@@ -1,0 +1,133 @@
+    /*
+    Flaticon icon font: Flaticon
+    Creation date: 23/08/2017 05:43
+    */
+
+    @font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+    .fi:before{
+        display: inline-block;
+  font-family: "Flaticon";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+    }
+
+    .flaticon-interface:before { content: "\f100"; }
+.flaticon-summer:before { content: "\f101"; }
+.flaticon-forest:before { content: "\f102"; }
+.flaticon-mountains-1:before { content: "\f103"; }
+.flaticon-hay-rolls:before { content: "\f104"; }
+.flaticon-suburb:before { content: "\f105"; }
+.flaticon-castle:before { content: "\f106"; }
+.flaticon-city:before { content: "\f107"; }
+.flaticon-mountains:before { content: "\f108"; }
+.flaticon-nature-3:before { content: "\f109"; }
+.flaticon-desert:before { content: "\f10a"; }
+.flaticon-palm-trees:before { content: "\f10b"; }
+.flaticon-hills:before { content: "\f10c"; }
+.flaticon-yacht:before { content: "\f10d"; }
+.flaticon-nature-2:before { content: "\f10e"; }
+.flaticon-nature-4:before { content: "\f10f"; }
+.flaticon-map-3:before { content: "\f110"; }
+.flaticon-map-2:before { content: "\f111"; }
+.flaticon-map-1:before { content: "\f112"; }
+.flaticon-map:before { content: "\f113"; }
+.flaticon-planet-1:before { content: "\f114"; }
+.flaticon-solar-system-1:before { content: "\f115"; }
+.flaticon-africa-map:before { content: "\f116"; }
+.flaticon-australia-map:before { content: "\f117"; }
+.flaticon-south-america:before { content: "\f118"; }
+.flaticon-moon-1:before { content: "\f119"; }
+.flaticon-alien-with-aqualung:before { content: "\f11a"; }
+.flaticon-nature-1:before { content: "\f11b"; }
+.flaticon-nature:before { content: "\f11c"; }
+.flaticon-moon:before { content: "\f11d"; }
+.flaticon-big-moon:before { content: "\f11e"; }
+.flaticon-spherical-shape-with-vertical-lines:before { content: "\f11f"; }
+.flaticon-dna-structure:before { content: "\f120"; }
+.flaticon-molecule:before { content: "\f121"; }
+.flaticon-asteroid:before { content: "\f122"; }
+.flaticon-nebula:before { content: "\f123"; }
+.flaticon-gas:before { content: "\f124"; }
+.flaticon-sunrise:before { content: "\f125"; }
+.flaticon-solar-system:before { content: "\f126"; }
+.flaticon-meteor-shower:before { content: "\f127"; }
+.flaticon-atom:before { content: "\f128"; }
+.flaticon-stars:before { content: "\f129"; }
+.flaticon-sun:before { content: "\f12a"; }
+.flaticon-planet:before { content: "\f12b"; }
+.flaticon-black-hole:before { content: "\f12c"; }
+.flaticon-religion-cross:before { content: "\f12d"; }
+.flaticon-cell:before { content: "\f12e"; }
+    
+    $font-Flaticon-interface: "\f100";
+    $font-Flaticon-summer: "\f101";
+    $font-Flaticon-forest: "\f102";
+    $font-Flaticon-mountains-1: "\f103";
+    $font-Flaticon-hay-rolls: "\f104";
+    $font-Flaticon-suburb: "\f105";
+    $font-Flaticon-castle: "\f106";
+    $font-Flaticon-city: "\f107";
+    $font-Flaticon-mountains: "\f108";
+    $font-Flaticon-nature-3: "\f109";
+    $font-Flaticon-desert: "\f10a";
+    $font-Flaticon-palm-trees: "\f10b";
+    $font-Flaticon-hills: "\f10c";
+    $font-Flaticon-yacht: "\f10d";
+    $font-Flaticon-nature-2: "\f10e";
+    $font-Flaticon-nature-4: "\f10f";
+    $font-Flaticon-map-3: "\f110";
+    $font-Flaticon-map-2: "\f111";
+    $font-Flaticon-map-1: "\f112";
+    $font-Flaticon-map: "\f113";
+    $font-Flaticon-planet-1: "\f114";
+    $font-Flaticon-solar-system-1: "\f115";
+    $font-Flaticon-africa-map: "\f116";
+    $font-Flaticon-australia-map: "\f117";
+    $font-Flaticon-south-america: "\f118";
+    $font-Flaticon-moon-1: "\f119";
+    $font-Flaticon-alien-with-aqualung: "\f11a";
+    $font-Flaticon-nature-1: "\f11b";
+    $font-Flaticon-nature: "\f11c";
+    $font-Flaticon-moon: "\f11d";
+    $font-Flaticon-big-moon: "\f11e";
+    $font-Flaticon-spherical-shape-with-vertical-lines: "\f11f";
+    $font-Flaticon-dna-structure: "\f120";
+    $font-Flaticon-molecule: "\f121";
+    $font-Flaticon-asteroid: "\f122";
+    $font-Flaticon-nebula: "\f123";
+    $font-Flaticon-gas: "\f124";
+    $font-Flaticon-sunrise: "\f125";
+    $font-Flaticon-solar-system: "\f126";
+    $font-Flaticon-meteor-shower: "\f127";
+    $font-Flaticon-atom: "\f128";
+    $font-Flaticon-stars: "\f129";
+    $font-Flaticon-sun: "\f12a";
+    $font-Flaticon-planet: "\f12b";
+    $font-Flaticon-black-hole: "\f12c";
+    $font-Flaticon-religion-cross: "\f12d";
+    $font-Flaticon-cell: "\f12e";
