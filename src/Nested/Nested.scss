@@ -1,0 +1,347 @@
+html, body {
+    margin: 0;
+    height: 100%;
+    color: slategray;
+}
+#root, .App{
+	height:100%;
+}
+.navbar.navbar-default {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+}
+#content{
+	padding-top:60px;
+	min-height: 100%;
+}
+.dropdown-menu {
+    height: auto;
+    max-height: 80vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+h1{
+	text-align: left;
+	
+	.btn{
+		font-size: 0.7em;
+		vertical-align: middle;
+    color: inherit;
+    
+    &:hover,&:focus,&.focus,&:active,&.active{
+      color: inherit;
+    }
+    .open > .dropdown-toggle{
+      color: inherit;
+      &:hover,&:focus,&.focus{
+        color: inherit;
+      }
+    }
+	}
+}
+
+i.gi{
+  font-size:inherit;
+}
+.child-appear, .child-enter {
+  opacity: 0.01;
+}
+
+.delay500{
+	transition-delay: 500ms;
+}
+
+.child-appear.child-appear-active,.child-enter.child-enter-active  {
+  opacity: 1;
+  transition: opacity 400ms ease-in;
+}
+#title{
+	margin-bottom:30px;
+}
+div.child h1{
+  color:#000;
+}
+.child-inner{
+	box-shadow:0px 0px 4px rgba(0, 0, 0, 0.3);
+	background: #eee;
+	cursor: pointer;
+	margin-bottom:30px;
+	padding:15px 0;
+	height:150px;
+	position:relative;
+  text-align: center;
+}
+.child-inner:hover{
+  opacity:0.8;
+}
+
+a.child{
+  color: slategray;
+}
+
+a.child:hover, a.child:focus{
+  color: slategray;
+}
+
+.child i{
+	font-size:5em;
+}
+.child h1{
+	text-align: center;
+	font-size: 1em;
+	font-weight: normal;
+	margin:10px 0 15px 0;
+	width:100%;
+	padding:0 10px;
+	position:absolute;
+	bottom:0;
+	left:0;
+}
+
+.child-inner.empty {
+	height:auto;
+}
+.child-inner.empty i{
+	display:none;
+}
+.child-inner.empty h1{
+	position:static;
+	font-size:1.7em;
+	margin:0;
+}
+
+.child i.empty{
+	visibility: hidden;
+} 
+
+.example-enter {
+	transition-delay: 1s;
+	visibility: hidden;
+	opacity: 0;
+	height:0px;
+	width:0px;
+  
+}
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition-delay: 1s;
+  visibility: visible;
+  height:auto;
+ width:auto;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}
+
+.switch-enter {
+    opacity: 0.01;
+}
+.switch-enter.switch-enter-active {
+    opacity: 1.0;
+    transition: opacity 0.5s ease-in
+}
+.switch-leave {
+    /* Completely hide the button while it's being animated and before it's removed from the DOM. */
+    visibility: hidden;
+    height: 0px;
+    width: 0px;
+    position:absolute;
+    
+    /* Starting opacity */
+    opacity: 1.0;
+}
+.switch-leave.switch-leave-active {
+    /* Ending opacity: 
+    Trigger opacity change so the "transitionend" event will fire, causing React to remove from the DOM. */
+    opacity: 0;
+    transition: opacity 0.5s ease-in
+}
+
+/* Transition */
+.slide-up-appear,.slide-up-enter {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 500ms ease;
+}
+
+.slide-up-appear.slide-up-appear-active,.slide-up-enter.slide-up-enter-active {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+
+.fa[class^="flaticon-"]:before, .fa[class*=" flaticon-"]:before, .fa[class^="flaticon-"]:after, .fa[class*=" flaticon-"]:after{
+	font-size:1em;
+	margin:0;
+}
+
+$html5colorNames: "aliceblue","antiquewhite","aqua","aquamarine","azure","beige","bisque","black","blanchedalmond","blue","blueviolet","brown","burlywood","cadetblue","chartreuse","chocolate","coral","cornflowerblue","cornsilk","crimson","cyan","darkblue","darkcyan","darkgray","darkgreen","darkkhaki","darkmagenta","darkolivegreen","darkorange","darkorchid","darkred","darksalmon","darkseagreen","darkslateblue","darkslategray","darkturquoise","darkviolet","deeppink","deepskyblue","dimgray","dodgerblue","firebrick","floralwhite","forestgreen","fuchsia","gainsboro","ghostwhite","gold","goldenrod","gray","green","greenyellow","indianred","indigo","ivory","khaki","lavender","lavenderblush","lawngreen","lemonchiffon","lightblue","lightcoral","lightcyan","lightgoldenrodyellow","lightgray","lightgreen","lightpink","lightsalmon","lightseagreen","lightskyblue","lightslategray","lightsteelblue","lightyellow","lime","limegreen","linen","magenta","maroon","mediumaquamarine","mediumblue","mediumorchid","mediumpurple","mediumseagreen","mediumslateblue","mediumspringgreen","mediumturquoise","mediumvioletred","midnightblue","mintcream","mistyrose","moccasin","navajowhite","navy","oldlace","olive","olivedrab","orange","orangered","orchid","palegoldenrod","palegreen","paleturquoise","palevioletred","papayawhip","peachpuff","peru","pink","plum","powderblue","purple","red","rosybrown","royalblue","saddlebrown","salmon","sandybrown","seagreen","seashell","sienna","silver","skyblue","slateblue","slategray","snow","springgreen","steelblue","tan","teal","thistle","tomato","turquoise","violet","wheat","white","whitesmoke","yellow","yellowgreen";
+$html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#FFEBCD,#0000FF,#8A2BE2,#A52A2A,#DEB887,#5F9EA0,#7FFF00,#D2691E,#FF7F50,#6495ED,#FFF8DC,#DC143C,#00FFFF,#00008B,#008B8B,#A9A9A9,#006400,#BDB76B,#8B008B,#556B2F,#FF8C00,#9932CC,#8B0000,#E9967A,#8FBC8F,#483D8B,#2F4F4F,#00CED1,#9400D3,#FF1493,#00BFFF,#696969,#1E90FF,#B22222,#FFFAF0,#228B22,#FF00FF,#DCDCDC,#F8F8FF,#FFD700,#DAA520,#808080,#008000,#ADFF2F,#CD5C5C,#4B0082,#FFFFF0,#F0E68C,#E6E6FA,#FFF0F5,#7CFC00,#FFFACD,#ADD8E6,#F08080,#E0FFFF,#FAFAD2,#D3D3D3,#90EE90,#FFB6C1,#FFA07A,#20B2AA,#87CEFA,#778899,#B0C4DE,#FFFFE0,#00FF00,#32CD32,#FAF0E6,#FF00FF,#800000,#66CDAA,#0000CD,#BA55D3,#9370D8,#3CB371,#7B68EE,#00FA9A,#48D1CC,#C71585,#191970,#F5FFFA,#FFE4E1,#FFE4B5,#FFDEAD,#000080,#FDF5E6,#808000,#6B8E23,#FFA500,#FF4500,#DA70D6,#EEE8AA,#98FB98,#AFEEEE,#D87093,#FFEFD5,#FFDAB9,#CD853F,#FFC0CB,#DDA0DD,#B0E0E6,#800080,#FF0000,#BC8F8F,#4169E1,#8B4513,#FA8072,#F4A460,#2E8B57,#FFF5EE,#A0522D,#C0C0C0,#87CEEB,#6A5ACD,#708090,#FFFAFA,#00FF7F,#4682B4,#D2B48C,#008080,#D8BFD8,#FF6347,#40E0D0,#EE82EE,#F5DEB3,#FFFFFF,#F5F5F5,#FFFF00,#9ACD32;
+
+
+
+@mixin button-variant($color, $background, $border) {
+  background-color: $background;
+  border-color: $border;
+
+  &:focus,
+  &.focus {
+    background-color: darken($background, 10%);
+        border-color: darken($border, 25%);
+  }
+  &:hover {
+    background-color: darken($background, 10%);
+        border-color: darken($border, 12%);
+  }
+  &:active,
+  &.active, .open > .dropdown-toggle {
+    background-color: darken($background, 10%);
+    border-color: darken($border, 12%);
+    background-image: none;
+
+    &:hover,
+    &:focus,
+    &.focus {
+      background-color: darken($background, 17%);
+      border-color: darken($border, 25%);
+    }
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &:hover,
+    &:focus,
+    &.focus {
+      background-color: $background;
+      border-color: $border;
+    }
+  }
+
+  .badge {
+    color: $background;
+    background-color: $color;
+  }
+}
+
+@mixin darkBG($color) {
+    background-color: $color;
+    color: adjust-color($color, $lightness: 55%);
+
+    &.parent .btn{
+    	@include button-variant(
+    		adjust-color($color, $lightness: 55%), 
+			adjust-color($color, $lightness: 10%), 
+			adjust-color($color, $lightness: 5%))
+    }
+}
+
+@mixin lightBG($color) {
+    background-color: $color;
+    color: adjust-color($color, $lightness: -45%);
+
+    &.parent .btn{
+    	@include button-variant(
+    		adjust-color($color, $lightness: -45%), 
+			adjust-color($color, $lightness: -10%), 
+			adjust-color($color, $lightness: -15%))
+    }
+}
+
+@for $i from 1 through length($html5colors) {
+  $color: nth($html5colors, $i);
+  $name: nth($html5colorNames, $i);
+
+  .#{$name}{
+    @if lightness($color) > 50%{
+      @include lightBG($color)
+    }
+    @else{
+      @include darkBG($color)
+    }
+  }
+}
+
+.child-inner.pink,.container-fluid.pink{
+	@include darkBG(#FF1493);
+}
+.child-inner.magenta,.container-fluid.magenta{
+	@include darkBG(#FF00FF);
+}
+.child-inner.orange,.container-fluid.orange{
+	@include darkBG(#FF4500);
+	color:adjust-color(#FF4500, $lightness: 40%);
+}
+
+.child-inner.blueish,.container-fluid.blueish{
+	@include darkBG(#00008B);
+}
+.child-inner.turquoise,.container-fluid.turquoise{
+	@include darkBG(#40E0D0);
+}
+.child-inner.teal,.container-fluid.teal{
+	@include darkBG(#008080);
+}
+.child-inner.gold,.container-fluid.gold,
+.child-inner.golden,.container-fluid.golden{
+	@include darkBG(#DAA520);
+}
+.child-inner.pale,.child-inner.faint,
+.container-fluid.pale,.container-fluid.faint{
+	@include lightBG(#fff);
+	background:white;
+	color: #999;
+	padding:14px;
+	border:1px solid #eee;
+}
+.child-inner.multicolored,.child-inner.rainbow,
+.container-fluid.multicolored,.container-fluid.rainbow{
+	color:white;
+	text-shadow: 1px 1px grey;
+	background: red; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(top left, magenta, orange, yellow, SpringGreen, cyan); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right bottom, magenta, orange, yellow, SpringGreen, cyan); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right bottom, magenta, orange, yellow, SpringGreen, cyan); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to right bottom, magenta, orange, yellow, SpringGreen, cyan); /* Standard syntax (must be last) */
+}
+.child-inner.brown,.container-fluid.brown{
+	@include darkBG(#8b4513);
+}
+
+@media (min-width:1200px){
+    .auto-clear .col-lg-1:nth-child(12n+1){clear:left;}
+    .auto-clear .col-lg-2:nth-child(6n+1){clear:left;}
+    .auto-clear .col-lg-3:nth-child(4n+1){clear:left;}
+    .auto-clear .col-lg-4:nth-child(3n+1){clear:left;}
+    .auto-clear .col-lg-6:nth-child(odd){clear:left;}
+}
+@media (min-width:992px) and (max-width:1199px){
+    .auto-clear .col-md-1:nth-child(12n+1){clear:left;}
+    .auto-clear .col-md-2:nth-child(6n+1){clear:left;}
+    .auto-clear .col-md-3:nth-child(4n+1){clear:left;}
+    .auto-clear .col-md-4:nth-child(3n+1){clear:left;}
+    .auto-clear .col-md-6:nth-child(odd){clear:left;}
+}
+@media (min-width:768px) and (max-width:991px){
+    .auto-clear .col-sm-1:nth-child(12n+1){clear:left;}
+    .auto-clear .col-sm-2:nth-child(6n+1){clear:left;}
+    .auto-clear .col-sm-3:nth-child(4n+1){clear:left;}
+    .auto-clear .col-sm-4:nth-child(3n+1){clear:left;}
+    .auto-clear .col-sm-6:nth-child(odd){clear:left;}
+}
+@media (max-width:767px){
+    .auto-clear .col-xs-1:nth-child(12n+1){clear:left;}
+    .auto-clear .col-xs-2:nth-child(6n+1){clear:left;}
+    .auto-clear .col-xs-3:nth-child(4n+1){clear:left;}
+    .auto-clear .col-xs-4:nth-child(3n+1){clear:left;}
+    .auto-clear .col-xs-6:nth-child(odd){clear:left;}
+}
