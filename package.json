@@ -2,6 +2,7 @@
   "name": "nested-dnd",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://cattegy.github.io/nested-dnd",
   "dependencies": {
     "animate.css": "^3.5.2",
     "bootstrap": "3",
@@ -36,7 +37,9 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@storybook/react": "^3.2.3",

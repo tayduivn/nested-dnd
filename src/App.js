@@ -37,7 +37,7 @@ class App extends Component {
         <div className="App">
           <Nav/>
           <Switch>
-            <Route exact path='/' component={Home} />
+            <Route exact path='/' component={Nested} />
             <Route path='/nested' component={Nested} />
           </Switch>
         </div>
