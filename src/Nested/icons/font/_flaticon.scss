@@ -1,6 +1,6 @@
     /*
     Flaticon icon font: Flaticon
-    Creation date: 23/08/2017 05:43
+    Creation date: 24/08/2017 20:27
     */
 
     @font-face {
@@ -36,98 +36,112 @@
   font-smoothing: antialiased;
     }
 
-    .flaticon-interface:before { content: "\f100"; }
-.flaticon-summer:before { content: "\f101"; }
-.flaticon-forest:before { content: "\f102"; }
-.flaticon-mountains-1:before { content: "\f103"; }
-.flaticon-hay-rolls:before { content: "\f104"; }
-.flaticon-suburb:before { content: "\f105"; }
-.flaticon-castle:before { content: "\f106"; }
-.flaticon-city:before { content: "\f107"; }
-.flaticon-mountains:before { content: "\f108"; }
-.flaticon-nature-3:before { content: "\f109"; }
-.flaticon-desert:before { content: "\f10a"; }
-.flaticon-palm-trees:before { content: "\f10b"; }
-.flaticon-hills:before { content: "\f10c"; }
-.flaticon-yacht:before { content: "\f10d"; }
-.flaticon-nature-2:before { content: "\f10e"; }
-.flaticon-nature-4:before { content: "\f10f"; }
-.flaticon-map-3:before { content: "\f110"; }
-.flaticon-map-2:before { content: "\f111"; }
-.flaticon-map-1:before { content: "\f112"; }
-.flaticon-map:before { content: "\f113"; }
-.flaticon-planet-1:before { content: "\f114"; }
-.flaticon-solar-system-1:before { content: "\f115"; }
-.flaticon-africa-map:before { content: "\f116"; }
-.flaticon-australia-map:before { content: "\f117"; }
-.flaticon-south-america:before { content: "\f118"; }
-.flaticon-moon-1:before { content: "\f119"; }
-.flaticon-alien-with-aqualung:before { content: "\f11a"; }
-.flaticon-nature-1:before { content: "\f11b"; }
-.flaticon-nature:before { content: "\f11c"; }
-.flaticon-moon:before { content: "\f11d"; }
-.flaticon-big-moon:before { content: "\f11e"; }
-.flaticon-spherical-shape-with-vertical-lines:before { content: "\f11f"; }
-.flaticon-dna-structure:before { content: "\f120"; }
-.flaticon-molecule:before { content: "\f121"; }
-.flaticon-asteroid:before { content: "\f122"; }
-.flaticon-nebula:before { content: "\f123"; }
-.flaticon-gas:before { content: "\f124"; }
-.flaticon-sunrise:before { content: "\f125"; }
-.flaticon-solar-system:before { content: "\f126"; }
-.flaticon-meteor-shower:before { content: "\f127"; }
-.flaticon-atom:before { content: "\f128"; }
-.flaticon-stars:before { content: "\f129"; }
-.flaticon-sun:before { content: "\f12a"; }
-.flaticon-planet:before { content: "\f12b"; }
-.flaticon-black-hole:before { content: "\f12c"; }
-.flaticon-religion-cross:before { content: "\f12d"; }
-.flaticon-cell:before { content: "\f12e"; }
+    .flaticon-city-1:before { content: "\f100"; }
+.flaticon-black-hole:before { content: "\f101"; }
+.flaticon-asteroid:before { content: "\f102"; }
+.flaticon-australia-map:before { content: "\f103"; }
+.flaticon-south-america:before { content: "\f104"; }
+.flaticon-spherical-shape-with-vertical-lines:before { content: "\f105"; }
+.flaticon-moon-1:before { content: "\f106"; }
+.flaticon-moon:before { content: "\f107"; }
+.flaticon-nature-4:before { content: "\f108"; }
+.flaticon-cell:before { content: "\f109"; }
+.flaticon-dna-structure:before { content: "\f10a"; }
+.flaticon-alien-with-aqualung:before { content: "\f10b"; }
+.flaticon-molecule:before { content: "\f10c"; }
+.flaticon-nature-3:before { content: "\f10d"; }
+.flaticon-big-moon:before { content: "\f10e"; }
+.flaticon-gas:before { content: "\f10f"; }
+.flaticon-sunrise:before { content: "\f110"; }
+.flaticon-solar-system-1:before { content: "\f111"; }
+.flaticon-religion-cross:before { content: "\f112"; }
+.flaticon-meteor-shower:before { content: "\f113"; }
+.flaticon-atom:before { content: "\f114"; }
+.flaticon-stars:before { content: "\f115"; }
+.flaticon-sun:before { content: "\f116"; }
+.flaticon-planet-1:before { content: "\f117"; }
+.flaticon-nebula:before { content: "\f118"; }
+.flaticon-africa-map:before { content: "\f119"; }
+.flaticon-interface:before { content: "\f11a"; }
+.flaticon-hay-rolls:before { content: "\f11b"; }
+.flaticon-transport:before { content: "\f11c"; }
+.flaticon-ufo:before { content: "\f11d"; }
+.flaticon-map-3:before { content: "\f11e"; }
+.flaticon-map-2:before { content: "\f11f"; }
+.flaticon-map-1:before { content: "\f120"; }
+.flaticon-map:before { content: "\f121"; }
+.flaticon-castle:before { content: "\f122"; }
+.flaticon-summer:before { content: "\f123"; }
+.flaticon-technology-2:before { content: "\f124"; }
+.flaticon-nature-2:before { content: "\f125"; }
+.flaticon-technology-1:before { content: "\f126"; }
+.flaticon-technology:before { content: "\f127"; }
+.flaticon-yacht:before { content: "\f128"; }
+.flaticon-palm-trees:before { content: "\f129"; }
+.flaticon-desert:before { content: "\f12a"; }
+.flaticon-hills:before { content: "\f12b"; }
+.flaticon-solar-system:before { content: "\f12c"; }
+.flaticon-mountains-1:before { content: "\f12d"; }
+.flaticon-forest:before { content: "\f12e"; }
+.flaticon-city:before { content: "\f12f"; }
+.flaticon-nature-1:before { content: "\f130"; }
+.flaticon-mountains:before { content: "\f131"; }
+.flaticon-suburb:before { content: "\f132"; }
+.flaticon-nature:before { content: "\f133"; }
+.flaticon-planet:before { content: "\f134"; }
+.flaticon-transport-1:before { content: "\f135"; }
     
-    $font-Flaticon-interface: "\f100";
-    $font-Flaticon-summer: "\f101";
-    $font-Flaticon-forest: "\f102";
-    $font-Flaticon-mountains-1: "\f103";
-    $font-Flaticon-hay-rolls: "\f104";
-    $font-Flaticon-suburb: "\f105";
-    $font-Flaticon-castle: "\f106";
-    $font-Flaticon-city: "\f107";
-    $font-Flaticon-mountains: "\f108";
-    $font-Flaticon-nature-3: "\f109";
-    $font-Flaticon-desert: "\f10a";
-    $font-Flaticon-palm-trees: "\f10b";
-    $font-Flaticon-hills: "\f10c";
-    $font-Flaticon-yacht: "\f10d";
-    $font-Flaticon-nature-2: "\f10e";
-    $font-Flaticon-nature-4: "\f10f";
-    $font-Flaticon-map-3: "\f110";
-    $font-Flaticon-map-2: "\f111";
-    $font-Flaticon-map-1: "\f112";
-    $font-Flaticon-map: "\f113";
-    $font-Flaticon-planet-1: "\f114";
-    $font-Flaticon-solar-system-1: "\f115";
-    $font-Flaticon-africa-map: "\f116";
-    $font-Flaticon-australia-map: "\f117";
-    $font-Flaticon-south-america: "\f118";
-    $font-Flaticon-moon-1: "\f119";
-    $font-Flaticon-alien-with-aqualung: "\f11a";
-    $font-Flaticon-nature-1: "\f11b";
-    $font-Flaticon-nature: "\f11c";
-    $font-Flaticon-moon: "\f11d";
-    $font-Flaticon-big-moon: "\f11e";
-    $font-Flaticon-spherical-shape-with-vertical-lines: "\f11f";
-    $font-Flaticon-dna-structure: "\f120";
-    $font-Flaticon-molecule: "\f121";
-    $font-Flaticon-asteroid: "\f122";
-    $font-Flaticon-nebula: "\f123";
-    $font-Flaticon-gas: "\f124";
-    $font-Flaticon-sunrise: "\f125";
-    $font-Flaticon-solar-system: "\f126";
-    $font-Flaticon-meteor-shower: "\f127";
-    $font-Flaticon-atom: "\f128";
-    $font-Flaticon-stars: "\f129";
-    $font-Flaticon-sun: "\f12a";
-    $font-Flaticon-planet: "\f12b";
-    $font-Flaticon-black-hole: "\f12c";
-    $font-Flaticon-religion-cross: "\f12d";
-    $font-Flaticon-cell: "\f12e";
+    $font-Flaticon-city-1: "\f100";
+    $font-Flaticon-black-hole: "\f101";
+    $font-Flaticon-asteroid: "\f102";
+    $font-Flaticon-australia-map: "\f103";
+    $font-Flaticon-south-america: "\f104";
+    $font-Flaticon-spherical-shape-with-vertical-lines: "\f105";
+    $font-Flaticon-moon-1: "\f106";
+    $font-Flaticon-moon: "\f107";
+    $font-Flaticon-nature-4: "\f108";
+    $font-Flaticon-cell: "\f109";
+    $font-Flaticon-dna-structure: "\f10a";
+    $font-Flaticon-alien-with-aqualung: "\f10b";
+    $font-Flaticon-molecule: "\f10c";
+    $font-Flaticon-nature-3: "\f10d";
+    $font-Flaticon-big-moon: "\f10e";
+    $font-Flaticon-gas: "\f10f";
+    $font-Flaticon-sunrise: "\f110";
+    $font-Flaticon-solar-system-1: "\f111";
+    $font-Flaticon-religion-cross: "\f112";
+    $font-Flaticon-meteor-shower: "\f113";
+    $font-Flaticon-atom: "\f114";
+    $font-Flaticon-stars: "\f115";
+    $font-Flaticon-sun: "\f116";
+    $font-Flaticon-planet-1: "\f117";
+    $font-Flaticon-nebula: "\f118";
+    $font-Flaticon-africa-map: "\f119";
+    $font-Flaticon-interface: "\f11a";
+    $font-Flaticon-hay-rolls: "\f11b";
+    $font-Flaticon-transport: "\f11c";
+    $font-Flaticon-ufo: "\f11d";
+    $font-Flaticon-map-3: "\f11e";
+    $font-Flaticon-map-2: "\f11f";
+    $font-Flaticon-map-1: "\f120";
+    $font-Flaticon-map: "\f121";
+    $font-Flaticon-castle: "\f122";
+    $font-Flaticon-summer: "\f123";
+    $font-Flaticon-technology-2: "\f124";
+    $font-Flaticon-nature-2: "\f125";
+    $font-Flaticon-technology-1: "\f126";
+    $font-Flaticon-technology: "\f127";
+    $font-Flaticon-yacht: "\f128";
+    $font-Flaticon-palm-trees: "\f129";
+    $font-Flaticon-desert: "\f12a";
+    $font-Flaticon-hills: "\f12b";
+    $font-Flaticon-solar-system: "\f12c";
+    $font-Flaticon-mountains-1: "\f12d";
+    $font-Flaticon-forest: "\f12e";
+    $font-Flaticon-city: "\f12f";
+    $font-Flaticon-nature-1: "\f130";
+    $font-Flaticon-mountains: "\f131";
+    $font-Flaticon-suburb: "\f132";
+    $font-Flaticon-nature: "\f133";
+    $font-Flaticon-planet: "\f134";
+    $font-Flaticon-transport-1: "\f135";
