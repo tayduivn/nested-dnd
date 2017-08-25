@@ -21,7 +21,7 @@ class Nav extends Component {
 
           <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul className="nav navbar-nav">
-              <li><a href="/nested">Nested</a></li>
+              <li><a href="/nested-dnd">Nested</a></li>
             </ul>
           </div>
         </div>
@@ -38,7 +38,7 @@ class App extends Component {
           <Nav/>
           <Switch>
             <Route exact path='/' component={Nested} />
-            <Route path='/nested' component={Nested} />
+            <Route path='/nested-dnd' component={Nested} />
           </Switch>
         </div>
       </Router>

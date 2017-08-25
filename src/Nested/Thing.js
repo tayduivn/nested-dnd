@@ -14,16 +14,22 @@ class Thing{
 		this.name = options.name || this.name;
 		this.isa = options.isa || this.isa;
 		this.contains = options.contains || this.contains ||  [];
-		this.extend = options.extend || this.extend || false; //if true, will append this.contains to this.isa.contains
+		//if true, will append this.contains to this.isa.contains
+		this.extend = (typeof options.extend !== "undefined") ? options.extend 
+			: (typeof this.extend !== "undefined") ? this.extend : false;
 		this.namegen = options.namegen || this.namegen;
-		this.uniqueInstance = options.uniqueInstance || this.uniqueInstance || false;
+		this.uniqueInstance = (typeof options.uniqueInstance !== "undefined") ? options.uniqueInstance 
+			: (typeof this.uniqueInstance !== "undefined") ? this.uniqueInstance : false;
 		this.data = options.data || this.data || {};
 		this.icon = options.icon || this.icon || "empty";
 		this.background = options.background || this.background;
 		this.textColor = options.textColor || this.textColor;
-		this.autoColor = options.autoColor || this.autoColor || true;
+		this.autoColor = (typeof options.autoColor !== "undefined") ? options.autoColor
+			: (typeof this.autoColor !== "undefined") ? this.autoColor : true;
 
-		//not an option
+		
+		if(this.background) this.background = this.background.toLowerCase();
+		if(this.textColor) this.textColor = this.textColor.toLowerCase();
 		this.cssClass = Styler.getClass(this);
 
 		//save
@@ -32,12 +38,16 @@ class Thing{
 	}
 
 	getName(){
-		if(this.isa && !this.name && !this.namegen)
-			return parse(things[this.isa]);
-		else
+		var name;
+		if(this.isa && !this.namegen)
+			name = parse(things[this.isa],true);
+		
+		if(!name)
 			return parse(this);
+		else
+			return name;
 	
-		function parse(thing){
+		function parse(thing, isSuper){
 			if(thing.namegen === "" || thing.namegen == thing.name)
 				thing.namegen = false;
 
@@ -53,7 +63,7 @@ class Thing{
 			if(thing.namegen)
 				return Table.roll(thing.namegen);
 
-			return thing.name;
+			return (isSuper) ? false : thing.name;
 		}
 	}//getName
 
@@ -61,8 +71,19 @@ class Thing{
 		if(!name) name = this.getName();
 
 		var icon = "";
-		if(this.isa && !this.icon)
-			icon = things[this.isa].icon;
+		if(this.isa){
+			var superthing = things[this.isa];
+
+			if(!this.background){
+				this.background = superthing.background;
+			}
+			if(!this.textColor)
+				this.textColor = superthing.textColor;
+			if(this.icon == "empty")
+				icon = things[this.isa].icon;
+
+			this.cssClass = Styler.getClass(this);
+		}
 		else
 			icon = this.icon;
 

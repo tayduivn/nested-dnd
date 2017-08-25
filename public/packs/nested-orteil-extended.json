@@ -14,19 +14,22 @@
     "traffic accident": {},
     "future moon": {},
     "mold": {},
-    "medieval battlefield": {},
+    "medieval battlefield": {
+      "icon": "gi gi-bloody-sword",
+      "background": "darkred"
+    },
     "supercluster": {
       "icon": "fa flaticon-stars pulse animated infinite",
       "background": "black",
       "textColor": "white"
     },
     "galaxy": {
-      "icon": "fa flaticon-nature",
+      "icon": "fa flaticon-nature-4",
       "background": "black",
       "textColor": "white"
     },
     "universe": {
-      "icon": "fa flaticon-nature",
+      "icon": "fa flaticon-nature-4",
       "background": "black",
       "textColor": "white"
     },
@@ -41,14 +44,14 @@
       "textColor": "white"
     },
     "star system": {
-      "icon": "fa flaticon-solar-system-1 fa-spin",
+      "icon": "fa flaticon-solar-system fa-spin",
       "background": "black",
       "textColor": "white"
     },
     "star": {
       "icon": "fa flaticon-sun fa-spin",
-      "background":"black",
-      "textColor":"gold"
+      "background": "black",
+      "textColor": "gold"
     },
     "gas giant": {
       "icon": "fa flaticon-moon",
@@ -57,17 +60,30 @@
     },
     "moon": {
       "icon": "fa flaticon-big-moon fa-spin",
-      "background":"black"
+      "background": "black"
     },
     "dyson sphere": {
       "icon": "fa flaticon-spherical-shape-with-vertical-lines",
-      "background":"black",
-      "textColor":"gold"
+      "background": "black",
+      "textColor": "gold"
     },
     "black hole": {
       "icon": "fa flaticon-black-hole fa-spin",
       "background": "black",
-      "textColor": "white"
+      "textColor": "white",
+      "autoColor": false
+    },
+    "inside the black hole": {
+      "icon": "fa flaticon-black-hole fa-spin",
+      "background": "black",
+      "textColor": "white",
+      "autoColor": false
+    },
+    "white hole": {
+      "icon": "fa flaticon-black-hole fa-spin",
+      "background": "white",
+      "textColor": "black",
+      "autoColor": false
     },
     "abyss": {
       "icon": "fa flaticon-black-hole fa-spin",
@@ -76,13 +92,13 @@
     },
     "nebula": {
       "icon": "fa flaticon-gas",
-      "background":"black",
-      "textColor":"mediumpurple"
+      "background": "black",
+      "textColor": "mediumpurple"
     },
     "interstellar cloud": {
       "icon": "fa flaticon-gas",
-      "background":"black",
-      "textColor":"mediumpurple"
+      "background": "black",
+      "textColor": "mediumpurple"
     },
     "molecule": {
       "icon": "fa flaticon-molecule"
@@ -178,7 +194,7 @@
       "icon": "fa flaticon-dna-structure"
     },
     "bacteria": {
-      "icon": "fa flaticon-cell"
+      "icon": "gi gi-parmecia"
     },
     "leather": {
       "icon": "fa flaticon-cell"
@@ -187,7 +203,7 @@
       "icon": "fa flaticon-cell"
     },
     "plankton": {
-      "icon": "fa flaticon-cell"
+      "icon": "gi gi-parmecia"
     },
     "planet": {
       "icon": [
@@ -195,15 +211,15 @@
         "gi gi-earth-asia-oceania gi-spin",
         "gi gi-earth-africa-europe gi-spin",
         "gi gi-earth-america gi-spin",
-        "fa flaticon-nature-1",
-        "fa flaticon-nature-1"
+        "fa flaticon-nature-3",
+        "fa flaticon-nature-3"
       ],
       "background": "black",
       "textColor": "DodgerBlue"
     },
     "barren planet": {
       "icon": "fa flaticon-big-moon",
-      "background":"black"
+      "background": "black"
     },
     "terraformed planet": {
       "icon": [
@@ -211,21 +227,34 @@
         "gi gi-earth-asia-oceania gi-spin",
         "gi gi-earth-africa-europe gi-spin",
         "gi gi-earth-america gi-spin",
-        "fa flaticon-nature-1",
-        "fa flaticon-nature-1"
+        "fa flaticon-nature-3",
+        "fa flaticon-nature-3"
       ],
       "background": "black",
       "textColor": "DodgerBlue"
     },
+    "visitor planet": {
+      "icon": "fa flaticon-transport",
+      "background": "black"
+    },
+    "visitor installation": {
+      "icon": "fa flaticon-technology-1"
+    },
+    "named visitor": {
+      "icon": [
+        "fa flaticon-technology",
+        "fa flaticon-alien-with-aqualung"
+      ]
+    },
     "future planet": {
       "icon": "fa flaticon-spherical-shape-with-vertical-lines",
-      "background":"black",
-      "textColor":"gold"
+      "background": "black",
+      "textColor": "gold"
     },
-    "visitor planet": {
-      "icon": "fa flaticon-spherical-shape-with-vertical-lines",
-      "background":"black",
-      "textColor":"gold"
+    "visitor ship": {
+      "icon": "fa flaticon-transport-1",
+      "background": "lime",
+      "textColor": "purple"
     },
     "medieval planet": {
       "icon": [
@@ -233,8 +262,8 @@
         "gi gi-earth-asia-oceania gi-spin",
         "gi gi-earth-africa-europe gi-spin",
         "gi gi-earth-america gi-spin",
-        "fa flaticon-nature-1",
-        "fa flaticon-nature-1"
+        "fa flaticon-nature-3",
+        "fa flaticon-nature-3"
       ],
       "background": "black",
       "textColor": "DodgerBlue"
@@ -245,48 +274,48 @@
         "gi gi-earth-asia-oceania gi-spin",
         "gi gi-earth-africa-europe gi-spin",
         "gi gi-earth-america gi-spin",
-        "fa flaticon-nature-1",
-        "fa flaticon-nature-1"
+        "fa flaticon-nature-3",
+        "fa flaticon-nature-3"
       ],
       "background": "black",
       "textColor": "DodgerBlue"
     },
     "asteroid belt": {
       "icon": "fa flaticon-meteor-shower",
-      "background":"black",
-      "textColor":"burlywood"
+      "background": "black",
+      "textColor": "burlywood"
     },
     "asteroid": {
       "icon": "fa flaticon-asteroid",
-      "background":"sienna"
+      "background": "sienna"
     },
     "planet core": {
-      "icon": "fa flaticon-planet-1 fa-spin",
-      "background":"red"
+      "icon": "fa flaticon-planet fa-spin",
+      "background": "darkred"
     },
     "sky": {
       "icon": "fa fa-cloud",
-      "background":"skyblue",
-      "textColor":"white"
+      "background": "skyblue",
+      "textColor": "white"
     },
     "cloud": {
       "icon": "fa fa-cloud",
-      "background":"skyblue",
-      "textColor":"white"
+      "background": "skyblue",
+      "textColor": "white"
     },
     "future sky": {
       "icon": "fa fa-cloud",
-      "background":"skyblue",
-      "textColor":"white"
+      "background": "skyblue",
+      "textColor": "white"
     },
     "gas giant atmosphere": {
       "icon": "fa fa-cloud",
-      "background":"papayawhip"
+      "background": "papayawhip"
     },
     "terraformed sky": {
       "icon": "fa fa-cloud",
-      "background":"skyblue",
-      "textColor":"white"
+      "background": "skyblue",
+      "textColor": "white"
     },
     "continent": {
       "icon": [
@@ -294,8 +323,8 @@
         "fa flaticon-africa-map",
         "fa flaticon-south-america"
       ],
-      "background":"#87CEEB",
-      "textColor":"DarkGreen"
+      "background": "#87CEEB",
+      "textColor": "DarkGreen"
     },
     "future continent": {
       "icon": [
@@ -303,8 +332,8 @@
         "fa flaticon-africa-map",
         "fa flaticon-south-america"
       ],
-      "background":"#87CEEB",
-      "textColor":"DarkGreen"
+      "background": "#87CEEB",
+      "textColor": "DarkGreen"
     },
     "ancient continent": {
       "icon": [
@@ -312,8 +341,8 @@
         "fa flaticon-africa-map",
         "fa flaticon-south-america"
       ],
-      "background":"#87CEEB",
-      "textColor":"DarkGreen"
+      "background": "#87CEEB",
+      "textColor": "DarkGreen"
     },
     "medieval continent": {
       "icon": [
@@ -321,8 +350,8 @@
         "fa flaticon-africa-map",
         "fa flaticon-south-america"
       ],
-      "background":"#87CEEB",
-      "textColor":"DarkGreen"
+      "background": "#87CEEB",
+      "textColor": "DarkGreen"
     },
     "country": {
       "icon": [
@@ -331,8 +360,8 @@
         "fa flaticon-map-2",
         "fa flaticon-map-3"
       ],
-      "background":"#87CEEB",
-      "textColor":"DarkGreen"
+      "background": "#87CEEB",
+      "textColor": "DarkGreen"
     },
     "medieval land": {
       "icon": [
@@ -341,8 +370,8 @@
         "fa flaticon-map-2",
         "fa flaticon-map-3"
       ],
-      "background":"#87CEEB",
-      "textColor":"DarkGreen"
+      "background": "#87CEEB",
+      "textColor": "DarkGreen"
     },
     "ancient land": {
       "icon": [
@@ -351,8 +380,8 @@
         "fa flaticon-map-2",
         "fa flaticon-map-3"
       ],
-      "background":"#87CEEB",
-      "textColor":"DarkGreen"
+      "background": "#87CEEB",
+      "textColor": "DarkGreen"
     },
     "region": {
       "icon": "fa flaticon-suburb"
@@ -369,8 +398,17 @@
     "residential area": {
       "icon": "fa flaticon-suburb"
     },
+    "visitor neighborhood": {
+      "icon": "fa flaticon-suburb"
+    },
     "medieval residential area": {
       "icon": "fa flaticon-suburb"
+    },
+    "medieval monument": {
+      "icon": [
+        "gi gi-water-fountain",
+        "gi gi-ionic-column"
+      ]
     },
     "living center": {
       "icon": "fa flaticon-suburb"
@@ -383,7 +421,7 @@
     },
     "coin": {
       "icon": "gi gi-crown-coin",
-      "background":"gold"
+      "background": "gold"
     },
     "spending center": {
       "icon": "fa fa-credit-card"
@@ -392,7 +430,7 @@
       "icon": "gi gi-magic-swirl"
     },
     "medieval temple": {
-      "icon": "gi gi-greek-temple"
+      "icon": "gi gi-church"
     },
     "castle": {
       "icon": "fa flaticon-castle"
@@ -401,7 +439,10 @@
       "icon": "fa flaticon-city"
     },
     "future city": {
-      "icon": "fa flaticon-city"
+      "icon": "fa flaticon-city-1"
+    },
+    "visitor city": {
+      "icon": "fa flaticon-city-1"
     },
     "village": {
       "icon": "fa flaticon-suburb"
@@ -411,104 +452,147 @@
     },
     "ocean": {
       "icon": "fa flaticon-sunrise",
-      "background":"#00BEA6 linear-gradient(#0057BE, #00BEA6)"
+      "background": "#00BEA6 linear-gradient(#0057BE, #00BEA6)"
     },
     "sea": {
       "icon": [
         "fa flaticon-yacht",
         "gi gi-at-sea"
       ],
-      "background":"#00BEA6 linear-gradient(#0057BE, #00BEA6)"
+      "background": "#00BEA6 linear-gradient(#0057BE, #00BEA6)"
     },
     "lake": {
       "icon": [
         "fa flaticon-yacht",
         "gi gi-at-sea"
       ],
-      "background":"#00BEA6 linear-gradient(#0057BE, #00BEA6)"
+      "background": "#00BEA6 linear-gradient(#0057BE, #00BEA6)"
     },
     "battlefield": {
       "icon": "gi gi-bloody-sword",
-      "background":"darkred"
+      "background": "darkred"
     },
     "river": {
       "icon": "gi gi-river",
-      "background":"#0057BE"
+      "background": "#0057BE"
     },
     "galactic life": {
       "icon": "fa flaticon-alien-with-aqualung pulse animated infinite",
-      "background":"#00FF00",
-      "textColor":"#8B008B"
+      "background": "#00FF00",
+      "textColor": "#8B008B"
     },
     "space animal": {
       "icon": [
-        "fa flaticon-alien-with-aqualung",
         "gi gi-alien-skull",
         "gi gi-alien-stare"
       ],
-      "background":"#00FF00",
-      "textColor":"#8B008B"
+      "background": "#00FF00",
+      "textColor": "#8B008B"
     },
     "land life": {
       "icon": "gi gi-rabbit",
-      "background":"lightgoldenrodyellow"
+      "background": "lightgoldenrodyellow"
+    },
+    "urban life": {
+      "icon": "gi gi-mouse",
+      "background": "lightgoldenrodyellow"
+    },
+    "dungeon life": {
+      "icon": "gi gi-mouse",
+      "background": "gray"
     },
     "ancient land life": {
       "icon": "gi gi-dinosaur-rex",
-      "background":"lightgoldenrodyellow"
+      "background": "lightgoldenrodyellow"
     },
     "ancient forest life": {
       "icon": "gi gi-dinosaur-rex",
-      "background":"lightgoldenrodyellow"
+      "background": "lightgoldenrodyellow"
+    },
+    "dungeon": {
+      "icon": "gi gi-hole-ladder",
+      "background": "slategray"
+    },
+    "pile of treasure": {
+      "icon": "gi gi-gold-stack",
+      "background": "LIGHTGOLDENRODYELLOW"
+    },
+    "dungeon entrance": {
+      "icon": "gi gi-closed-doors",
+      "background": "saddlebrown"
+    },
+    "dungeon passage": {
+      "icon": "gi gi-exit-door",
+      "background": "slategray"
+    },
+    "dungeon walls": {
+      "icon": "gi gi-brick-wall",
+      "background": "slategray"
+    },
+    "medieval clutter": {
+      "icon": [
+        "gi gi-broom",
+        "gi gi-knife-fork",
+        "gi gi-cooking-pot",
+        "gi gi-candle-holder",
+        "gi gi-wood-axe",
+        "gi gi-hand-saw",
+        "gi gi-quill-ink",
+        "gi gi-scissors"
+      ]
+    },
+    "dungeon tower": {
+      "icon": "gi gi-stone-tower",
+      "background": "slategray"
     },
     "plain": {
       "icon": [
         "fa flaticon-desert",
         "fa flaticon-nature-2"
       ],
-      "background":"#F0E68C"
+      "background": "KHAKI"
     },
     "ancient plain": {
       "icon": [
         "fa flaticon-desert",
         "fa flaticon-nature-2"
       ],
-      "background":"#F0E68C"
+      "background": "KHAKI"
     },
     "forest": {
       "icon": [
         "fa flaticon-forest",
-        "fa flaticon-nature-3"
+        "fa flaticon-nature-2"
       ],
-      "background":"#90EE90"
+      "background": "LIGHTGREEN"
     },
     "trees": {
       "icon": [
         "fa flaticon-forest",
-        "fa flaticon-nature-3"
+        "fa flaticon-nature-2"
       ],
-      "background":"#90EE90"
+      "background": "LIGHTGREEN"
     },
     "jungle": {
       "icon": [
         "fa flaticon-forest",
-        "fa flaticon-nature-3"
+        "fa flaticon-nature-2"
       ],
-      "background":"#90EE90"
+      "background": "LIGHTGREEN"
     },
     "ancient jungle": {
       "icon": [
         "fa flaticon-forest",
-        "fa flaticon-nature-3"
+        "fa flaticon-nature-2"
       ],
-      "background":"#90EE90"
+      "background": "LIGHTGREEN"
     },
     "ancient forest": {
       "icon": [
         "fa flaticon-forest",
-        "fa flaticon-nature-3"
+        "fa flaticon-nature-2"
       ],
-      "background":"#90EE90"
+      "background": "LIGHTGREEN"
     },
     "mountain": {
       "icon": [
@@ -517,7 +601,7 @@
         "gi gi-mountains",
         "gi gi-mountaintop"
       ],
-      "background":"saddlebrown"
+      "background": "saddlebrown"
     },
     "ancient mountain": {
       "icon": [
@@ -526,43 +610,61 @@
         "gi gi-mountains",
         "gi gi-mountaintop"
       ],
-      "background":"saddlebrown"
+      "background": "saddlebrown"
     },
     "cave": {
       "icon": "gi gi-mountain-cave",
-      "background":"saddlebrown"
+      "background": "saddlebrown"
     },
     "ancient cave": {
       "icon": "gi gi-mountain-cave",
-      "background":"saddlebrown"
+      "background": "saddlebrown"
     },
     "spaceport": {
       "icon": "fa fa-space-shuttle",
-      "background":"lightslategray"
+      "background": "lightslategray"
     },
     "sprowseship": {
-      "icon": "fa fa-space-shuttle",
-      "background":"lightslategray"
+      "icon": [
+        "fa fa-space-shuttle",
+        "fa flaticon-ufo"
+      ],
+      "background": "lightslategray"
     },
     "future commercial building": {
       "icon": "fa flaticon-city",
-      "background":"lightslategray"
+      "background": "lightslategray"
     },
     "future building": {
       "icon": "fa fa-building-o",
-      "background":"lightslategray"
+      "background": "lightslategray"
+    },
+    "museum": {
+      "icon": "gi gi-greek-temple"
+    },
+    "visitor building": {
+      "icon": "fa fa-building-o",
+      "background": "lightslategray"
     },
     "building": {
       "icon": "fa fa-building-o"
     },
+    "apartment building": {
+      "icon": "fa fa-building-o"
+    },
     "future goods room": {
       "icon": "fa fa-shopping-cart",
-      "background":"lightslategray"
+      "background": "lightslategray"
     },
     "beach": {
       "icon": "fa flaticon-palm-trees",
-      "background":"navajowhite",
-      "textColor":"darkblue"
+      "background": "navajowhite",
+      "textColor": "darkblue"
+    },
+    "sand": {
+      "icon": "gi gi-cool-spices",
+      "background": "navajowhite",
+      "textColor": "darkblue"
     },
     "fish": {
       "icon": [
@@ -570,26 +672,26 @@
         "gi gi-tropical-fish",
         "gi gi-angler-fish"
       ],
-      "background":"#00BEA6"
+      "background": "#00BEA6"
     },
     "cetacean": {
       "icon": [
         "gi gi-sperm-whale",
         "gi gi-dolphin"
       ],
-      "background":"#00BEA6"
+      "background": "#00BEA6"
     },
     "sea life": {
       "icon": "gi gi-shark-fin",
-      "background":"#0057BE"
+      "background": "#0057BE"
     },
     "lake life": {
       "icon": "gi gi-fishing",
-      "background":"#0057BE"
+      "background": "#0057BE"
     },
     "river life": {
       "icon": "gi gi-fishing",
-      "background":"#0057BE"
+      "background": "#0057BE"
     },
     "abyss life": {
       "icon": "gi gi-shark-fin",
@@ -598,14 +700,14 @@
     },
     "beach life": {
       "icon": "gi gi-scallop",
-      "background":"seashell"
+      "background": "seashell"
     },
     "shark": {
       "icon": [
         "gi gi-shark-jaws",
         "gi gi-shark-fin"
       ],
-      "background":"lightslategray"
+      "background": "lightslategray"
     },
     "crustacean": {
       "icon": [
@@ -613,11 +715,11 @@
         "gi gi-crab",
         "gi gi-sad-crab"
       ],
-      "background":"brown"
+      "background": "brown"
     },
     "cnidaria": {
       "icon": "gi gi-jellyfish",
-      "background":"#00BEA6"
+      "background": "#00BEA6"
     },
     "mollusk": {
       "icon": [
@@ -625,14 +727,14 @@
         "gi gi-octopus",
         "gi gi-snail"
       ],
-      "background":"seashell"
+      "background": "seashell"
     },
     "clam": {
       "icon": [
         "gi gi-oyster-pearl",
         "gi gi-scallop"
       ],
-      "background":"seashell"
+      "background": "seashell"
     },
     "bird": {
       "icon": [
@@ -641,38 +743,38 @@
         "gi gi-bird-mask",
         "gi gi-bird-twitter"
       ],
-      "background":"skyblue"
+      "background": "skyblue"
     },
     "sky life": {
       "icon": "gi gi-bird-twitter",
-      "background":"skyblue"
+      "background": "skyblue"
     },
     "iceberg": {
       "icon": "gi gi-iceberg",
-      "background":"azure"
+      "background": "azure"
     },
     "water": {
       "icon": "fa fa-tint",
-      "background":"#0057BE"
+      "background": "#0057BE"
     },
     "oil": {
       "icon": "fa fa-tint",
-      "background":"goldenrod"
+      "background": "goldenrod"
     },
     "sea water": {
       "icon": "fa fa-tint",
-      "background":"#0057BE"
+      "background": "#0057BE"
     },
     "grease": {
       "icon": "fa fa-tint",
-      "background":"black"
+      "background": "black"
     },
     "ink": {
       "icon": "fa fa-tint"
     },
     "tear": {
       "icon": "fa fa-tint",
-      "background":"black"
+      "background": "black"
     },
     "small mammal": {
       "icon": [
@@ -681,7 +783,7 @@
         "gi gi-rabbit",
         "gi gi-bat"
       ],
-      "background":"saddlebrown"
+      "background": "saddlebrown"
     },
     "insect": {
       "icon": [
@@ -697,32 +799,38 @@
         "gi gi-dragonfly",
         "gi gi-insect-jaws"
       ],
-      "background":"maroon"
+      "background": "maroon"
     },
     "grass": {
       "icon": "gi gi-grass",
-      "background":"forestgreen"
+      "background": "forestgreen"
     },
     "dinosaur": {
       "icon": [
         "gi gi-dinosaur-rex",
         "gi gi-dinosaur-bones"
       ],
-      "background":"maroon"
+      "background": "maroon"
     },
     "snake": {
       "icon": "gi gi-snake",
-      "background":"gainsboro",
-      "textColor":"darkgreen"
+      "background": "gainsboro",
+      "textColor": "darkgreen"
     },
     "hospital": {
-      "icon": "fa fa-hospital-o"
+      "icon": "fa fa-hospital-o",
+      "background": "white",
+      "textColor": "red"
     },
     "factory": {
       "icon": "gi gi-factory"
     },
     "house": {
       "icon": "gi gi-house"
+    },
+    "roof": {
+      "icon": "fa fa-home",
+      "background": "slategray"
     },
     "medieval house": {
       "icon": "gi gi-house"
@@ -738,6 +846,9 @@
     },
     "future tv": {
       "icon": "gi gi-tv"
+    },
+    "small bookshelf": {
+      "icon": "gi gi-bookshelf"
     },
     "bookshelf": {
       "icon": "gi gi-bookshelf"
@@ -756,37 +867,44 @@
     },
     "laptop": {
       "icon": "fa fa-laptop",
-      "background":"slategrey"
+      "background": "slategray"
     },
     "desk": {
       "icon": "gi gi-desk-lamp"
     },
     "flowers": {
       "icon": "gi gi-flowers",
-      "background":"mistyrose"
+      "background": "mistyrose"
     },
     "brain": {
       "icon": "gi gi-brain"
     },
     "paper": {
       "icon": "gi gi-papers",
-      "background":"antiquewhite"
+      "background": "antiquewhite"
     },
     "rock": {
       "icon": "gi gi-rock",
-      "background":"sienna"
+      "background": "sienna"
+    },
+    "bathroom": {
+      "icon": "fa fa-bathtub",
+      "background": "ivory"
     },
     "bathtub": {
       "icon": "fa fa-bathtub",
-      "background":"ivory"
+      "background": "ivory"
     },
     "shower": {
       "icon": "fa fa-shower",
-      "background":"ivory"
+      "background": "ivory"
     },
     "mirror": {
       "icon": "gi gi-mirror-mirror",
-      "background":"lightslategrey"
+      "background": "lightslategray"
+    },
+    "bedroom": {
+      "icon": "gi gi-bed"
     },
     "bed": {
       "icon": "gi gi-bed"
@@ -796,81 +914,81 @@
     },
     "medieval chest": {
       "icon": "gi gi-chest",
-      "background":"saddlebrown"
+      "background": "saddlebrown"
     },
     "meat": {
       "icon": "gi gi-meat",
-      "background":"maroon"
+      "background": "maroon"
     },
     "food": {
       "icon": "gi gi-sliced-bread",
-      "background":"wheat"
+      "background": "wheat"
     },
     "medieval food": {
       "icon": "gi gi-sliced-bread",
-      "background":"wheat"
+      "background": "wheat"
     },
     "spices": {
       "icon": "gi gi-cool-spices",
-      "background":"maroon"
+      "background": "maroon"
     },
     "medieval meat": {
       "icon": "gi gi-meat",
-      "background":"maroon"
+      "background": "maroon"
     },
     "wall": {
       "icon": "gi gi-brick-wall",
-      "background":"maroon"
+      "background": "maroon"
     },
     "future wall": {
       "icon": "gi gi-brick-wall",
-      "background":"slategrey"
+      "background": "slategray"
     },
     "medieval wall": {
       "icon": "gi gi-defensive-wall",
-      "background":"slategrey"
+      "background": "slategray"
     },
     "walls": {
       "icon": "gi gi-brick-wall",
-      "background":"maroon"
+      "background": "maroon"
     },
     "door": {
       "icon": "gi gi-wooden-door"
     },
     "future door": {
       "icon": "gi gi-steel-door",
-      "background":"slategrey"
+      "background": "slategray"
     },
     "townwall": {
       "icon": "gi gi-defensive-wall",
-      "background":"slategrey"
+      "background": "slategray"
     },
     "soil": {
       "icon": "gi gi-ground-sprout",
-      "background":"sienna"
+      "background": "sienna"
     },
     "mud": {
       "icon": "gi gi-ground-sprout",
-      "background":"sienna"
+      "background": "sienna"
     },
     "worm": {
       "icon": "gi gi-leeching-worm"
     },
     "branches": {
-      "icon": "gi gi-lightning-branchesh",
-      "background":"forestgreen"
+      "icon": "gi gi-lightning-branches",
+      "background": "forestgreen"
     },
     "branch": {
       "icon": "gi gi-tree-branch",
-      "background":"forestgreen"
+      "background": "forestgreen"
     },
     "leaves": {
       "icon": "gi gi-three-leaves",
-      "background":"forestgreen"
+      "background": "forestgreen"
     },
     "nest": {
       "icon": "gi gi-three-leaves",
-      "background":"saddlebrown"
+      "background": "saddlebrown"
     },
     "leaf": {
       "icon": [
@@ -884,26 +1002,26 @@
         "gi gi-zigzag-leaf",
         "gi gi-linden-leaf"
       ],
-      "background":"forestgreen"
+      "background": "forestgreen"
     },
     "caveman settlement": {
       "icon": "gi gi-campfire"
     },
     "farm": {
       "icon": "fa flaticon-hay-rolls",
-      "background":"wheat"
+      "background": "wheat"
     },
     "medieval farm": {
       "icon": "fa flaticon-hay-rolls",
-      "background":"wheat"
+      "background": "wheat"
     },
     "medieval cemetery": {
       "icon": "gi gi-graveyard",
-      "background":"grey"
+      "background": "gray"
     },
     "cemetery": {
       "icon": "gi gi-graveyard",
-      "background":"grey"
+      "background": "gray"
     },
     "grave": {
       "icon": "gi gi-pirate-grave"
@@ -916,13 +1034,13 @@
     },
     "police station": {
       "icon": "gi gi-police-officer-head",
-      "background":"navy",
-      "textColor":"white"
+      "background": "navy",
+      "textColor": "white"
     },
     "fire department": {
       "icon": "fa fa-fire-extinguisher",
-      "background":"darkRed",
-      "textColor":"white"
+      "background": "darkRed",
+      "textColor": "white"
     },
     "library": {
       "icon": "gi gi-bookshelf"
@@ -956,37 +1074,66 @@
       "icon": "gi gi-salt-shaker"
     },
     "fire": {
-      "icon": "gi gi-celebration-fire"
+      "icon": "gi gi-celebration-fire",
+      "background": "darkred"
+    },
+    "magma": {
+      "icon": "gi gi-celebration-fire",
+      "background": "red"
     },
     "ice": {
       "icon": "gi gi-ice-cube",
-      "background":"azure"
+      "background": "azure"
     },
     "steel": {
       "icon": "gi gi-metal-bar",
-      "background":"steelblue"
+      "background": "steelblue"
     },
     "earth": {
       "icon": "gi gi-earth-america"
     },
     "blood": {
       "icon": "gi gi-blood",
-      "background":"darkred"
+      "background": "darkred"
     },
     "scar": {
       "icon": "gi gi-scar-wound",
-      "background":"oldlace"
+      "background": "oldlace"
     },
     "bone": {
       "icon": "gi gi-jawbone",
-      "background":"oldlace"
+      "background": "oldlace"
     },
     "bones": {
       "icon": "gi gi-jawbone",
-      "background":"oldlace"
+      "background": "oldlace"
     },
     "portal": {
       "icon": "gi gi-portal"
+    },
+    "person": {
+      "icon": [
+        "fa fa-female",
+        "fa fa-male"
+      ]
+    },
+    "ancient person": {
+      "icon": [
+        "fa fa-female",
+        "fa fa-male"
+      ]
+    },
+    "future person": {
+      "icon": [
+        "fa fa-female",
+        "fa fa-male"
+      ]
+    },
+    "tourist": {
+      "icon": [
+        "fa fa-female",
+        "fa fa-male"
+      ]
     },
     "woman": {
       "icon": "fa fa-female"
@@ -1004,6 +1151,9 @@
       "icon": "fa fa-male"
     },
     "body": {
+      "icon": "fa fa-male"
+    },
+    "visitor body": {
       "icon": "fa fa-male"
     },
     "arm": {
@@ -1135,6 +1285,9 @@
     "shop": {
       "icon": "gi gi-shop"
     },
+    "souvenir shop": {
+      "icon": "gi gi-shop"
+    },
     "medieval shop": {
       "icon": "gi gi-shop"
     },
@@ -1162,17 +1315,53 @@
     "table": {
       "icon": "gi gi-table"
     },
+    "bench": {
+      "icon": "gi gi-table"
+    },
     "medieval table": {
       "icon": "gi gi-table"
     },
     "ghost": {
-      "icon": "gi gi-ghost"
+      "icon": "gi gi-ghost",
+      "background": "whiteSmoke"
     },
     "road": {
-      "icon": "fa fa-road"
+      "icon": "fa fa-road",
+      "background": "black",
+      "textColor": "yellow"
     },
     "street": {
-      "icon": "fa fa-road"
+      "icon": "fa fa-road",
+      "background": "black",
+      "textColor": "yellow"
+    },
+    "pavement": {
+      "icon": "fa fa-road",
+      "background": "black",
+      "textColor": "yellow"
+    },
+    "car": {
+      "icon": [
+        "gi gi-city-car",
+        "fa fa-car"
+      ],
+      "background": "black",
+      "textColor": "red"
+    },
+    "driven car": {
+      "icon": [
+        "gi gi-city-car",
+        "fa fa-car"
+      ],
+      "background": "black",
+      "textColor": "red"
+    },
+    "garage": {
+      "icon": [
+        "gi gi-city-car",
+        "fa fa-car"
+      ],
+      "background": "gray"
     },
     "paragraph": {
       "icon": "fa fa-paragraph"
@@ -1184,6 +1373,9 @@
       "icon": "gi gi-stone-block"
     },
     "microchip": {
+      "icon": "gi gi-microchip"
+    },
+    "electronics": {
       "icon": "gi gi-microchip"
     },
     "nanobot": {
@@ -1288,7 +1480,16 @@
         "gi gi-white-cat"
       ]
     },
+    "psyche": {
+      "icon": "fa flaticon-interface"
+    },
+    "visitor psyche": {
+      "icon": "fa flaticon-interface"
+    },
     "grass thoughts": {
+      "icon": "fa flaticon-interface"
+    },
+    "fish thoughts": {
       "icon": "fa flaticon-interface"
     },
     "tree thoughts": {

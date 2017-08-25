@@ -52,6 +52,10 @@ class Table {
 };
 
 Table.roll = function(obj){
+	if(obj.constructor === ({}).constructor && obj.rows){
+		obj = new Table(obj);
+	}
+
 	if(obj.roll){
 		return obj.roll();
 	}

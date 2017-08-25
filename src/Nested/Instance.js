@@ -29,8 +29,14 @@ class Instance{
 		this.name = thing.getName();
 		this.icon = thing.getIcon(this.name);
 		this.cssClass = thing.cssClass;
-		if(thing.autoColor)
-			this.cssClass+=" "+Styler.strToColor(this.name);
+		this.textColor = thing.textColor;
+		if(thing.autoColor){
+			var color = Styler.strToColor(this.name);
+			if(color){
+				this.cssClass+=" "+color;
+				this.textColor = null;
+			}
+		}
 		if(this.icon=="empty")
 			this.cssClass+=" empty";
 
@@ -115,6 +121,13 @@ class Instance{
 
 		this.grown = true;
 	}//grow()
+}
+
+Instance.getInstance = function(index){
+	if(isNaN(index) || index > instances.length){
+		throw new Error("Invalid index "+index+" when trying to get instance.");
+	}
+	return instances[index];
 }
 
 

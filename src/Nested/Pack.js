@@ -25,7 +25,11 @@ class Pack{
 		//create things
 		var thing;
 		for(var name in this.things){
-			thing = new Thing(Object.assign({name:""+name}, this.things[name]));
+			thing = this.things[name];
+			if(thing instanceof Array){
+				thing = {contains:[].concat(thing)}
+			}
+			thing = new Thing(Object.assign({name:""+name}, thing));
 			Styler.addThing(thing);
 		}
 
@@ -33,6 +37,10 @@ class Pack{
 
 		if(typeof this.beforeLoad === "function")
 			this.afterLoad();
+
+		console.log("Loaded pack: "+this.name
+			+"\n\t Added "+Object.keys(this.things).length+" things."
+			+"\n\t Added "+Object.keys(this.tables).length+" tables.");
 	}
 	checkDependencies(loaded){
 		this.dependencies.forEach(function(dependency){
@@ -45,8 +53,10 @@ class Pack{
 
 Pack.doImport = function(callback){
 	var packs = localStorage["packs"];
-	if(!(packs instanceof Array)){
+	if(!packs){
 		localStorage["packs"] = packs = ["./packs/nested-orteil.json","./packs/nested-orteil-extended.json"];
+	}else{
+		packs = packs.split(",");
 	}
 
 	var result = {

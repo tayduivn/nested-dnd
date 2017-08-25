@@ -61,9 +61,6 @@ i.gi{
 #title{
 	margin-bottom:30px;
 }
-div.child h1{
-  color:#000;
-}
 .child-inner{
 	box-shadow:0px 0px 4px rgba(0, 0, 0, 0.3);
 	background: #eee;
@@ -74,7 +71,7 @@ div.child h1{
 	position:relative;
   text-align: center;
 }
-.child-inner:hover{
+a .child-inner:hover{
   opacity:0.8;
 }
 
@@ -84,6 +81,7 @@ a.child{
 
 a.child:hover, a.child:focus{
   color: slategray;
+  text-decoration: none;
 }
 
 .child i{
@@ -100,7 +98,9 @@ a.child:hover, a.child:focus{
 	bottom:0;
 	left:0;
 }
-
+div.child .child-inner{
+  cursor:default;
+}
 .child-inner.empty {
 	height:auto;
 }
@@ -234,27 +234,37 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
 }
 
 @mixin darkBG($color) {
-    background-color: $color;
-    color: adjust-color($color, $lightness: 55%);
+  lightness: lightness($color);
+  background-color: $color;
+  color: adjust-color($color, $lightness: 55%);
 
-    &.parent .btn{
-    	@include button-variant(
-    		adjust-color($color, $lightness: 55%), 
-			adjust-color($color, $lightness: 10%), 
-			adjust-color($color, $lightness: 5%))
-    }
+  &.parent .btn{
+  	@include button-variant(
+  		adjust-color($color, $lightness: 55%), 
+		adjust-color($color, $lightness: 10%), 
+		adjust-color($color, $lightness: 5%))
+  }
 }
 
 @mixin lightBG($color) {
-    background-color: $color;
-    color: adjust-color($color, $lightness: -45%);
+  lightness: lightness($color);
+  background-color: $color;
 
-    &.parent .btn{
-    	@include button-variant(
-    		adjust-color($color, $lightness: -45%), 
-			adjust-color($color, $lightness: -10%), 
-			adjust-color($color, $lightness: -15%))
-    }
+  $color-adjust: -25%;
+  @if (lightness($color) > 60) {
+    $color-adjust: -45%;
+  }
+  @if (lightness($color) > 90) {
+    $color-adjust: -55%;
+  }
+  color: adjust-color($color, $lightness: $color-adjust);
+
+  &.parent .btn{
+  	@include button-variant(
+  		adjust-color($color, $lightness: -30%), 
+		adjust-color($color, $lightness: -10%), 
+		adjust-color($color, $lightness: -15%))
+  }
 }
 
 @for $i from 1 through length($html5colors) {
@@ -262,7 +272,7 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
   $name: nth($html5colorNames, $i);
 
   .#{$name}{
-    @if lightness($color) > 50%{
+    @if (lightness($color) > 49) {
       @include lightBG($color)
     }
     @else{
@@ -271,50 +281,35 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
   }
 }
 
-.child-inner.pink,.container-fluid.pink{
-	@include darkBG(#FF1493);
-}
-.child-inner.magenta,.container-fluid.magenta{
-	@include darkBG(#FF00FF);
-}
-.child-inner.orange,.container-fluid.orange{
-	@include darkBG(#FF4500);
-	color:adjust-color(#FF4500, $lightness: 40%);
-}
-
-.child-inner.blueish,.container-fluid.blueish{
-	@include darkBG(#00008B);
-}
-.child-inner.turquoise,.container-fluid.turquoise{
-	@include darkBG(#40E0D0);
-}
-.child-inner.teal,.container-fluid.teal{
-	@include darkBG(#008080);
-}
-.child-inner.gold,.container-fluid.gold,
-.child-inner.golden,.container-fluid.golden{
-	@include darkBG(#DAA520);
-}
-.child-inner.pale,.child-inner.faint,
-.container-fluid.pale,.container-fluid.faint{
-	@include lightBG(#fff);
-	background:white;
-	color: #999;
-	padding:14px;
-	border:1px solid #eee;
-}
-.child-inner.multicolored,.child-inner.rainbow,
-.container-fluid.multicolored,.container-fluid.rainbow{
-	color:white;
-	text-shadow: 1px 1px grey;
+.rainbow, .child-inner.rainbow{
+	color:black;
+	text-shadow: 1px 1px white;
 	background: red; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(top left, magenta, orange, yellow, SpringGreen, cyan); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(right bottom, magenta, orange, yellow, SpringGreen, cyan); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(right bottom, magenta, orange, yellow, SpringGreen, cyan); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to right bottom, magenta, orange, yellow, SpringGreen, cyan); /* Standard syntax (must be last) */
+  background: -webkit-linear-gradient(top left, magenta, orange, yellow, SpringGreen, cyan); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right bottom, magenta, orange, yellow, SpringGreen, cyan); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right bottom, magenta, orange, yellow, SpringGreen, cyan); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right bottom, magenta, orange, yellow, SpringGreen, cyan); /* Standard syntax (must be last) */
 }
-.child-inner.brown,.container-fluid.brown{
-	@include darkBG(#8b4513);
+.glow{
+  box-shadow:0px 0px 15px RGBA(255, 255, 224,0.9);
+  @include lightBG(#FFFACD);
+}
+.sharkverse{
+  background-image:url('http://orteil.dashnet.org/nestedSharkverse.png');
+}
+.baconverse{
+  background-color: maroon;
+  color:white;
+  background-image:url('http://orteil.dashnet.org/nestedBaconverse.png');
+}
+.doughnutverse{
+  background-color: pink;
+  background-image:url('http://orteil.dashnet.org/nestedDoughnutverse.png');
+  color:#000;
+  text-shadow: 1px 1px MOCCASIN;
+}
+.lasagnaverse{
+  background-image:url('http://orteil.dashnet.org/nestedLasagnaverse.png');
 }
 
 @media (min-width:1200px){
