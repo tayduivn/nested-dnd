@@ -12,9 +12,9 @@ class Thing{
 		this.afMake = options.afterMake;
 		this.b4Render = options.beforeRender;
 
-		options = Object.assign({}, options, (
-			//overwrite existing thing
-			things[options.name]) ? clean(things[options.name]) : {} );
+		if(things[options.name]){
+			options = Object.assign({}, things[options.name], options );
+		}
 		saveOptions(this,options);
 
 		//data clean
