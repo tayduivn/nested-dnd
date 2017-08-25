@@ -1,4 +1,41 @@
-{
+function createMirrorPlane(instance, Instance, Thing, name){
+	var thing = Thing.get(name);
+
+	instance.children.forEach(function(child){
+		if(typeof child !== "number") return;
+		child = Instance.get(child);
+		child.background = thing.background;
+		child.textColor = thing.textColor;
+		if(child.cssClass.indexOf(thing.background) === -1)
+			child.cssClass+=" "+thing.background;
+		if(child.data.mirrors !== undefined && Instance.get(child.data.mirrors).thing.contains){
+			child.thing = styleAThing(child.thing,name,Thing);
+		}
+	});
+}
+
+function styleAThing(thing, styleName, Thing){
+	var prefix = styleName.split(" ")[0]+" ";
+	if(thing.isa && thing.isa.startsWith(styleName)){
+		return thing;
+	}
+
+	var originalThing = thing.name;
+	if(!originalThing) originalThing = "";
+	if(Thing.exists(prefix+originalThing)){
+		return Thing.get(prefix+originalThing);
+	}
+
+	thing = Thing.add({
+		"name": prefix+originalThing,
+		"isa": originalThing
+	});
+	thing.isa = styleName;
+
+  return thing;
+}
+
+module.exports = {
   "name": "dnd",
   "version": "0.0.0",
   "description": "",
@@ -27,6 +64,55 @@
       ],
       "icon": "gi gi-fluffy-cloud",
       "background": "aliceBlue"
+    },
+    "mirror plane":{
+    	"contains": ["fake"],
+    	beforeRender:function(instance, Instance, Thing){
+    		if(typeof instance.data.mirrors === "undefined") return;
+
+    		if(typeof instance.data.mirrors === "string"){
+    			var index = Thing.get(instance.data.mirrors).uniqueInstance;
+    			if(typeof index==='number'){
+    				instance.data.mirrors = index;
+    			}else return;
+    		}
+
+    		var mirrorInstance = Instance.get(instance.data.mirrors);
+    		if(!mirrorInstance.grown) 
+    			mirrorInstance.grow();
+
+    		if(instance.data.mirrorChildrenCopy === JSON.stringify(mirrorInstance.children)){
+    			return;
+    		}
+
+    		//TODO: copy contents of children and transform
+    		instance.children = [];
+    		mirrorInstance.children.forEach(function(mirrorChild){
+    			if(typeof mirrorChild==="number"){
+    				mirrorChild = Instance.get(mirrorChild);
+
+    				//create a new mirror plane thing
+    				var mirrorThing = mirrorChild.thing;
+    				var childThing = styleAThing(mirrorChild.thing,"mirror plane",Thing);
+
+    				//create new child and copy mirror
+	    			var child = new Instance(childThing);
+	    			var newId = child.id;
+	    			Object.assign(child,mirrorChild);
+	    			child.id = newId;
+	    			child.parent = instance.id;
+	    			child.thing = childThing;
+	    			child.data.mirrors = mirrorChild.id;
+
+	    			instance.children.push(child.id);
+    			}
+    			if(typeof mirrorChild==="string"){
+    				instance.children.push(mirrorChild);
+    			}
+    		});
+
+    		instance.data.mirrorChildrenCopy = JSON.stringify(mirrorInstance.children);
+    	}
     },
     "earth plane": {
       "contains": [
@@ -87,11 +173,14 @@
       "background": "darkred",
       "icon": "gi gi-daemon-skull"
     },
-    "undead plane": [
-      "hostile citadel,1-3",
-      "hostile palace,1-3",
-      "hostile temple,1-5"
-    ],
+    "undead mirror plane": { 
+    	"isa":"mirror plane",
+    	beforeRender:function(instance, Instance, Thing){
+    		createMirrorPlane(instance, Instance, Thing, "undead mirror plane");
+    	},
+    	"background":"gray",
+    	"textColor":null
+    },
     "abyssal plane": {
       "contains": [
         "hostile citadel,1-3",
@@ -106,6 +195,14 @@
       "palace,1-3",
       "temple,1-5"
     ],
+    "fey mirror plane":{
+    	"isa":"mirror plane",
+    	beforeRender:function(instance, Instance, Thing){
+    		createMirrorPlane(instance, Instance, Thing, "fey mirror plane");
+    	},
+    	"background":"lavenderblush",
+    	"textColor":"purple"
+    },
     "astral color pool": [
       "*COLORS*| astral pool"
     ],
@@ -143,7 +240,7 @@
       "textColor": "DodgerBlue"
     },
     "gaseous bubble": {
-      "namgen": "*COLORS*| gaseous bubble"
+      "namegen": "*COLORS*| gaseous bubble"
     },
     "Great Wheel": {
       "contains": [
@@ -153,17 +250,17 @@
         "Inner Planes",
         "Outer Planes"
       ],
-      "isa":"cosmology"
+      "isa": "cosmology"
     },
     "World Axis": {
       "contains": [
         "Prime Material Plane",
-        "Shadowfell (Axis)",
+        "Shadowfell",
         "Feywild",
         "Astral Sea",
         "Elemental Chaos"
       ],
-      "isa":"cosmology"
+      "isa": "cosmology"
     },
     "World Tree": {
       "contains": [
@@ -174,7 +271,7 @@
         "Cynosure",
         "Fugue Plane"
       ],
-      "isa":"cosmology"
+      "isa": "cosmology"
     },
     "Inner Planes": {
       "contains": [
@@ -262,9 +359,8 @@
         "Ethereal Plane",
         "Astral Plane"
       ],
-      "background": "whitesmoke",
-      "icon": "gi gi-dust-cloud",
-      "background": "wheat"
+      "background": "wheat",
+      "icon": "gi gi-dust-cloud"
     },
     "Celestial Planes": {
       "contains": [
@@ -303,12 +399,46 @@
       "Jotunheim",
       "Warrior's Rest"
     ],
+    "ethereal plane": {
+      "icon": "gi gi-cloud-ring gi-spin",
+      "background":"whitesmoke"
+    },
     "Ethereal Plane": {
+      "isa": "ethereal plane",
       "contains": [
-        "Ravenloft",
-        ".plane of existence"
-      ],
-      "icon": "gi gi-cloud-ring gi-spin"
+        "Border Ethereal",
+        "Deep Ethereal",
+        "Ravenloft"
+      ]
+    },
+    "Border Ethereal": {
+      "isa": "ethereal plane",
+      "contains": [
+        {
+          "namegen": "Prime Material Plane",
+          "isa":"ethereal mirror plane",
+          "data": {
+            "mirrors": "Prime Material Plane"
+          },
+          "icon": "fa flaticon-nature-4 fa-rotate-90",
+        },
+        {
+        	"namegen": "Inner Planes",
+        	"isa":"ethereal mirror plane",
+          "data": {
+            "mirrors": "Inner Planes"
+          },
+          "icon": "gi gi-at-sea"
+        }
+      ]
+    },
+    "ethereal mirror plane":{
+    	"isa":"mirror plane",
+    	beforeRender:function(i, I, T){
+    		createMirrorPlane(i,I,T,"ethereal mirror plane");
+    	},
+    	"background":"whitesmoke",
+    	"textColor":null
     },
     "The Abyss": {
       "isa": "abyssal plane"
@@ -317,7 +447,6 @@
       "contains": [
         "*RANDOM*"
       ],
-      "afterMake": "chaosTheory()",
       "icon": "gi gi-time-trap",
       "background": "gray"
     },
@@ -374,33 +503,21 @@
       "namegen": "Arvandor (also known as Arborea or Olympus)"
     },
     "Shadowfell": {
-      "contains": [
-        ".undead plane"
-      ],
-      "icon": [
-        "fa fa-globe",
-        "gi gi-earth-asia-oceania",
-        "gi gi-earth-africa-europe",
-        "gi gi-earth-america"
-      ],
-      "background": "gray"
+      "isa": "undead mirror plane",
+      "data": {
+        "mirrors": "Prime Material Plane"
+      },
+      "icon": "fa flaticon-nature-4 fa-rotate-90",
     },
-    "Shadowfell (Axis)": {
-      "namegen": "Shadowfell",
+    "Plane of Shadow": {
       "isa": "Shadowfell"
     },
-    "Plane of Shadow": [
-      ".Shadowfell"
-    ],
     "Feywild": {
-      "icon": [
-        "fa fa-globe",
-        "gi gi-earth-asia-oceania",
-        "gi gi-earth-africa-europe",
-        "gi gi-earth-america"
-      ],
-      "background": "lavenderblush",
-      "textColor": "purple"
+      "isa": "fey mirror plane",
+      "data": {
+        "mirrors": "Prime Material Plane"
+      },
+      "icon": "fa flaticon-nature-4 fa-rotate-90"
     },
     "Ravenloft": {
       "contains": [
@@ -498,7 +615,7 @@
     },
     "Hades/The Gray Waste": {
       "isa": "fiendish plane",
-      "background":"gray"
+      "background": "gray"
     },
     "Nirvana/Mechanus": {
       "isa": "fiendish plane"
@@ -593,4 +710,4 @@
       "ilia"
     ]
   }
-}
+};

@@ -104,7 +104,7 @@ Table.getTable = function(str){
 	return table;
 }
 
-Table.addTables = function(newTables){
+Table.addAll = function(newTables){
 	Object.assign(tables, newTables);
 }
 

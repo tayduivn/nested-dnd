@@ -1,6 +1,6 @@
 import Thing from './Thing.js';
 import Table from './Table.js';
-import Styler from './Styler.js';
+let vm = require('vm');
 
 class Pack{
 	constructor(options){
@@ -22,18 +22,8 @@ class Pack{
 		if(this.defaultSeed)
 				result.defaultSeed = this.defaultSeed;
 
-		//create things
-		var thing;
-		for(var name in this.things){
-			thing = this.things[name];
-			if(thing instanceof Array){
-				thing = {contains:[].concat(thing)}
-			}
-			thing = new Thing(Object.assign({name:""+name}, thing));
-			Styler.addThing(thing);
-		}
-
-		Table.addTables(this.tables);
+		Thing.addAll(this.things);
+		Table.addAll(this.tables);
 
 		if(typeof this.beforeLoad === "function")
 			this.afterLoad();
@@ -68,8 +58,16 @@ Pack.doImport = function(callback){
 	var numFetched = 0;
 	packs.forEach(function(url, index){
 
-		fetch(url).then((response) => response.json())
+		fetch(url).then(function(response){
+			if(url.endsWith('.json'))
+				return response.json();
+			else
+				return response.text();
+		})
 		.then(function(pack){
+			if(typeof pack === "string"){
+				pack = vm.runInThisContext(pack, 'remote_modules/nestedscript.js');
+			}
 			packs[index] = new Pack(pack);
 			numFetched++;
 
@@ -87,11 +85,10 @@ Pack.doImport = function(callback){
 		.catch((error) => {
 			numFetched++;
 			packs[index] = null;
-			console.error("could not load pack"+url+": "+error);
+			console.error("could not load pack "+url);
+			console.error(error);
 		});
 	});
-
-	
 }
 
 export default Pack;

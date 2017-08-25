@@ -9,14 +9,6 @@ let instances = [];
  */
 class Instance{
 	constructor(thing){
-		this.id = null;
-		this.name = null;
-		this.parent = null;
-		this.children = []; //indexes of children and string descriptions
-		this.thing = thing;
-		this.grown = false;
-		this.icon = null;
-
 		if(typeof thing === "undefined")
 			throw new Error("thing is required when creating an Instance");
 
@@ -26,10 +18,22 @@ class Instance{
 		if(thing.isa && !Thing.exists(thing.isa))
 			throw new Error("trying to extend a non-existent thing "+thing.isa);
 
+		if(thing.uniqueInstance instanceof Number && instances[thing.uniqueInstance]){
+			throw new Error("Cannot make more than one instance of "+thing.name);
+		}
+
+		thing.beforeMake(this);
+
+		this.id = null;
+		this.parent = null;
+		this.children = []; //indexes of children and string descriptions
+		this.thing = thing;
+		this.grown = false;
 		this.name = thing.getName();
-		this.icon = thing.getIcon(this.name);
+		this.icon = thing.getIcon();
 		this.cssClass = thing.cssClass;
 		this.textColor = thing.textColor;
+		this.data = thing.data;
 		if(thing.autoColor){
 			var color = Styler.strToColor(this.name);
 			if(color){
@@ -37,43 +41,34 @@ class Instance{
 				this.textColor = null;
 			}
 		}
-		if(this.icon=="empty")
-			this.cssClass+=" empty";
+		if(this.icon === "empty")
+			this.cssClass += " empty";
 
 		//save
 		this.id = instances.length;
+		if(thing.uniqueInstance === true) thing.uniqueInstance = this.id;
 		instances.push(this);
+
+		thing.afterMake(this);
 	}//contructor()
 
-	getBlueprint(){
-		var blueprint =this.thing.contains;
-		if(this.thing.isa){
-			var superThing = Thing.get(this.thing.isa);
-			blueprint = 
-				(this.thing.extend) ? superThing.contains.concat(this.thing.contains) 
-				: (!this.thing.contains) ? superThing.contains 
-				: this.thing.contains;
-		}
-		return blueprint;
-	}
-
-	getBGClass(){
-		return this.icon.replace("gi g","")
-  		.replace("fa flaticon-","i-")
-  		.replace("fa fa-","i-")
-  		.replace("fa-spin","")
-  		.replace("gi-spin","")
-  		.replace("animated","")
+	beforeRender(){
+		this.thing.beforeRender(this);
 	}
 	
 	//process contains into instances
 	grow(){
 		this.children = [];
-		var blueprint = this.getBlueprint();
+		var blueprint = this.thing.contains;
 
 		var children = this.children;
 		for(var i = 0,child; i < blueprint.length; i++){
 			child = blueprint[i];
+
+			if(child === undefined){
+				console.error("Child of "+this.name+" is undefined");
+				return;
+			}
 
 			//this is a plain object, and was likely created in a Pack.
 			if(child.constructor === ({}).constructor){
@@ -81,7 +76,7 @@ class Instance{
 					child = new Table(child);
 				}
 				else{
-					var inst = new Instance(new Thing(child));
+					var inst = new Instance(Thing.add(child));
 					inst.parent = this.id;
 					children.push(inst.id);
 					continue;
@@ -123,7 +118,7 @@ class Instance{
 	}//grow()
 }
 
-Instance.getInstance = function(index){
+Instance.get = function(index){
 	if(isNaN(index) || index > instances.length){
 		throw new Error("Invalid index "+index+" when trying to get instance.");
 	}

@@ -22,7 +22,7 @@ class Ancestors extends Component {
 		if(this.parentID === null) 
 			return <span></span>
 
-		var parentInst = Instance.getInstance(this.parentID);
+		var parentInst = Instance.get(this.parentID);
 		var title = <span><i className="fa fa-angle-left"></i> {parentInst.name}</span>;
 		var ancestors = [];
 		var parent;
@@ -31,7 +31,7 @@ class Ancestors extends Component {
 			var current = parentInst.parent;
 			var _t = this;
   		while(current !== null){
-  			var ancestor = Instance.getInstance(current);
+  			var ancestor = Instance.get(current);
   			ancestors.push(
   				<MenuItem key={ancestors.length+1} eventKey={current}
   					onSelect={(key) => this.page.setSeed(key,true) } href={"#"+current}> 
@@ -93,18 +93,21 @@ class Nested extends Component {
  		if(!this.seed)
  			throw new Error(seed+" could not be found -- it is not a valid seed");
 
- 		this.seed = new Instance(this.seed);
+ 		this.setSeed(new Instance(this.seed).id);
 	}
 	setSeed(index, zoomOut){
 		//toggleAnimation(document.getElementsByClassName("child"));
 
 		/*document.getElementById("contains").className = "row animated "+(zoomOut?"zoomOutRight":"zoomOutLeft");*/
-		this.seed = Instance.getInstance(index);
-		var _t = this;
+		this.seed = Instance.get(index);
+		if(!this.seed.grown){
+  		this.seed.grow();
+		}
+  	this.seed.thing.beforeRender(this.seed);
 		
 		/*;
 		document.getElementById("contains").className = "row animated "+(zoomOut?"slideInLeft":"slideInRight");*/
-		_t.forceUpdate();
+		this.forceUpdate();
 		document.getElementById("title").className="animated fadeIn";
 		
 	}
@@ -112,11 +115,8 @@ class Nested extends Component {
   	if(!this.seed)
   		return <p>LOADING</p>
 
-  	if(!this.seed.grown)
-  		this.seed.grow();
-
   	return (
-    		<div id="content" className={"container-fluid "+this.seed.cssClass} style={{color:this.seed.textColor}}>
+    		<div id="content"  data-thing={this.seed.thing.name} className={"container-fluid "+this.seed.cssClass} style={{color:this.seed.textColor}}>
 
     				<div className="pull-right"><Settings /></div>
     				<h1 id="title" key={this.seed.name} >
@@ -137,14 +137,14 @@ class Nested extends Component {
 											</div>
 										)
 	    						}
-	    						var instance = Instance.getInstance(child);
+	    						var instance = Instance.get(child);
 	    						var inner = <div className={"child-inner "+instance.cssClass}
 	    							style={{color:instance.textColor}}>
 								      	<i className={instance.icon}></i>
 								      	<h1>{instance.name}</h1>
 								      </div>;
 
-	    						if(instance.getBlueprint().length ==0){
+	    						if(instance.thing.contains.length == 0){
 	    							return (
 	    								<div key={child}
 						          	className="child col-lg-2 col-md-3 col-sm-4 col-xs-6" 
