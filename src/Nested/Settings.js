@@ -1,37 +1,59 @@
 import React, { Component } from 'react';
-import { Button, Modal,FormGroup,ControlLabel,FormControl } from 'react-bootstrap';
+import { Button, Modal,FormGroup,ControlLabel,FormControl, Radio } from 'react-bootstrap';
 import Autosuggest from 'react-autosuggest';
 
 class SettingsModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-    	packs: localStorage.packs.replace(/,/g,"\n").replace(/\.\/packs\//g,""),
+    	pack: "custom",
+    	customPacks: localStorage.packs.replace(/,/g,"\n").replace(/\.\/packs\//g,""),
     	seed:localStorage.seed
     };
+
+    this.packMap = {
+    	"dnd": "./packs/dnd.js",
+    	"nested-orteil":"./packs/nested-orteil.json,./packs/nested-orteil-extended.json"
+    }
+
+    for(var name in this.packMap){
+    	if(localStorage.packs === this.packMap[name]){
+    		this.state.pack = name;
+    	}
+    }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
-  	if(event.target.id == "seed"){
+  	if(event.target.name == "seed"){
   		this.setState({ seed: event.target.value })
-  	}else	if(event.target.id == "packs"){
-  		this.setState({ packs: event.target.value })
+  	}else	if(event.target.name == "pack"){
+  		this.setState({ seed: "" })
+  		this.setState({ pack: event.target.value })
+  	}else	if(event.target.name == "customPacks"){
+  		this.setState({ customPacks: event.target.value })
   	}
   }
 
   handleSubmit(event) {
   	localStorage["seed"] = this.state.seed;
-  	var packs = this.state.packs.split("\n");
-  	packs.forEach(function(str, index){
-  		if(!str.startsWith("http"))
-  			packs[index] = "./packs/"+str
-  	});
-  	localStorage["packs"] = packs.join(",");
+
+  	if(this.state.pack == "custom"){
+  		var packs = this.state.customPacks.split("\n");
+	  	packs.forEach(function(str, index){
+	  		if(!str.startsWith("http"))
+	  			packs[index] = "./packs/"+str
+	  	});
+	  	localStorage["packs"] = packs.join(",");
+  	}else{
+  		localStorage["packs"] = this.packMap[this.state.pack];
+  	}
+  	
   	this.props.modal.close();
     event.preventDefault();
+    window.location.reload();
   }
 
   render() {
@@ -46,12 +68,25 @@ class SettingsModal extends React.Component {
 
 						<FormGroup controlId="seed">
 							<ControlLabel>Seed</ControlLabel>
-							<FormControl type="text" id="seed" value={this.state.seed} onChange={this.handleChange}  />
+							<FormControl type="text" name="seed" value={this.state.seed} onChange={this.handleChange}  />
 						</FormGroup>
 
-						<FormGroup controlId="packs">
-							<ControlLabel>Packs</ControlLabel>
-							<FormControl componentClass="textarea" id="packs" value={this.state.packs} onChange={this.handleChange}  />
+						<FormGroup>
+							<ControlLabel>Pack</ControlLabel>
+							<Radio name="pack" value="nested-orteil" checked={(this.state.pack === "nested-orteil") ? true : false} onChange={this.handleChange}>
+								Nested 0.3 (<a target="_blank" href="http://orteil.dashnet.org/nested">source</a>)
+							</Radio>
+							<Radio name="pack" value="dnd" checked={(this.state.pack === "dnd") ? true : false} onChange={this.handleChange}>
+								Dungeons & Dragons
+							</Radio>
+							<Radio name="pack" value="custom" checked={(this.state.pack === "custom") ? true : false} onChange={this.handleChange}>
+								Custom
+							</Radio>
+						</FormGroup>
+
+						<FormGroup controlId="packs" style={{display: (this.state.pack === "custom") ? "block":"none"}}>
+							<ControlLabel>Custom Packs</ControlLabel>
+							<FormControl componentClass="textarea" name="customPacks" value={this.state.customPacks} onChange={this.handleChange}  />
 						</FormGroup>
 
 					</Modal.Body>

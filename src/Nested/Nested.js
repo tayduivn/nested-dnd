@@ -85,8 +85,9 @@ class Nested extends Component {
 	getSeed(packs){
 		var seed = localStorage["seed"];
 
-		if(!seed)
+		if(!seed || !Thing.exists(seed)){
 			localStorage["seed"] = seed = packs.defaultSeed;
+		}
 
  		this.seed = Thing.get(seed);
 
