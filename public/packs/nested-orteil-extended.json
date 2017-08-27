@@ -4,10 +4,9 @@
   "description": "Adds missing things, icons and colors for things.",
   "author": "Cattegy",
   "dependencies": [
-    "nested-orteil"
+    "orteil-nested"
   ],
   "things": {
-    "plane": {},
     "rocketship": {},
     "attic": {},
     "fire truck": {},
@@ -17,6 +16,453 @@
     "medieval battlefield": {
       "icon": "gi gi-bloody-sword",
       "background": "darkred"
+    },
+    "coat": {
+      "icon": "gi gi-sleeveless-jacket"
+    },
+    "shoes": {
+      "icon": [
+        "gi gi-boots",
+        "gi gi-steeltoe-boots"
+      ]
+    },
+    "jungle tree": {
+      "icon": [
+        "gi gi-palm-tree",
+        "gi gi-pine-tree",
+        "fa fa-tree"
+      ]
+    },
+    "insect queen": {
+      "icon": "gi gi-chess-queen"
+    },
+    "amphibian": {
+      "icon": [
+        "gi gi-frog",
+        "gi gi-toad-teeth",
+        "gi gi-salamander"
+      ]
+    },
+    "reptile": {
+      "icon": [
+        "gi gi-turtle-shell",
+        "gi gi-turtle",
+        "gi gi-tortoise",
+        "gi gi-gecko"
+      ]
+    },
+    "poultry": {
+      "icon": [
+        "gi gi-chicken",
+        "gi gi-duck"
+      ]
+    },
+    "herbivorous mammal": {
+      "icon": [
+        "gi gi-elephant-head",
+        "gi gi-rhinoceros-horn"
+      ]
+    },
+    "predatory mammal": {
+      "icon": [
+        "gi gi-fox-head",
+        "gi gi-boar-tusks",
+        "gi gi-wolf-head",
+        "gi gi-wolf-howl",
+        "gi gi-lynx-head",
+        "gi gi-lion",
+        "gi gi-tiger"
+      ]
+    },
+    "bear": {
+      "icon": "gi gi-panda"
+    },
+    "push-button": {
+      "icon": [
+        "gi gi-lever",
+        "gi gi-button-finger",
+        "gi gi-power-button"
+      ]
+    },
+    "computer file": {
+      "icon": [
+        "fa fa-file-o",
+        "fa fa-file-text-o",
+        "fa fa-file",
+        "fa fa-file-text",
+        "fa fa-file-pdf-o",
+        "fa fa-file-word-o",
+        "fa fa-file-excel-o",
+        "fa fa-file-powerpoint-o",
+        "fa fa-file-photo-o",
+        "fa fa-file-picture-o",
+        "fa fa-file-image-o",
+        "fa fa-file-zip-o",
+        "fa fa-file-archive-o",
+        "fa fa-file-sound-o",
+        "fa fa-file-audio-o",
+        "fa fa-file-movie-o",
+        "fa fa-file-video-o",
+        "fa fa-file-code-o"
+      ]
+    },
+    "medieval coat": {
+      "icon": [
+        "gi gi-cloak-dagger",
+        "gi gi-wing-cloak",
+        "gi gi-cloak",
+        "gi gi-cape",
+        "gi gi-robe"
+      ]
+    },
+    "medieval weapon": {
+      "icon": [
+        "gi gi-bloody-sword",
+        "gi gi-croc-sword",
+        "gi gi-dripping-sword",
+        "gi gi-energy-sword",
+        "gi gi-fragmented-sword",
+        "gi gi-gooey-sword",
+        "gi gi-rune-sword",
+        "gi gi-shard-sword",
+        "gi gi-shattered-sword",
+        "gi gi-shining-sword",
+        "gi gi-spinning-sword",
+        "gi gi-sword-array",
+        "gi gi-sword-clash",
+        "gi gi-sword-hilt",
+        "gi gi-sword-in-stone",
+        "gi gi-sword-slice",
+        "gi gi-sword-smithing",
+        "gi gi-sword-spade",
+        "gi gi-sword-spin",
+        "gi gi-winged-sword",
+        "gi gi-zeus-sword",
+        "gi gi-lightning-bow",
+        "gi gi-pocket-bow",
+        "gi gi-crossbow",
+        "gi gi-flanged-mace",
+        "gi gi-mace-head",
+        "gi gi-spiked-mace",
+        "gi gi-spear-feather",
+        "gi gi-sun-spear",
+        "gi gi-barbed-spear",
+        "gi gi-ice-spear",
+        "gi gi-spear-hook",
+        "gi gi-stone-spear",
+        "gi gi-thrown-spear",
+        "gi gi-dagger-rose",
+        "gi gi-broad-dagger",
+        "gi gi-cloak-dagger",
+        "gi gi-diving-dagger",
+        "gi gi-flying-dagger",
+        "gi gi-plain-dagger",
+        "gi gi-sacrificial-dagger",
+        "gi gi-bone-knife",
+        "gi gi-bowie-knife",
+        "gi gi-curvy-knife",
+        "gi gi-dripping-knife",
+        "gi gi-knife-fork",
+        "gi gi-knife-thrust",
+        "gi gi-thrown-knife",
+        "gi gi-sharp-halberd",
+        "gi gi-halberd-shuriken",
+        "gi gi-halberd",
+        "gi gi-axe-swing",
+        "gi gi-battered-axe",
+        "gi gi-battle-axe",
+        "gi gi-fire-axe",
+        "gi gi-stone-axe",
+        "gi gi-wood-axe",
+        "gi gi-wizard-staff",
+        "gi gi-aerodynamic-harpoon",
+        "gi gi-harpoon-chain",
+        "gi gi-harpoon-trident",
+        "gi gi-meat-cleaver",
+        "gi gi-wood-club"
+      ]
+    },
+    "unusual stone": {
+      "icon": [
+        "gi gi-crystal-cluster",
+        "gi gi-crystal-growth",
+        "gi gi-crystal-shine",
+        "gi gi-floating-crystal"
+      ]
+    },
+    "unusual plant": {
+      "icon": [
+        "gi gi-lotus-flower",
+        "gi gi-lotus",
+        "gi gi-incense",
+        "gi gi-garlic"
+      ]
+    },
+    "future bathroom stuff": {
+      "icon": [
+        "fa fa-bathtub",
+        "fa fa-shower"
+      ]
+    },
+    "future living-room stuff": {
+      "icon": [
+        "gi gi-table",
+        "fa fa-table",
+        "gi gi-desk-lamp"
+      ]
+    },
+    "future bedroom stuff": {
+      "icon": [
+        "gi gi-bed",
+        "fa fa-bed",
+        "gi gi-desk-lamp"
+      ]
+    },
+    "future decoration stuff": {
+      "icon": "gi gi-desk-lamp"
+    },
+    "wing": {
+      "icon": [
+        "gi gi-bat-wing",
+        "gi gi-curly-wing",
+        "gi gi-feathered-wing",
+        "gi gi-fluffy-wing"
+      ]
+    },
+    "beak": {
+      "icon": "gi gi-triple-beak"
+    },
+    "tail": {
+      "icon": [
+        "gi gi-fox-tail",
+        "gi gi-armadillo-tail",
+        "gi gi-scorpion-tail"
+      ]
+    },
+    "dog": {
+      "icon": "gi gi-sniffing-dog"
+    },
+    "needle": {
+      "icon": [
+        "gi gi-sewing-needle",
+        "gi gi-triple-needle"
+      ]
+    },
+    "doll": {
+      "icon": "gi gi-voodoo-doll"
+    },
+    "bullet": {
+      "icon": "gi gi-bullets"
+    },
+    "gun": {
+      "icon": [
+        "gi gi-pistol-gun",
+        "gi gi-bolter-gun",
+        "gi gi-ray-gun",
+        "gi gi-sentry-gun",
+        "gi gi-laser-gun"
+      ]
+    },
+    "wound": {
+      "icon": [
+        "gi gi-bleeding-wound",
+        "gi gi-large-wound",
+        "gi gi-open-wound",
+        "gi gi-ragged-wound",
+        "gi gi-rough-wound",
+        "gi gi-scar-wound",
+        "gi gi-spotted-wound",
+        "gi gi-stitched-wound"
+      ]
+    },
+    "pen": {
+      "icon": "gi gi-fountain-pen"
+    },
+    "note": {
+      "icon": [
+        "fa fa-sticky-note",
+        "fa fa-sticky-note-o"
+      ]
+    },
+    "feathers": {
+      "icon": "gi gi-two-feathers"
+    },
+    "glass": {
+      "icon": [
+        "gi gi-cracked-glass",
+        "gi gi-shattered-glass"
+      ]
+    },
+    "bowl": {
+      "icon": "gi gi-bubbling-bowl"
+    },
+    "cup": {
+      "icon": "gi gi-coffee-cup"
+    },
+    "tube": {
+      "icon": "gi gi-corked-tube"
+    },
+    "nested": {
+      "icon": "gi gi-nested-hexagons"
+    },
+    "throne": {
+      "icon": "gi gi-stone-throne"
+    },
+    "flesh": {
+      "icon": "gi gi-fleshy-mass"
+    },
+    "marble": {
+      "icon": "gi gi-marbles"
+    },
+    "ale": {
+      "icon": "gi gi-beer-stein"
+    },
+    "dragon thought": {
+      "isa": "thought"
+    },
+    "orteil thoughts": {
+      "isa": "thoughts"
+    },
+    "abomination thought": {
+      "isa": "thought"
+    },
+    "thought": {
+      "icon": "empty"
+    },
+    "thoughts": {
+      "icon": "fa flaticon-interface"
+    },
+    "sad thought": {
+      "isa": "thought"
+    },
+    "happy thought": {
+      "isa": "thought"
+    },
+    "grass thought": {
+      "isa": "thought"
+    },
+    "tree thought": {
+      "isa": "thought"
+    },
+    "bacteria thought": {
+      "isa": "thought"
+    },
+    "plankton thought": {
+      "isa": "thought"
+    },
+    "clam thought": {
+      "isa": "thought"
+    },
+    "cnidaria thought": {
+      "isa": "thought"
+    },
+    "mollusk thought": {
+      "isa": "thought"
+    },
+    "crustacean thought": {
+      "isa": "thought"
+    },
+    "fish thought": {
+      "isa": "thought"
+    },
+    "shark thoughts": {
+      "isa": "thoughts"
+    },
+    "shark thought": {
+      "isa": "thought"
+    },
+    "cetacean thought": {
+      "isa": "thought"
+    },
+    "worm thought": {
+      "isa": "thought"
+    },
+    "insect thought": {
+      "isa": "thought"
+    },
+    "social insect thought": {
+      "isa": "thought"
+    },
+    "sea monster thought": {
+      "isa": "thought"
+    },
+    "space monster thought": {
+      "isa": "thought"
+    },
+    "space animal thought": {
+      "isa": "thought"
+    },
+    "amphibian thought": {
+      "isa": "thought"
+    },
+    "reptile thoughts": {
+      "isa": "thoughts"
+    },
+    "reptile thought": {
+      "isa": "thought"
+    },
+    "dinosaur thought": {
+      "isa": "thought"
+    },
+    "bird thought": {
+      "isa": "thought"
+    },
+    "poultry thought": {
+      "isa": "thought"
+    },
+    "egg thought": {
+      "isa": "thought"
+    },
+    "small mammal thought": {
+      "isa": "thought"
+    },
+    "herbivorous mammal thoughts": {
+      "isa": "thoughts"
+    },
+    "herbivorous mammal thought": {
+      "isa": "thought"
+    },
+    "predatory mammal thought": {
+      "isa": "thought"
+    },
+    "bear thought": {
+      "isa": "thought"
+    },
+    "horse thought": {
+      "isa": "thought"
+    },
+    "monkey thought": {
+      "isa": "thought"
+    },
+    "cat thought": {
+      "isa": "thought"
+    },
+    "dog thought": {
+      "isa": "thought"
+    },
+    "ghost thought": {
+      "isa": "thought"
+    },
+    "visitor thought": {
+      "isa": "thought"
+    },
+    "medieval thoughts": {
+      "isa": "thoughts"
+    },
+    "medieval thought": {
+      "isa": "thought"
+    },
+    "creature thought": {
+      "isa": "thought"
+    },
+    "future thought": {
+      "isa": "thought"
+    },
+    "nanobot thought": {
+      "isa": "thought"
+    },
+    "ancient thought": {
+      "isa": "thought"
     },
     "supercluster": {
       "icon": "fa flaticon-stars pulse animated infinite",
@@ -1484,121 +1930,118 @@
       "icon": "fa flaticon-interface"
     },
     "visitor psyche": {
-      "icon": "fa flaticon-interface"
+      "isa": "psyche"
     },
     "grass thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "fish thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "tree thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "abomination thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "sad thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "happy thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "bacteria thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "plankton thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "clam thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "cnidaria thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "mollusk thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "crustacean thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "cetacean thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "worm thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "insect thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "social insect thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "sea monster thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "space monster thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "space animal thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "amphibian thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "dinosaur thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "dragon thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "bird thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "poultry thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "egg thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "small mammal thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "predatory mammal thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "bear thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "horse thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "monkey thoughts": {
-      "icon": "fa flaticon-interface"
-    },
-    " thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "cat thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "dog thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "ghost thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "visitor thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "creature thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "future thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "nanobot thoughts": {
-      "icon": "fa flaticon-interface"
+      "isa": "thoughts"
     },
     "ancient thoughts": {
       "icon": "fa flaticon-interface"

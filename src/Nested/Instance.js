@@ -1,6 +1,7 @@
 import Thing from './Thing.js';
 import Table from './Table.js';
 import Styler from './Styler.js';
+
 let instances = [];
 
 /**
@@ -34,6 +35,7 @@ class Instance{
 		this.cssClass = thing.cssClass;
 		this.textColor = thing.textColor;
 		this.data = thing.data;
+
 		if(thing.autoColor){
 			var color = Styler.strToColor(this.name);
 			if(color){
@@ -54,6 +56,19 @@ class Instance{
 
 	beforeRender(){
 		this.thing.beforeRender(this);
+	}
+
+	//get instance of child by name of thing
+	findChild(thingName){
+		if(!this.grown) this.grow();
+
+		for(var i = 0, child; i < this.children.length; i++){
+			if(typeof this.children[i] === "string") continue;
+			child = instances[this.children[i]];
+			if(child.thing.name == thingName)
+				return child;
+		}
+		return false;
 	}
 	
 	//process contains into instances
@@ -118,9 +133,12 @@ class Instance{
 	}//grow()
 }
 
+//convenience for packs to access Instance functions;
+Instance.prototype.Instance = Instance;
+
 Instance.get = function(index){
 	if(isNaN(index) || index > instances.length){
-		throw new Error("Invalid index "+index+" when trying to get instance.");
+		console.error("Invalid index "+index+" when trying to get instance.");
 	}
 	return instances[index];
 }
@@ -178,4 +196,4 @@ function Contain(string){
 }
 
 export default Instance;
-export {instances};
+export {Contain};

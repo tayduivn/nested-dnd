@@ -2,6 +2,12 @@ import Thing from './Thing.js';
 import Table from './Table.js';
 let vm = require('vm');
 
+var packsAreLoaded = false;
+var result = {
+	defaultSeed: "",
+	tables: []
+};
+
 class Pack{
 	constructor(options){
 		this.name = options.name;
@@ -17,7 +23,7 @@ class Pack{
 	}
 	load(result){
 		if(typeof this.beforeLoad === "function")
-			this.beforeLoad();
+			this.beforeLoad(Thing, Table);
 
 		if(this.defaultSeed)
 				result.defaultSeed = this.defaultSeed;
@@ -25,34 +31,34 @@ class Pack{
 		Thing.addAll(this.things);
 		Table.addAll(this.tables);
 
-		if(typeof this.beforeLoad === "function")
-			this.afterLoad();
+		if(typeof this.afterLoad === "function")
+			this.afterLoad(Thing, Table);
 
 		console.log("Loaded pack: "+this.name
 			+"\n\t Added "+Object.keys(this.things).length+" things."
 			+"\n\t Added "+Object.keys(this.tables).length+" tables.");
 	}
 	checkDependencies(loaded){
+		var _this = this;
 		this.dependencies.forEach(function(dependency){
 			if(!loaded.includes(dependency))
-				throw new Error(this.name+" requires "+dependency+" to be loaded first.");
+				throw new Error(_this.name+" requires "+dependency+" to be loaded first.");
 		});
-		loaded.push(this.name);
 	}
 }
 
 Pack.doImport = function(callback){
+	if(packsAreLoaded){
+		callback(result);
+		return result;
+	}
+
 	var packs = localStorage["packs"];
 	if(!packs){
 		localStorage["packs"] = packs = ["./packs/nested-orteil.json","./packs/nested-orteil-extended.json"];
 	}else{
 		packs = packs.split(",");
 	}
-
-	var result = {
-		defaultSeed: "",
-		tables: []
-	};
 
 	//load each pack
 	var numFetched = 0;
@@ -78,7 +84,10 @@ Pack.doImport = function(callback){
 					if(pack == null) return;
 					pack.checkDependencies(loaded);
 					pack.load(result);
+					loaded.push(pack.name);
 				})
+				
+				packsAreLoaded = true;
 				callback(result);
 			}
 		})

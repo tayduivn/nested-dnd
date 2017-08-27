@@ -3,63 +3,63 @@ import { Button, Modal,FormGroup,ControlLabel,FormControl, Radio } from 'react-b
 import Autosuggest from 'react-autosuggest';
 
 class SettingsModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    	pack: "custom",
-    	customPacks: localStorage.packs.replace(/,/g,"\n").replace(/\.\/packs\//g,""),
-    	seed:localStorage.seed
-    };
+	constructor(props) {
+		super(props);
+		this.state = {
+			pack: "custom",
+			customPacks: localStorage.packs.replace(/,/g,"\n").replace(/\..\/packs\//g,""),
+			seed:localStorage.seed
+		};
 
-    this.packMap = {
-    	"dnd": "./packs/dnd.js",
-    	"nested-orteil":"./packs/nested-orteil.json,./packs/nested-orteil-extended.json"
-    }
+		this.packMap = {
+			"dnd": "../packs/game-icons.json,../packs/nested-dnd-data.json,../packs/dnd.js,../packs/forgotten-realms.json",
+			"nested-orteil":"../packs/game-icons.json,../packs/nested-orteil.json,../packs/nested-orteil-extended.json"
+		}
 
-    for(var name in this.packMap){
-    	if(localStorage.packs === this.packMap[name]){
-    		this.state.pack = name;
-    	}
-    }
+		for(var name in this.packMap){
+			if(localStorage.packs === this.packMap[name]){
+				this.state.pack = name;
+			}
+		}
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
 
-  handleChange(event) {
-  	if(event.target.name == "seed"){
-  		this.setState({ seed: event.target.value })
-  	}else	if(event.target.name == "pack"){
-  		this.setState({ seed: "" })
-  		this.setState({ pack: event.target.value })
-  	}else	if(event.target.name == "customPacks"){
-  		this.setState({ customPacks: event.target.value })
-  	}
-  }
+	handleChange(event) {
+		if(event.target.name == "seed"){
+			this.setState({ seed: event.target.value })
+		}else	if(event.target.name == "pack"){
+			this.setState({ seed: "" })
+			this.setState({ pack: event.target.value })
+		}else	if(event.target.name == "customPacks"){
+			this.setState({ customPacks: event.target.value })
+		}
+	}
 
-  handleSubmit(event) {
-  	localStorage["seed"] = this.state.seed;
+	handleSubmit(event) {
+		localStorage["seed"] = this.state.seed;
 
-  	if(this.state.pack == "custom"){
-  		var packs = this.state.customPacks.split("\n");
-	  	packs.forEach(function(str, index){
-	  		if(!str.startsWith("http"))
-	  			packs[index] = "./packs/"+str
-	  	});
-	  	localStorage["packs"] = packs.join(",");
-  	}else{
-  		localStorage["packs"] = this.packMap[this.state.pack];
-  	}
-  	
-  	this.props.modal.close();
-    event.preventDefault();
-    window.location.reload();
-  }
+		if(this.state.pack == "custom"){
+			var packs = this.state.customPacks.split("\n");
+			packs.forEach(function(str, index){
+				if(!str.startsWith("http"))
+					packs[index] = "./packs/"+str
+			});
+			localStorage["packs"] = packs.join(",");
+		}else{
+			localStorage["packs"] = this.packMap[this.state.pack];
+		}
+		
+		this.props.modal.close();
+		event.preventDefault();
+		window.location.reload();
+	}
 
-  render() {
-    return (
-    	<Modal show={this.props.modal.state.showModal} 
-    		onHide={() => this.props.modal.close()}>
+	render() {
+		return (
+			<Modal show={this.props.modal.state.showModal} 
+				onHide={() => this.props.modal.close()}>
 				<Modal.Header>
 					<Modal.Title>Settings</Modal.Title>
 				</Modal.Header>
@@ -96,8 +96,8 @@ class SettingsModal extends React.Component {
 					</Modal.Footer>
 				</form>
 			</Modal>
-    );
-  }
+		);
+	}
 }
 
 class Settings extends React.Component{
@@ -106,25 +106,20 @@ class Settings extends React.Component{
 		this.state = { showModal: false };
 	}
 
-  close() {
-    this.setState({ showModal: false });
-  }
+	close() {
+		this.setState({ showModal: false });
+	}
 
-  open() {
-    this.setState({ showModal: true });
-  }
+	open(e) {
+		e.preventDefault();
+		this.setState({ showModal: true });
+	}
 	render(){
 		return (
-			<div className="static-modal">
-
-			<Button bsSize="large"
-          onClick={() => this.open()}>
-          <i className="fa fa-gear"/>
-        </Button>
-     
-		    <SettingsModal modal={this} />
-		    
-		  </div>
+			<a href="#" onClick={(e) => this.open(e)}>
+				<i className="fa fa-gear"/>
+				<SettingsModal modal={this} />
+			</a>
 		);
 	}
 }

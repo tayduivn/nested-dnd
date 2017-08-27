@@ -1,4 +1,4 @@
-import Instance from './Instance.js';
+import Instance, {Contain} from './Instance.js';
 import Table from './Table.js';
 import Styler from './Styler.js';
 
@@ -7,21 +7,29 @@ let things = {}
 class Thing{
 	constructor(options){
 
+		if(options instanceof Array){
+			options = {contains:[].concat(options)}
+		}
+
 		//functions
 		this.b4Make = options.beforeMake;
 		this.afMake = options.afterMake;
 		this.b4Render = options.beforeRender;
 
+		//convenience for packs to access Thing functions;
+		this.Thing = Thing;
+
 		if(things[options.name]){
 			options = Object.assign({}, things[options.name], options );
 		}
-		saveOptions(this,options);
 
 		//data clean
-		if(this.background) this.background = this.background.toLowerCase();
-		if(this.textColor) this.textColor = this.textColor.toLowerCase();
-		this.cssClass;
+		if(options.background) options.background = options.background.toLowerCase();
+		if(options.textColor) options.textColor = options.textColor.toLowerCase();
+
+		saveOptions(this,options);
 		
+		this.cssClass;
 
 		//save
 		if(this.name)
@@ -30,7 +38,6 @@ class Thing{
 		function saveOptions(_t, options){
 			_t.name = options.name,
 			_t.isa = options.isa;
-			_t.doExtend = options.doExtend;
 			_t.contains = options.contains;
 			_t.namegen = options.namegen;
 			_t.uniqueInstance = options.uniqueInstance;
@@ -39,6 +46,7 @@ class Thing{
 			_t.background = options.background;
 			_t.textColor = options.textColor;
 			_t.autoColor = options.autoColor;
+			_t.originalOptions = options;
 		}
 
 		/*  do extend and set defaults */
@@ -58,10 +66,6 @@ class Thing{
 				superThing.processIsa();
 
 				saveOptions(this, Object.assign({}, clean(superThing), clean(this) ));
-
-				if(this.doExtend){
-					this.contains = superThing.contains.concat(this.contains);
-				}
 			}
 
 			/* TODO: temporary */
@@ -93,22 +97,25 @@ class Thing{
 	}
 
 	beforeMake(instance, thing){
+		this.processIsa();
+
 		if(!thing) thing = this;
+
 		//super
 		if(this.isa) things[this.isa].beforeMake(instance, thing);
 
 		if(this.b4Make) {
-			this.b4Make.call(thing, instance, Instance, Thing);
+			this.b4Make.call(thing, instance);
 		}
 	}
-
+	
 	afterMake(instance, thing){
 		if(!thing) thing = this;
 		//super
 		if(this.isa) things[this.isa].afterMake(instance, thing);
 
 		if(this.afMake) {
-			this.afMake.call(thing, instance, Instance, Thing);
+			this.afMake.call(thing, instance);
 		}
 	}
 
@@ -118,7 +125,7 @@ class Thing{
 		if(this.isa) things[this.isa].beforeRender(instance, thing);
 
 		if(this.b4Render) {
-			this.b4Render.call(thing, instance, Instance, Thing);
+			this.b4Render.call(thing, instance);
 		}
 	}
 
@@ -145,10 +152,10 @@ class Thing{
 	}
 }
 
+//convenience for packs to access Thing functions;
+Thing.prototype.Thing = Thing;
+
 Thing.add = function(obj){
-	if(obj instanceof Array){
-		obj = {contains:[].concat(obj)}
-	}
 	return new Thing(obj).processIsa();
 }
 
@@ -160,14 +167,14 @@ Thing.addAll = function(obj){
 		}
 		thing = new Thing(Object.assign({name:""+name}, thing));
 	}
+}
 
-	for(var name in things){
-		things[name].processIsa();
-	}
+Thing.filter = function(str){
+	return Object.keys(things).filter((name) => name.includes(str) );
 }
 
 Thing.exists = function(name){
-	return typeof things[name] !== "undefined";
+	return typeof things[new Contain(name).value] !== "undefined";
 }
 
 Thing.get = function(name){
@@ -177,42 +184,8 @@ Thing.get = function(name){
 	return things[name];
 }
 
-Thing.checkForIcons = function(things){
-	for(var thingName in things){
-		var t = things[thingName];
-		var name = t.getName()
-		if(t.getIcon(name) !== "empty")
-			continue;
-
-		var results = getDefinedCss(""+t.name.replace("medieval ","").replace("ancient ","").replace("future ",""))
-		/*if(!results.length){
-			results = getDefinedCss("fa-"+t.name.replace("medieval ","").replace("ancient ","").replace("future ",""))
-		}*/
-		if(results.length){
-			console.log("FOUND ICON \t\t thing: "+t.name+" || options: "+results);
-		}
-		/*else{
-			console.log("NEED ICON \t\t thing: "+t.name);
-		}*/
-	}
-}
-
-function getDefinedCss(s){
-	if(!document.styleSheets) return '';
-	if(typeof s === 'string') s= RegExp('\\b'+s+'\\b','i'); 
-
-	var A, S, DS= document.styleSheets, n= DS.length, SA= [];
-	while(n){
-		S= DS[--n];
-		A= (S.rules)? S.rules: S.cssRules;
-		for(var i= 0, tem, L= A.length; i<L; i++){
-			tem= A[i].selectorText? [A[i].selectorText,A[i].style.cssText] : [A[i]+''];
-			if(s.test(tem[0])){
-				SA[SA.length]= tem[0].split("::")[0];
-			}
-		}
-	}
-	return SA.join('\t\t|\t\t');
+Thing.getThings = function(){
+	return things;
 }
 
 export default Thing;

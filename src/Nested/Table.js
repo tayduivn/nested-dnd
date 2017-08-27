@@ -71,7 +71,7 @@ Table.roll = function(obj){
 	obj = parts[0];
 
 	if(Table.isTableID(obj)){
-		return Table.getTable(obj).roll();
+		return Table.get(obj).roll();
 	}
 
 	return obj;
@@ -83,7 +83,7 @@ Table.isTableID = function(str){
 		&& typeof tables[str.substring(1, str.length-1)] !== "undefined";
 }
 
-Table.getTable = function(str){
+Table.get = function(str){
 	str = str.trim();
 	if(str.charAt(0) === "*" && str.charAt(str.length-1))
 		str = str.substring(1, str.length-1);
@@ -94,7 +94,7 @@ Table.getTable = function(str){
 	}
 	else if(typeof table == "string" && Table.isTableID(table)){
 		// is an alias for another table
-		return Table.getTable(table);
+		return Table.get(table);
 	}
 
 	if(!table.roll){
