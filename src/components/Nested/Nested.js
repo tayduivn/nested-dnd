@@ -91,7 +91,7 @@ class Nested extends React.Component {
 		if(!instance.grown){
 			instance.grow();
 		}
-		instance.thing.beforeRender(this.state.instance);
+		instance.thing.beforeRender(instance);
 		
 		/*;
 		document.getElementById("contains").className = "row animated "+(zoomOut?"slideInLeft":"slideInRight");*/

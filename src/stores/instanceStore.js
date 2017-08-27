@@ -122,6 +122,13 @@ class Instance{
 
 var instanceStore = {};
 instanceStore.get = function(index){
+	if(typeof index == "string" && thingStore.exists(index)){
+		var thing = thingStore.get(index);
+		if(thing.uniqueInstance !== false) 
+			return instances[thing.uniqueInstance];
+		console.error("Could not find instance with name \""+index+"\"");
+		return;
+	}
 	if(isNaN(index) || index > instances.length){
 		console.error("Invalid index "+index+" when trying to get instance.");
 	}
