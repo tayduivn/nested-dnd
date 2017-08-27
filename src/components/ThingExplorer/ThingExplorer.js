@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { FormGroup, ControlLabel, FormControl, Checkbox, Button, InputGroup } from 'react-bootstrap';
 import Select from 'react-select';
 import VirtualizedSelect from 'react-virtualized-select'
 
-import Thing from './Thing.js';
-import Table from './Table.js';
-import Pack from './Pack.js';
-import Styler from './Styler.js';
-import {uniq} from './Debug.js';
+import thingStore from '../../stores/thingStore.js';
+import tableStore from '../../stores/tableStore.js'
+import PackLoader from '../../util/PackLoader.js';
+import Styler from '../../util/Styler.js';
+import {uniq} from '../../util/util.js';
 
+import './ThingExplorer.css';
 
 var thingsList = [];
 var thingNames = [];
-
 var iconsOptions = [];
 
 function getIconsOptions(str){
@@ -27,6 +27,12 @@ function getIconsOptions(str){
 	}
 	return iconsOptions;
 };
+
+function renderColorOption(option){
+	return (
+		<div><i className="fa fa-2x fa-square" style={{color: option.value}}></i>  {option.label}</div>
+	);
+}
 
 function renderIcon({ focusedOption, focusedOptionIndex, focusOption, key, labelKey, option, options, selectValue, style, valueArray }) {
 	return (
@@ -43,7 +49,7 @@ function makeLabel(str){
 	return str.replace(/-/g," ").replace(/gi gi /g,"").replace(/fa fa /g,"").replace(/fa flaticon /g,"").replace(/fa spin/g,"spin")
 }
 
-class ThingChoice extends Component{
+class ThingChoice extends React.Component{
 	constructor(props){
 		super(props);
 		this.handleClick = this.handleClick.bind(this)
@@ -69,7 +75,7 @@ class ThingChoice extends Component{
 	}
 }
 
-class PropertyInput extends Component{
+class PropertyInput extends React.Component{
 	render(){
 		var children = React.Children.map(this.props.children,
      (child) => React.cloneElement(child, {
@@ -163,7 +169,7 @@ class ThingView extends React.Component{
 
 			if(value){
 				cssClass = cssClass.replace(" empty","");
-				randomIcon = Table.roll(value);
+				randomIcon = tableStore.roll(value);
 			}
 			else if(!cssClass.includes("empty"))
 				cssClass+= " empty";
@@ -193,8 +199,7 @@ class ThingView extends React.Component{
 		var options = Object.assign({}, this.props.thing.originalOptions, this.state.updates);
 
 		//submit each value
-		var thing = new Thing(options);
-
+		var thing = thingStore.add(options);
 
 		//clean values
 
@@ -256,7 +261,7 @@ class ThingView extends React.Component{
 								<FormControl name="contains" type="text" value={(typeof item === "string") ? item : JSON.stringify(item) } disabled={this.disabled("contains")} 
 									onChange={this.handleChange} />
 								<InputGroup.Addon>
-									<em>{ (item.roll) ? "Table" : (Thing.exists(item)) ? "thing" : "text"}</em>
+									<em>{ (item.roll) ? "Table" : (thingStore.exists(item)) ? "thing" : "text"}</em>
 								</InputGroup.Addon>
 							</PropertyInput>
 						))}
@@ -278,7 +283,7 @@ class ThingView extends React.Component{
 						<label>Background</label>
 						<Select name="background" value={this.state.background} 
 							clearValueText="Clear changes" resetValue={this.props.thing.background}
-							optionRenderer={Styler.renderColorOption}
+							optionRenderer={renderColorOption}
 							onChange={(option) => {this.changeProperty("background", option.value)} } options={Styler.getColorOptions()} >
 							<option key={"asaksjlkad"}>aslakjslkjd</option>
 							</Select>
@@ -287,7 +292,7 @@ class ThingView extends React.Component{
 						<label>Text Color</label>
 						<Select name="textColor" value={this.state.textColor} 
 							clearValueText="Clear changes" resetValue={this.props.thing.textColor}
-							optionRenderer={Styler.renderColorOption}
+							optionRenderer={renderColorOption}
 							onChange={(option) => {this.changeProperty("textColor", option.value)} } options={Styler.getColorOptions()}>
 						</Select>
 					</FormGroup>
@@ -357,17 +362,17 @@ class ThingExplorer extends React.Component{
 		}
 
     var _this = this;
-		Pack.doImport(function(packs){
-			var things = Thing.getThings();
+		PackLoader.load(function(packs){
+			var things = thingStore.getThings();
 			thingsList = Object.values(things);
 			thingsList = thingsList.sort((a,b) => a.name.localeCompare(b.name) );
-			thingNames = Object.keys(Thing.getThings()).sort((a,b) => a.localeCompare(b));
+			thingNames = Object.keys(thingStore.getThings()).sort((a,b) => a.localeCompare(b));
 
 			//load icons options
-			uniq(Table.get("*GAME ICONS*")).forEach(function(icon){
+			uniq(tableStore.get("*GAME ICONS*")).forEach(function(icon){
 				iconsOptions.push({ value: "gi gi-"+icon, label: icon.replace(/\-/g," ") })
 			})
-			uniq(Table.get("*FONTAWESOME ICONS*")).forEach(function(icon){
+			uniq(tableStore.get("*FONTAWESOME ICONS*")).forEach(function(icon){
 				iconsOptions.push({ value: "fa fa-"+icon, label: icon.replace(/\-/g," ") })
 			});
 			iconsOptions = iconsOptions.sort(function(a,b){ 
@@ -413,10 +418,10 @@ class ThingExplorer extends React.Component{
 		var newPack = Object.assign({}, this.state.newPack, {
 			things: newThings });
 
-		var things = Thing.getThings();
+		var things = thingStore.getThings();
 		thingsList = Object.values(things);
 		thingsList = thingsList.sort((a,b) => a.name.localeCompare(b.name) );
-		thingNames = Object.keys(Thing.getThings()).sort((a,b) => a.localeCompare(b));
+		thingNames = Object.keys(thingStore.getThings()).sort((a,b) => a.localeCompare(b));
 
 		this.setState({
 			things: this.doFilter(this.state.query),

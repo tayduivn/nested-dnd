@@ -1,5 +1,5 @@
-import Thing from './Thing.js';
-import Table from './Table.js';
+import thingStore from '../stores/thingStore.js';
+import tableStore from '../stores/tableStore.js';
 let vm = require('vm');
 
 var packsAreLoaded = false;
@@ -23,16 +23,16 @@ class Pack{
 	}
 	load(result){
 		if(typeof this.beforeLoad === "function")
-			this.beforeLoad(Thing, Table);
+			this.beforeLoad(thingStore, tableStore);
 
 		if(this.defaultSeed)
 				result.defaultSeed = this.defaultSeed;
 
-		Thing.addAll(this.things);
-		Table.addAll(this.tables);
+		thingStore.addAll(this.things);
+		tableStore.addAll(this.tables);
 
 		if(typeof this.afterLoad === "function")
-			this.afterLoad(Thing, Table);
+			this.afterLoad(thingStore, tableStore);
 
 		console.log("Loaded pack: "+this.name
 			+"\n\t Added "+Object.keys(this.things).length+" things."
@@ -47,7 +47,9 @@ class Pack{
 	}
 }
 
-Pack.doImport = function(callback){
+var PackLoader = {};
+
+PackLoader.load = function(callback){
 	if(packsAreLoaded){
 		callback(result);
 		return result;
@@ -100,4 +102,4 @@ Pack.doImport = function(callback){
 	});
 }
 
-export default Pack;
+export default PackLoader;

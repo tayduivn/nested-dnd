@@ -1,23 +1,16 @@
-import Instance, {Contain} from './Instance.js';
-import Table from './Table.js';
-import Styler from './Styler.js';
+import tableStore from './tableStore.js';
+import Styler from '../util/Styler.js';
+import Contain from '../util/Contain.js'
 
-let things = {}
+let things = {};
+let thingStore = {};
 
 class Thing{
 	constructor(options){
-
-		if(options instanceof Array){
-			options = {contains:[].concat(options)}
-		}
-
 		//functions
 		this.b4Make = options.beforeMake;
 		this.afMake = options.afterMake;
 		this.b4Render = options.beforeRender;
-
-		//convenience for packs to access Thing functions;
-		this.Thing = Thing;
 
 		if(things[options.name]){
 			options = Object.assign({}, things[options.name], options );
@@ -62,7 +55,7 @@ class Thing{
 					return;
 				}
 
-				var superThing = Thing.get(this.isa);
+				var superThing = thingStore.get(this.isa);
 				superThing.processIsa();
 
 				saveOptions(this, Object.assign({}, clean(superThing), clean(this) ));
@@ -135,12 +128,12 @@ class Thing{
 		}
 		
 		if(this.namegen  instanceof Array && this.namegen[0] instanceof Array){
-			var table = new Table({rows: this.namegen, concatenate: true})
+			var table = tableStore.add({rows: this.namegen, concatenate: true})
 			return table.roll();
 		}
 
 		if(this.namegen)
-			return Table.roll(this.namegen);
+			return tableStore.roll(this.namegen);
 
 		return this.name;
 	}
@@ -153,13 +146,16 @@ class Thing{
 }
 
 //convenience for packs to access Thing functions;
-Thing.prototype.Thing = Thing;
+Thing.prototype.thingStore = thingStore;
 
-Thing.add = function(obj){
-	return new Thing(obj).processIsa();
+thingStore.add = function(options){
+	if(options instanceof Array){
+		options = {contains:[].concat(options)}
+	}		
+	return new Thing(options).processIsa();
 }
 
-Thing.addAll = function(obj){
+thingStore.addAll = function(obj){
 	for(var name in obj){
 		var thing = obj[name];
 		if(thing instanceof Array){
@@ -169,23 +165,23 @@ Thing.addAll = function(obj){
 	}
 }
 
-Thing.filter = function(str){
+thingStore.filter = function(str){
 	return Object.keys(things).filter((name) => name.includes(str) );
 }
 
-Thing.exists = function(name){
+thingStore.exists = function(name){
 	return typeof things[new Contain(name).value] !== "undefined";
 }
 
-Thing.get = function(name){
+thingStore.get = function(name){
 	if(!things[name]){
 		throw new Error("could not find Thing named "+name);
 	}
 	return things[name];
 }
 
-Thing.getThings = function(){
+thingStore.getThings = function(){
 	return things;
 }
 
-export default Thing;
+export default thingStore;

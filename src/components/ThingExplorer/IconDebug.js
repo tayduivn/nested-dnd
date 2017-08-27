@@ -1,19 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import Thing from './Thing.js';
-import Table from './Table.js';
-
-function uniq(a) {
-	var prims = {"boolean":{}, "number":{}, "string":{}}, objs = [];
-
-	return a.filter(function(item) {
-			var type = typeof item;
-			if(type in prims)
-					return prims[type].hasOwnProperty(item) ? false : (prims[type][item] = true);
-			else
-					return objs.indexOf(item) >= 0 ? false : objs.push(item);
-	});
-}
+import thingStore from '../../stores/thingStore.js';
+import tableStore from '../../stores/tableStore.js'
+import {uniq} from '../../util/util.js';
 
 class IconList extends React.Component{
 	render(){
@@ -22,7 +11,7 @@ class IconList extends React.Component{
 		for(var name in matches){
 			icons.push(
 				<div key={"matches "+name}>
-					<strong>{name} ({Thing.get(name).isa})</strong>
+					<strong>{name} ({thingStore.get(name).isa})</strong>
 					<h1>{uniq(matches[name]).map((icon) => <i key={icon} title={icon} className={icon} />)}</h1>
 					<p>
 						"{name}"{": { \"icon\":"}{ 
@@ -55,32 +44,32 @@ class IconDebug extends React.Component{
 	}
 
 	findIcons(){
-		if(!Table.isTableID("*GAME ICONS*"))
+		if(!tableStore.isTableID("*GAME ICONS*"))
 			return;
 
-		var gameicons = Table.get("GAME ICONS");
-		var faicons = Table.get("FONTAWESOME ICONS");
+		var gameicons = tableStore.get("GAME ICONS");
+		var faicons = tableStore.get("FONTAWESOME ICONS");
 		
 		var matches = {};
 		var nearMatches = {};
 		var nameGenMatches = {};
-		var things = Thing.getThings();
+		var things = thingStore.getThings();
 
 		//msg+="\""+name+"\": { \"icon\": \"gi gi-dragon-head\" },\n";
 
-		Thing.filter("dragon").forEach(function(name){
+		thingStore.filter("dragon").forEach(function(name){
 			if(!things[name].icon)
 				matches[name] = ["gi gi-dragon-head","gi gi-double-dragon"];
 		});
-		Thing.filter("thoughts").forEach(function(name){
+		thingStore.filter("thoughts").forEach(function(name){
 			if(!things[name].icon)
 				matches[name] = ["fa flaticon-interface"];
 		});
-		Thing.filter("psyche").forEach(function(name){
+		thingStore.filter("psyche").forEach(function(name){
 			if(!things[name].icon)
 				matches[name] = ["fa flaticon-interface"];
 		});
-		Thing.filter("shop").forEach(function(name){
+		thingStore.filter("shop").forEach(function(name){
 			if(!things[name].icon)
 				matches[name] = ["gi gi-shop"];
 		});

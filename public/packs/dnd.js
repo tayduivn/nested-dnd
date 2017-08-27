@@ -1520,42 +1520,42 @@ var pack = {
     },
     "boots of the winterlands": {
       "isa": "boots"
-    },
-    "abomination psyche":{"isa":"psyche"},"future psyche":{"isa":"psyche"},"ancient psyche":{"isa":"psyche"},"medieval psyche":{"isa":"psyche"}
+    }
   }
 };
 
 function createMirrorPlane(instance, name){
-	var Instance = instance.Instance;
-	var Thing = instance.thing.Thing;
-	var thing = Thing.get(name);
+	var instanceStore = instance.instanceStore;
+	var thingStore = instance.thing.thingStore;
+	var thing = thingStore.get(name);
 
 	instance.children.forEach(function(child){
 		if(typeof child !== "number") return;
-		child = Instance.get(child);
+		child = instanceStore.get(child);
 		child.background = thing.background;
 		child.textColor = thing.textColor;
 		if(child.cssClass.indexOf(thing.background) === -1)
 			child.cssClass+=" "+thing.background;
-		if(child.data.mirrors !== undefined && Instance.get(child.data.mirrors).thing.contains){
-			child.thing = styleAThing(child.thing,name,Thing);
+		if(child.data.mirrors !== undefined && instanceStore.get(child.data.mirrors).thing.contains){
+			child.thing = styleAThing(child.thing,name);
 		}
 	});
 }
 
-function styleAThing(thing, styleName, Thing){
+function styleAThing(thing, styleName){
 	var prefix = styleName.split(" ")[0]+" ";
 	if(thing.isa && thing.isa.startsWith(styleName)){
 		return thing;
 	}
+	var thingStore = thing.thingStore;
 
 	var originalThing = thing.name;
 	if(!originalThing) originalThing = "";
-	if(Thing.exists(prefix+originalThing)){
-		return Thing.get(prefix+originalThing);
+	if(thingStore.exists(prefix+originalThing)){
+		return thingStore.get(prefix+originalThing);
 	}
 
-	thing = Thing.add({
+	thing = thingStore.add({
 		"name": prefix+originalThing,
 		"isa": originalThing
 	});
@@ -1567,17 +1567,17 @@ function styleAThing(thing, styleName, Thing){
 pack.things["mirror plane"].beforeRender = function(instance){
 	if(typeof instance.data.mirrors === "undefined") return;
 
-	var Instance = instance.Instance;
-	var Thing = instance.thing.Thing;
+	var instanceStore = instance.instanceStore;
+	var thingStore = instance.thing.thingStore;
 
 	if(typeof instance.data.mirrors === "string"){
-		var index = Thing.get(instance.data.mirrors).uniqueInstance;
+		var index = thingStore.get(instance.data.mirrors).uniqueInstance;
 		if(typeof index==='number'){
 			instance.data.mirrors = index;
 		}else return;
 	}
 
-	var mirrorInstance = Instance.get(instance.data.mirrors);
+	var mirrorInstance = instanceStore.get(instance.data.mirrors);
 	if(!mirrorInstance.grown) 
 		mirrorInstance.grow();
 
@@ -1589,14 +1589,14 @@ pack.things["mirror plane"].beforeRender = function(instance){
 	instance.children = [];
 	mirrorInstance.children.forEach(function(mirrorChild){
 		if(typeof mirrorChild==="number"){
-			mirrorChild = Instance.get(mirrorChild);
+			mirrorChild = instanceStore.get(mirrorChild);
 
 			//create a new mirror plane thing
 			var mirrorThing = mirrorChild.thing;
-			var childThing = styleAThing(mirrorChild.thing,"mirror plane",Thing);
+			var childThing = styleAThing(mirrorChild.thing,"mirror plane");
 
 			//create new child and copy mirror
-			var child = new Instance(childThing);
+			var child = new instanceStore(childThing);
 			var newId = child.id;
 			Object.assign(child,mirrorChild);
 			child.id = newId;

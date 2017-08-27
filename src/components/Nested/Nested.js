@@ -1,60 +1,14 @@
-import React, { Component } from 'react';
-import Thing from './Thing.js';
-import Instance from './Instance.js'
-import Pack from './Pack.js';
-
+import React from 'react';
 import { CSSTransitionGroup } from 'react-transition-group'
-import { SplitButton, MenuItem } from 'react-bootstrap'
 
+import thingStore from '../../stores/thingStore.js';
+import instanceStore from '../../stores/instanceStore.js'
+import PackLoader from '../../util/PackLoader.js';
+import Ancestors from './Ancestors.js';
 
-class Ancestors extends Component {
-	constructor(props){
-		super(props);
-		this.parentID = this.props.parent;
-		this.page = this.props.page;
-	}
-	render(){
-		if(this.parentID === null) 
-			return <span></span>
+import './Nested.css';
 
-		var parentInst = Instance.get(this.parentID);
-		var title = <span><i className="fa fa-angle-left"></i> {parentInst.name}</span>;
-		var ancestors = [];
-		var parent;
-
-		if(parentInst.parent !== null){
-			var current = parentInst.parent;
-			var _t = this;
-			while(current !== null){
-				var ancestor = Instance.get(current);
-				ancestors.push(
-					<MenuItem key={ancestors.length+1} eventKey={current}
-						onSelect={(key) => this.page.setSeed(key,true) } href={"#"+current}> 
-						{ancestor.name}
-					</MenuItem>)
-				current = ancestor.parent;
-			}
-			parent = <SplitButton 
-				title={title} href={"#"+this.parentID}
-				onClick={() => this.page.setSeed(this.parentID,true)}
-				id="ancestorDropdown">
-					{ancestors}
-				</SplitButton>;
-		}else{
-			parent = (<a className="btn btn-default" href={"#"+this.parentID}
-				onClick={() => this.page.setSeed(this.parentID,true)}>
-				{title}
-			</a>)
-		}
-
-		return (<span className={"parent "+parentInst.cssClass}
-				style={{color:parentInst.textColor}}>
-				{parent}
-				</span>)
-	}
-}
-
-class Nested extends Component {
+class Nested extends React.Component {
 	constructor(){
 		super();
 		var _this = this;
@@ -73,7 +27,7 @@ class Nested extends Component {
 	componentDidMount(){
 		var _this = this;
 		window.location.hash = "#0";
-		Pack.doImport(function(packs){
+		PackLoader.load(function(packs){
 
 			_this.getSeed(packs);
 
@@ -103,20 +57,20 @@ class Nested extends Component {
 
 		seed = seed.split(">");
 		if(seed.length === 1){
-			if(Instance.get(0))
+			if(instanceStore.get(0))
 				return this.setInstance(0);
 
 			seed = seed[0];
-			if(!Thing.exists(seed)){
+			if(!thingStore.exists(seed)){
 				localStorage["seed"] = seed = packs.defaultSeed;
 			}
-			return this.setInstance(new Instance(Thing.get(seed)).id);
+			return this.setInstance(instanceStore.add(thingStore.get(seed)).id);
 		}
 
 		var parent,current;
 		for(var i = 0, name; name = seed[i]; i++){
 			name = name.trim();
-			if(!Thing.exists(name)){
+			if(!thingStore.exists(name)){
 				console.error("can't find thing "+name)
 				seed = false;
 				break;
@@ -124,10 +78,10 @@ class Nested extends Component {
 			if(parent){
 				current = parent.findChild(name);
 			}
-			else if(Instance.get(0))
+			else if(instanceStore.get(0))
 				return this.setInstance(0);
 			else{
-				current = new Instance(Thing.get(name));
+				current = instanceStore.add(thingStore.get(name));
 			}
 			console.log("loaded "+current.name);
 			parent = current;
@@ -139,11 +93,11 @@ class Nested extends Component {
 		//toggleAnimation(document.getElementsByClassName("child"));
 
 		/*document.getElementById("contains").className = "row animated "+(zoomOut?"zoomOutRight":"zoomOutLeft");*/
-		var instance = Instance.get(index);
+		var instance = instanceStore.get(index);
 		if(!instance.grown){
 			instance.grow();
 		}
-		instance.thing.beforeRender(this.seed);
+		instance.thing.beforeRender(this.state.instance);
 		
 		/*;
 		document.getElementById("contains").className = "row animated "+(zoomOut?"slideInLeft":"slideInRight");*/
@@ -175,7 +129,7 @@ class Nested extends Component {
 										</div>
 									)
 								}
-								var instance = Instance.get(child);
+								var instance = instanceStore.get(child);
 								var inner = <div className={"child-inner "+instance.cssClass}
 									style={{color:instance.textColor}}>
 											<i className={instance.icon}></i>
@@ -207,30 +161,5 @@ class Nested extends Component {
 		);
 	}
 }
-
-function toggleAnimation(arr) {
-	var style;
-	for (var i = 0; i < arr.length; i++) {
-		arr[i].classList.remove("slide-up-appear-active");
-		arr[i].classList.remove("slide-up-enter-active");
-		arr[i].classList.remove("slide-up-enter");
-	}
-}
-
-
-
-
-
-
-/*transitionName={ {
-								enter: 'bounceIn',
-								enterActive: 'bounceIn',
-								leave: 'fadeOutLeft',
-								leaveActive: 'fadeOutLeft'
-							} }
-							transitionEnterTimeout={400}
-							transitionLeaveTimeout={400}*/
-
-
 
 export default Nested;

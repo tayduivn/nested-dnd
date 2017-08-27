@@ -3525,5 +3525,17 @@
         ]
       ]
     }
+  },
+  "abomination psyche": {
+    "isa": "psyche"
+  },
+  "future psyche": {
+    "isa": "psyche"
+  },
+  "ancient psyche": {
+    "isa": "psyche"
+  },
+  "medieval psyche": {
+    "isa": "psyche"
   }
 }

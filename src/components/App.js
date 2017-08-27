@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 import Nested from './Nested/Nested.js';
-import ThingExplorer from './Nested/ThingExplorer.js';
-import { IconDebug } from './Nested/Debug.js'
-import Settings from './Nested/Settings.js';
+import ThingExplorer from './ThingExplorer/ThingExplorer.js';
+import { IconDebug } from './ThingExplorer/IconDebug.js'
+import Settings from './Settings.js';
+
+import './App.css';
 
 class Nav extends Component {
 	render(){
