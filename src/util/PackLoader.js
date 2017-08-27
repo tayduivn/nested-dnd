@@ -88,6 +88,10 @@ PackLoader.load = function(callback){
 					pack.load(result);
 					loaded.push(pack.name);
 				})
+
+				if(!localStorage["seed"]){
+					localStorage["seed"] = result.defaultSeed;
+				}
 				
 				packsAreLoaded = true;
 				callback(result);

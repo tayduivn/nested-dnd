@@ -7,29 +7,30 @@ let thingStore = {};
 
 class Thing{
 	constructor(options){
-		//functions
-		this.b4Make = options.beforeMake;
-		this.afMake = options.afterMake;
-		this.b4Render = options.beforeRender;
-
-		if(things[options.name]){
-			options = Object.assign({}, things[options.name], options );
-		}
 
 		//data clean
 		if(options.background) options.background = options.background.toLowerCase();
 		if(options.textColor) options.textColor = options.textColor.toLowerCase();
+		
+		//extend the existing thing
+		if(things[options.name]){
+			options = Object.assign({}, things[options.name], options );
+		}
+
+		//set functions. These are not in saveOptions because we don't want to copy isa functions
+		this.b4Make = options.beforeMake;
+		this.afMake = options.afterMake;
+		this.b4Render = options.beforeRender;
+		this.cssClass = null;
 
 		saveOptions(this,options);
-		
-		this.cssClass;
-
+	
 		//save
 		if(this.name)
 			things[""+this.name] = this;
 
 		function saveOptions(_t, options){
-			_t.name = options.name,
+			_t.name = options.name;
 			_t.isa = options.isa;
 			_t.contains = options.contains;
 			_t.namegen = options.namegen;
@@ -50,7 +51,7 @@ class Thing{
 			if(this.isa){
 
 				//whoops -- is itself
-				if(this.isa == this.name){
+				if(this.isa === this.name){
 					this.isa = null;
 					return;
 				}
@@ -69,7 +70,7 @@ class Thing{
 			if(!this.contains) this.contains = [];
 			if(!this.data) this.data = {};
 			if(!this.icon) this.icon = "empty";
-			if(this.namegen === "" || this.namegen == this.name) this.namegen = false;
+			if(this.namegen === "" || this.namegen === this.name) this.namegen = false;
 			this.cssClass = Styler.getClass(this);
 			Styler.addThing(this);
 
@@ -178,6 +179,10 @@ thingStore.get = function(name){
 		throw new Error("could not find Thing named "+name);
 	}
 	return things[name];
+}
+
+thingStore.getSortedThingNames = function(){
+	return Object.keys(things).sort();
 }
 
 thingStore.getThings = function(){

@@ -52,7 +52,7 @@ class Instance{
 		for(var i = 0, child; i < this.children.length; i++){
 			if(typeof this.children[i] === "string") continue;
 			child = instances[this.children[i]];
-			if(child.thing.name == thingName)
+			if(child.thing.name === thingName)
 				return child;
 		}
 		return false;

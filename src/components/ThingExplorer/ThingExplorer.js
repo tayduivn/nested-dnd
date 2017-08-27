@@ -66,11 +66,11 @@ class ThingChoice extends React.Component{
 		if(icon.roll) icon = icon[0];
 
 		return (
-			<a className={"list-group-item "+((curr === t) ? "active":"")} href="#"
+			<button className={"list-group-item "+((curr === t) ? "active":"")}
 				onClick={() => this.props.selectFunc(this.props.thing)}>
 				<h4 className="no-margin"><i className={icon}></i> {t.name}</h4>
 				{t.isa}
-			</a>
+			</button>
 		)
 	}
 }
@@ -157,15 +157,15 @@ class ThingView extends React.Component{
 		var updates = this.state.updates;
 		updates[property] = value;
 
-		var updates = {
+		var state = {
 			[property]: value,
 			updates:updates
 		};
-		if(property == "icon"){
+		if(property === "icon"){
 			var cssClass = this.state.cssClass;
 			var randomIcon = null;
 
-			if(value.length == 1) value = value[0];
+			if(value.length === 1) value = value[0];
 
 			if(value){
 				cssClass = cssClass.replace(" empty","");
@@ -182,7 +182,7 @@ class ThingView extends React.Component{
 			if(!this.state.icon) updates.cssClass+=" empty"
 		}
 
-		this.setState(updates);
+		this.setState(state);
 
 		
 	}
@@ -211,7 +211,7 @@ class ThingView extends React.Component{
 			console.error("can't find input");
 			return;
 		}
-		if(input.disabled == true){
+		if(input.disabled){
 			input.disabled = false;
 		}
 		input.focus();
@@ -220,7 +220,7 @@ class ThingView extends React.Component{
 	disabled(property){
 		if(this.state.updates[property] !== undefined)
 			return false;
-		if(this.state[property] == undefined || this.state[property] == null || this.state[property] == ""){
+		if(this.state[property] === undefined || this.state[property] === null || this.state[property] === ""){
 			return true;
 		}
 
@@ -366,14 +366,14 @@ class ThingExplorer extends React.Component{
 			var things = thingStore.getThings();
 			thingsList = Object.values(things);
 			thingsList = thingsList.sort((a,b) => a.name.localeCompare(b.name) );
-			thingNames = Object.keys(thingStore.getThings()).sort((a,b) => a.localeCompare(b));
+			thingNames = thingStore.getSortedThingNames();
 
 			//load icons options
 			uniq(tableStore.get("*GAME ICONS*")).forEach(function(icon){
-				iconsOptions.push({ value: "gi gi-"+icon, label: icon.replace(/\-/g," ") })
+				iconsOptions.push({ value: "gi gi-"+icon, label: icon.replace(/-/g," ") })
 			})
 			uniq(tableStore.get("*FONTAWESOME ICONS*")).forEach(function(icon){
-				iconsOptions.push({ value: "fa fa-"+icon, label: icon.replace(/\-/g," ") })
+				iconsOptions.push({ value: "fa fa-"+icon, label: icon.replace(/-/g," ") })
 			});
 			iconsOptions = iconsOptions.sort(function(a,b){ 
 				return a.label.localeCompare(b.label) 

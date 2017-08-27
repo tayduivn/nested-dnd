@@ -20,7 +20,6 @@ class Ancestors extends React.Component {
 
 		if(parentInst.parent !== null){
 			var current = parentInst.parent;
-			var _t = this;
 			while(current !== null){
 				var ancestor = instanceStore.get(current);
 				ancestors.push(

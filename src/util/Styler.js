@@ -48,7 +48,7 @@ Styler.getClass = function(thing){
 Styler.strToColor = function(str){
 	var colors = "multicolored|opaline|rainbow|red|magenta|orange|yellow|teal|green|blue|turquoise|purple|gold|golden|glowing|shimmering|luminous|faint|white|black|brown|pale|silver|silvery|grey|pink|shady|sharkverse|baconverse|doughnutverse|lasagnaverse";
 
-	str = " "+str.replace(/\-/g," ")+" ";
+	str = " "+str.replace(/-/g," ")+" ";
 	var matches = str.match("^.*\\s("+colors+")\\s.*$");
 	if(!matches) matches = str.match("^.*\\s("+colors+")ish\\s.*$");
 	if(matches && matches[1])
@@ -119,7 +119,7 @@ Styler.addThing = function(thing){
 function makeSafeForCSS(name) {
   return name.replace(/[^a-z0-9]/g, function(s) {
       var c = s.charCodeAt(0);
-      if (c == 32) return '-';
+      if (c === 32) return '-';
       if (c >= 65 && c <= 90) return '_' + s.toLowerCase();
       return '__' + ('000' + c.toString(16)).slice(-4);
   });
@@ -127,7 +127,7 @@ function makeSafeForCSS(name) {
 
 function createCSSSelector(selector, style) {
 	if (!document.styleSheets) return;
-	if (document.getElementsByTagName('head').length == 0) return;
+	if (document.getElementsByTagName('head').length === 0) return;
 
 	var styleSheet,mediaType;
 
@@ -143,7 +143,7 @@ function createCSSSelector(selector, style) {
 					styleSheet = document.styleSheets[i];
 				}
 			}
-			else if (mediaType=='object') {
+			else if (mediaType==='object') {
 				if (media.mediaText === '' || (media.mediaText.indexOf('screen') !== -1)) {
 					styleSheet = document.styleSheets[i];
 				}
@@ -170,8 +170,9 @@ function createCSSSelector(selector, style) {
 	}
 
 	if (mediaType === 'string') {
-		for (var i = 0, l = styleSheet.rules.length; i < l; i++) {
-			if(styleSheet.rules[i].selectorText && styleSheet.rules[i].selectorText.toLowerCase()==selector.toLowerCase()) {
+		var l;
+		for (i = 0, l = styleSheet.rules.length; i < l; i++) {
+			if(styleSheet.rules[i].selectorText && styleSheet.rules[i].selectorText.toLowerCase()===selector.toLowerCase()) {
 				styleSheet.rules[i].style.cssText = style;
 				return;
 			}
@@ -180,8 +181,8 @@ function createCSSSelector(selector, style) {
 	}
 	else if (mediaType === 'object') {
 		var styleSheetLength = (styleSheet.cssRules) ? styleSheet.cssRules.length : 0;
-		for (var i = 0; i < styleSheetLength; i++) {
-			if (styleSheet.cssRules[i].selectorText && styleSheet.cssRules[i].selectorText.toLowerCase() == selector.toLowerCase()) {
+		for (i = 0; i < styleSheetLength; i++) {
+			if (styleSheet.cssRules[i].selectorText && styleSheet.cssRules[i].selectorText.toLowerCase() === selector.toLowerCase()) {
 				styleSheet.cssRules[i].style.cssText = style;
 				return;
 			}

@@ -92,7 +92,7 @@ tableStore.get = function(str){
 	if(table.constructor === ({}).constructor){
 		table = tables[str] = new Table(tables[str]);
 	}
-	else if(typeof table == "string" && Table.isTableID(table)){
+	else if(typeof table === "string" && Table.isTableID(table)){
 		// is an alias for another table
 		return this.get(table);
 	}

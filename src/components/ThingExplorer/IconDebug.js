@@ -74,9 +74,9 @@ class IconDebug extends React.Component{
 				matches[name] = ["gi gi-shop"];
 		});
 
-		for(var thingName in things){
+		things.forEach((thingName) => {
 			var t = things[thingName];
-			if(t.icon) continue;
+			if(t.icon) return;
 
 			gameicons.filter((icon) => icon.split("-").includes(t.name))
 				.forEach((icon) => {
@@ -118,10 +118,11 @@ class IconDebug extends React.Component{
 						});
 				})
 			}
-		}
+		});
 
 		var msg = "MATCHED ICONS: \n ------------------------ \n";
-		for(var name in matches){
+		var name;
+		for(name in matches){
 			if(matches[name].length > 1)
 				msg+="\""+name+"\": { \"icon\": ["+matches[name].join(",")+"] },\n";
 			else
@@ -129,7 +130,7 @@ class IconDebug extends React.Component{
 		}
 
 		msg+= "NEAR MATCHED ICONS: \n ------------------------ \n";
-		for(var name in nearMatches){
+		for(name in nearMatches){
 			if(nearMatches[name].length > 1)
 				msg+="\""+name+"\": { \"icon\": ["+nearMatches[name].join(",")+"] },\n";
 			else
@@ -137,7 +138,7 @@ class IconDebug extends React.Component{
 		}
 
 		msg+= "NAMEGEN MATCHED ICONS: \n ------------------------ \n";
-		for(var name in nameGenMatches){
+		for(name in nameGenMatches){
 			if(nameGenMatches[name].length > 1)
 				msg+="\""+name+"\": { \"icon\": ["+nameGenMatches[name].join(",")+"] },\n";
 			else
