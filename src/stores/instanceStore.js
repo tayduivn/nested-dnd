@@ -147,10 +147,10 @@ instanceStore.get = function(index){
 
 instanceStore.add = function(thing){
 	if(typeof thing === "undefined")
-		throw new Error("thing is required when creating an Instance");
+		throw new Error("thing is required when creating an Instance.");
 
-	if(thing.constructor.name !== "Thing")
-		throw new Error("thing must be an instanceof Thing");
+	if(!thing.thingStore)
+		throw new Error("thing must be an instanceof Thing. Tried to make instance with: "+thing);
 
 	if(thing.isa && !thingStore.exists(thing.isa))
 		throw new Error("trying to extend a non-existent thing "+thing.isa);
