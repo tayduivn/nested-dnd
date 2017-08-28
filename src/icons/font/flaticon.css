@@ -1,9 +1,9 @@
-    /*
-    Flaticon icon font: Flaticon
-    Creation date: 28/08/2017 13:01
-    */
+	/*
+  	Flaticon icon font: Flaticon
+  	Creation date: 28/08/2017 13:01
+  	*/
 
-    @font-face {
+@font-face {
   font-family: "Flaticon";
   src: url("./Flaticon.eot");
   src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
@@ -21,22 +21,15 @@
   }
 }
 
-    .fi:before{
-        display: inline-block;
-  font-family: "Flaticon";
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  line-height: 1;
-  text-decoration: inherit;
-  text-rendering: optimizeLegibility;
-  text-transform: none;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
-    }
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+  font-family: Flaticon;
+        font-size: 20px;
+font-style: normal;
+margin-left: 20px;
+}
 
-    .flaticon-city:before { content: "\f100"; }
+.flaticon-city:before { content: "\f100"; }
 .flaticon-black-hole:before { content: "\f101"; }
 .flaticon-asteroid:before { content: "\f102"; }
 .flaticon-australia-map:before { content: "\f103"; }
@@ -90,58 +83,3 @@
 .flaticon-nature-3:before { content: "\f133"; }
 .flaticon-planet-1:before { content: "\f134"; }
 .flaticon-transport-1:before { content: "\f135"; }
-    
-    $font-Flaticon-city: "\f100";
-    $font-Flaticon-black-hole: "\f101";
-    $font-Flaticon-asteroid: "\f102";
-    $font-Flaticon-australia-map: "\f103";
-    $font-Flaticon-south-america: "\f104";
-    $font-Flaticon-spherical-shape-with-vertical-lines: "\f105";
-    $font-Flaticon-moon-1: "\f106";
-    $font-Flaticon-moon: "\f107";
-    $font-Flaticon-nature: "\f108";
-    $font-Flaticon-cell: "\f109";
-    $font-Flaticon-dna-structure: "\f10a";
-    $font-Flaticon-alien-with-aqualung: "\f10b";
-    $font-Flaticon-molecule: "\f10c";
-    $font-Flaticon-nature-1: "\f10d";
-    $font-Flaticon-big-moon: "\f10e";
-    $font-Flaticon-gas: "\f10f";
-    $font-Flaticon-sunrise: "\f110";
-    $font-Flaticon-solar-system: "\f111";
-    $font-Flaticon-religion-cross: "\f112";
-    $font-Flaticon-meteor-shower: "\f113";
-    $font-Flaticon-atom: "\f114";
-    $font-Flaticon-stars: "\f115";
-    $font-Flaticon-sun: "\f116";
-    $font-Flaticon-planet: "\f117";
-    $font-Flaticon-nebula: "\f118";
-    $font-Flaticon-africa-map: "\f119";
-    $font-Flaticon-interface: "\f11a";
-    $font-Flaticon-hay-rolls: "\f11b";
-    $font-Flaticon-transport: "\f11c";
-    $font-Flaticon-ufo: "\f11d";
-    $font-Flaticon-map-2: "\f11e";
-    $font-Flaticon-map-1: "\f11f";
-    $font-Flaticon-map: "\f120";
-    $font-Flaticon-map-3: "\f121";
-    $font-Flaticon-castle: "\f122";
-    $font-Flaticon-summer: "\f123";
-    $font-Flaticon-technology-1: "\f124";
-    $font-Flaticon-nature-2: "\f125";
-    $font-Flaticon-technology-2: "\f126";
-    $font-Flaticon-technology: "\f127";
-    $font-Flaticon-yacht: "\f128";
-    $font-Flaticon-palm-trees: "\f129";
-    $font-Flaticon-desert: "\f12a";
-    $font-Flaticon-hills: "\f12b";
-    $font-Flaticon-solar-system-1: "\f12c";
-    $font-Flaticon-mountains-1: "\f12d";
-    $font-Flaticon-forest: "\f12e";
-    $font-Flaticon-city-1: "\f12f";
-    $font-Flaticon-nature-4: "\f130";
-    $font-Flaticon-mountains: "\f131";
-    $font-Flaticon-suburb: "\f132";
-    $font-Flaticon-nature-3: "\f133";
-    $font-Flaticon-planet-1: "\f134";
-    $font-Flaticon-transport-1: "\f135";
