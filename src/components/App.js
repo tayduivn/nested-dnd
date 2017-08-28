@@ -20,14 +20,14 @@ class Nav extends Component {
 							<span className="icon-bar"></span>
 							<span className="icon-bar"></span>
 						</button>
-						<Link className="navbar-brand" to="/nested">Nested D&D</Link>
+						<Link className="navbar-brand" to={process.env.PUBLIC_URL + '/'}>Nested D&D</Link>
 						
 					</div>
 
 					<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul className="nav navbar-nav">
-							<li><Link to="/nested">Nested</Link></li>
-							<li><Link to="/things">Thing Explorer</Link></li>
+							<li><Link to={process.env.PUBLIC_URL + '/nested'}>Nested</Link></li>
+							<li><Link to={process.env.PUBLIC_URL + '/things'}>Thing Explorer</Link></li>
 						</ul>
 						<ul className="nav navbar-nav navbar-right">
 							<li><Settings /><IconDebug show={false}></IconDebug></li>
@@ -47,9 +47,9 @@ class App extends Component {
 				<div className="App">
 					<Nav/>
 					<Switch>
-						<Route exact path='/' component={Nested} />
-						<Route path='/nested' component={Nested} />
-						<Route path='/things' component={ThingExplorer} />
+						<Route exact path={process.env.PUBLIC_URL + '/'} component={Nested} />
+						<Route path={process.env.PUBLIC_URL + '/nested'} component={Nested} />
+						<Route path={process.env.PUBLIC_URL + '/things'} component={ThingExplorer} />
 					</Switch>
 				</div>
 			</Router>

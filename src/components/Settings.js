@@ -5,18 +5,15 @@ import Select from 'react-select';
 import thingStore from '../stores/thingStore';
 import tableStore from '../stores/tableStore';
 import Contain from '../util/Contain';
+import PackLoader from '../util/PackLoader';
 
 class SettingsModal extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.packMap = {
-			"dnd": "../packs/game-icons.json,../packs/nested-dnd-data.json,../packs/dnd.js,../packs/forgotten-realms.json",
-			"nested-orteil":"../packs/game-icons.json,../packs/nested-orteil.json,../packs/nested-orteil-extended.json"
-		}
 		var pack = "custom";
-		for(var name in this.packMap){
-			if(localStorage.packs === this.packMap[name]){
+		for(var name in PackLoader.packmap){
+			if(localStorage.packs === PackLoader.packmap[name]){
 				pack = name;
 			}
 		}
@@ -131,7 +128,7 @@ class SettingsModal extends React.Component {
 			});
 			localStorage["packs"] = packs.join(",");
 		}else{
-			localStorage["packs"] = this.packMap[this.state.pack];
+			localStorage["packs"] = PackLoader.packmap[this.state.pack];
 		}
 		
 		this.props.modal.close();
@@ -171,7 +168,7 @@ class SettingsModal extends React.Component {
 
 						<FormGroup controlId="packs" style={{display: (this.state.pack === "custom") ? "block":"none"}}>
 							<ControlLabel>Custom Packs</ControlLabel>
-							<FormControl componentClass="textarea" name="customPacks" value={this.state.customPacks} onChange={this.handleChange}  />
+							<FormControl componentClass="textarea" rows="7" name="customPacks" value={this.state.customPacks} onChange={this.handleChange}  />
 						</FormGroup>
 
 					</Modal.Body>

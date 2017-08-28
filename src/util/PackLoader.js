@@ -1,5 +1,7 @@
 import thingStore from '../stores/thingStore.js';
 import tableStore from '../stores/tableStore.js';
+
+let gameicons = require('../_data/game-icons.json');
 let vm = require('vm');
 
 var packsAreLoaded = false;
@@ -7,6 +9,13 @@ var result = {
 	defaultSeed: "",
 	tables: []
 };
+
+var PackLoader = {};
+
+PackLoader.packmap =  {
+	"dnd": "nested-dnd-data.json,dnd.js,forgotten-realms.json",
+	"nested-orteil":"nested-orteil.json,nested-orteil-extended.json"
+}
 
 class Pack{
 	constructor(options){
@@ -47,17 +56,16 @@ class Pack{
 	}
 }
 
-var PackLoader = {};
-
 PackLoader.load = function(callback){
 	if(packsAreLoaded){
 		callback(result);
 		return result;
 	}
+	new Pack(gameicons).load();
 
 	var packs = localStorage["packs"];
 	if(!packs){
-		localStorage["packs"] = packs = ["./packs/nested-orteil.json","./packs/nested-orteil-extended.json"];
+		localStorage["packs"] = packs = this.packmap[0];
 	}else{
 		packs = packs.split(",");
 	}
@@ -65,6 +73,8 @@ PackLoader.load = function(callback){
 	//load each pack
 	var numFetched = 0;
 	packs.forEach(function(url, index){
+		url = (url.indexOf('http://') === 0 || url.indexOf('https://') === 0) ? url :
+				process.env.PUBLIC_URL + '/packs/' + url;
 
 		fetch(url).then(function(response){
 			if(url.endsWith('.json'))

@@ -115,8 +115,8 @@ class Instance{
 				var thing = thingStore.get(value);
 
 				if(child.isEmbedded){
-					var insertThings = thing.contains;
-					blueprint.splice(i,1,...insertThings);
+					var insert = thing.contains;
+					blueprint.splice(i,1,...insert);
 					i--;
 				}else{
 					var New = instanceStore.add(thing);  

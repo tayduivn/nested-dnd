@@ -25,7 +25,12 @@ class Nested extends React.Component {
 	//set hash to root onload
 	componentDidMount(){
 		var _this = this;
-		window.location.hash = "#0";
+
+		if(this.state.instance)
+			window.location.hash = "#"+this.state.instance.id;
+		else
+			window.location.hash = "#0";
+
 		PackLoader.load(function(packs){
 
 			_this.getSeed(packs);
@@ -89,13 +94,13 @@ class Nested extends React.Component {
 		/*document.getElementById("contains").className = "row animated "+(zoomOut?"zoomOutRight":"zoomOutLeft");*/
 		if(isNaN(index)){
 			var currID = this.state.instance.id;
-			if(this.state.instance && window.location.hash != "#"+currID){
+			if(this.state.instance && window.location.hash !== "#"+currID){
 				window.history.pushState(null, null, '#'+currID);
 			}
 			return;
 		}
 		
-		if(window.location.hash != "#"+index){
+		if(window.location.hash !== "#"+index){
 			window.history.pushState(null, null, '#'+index);
 		}
 
