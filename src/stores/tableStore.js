@@ -57,7 +57,7 @@ tableStore.roll = function(obj){
 	}
 
 	if(obj.roll){
-		return obj.roll();
+		obj = obj.roll();
 	}
 
 	if(typeof obj !== "string"){
@@ -66,15 +66,20 @@ tableStore.roll = function(obj){
 
 	var parts = obj.split("|")
 	if(parts.length !== 1){
-		return new Table({rows: parts, concatenate: true}).roll();
+		obj = new Table({rows: parts, concatenate: true}).roll();
 	}
 	obj = parts[0];
 
 	if(this.isTableID(obj)){
-		return this.get(obj).roll();
+		obj = this.get(obj).roll();
 	}
 
 	return obj;
+}
+
+tableStore.isRollable = function(obj){
+	var result = tableStore.roll(obj);
+	return obj !== result;
 }
 
 tableStore.isTableID = function(str){

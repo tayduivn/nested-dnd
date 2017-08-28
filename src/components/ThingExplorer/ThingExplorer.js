@@ -1,341 +1,61 @@
 import React from 'react';
-import { FormGroup, ControlLabel, FormControl, Checkbox, Button, InputGroup } from 'react-bootstrap';
-import Select from 'react-select';
-import VirtualizedSelect from 'react-virtualized-select'
+import { Checkbox } from 'react-bootstrap';
 
 import thingStore from '../../stores/thingStore.js';
 import tableStore from '../../stores/tableStore.js'
 import PackLoader from '../../util/PackLoader.js';
-import Styler from '../../util/Styler.js';
-import {uniq} from '../../util/util.js';
+import {uniq,copyToClipboard} from '../../util/util.js';
+import ThingChoice from './ThingChoice';
+import ThingView from './ThingView';
 
 import './ThingExplorer.css';
 
-var thingsList = [];
-var thingNames = [];
-var iconsOptions = [];
-
-function getIconsOptions(str){
-	if(typeof str === "string"){
-		var allOptions = iconsOptions.map((o) => o.value);
-		if(!allOptions.includes(str)){
-			iconsOptions.push({
-				value: str,
-				label: makeLabel(str)
-			})
-		}
-	}
-	return iconsOptions;
-};
-
-function renderColorOption(option){
-	return (
-		<div><i className="fa fa-2x fa-square" style={{color: option.value}}></i>  {option.label}</div>
-	);
-}
-
-function renderIcon({ focusedOption, focusedOptionIndex, focusOption, key, labelKey, option, options, selectValue, style, valueArray }) {
-	return (
-		<div className="icon-option" key={key}
-      onClick={() => selectValue(option)}
-      onMouseOver={() => focusOption(option)}
-      style={style}
-    ><i className={option.value}/> {option.label}</div>
-	)
-}
-
-function makeLabel(str){
-	if(!str) return "";
-	return str.replace(/-/g," ").replace(/gi gi /g,"").replace(/fa fa /g,"").replace(/fa flaticon /g,"").replace(/fa spin/g,"spin")
-}
-
-class ThingChoice extends React.Component{
+class NewPack extends React.Component{
 	constructor(props){
 		super(props);
-		this.handleClick = this.handleClick.bind(this)
+		this.copyThings = this.copyThings.bind(this);
+		this.copyTables = this.copyTables.bind(this);
+		this.createNewThing = this.createNewThing.bind(this);
 	}
-
-	handleClick(thing){
-		this.props.selectFunc(thing)
+	createNewThing(){
+		var value = document.getElementById("newThingName").value;
+		var newThing = thingStore.add({name: value});
+		this.props.updatePack(null, {}, newThing);
 	}
-	render(){
-		var t = this.props.thing;
-		var curr = this.props.currentThing;
-		t.processIsa();
-		var icon = t.icon;
-		if(icon.roll) icon = icon[0];
-
-		return (
-			<button className={"list-group-item "+((curr === t) ? "active":"")}
-				onClick={() => this.props.selectFunc(this.props.thing)}>
-				<h4 className="no-margin"><i className={icon}></i> {t.name}</h4>
-				{t.isa}
-			</button>
-		)
+	copyThings(){
+		var str = JSON.stringify(this.props.newPack.things);
+		copyToClipboard(str.substring(1,str.length-1));
+		console.log(str);
 	}
-}
-
-class PropertyInput extends React.Component{
-	render(){
-		var children = React.Children.map(this.props.children,
-     (child) => React.cloneElement(child, {
-       disabled: this.props.disabled
-     })
-    );
-
-		return (
-			(<InputGroup className={this.props.disabled ? "": "no-input-addons"} disabled={this.props.disabled}>
-				<InputGroup.Addon className={"btn btn-danger "+(this.props.disabled ? "": "hidden")} 
-					onClick={(e) => this.props.handleClick(e) }><i className="fa fa-pencil"></i> Edit</InputGroup.Addon>
-				 {children}
-			</InputGroup>)
-		)
-	}
-}
-
-class ThingView extends React.Component{
-	constructor(props){
-		super(props);
-		this.props = props;
-		console.log("ThingView CONSTRUCTOR");
-
-		var t = this.props.thing;
-		this.state = {};
-		this.state = this.thingToState(t,this.state);
-
-		this.handleChange = this.handleChange.bind(this);
-		this.handleClick = this.handleClick.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleChangeIsa = this.handleChangeIsa.bind(this);
-		this.changeProperty = this.changeProperty.bind(this);
-	}
-	thingToState(t, oldState){
-		t.processIsa();
-		var newState = {
-			updates: {}, //wipe out updates
-			name: t.name,
-			randomName: t.getName(),
-			isa: (t.isa) ? t.isa : "",
-			icon: (t.icon !== "empty") ? t.icon : "",
-			namegen: (!t.namegen) ? "" : (typeof t.namegen === "string") ? t.namegen : JSON.stringify(t.namegen),
-			randomIcon: t.getIcon(),
-			contains: (t.contains) ? t.contains : [],
-			background: (t.background) ? t.background : "",
-			textColor: (t.textColor) ? t.textColor : "",
-			originalOptions: (t.originalOptions) ? t.originalOptions : {},
-			data: (!t.data || Object.keys(t.data).length===0) ? "" : JSON.stringify(t.data),
-			autoColor: !(t.autoColor === false),
-			uniqueInstance: t.uniqueInstance === true,
-			cssClass: (t.cssClass) ? t.cssClass : "",
-			thing: t
-		};
-		if(newState.randomName === undefined){
-			console.error("thing doesn't have name!")
-		}
-		if(t.autoColor){
-			var color = Styler.strToColor(newState.randomName);
-			if(color){
-				newState.cssClass+=" "+color;
-			}
-		}
-		if(newState.randomIcon === "empty"){
-			newState.cssClass += " empty";
-		}
-
-		if(oldState){
-			return Object.assign({}, oldState, newState);
-		}
-		else return newState;
-	}
-	componentWillReceiveProps(nextProps){
-		if (nextProps.thing !== this.state.thing) {
-			console.log("ThingView WILL UPDATE");
-			this.setState(this.thingToState(nextProps.thing));
-		}
-	}
-	changeProperty(property, value){
-		var updates = this.state.updates;
-		updates[property] = value;
-
-		var state = {
-			[property]: value,
-			updates:updates
-		};
-		if(property === "icon"){
-			var cssClass = this.state.cssClass;
-			var randomIcon = null;
-
-			if(value.length === 1) value = value[0];
-
-			if(value){
-				cssClass = cssClass.replace(" empty","");
-				randomIcon = tableStore.roll(value);
-			}
-			else if(!cssClass.includes("empty"))
-				cssClass+= " empty";
-
-			updates.cssClass = cssClass;
-			updates.randomIcon = randomIcon;
-		}
-		else if(property === "background"){
-			updates.cssClass = Styler.getClass(updates);
-			if(!this.state.icon) updates.cssClass+=" empty"
-		}
-
-		this.setState(state);
-
-		
-	}
-	handleChange(event){
-		var property = event.target.name;
-		var value = event.target.value;
-		this.changeProperty(property, value);
-		event.target.focus()
-	}
-	handleChangeIsa(option){
-		this.changeProperty("isa", option.value)
-	}
-	handleSubmit(){
-		var options = Object.assign({}, this.props.thing.originalOptions, this.state.updates);
-
-		//submit each value
-		var thing = thingStore.add(options);
-
-		//clean values
-
-		this.props.updatePack(this.props.thing.name, this.state.updates, thing);
-	}
-	handleClick(event){
-		var input = event.target.nextElementSibling;
-		if(!input){
-			console.error("can't find input");
-			return;
-		}
-		if(input.disabled){
-			input.disabled = false;
-		}
-		input.focus();
-		console.log("test");
-	}
-	disabled(property){
-		if(this.state.updates[property] !== undefined)
-			return false;
-		if(this.state[property] === undefined || this.state[property] === null || this.state[property] === ""){
-			return true;
-		}
-
-		//if it hasn't been updated and it's not the same as the original option, that means it's inherited
-		if(this.state[property] !== this.props.thing.originalOptions[property]){
-			return true;
-		}
-
+	copyTables(){
+		var str = JSON.stringify(this.props.newPack.tables);
+		copyToClipboard(str.substring(1,str.length-1));
+		console.log(str);
 	}
 	render(){
-		return (
-			<div id="thingView" className="thingView row">
-				<div className="properties col-lg-10 col-md-9 col-sm-8 col-xs-6">
-					<FormGroup>
-						<h1>
-							<FormControl name="name" type="text" bsSize="large" value={this.state.name} onChange={this.handleChange} />
-						</h1>
-					</FormGroup>
-					<FormGroup>
-						<label>Is a...</label>
-						<Select name="isa" value={this.state.isa} onChange={this.handleChangeIsa}
-							clearValueText="Clear changes" resetValue={this.props.thing.isa}
-							options={thingNames.map((name) =>{ return {value:name,label:name} })}>
-						</Select>
-					</FormGroup>
-					<FormGroup>
-						<label>Name generator</label>
-						<PropertyInput disabled={this.disabled("namegen")} handleClick={this.handleClick}>
-							<FormControl name="namegen" type="text" 
-								value={this.state.namegen} 
-								disabled={this.disabled("namegen")} onChange={this.handleChange} />
-						</PropertyInput>
-					</FormGroup>
-					<FormGroup>
-						<label>Contains</label>
-						{this.state.contains.map((item, index) => (
-							<PropertyInput key={index} disabled={this.disabled("contains")} handleClick={this.handleClick}>
-								<FormControl name="contains" type="text" value={(typeof item === "string") ? item : JSON.stringify(item) } disabled={this.disabled("contains")} 
-									onChange={this.handleChange} />
-								<InputGroup.Addon>
-									<em>{ (item.roll) ? "Table" : (thingStore.exists(item)) ? "thing" : "text"}</em>
-								</InputGroup.Addon>
-							</PropertyInput>
-						))}
-						<br/>
-						<div className={this.state.contains.length ? "":"pull-right"}><Button><i className="fa fa-plus"></i> Add Another</Button></div>
-					</FormGroup>
-					<FormGroup>
-						<label>Icon</label>
-							<VirtualizedSelect name="icon" value={this.state.icon} 
-								clearable={true} clearValueText="Clear changes" 
-								resetValue={ [ { value: this.props.thing.originalOptions.icon, label: makeLabel(this.props.thing.originalOptions.icon) } ] }
-								onChange={(value) => {this.changeProperty("icon", value.split(","))} } 
-								multi={true} matchProp="label" ignoreCase={false}
-								optionRenderer={renderIcon} simpleValue searchable={true}  
-								options={ getIconsOptions(this.props.thing.icon) } 
-								selectComponent={Select.Creatable} />
-					</FormGroup>
-					<FormGroup>
-						<label>Background</label>
-						<Select name="background" value={this.state.background} 
-							clearValueText="Clear changes" resetValue={this.props.thing.background}
-							optionRenderer={renderColorOption}
-							onChange={(option) => {this.changeProperty("background", option.value)} } options={Styler.getColorOptions()} >
-							<option key={"asaksjlkad"}>aslakjslkjd</option>
-							</Select>
-					</FormGroup>
-					<FormGroup>
-						<label>Text Color</label>
-						<Select name="textColor" value={this.state.textColor} 
-							clearValueText="Clear changes" resetValue={this.props.thing.textColor}
-							optionRenderer={renderColorOption}
-							onChange={(option) => {this.changeProperty("textColor", option.value)} } options={Styler.getColorOptions()}>
-						</Select>
-					</FormGroup>
-					<FormGroup>
-						<label>Data (JSON format)</label>
-						<PropertyInput disabled={this.disabled("data")} handleClick={this.handleClick}>
-								<textarea name="data" className="form-control" value={this.state.data} 	onChange={this.handleChange} disabled={this.disabled("data")} ></textarea>
-						</PropertyInput>
-					</FormGroup>
-					<FormGroup className={(this.props.thing.b4Make) ? "" : "hidden"} validationState="warning">
-						<ControlLabel>beforeMake() - Edit in *.js pack file</ControlLabel>
-						<FormControl componentClass="textarea" value={this.props.thing.b4Make} disabled />
-					</FormGroup>
-					<FormGroup className={(this.props.thing.afMake) ? "" : "hidden"} validationState="warning">
-						<ControlLabel>afterMake() - Edit in *.js pack file</ControlLabel>
-						<FormControl componentClass="textarea" value={this.props.thing.afMake} disabled />
-					</FormGroup>
-					<FormGroup className={(this.props.thing.b4Render) ? "" : "hidden"} validationState="warning">
-						<ControlLabel>beforeRender() - Edit in *.js pack file</ControlLabel>
-						<FormControl componentClass="textarea" value={this.props.thing.b4Render} disabled />
-					</FormGroup>
-					<Button onClick={this.handleSubmit}>Save</Button>
+		var numThings = Object.keys(this.props.newPack.things).length;
+		var numTables = Object.keys(this.props.newPack.tables).length;
+		var hasData = numTables || numThings;
+		var addThing = (<span className="form-inline">
+				<input className="form-control input-sm" id="newThingName" type="text" />
+				<button className="btn btn-sm btn-default" onClick={this.createNewThing}>Add Thing</button>
+			</span>);
+
+		var message = (<div>Update things to generate your own pack {addThing}</div>);
+		if(hasData){
+			message = (<div>
+				your new pack has <strong>{numThings}</strong> new things and <strong>{numTables}</strong> new tables 
+				{addThing}
+				<div className="pull-right">	
+					<button className="btn btn-sm btn-success" onClick={this.copyThings}>copy things</button>
+					<button className="btn btn-sm btn-success" onClick={this.copyTables}>copy tables</button>
 				</div>
-				<div className="child col-lg-2 col-md-3 col-sm-4 col-xs-6">
-					<h5>PREVIEW</h5>
-					<div className={"child-inner "+this.state.cssClass} style={{color:this.state.textColor}}>
-						<i className={this.state.randomIcon}></i>
-						<h1>{this.state.randomName}</h1>
-					</div>
-					<Checkbox name="uniqueInstance" checked={this.state.uniqueInstance} onChange={this.handleChange}>
-						Is Unique
-					</Checkbox>
-					<Checkbox name="autoColor" checked={this.state.autoColor} onChange={this.handleChange}>
-						Auto-Color from Name
-					</Checkbox>
-					<div className="icons-preview">
-						{ (this.state.icon && this.state.icon.roll && this.state.icon.length > 1) ? (
-							this.state.icon.map((icon) => (<div key={icon}><i className={icon} /><br/>{icon}</div>) )
-						) : "" }
-					</div>
-				</div>
-			</div>
-		)
+			</div>);
+		}
+
+		return (<div className={"notification-holder alert "+(hasData ? "alert-success" : "alert-primary")}>
+			{message}
+		</div>);
 	}
 }
 
@@ -347,15 +67,27 @@ class ThingExplorer extends React.Component{
 			currentThing: null,
 			newPack: {things: {},tables:{}}
 		};
+
+		this.thingsList = [];
+		this.thingNames = [];
+		this.thingOptions = [];
+		this.iconsOptions = [];
+
 		this.filterList = this.filterList.bind(this);
 		this.selectThing = this.selectThing.bind(this);
 		this.updatePack = this.updatePack.bind(this);
 	}
+	getThings() {
+		this.thingNames = thingStore.getSortedThingNames();
+		this.thingsList = thingStore.getThings(this.thingNames);
+		this.thingOptions = thingStore.getGenericThingNames()
+			.map((name) =>{ return {value:name,label:name} });
+	}
 	componentDidMount() {
-		if(thingsList.length){
+		if(this.thingsList.length){
 			var state = {
-				things: thingsList,
-				currentThing: thingsList[0]
+				things: this.thingsList,
+				currentThing: this.thingsList[0]
 			};
 			this.setState(state)
 			return;
@@ -363,65 +95,69 @@ class ThingExplorer extends React.Component{
 
     var _this = this;
 		PackLoader.load(function(packs){
-			var things = thingStore.getThings();
-			thingsList = Object.values(things);
-			thingsList = thingsList.sort((a,b) => a.name.localeCompare(b.name) );
-			thingNames = thingStore.getSortedThingNames();
+			_this.getThings();
 
 			//load icons options
 			uniq(tableStore.get("*GAME ICONS*")).forEach(function(icon){
-				iconsOptions.push({ value: "gi gi-"+icon, label: icon.replace(/-/g," ") })
+				_this.iconsOptions.push({ value: "gi gi-"+icon, label: icon.replace(/-/g," ") })
 			})
 			uniq(tableStore.get("*FONTAWESOME ICONS*")).forEach(function(icon){
-				iconsOptions.push({ value: "fa fa-"+icon, label: icon.replace(/-/g," ") })
+				_this.iconsOptions.push({ value: "fa fa-"+icon, label: icon.replace(/-/g," ") })
 			});
-			iconsOptions = iconsOptions.sort(function(a,b){ 
+			_this.iconsOptions = _this.iconsOptions.sort(function(a,b){ 
 				return a.label.localeCompare(b.label) 
 			});
 
 			var state = {
-				things: thingsList,
-				currentThing: thingsList[0]
+				things: _this.thingsList,
+				currentThing: _this.thingsList[0]
 			};
 			_this.setState(state)
 		});
   }
 
-	doFilter(query){
+	doFilter(query, isMissingIcons){
 		var result;
-		if(!query){
-			result = thingsList;
+
+		if(!query && !isMissingIcons){
+			result = this.thingsList;
 		}
 		else{
-			result = thingsList.filter((t) => 
-				t.name.toLowerCase().includes(query) || (t.isa && t.isa.toLowerCase().includes(query))
-			);
+			result = this.thingsList.filter((t) => {
+				var match= (t.name.toLowerCase().includes(query) || (t.isa && t.isa.toLowerCase().includes(query)));
+				var missingIcon = t.getIcon() === "empty";
+				if(!isMissingIcons) return match;
+				else if(!query) return missingIcon;
+				return match && missingIcon;
+			});
 		}
 		return result;
 	}
 
 	filterList(event){
-		var query = event.target.value.toLowerCase();
+		var state = {};
+		if(event.currentTarget.name === "query")
+			state.query = event.target.value.toLowerCase();
+		if(event.currentTarget.name === "isMissingIcons")
+			state.isMissingIcons = event.currentTarget.checked;
 
-		this.setState({
-			query: query,
-			things: this.doFilter(query)
-		});
+		state.things = this.doFilter(state.query, state.isMissingIcons);
+		this.setState(state);
 	}
 
 	selectThing(thing){
 		this.setState({currentThing: thing});
 	}
 	updatePack(originalName, updates, newThing){
-
+		if(originalName){
+			updates = Object.assign({}, thingStore.get(originalName).originalOptions, updates )
+		}
+		
 		var newThings =  Object.assign({}, this.state.newPack.things, { [newThing.name]: updates } )
 		var newPack = Object.assign({}, this.state.newPack, {
 			things: newThings });
 
-		var things = thingStore.getThings();
-		thingsList = Object.values(things);
-		thingsList = thingsList.sort((a,b) => a.name.localeCompare(b.name) );
-		thingNames = Object.keys(thingStore.getThings()).sort((a,b) => a.localeCompare(b));
+		this.getThings();
 
 		this.setState({
 			things: this.doFilter(this.state.query),
@@ -435,7 +171,6 @@ class ThingExplorer extends React.Component{
 	render(){
 		if(!this.state.things) 
 			return <div>LOADING</div>;
-
 		var things = this.state.things;
 		var thingList = things.map((thing) => (
 			<ThingChoice key={thing.name} thing={thing} currentThing={this.state.currentThing} selectFunc={this.selectThing} />
@@ -445,17 +180,26 @@ class ThingExplorer extends React.Component{
 			<div className="container-fluid">
 				<div className="row">
 					<div className="col-sm-3 col-md-2 sidebar">
-						<div className="form-group has-feedback">
-							<input type="text" className="form-control" placeholder="Search" onChange={this.filterList}/>
+						<div id="thingSearch" className="form-group has-feedback">
+							<input type="text" name="query" className="form-control" placeholder="Search" onChange={this.filterList}/>
 							<span className="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
 						</div>
+						<Checkbox className="col-xs-12" name="isMissingIcons" onChange={this.filterList} value={this.state.isMissingIcons}>
+							Missing an icon
+						</Checkbox>
 						<div className="list-group">{thingList}</div>
 					</div>
-					<div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-						<ThingView thing={this.state.currentThing} newPack={this.state.newPack} updatePack={this.updatePack} />
+					<div id="thingView" className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 ">
+						<NewPack newPack={this.state.newPack} updatePack={this.updatePack} />
+						<div className="main">
+							<ThingView 
+								thing={this.state.currentThing} 
+								thingOptions={this.thingOptions}
+								iconsOptions={this.iconsOptions}
+								updatePack={this.updatePack} />
+						</div>
 					</div>
 				</div>
-				<div id="notification-holder" className="alert alert-success page-alert">{Object.keys(this.state.newPack.things).length} new things and {Object.keys(this.state.newPack.tables).length} new tables</div>
 			</div>
 		)
 	}

@@ -74,7 +74,7 @@ Styler.addThing = function(thing){
 		var bg = Color(thing.background.split(" ")[0]);
 		var hover = shift(bg,0.05);
 		var border = hover;
-		var color = (thing.textColor) ? thing.textColor : shift(bg,0.5);
+		var color = (thing.textColor) ? Color(thing.textColor) : shift(bg,0.5);
 
 		var c="."+thing.cssClass;
 		var btn=c+".parent .btn.btn-default";
@@ -83,27 +83,26 @@ Styler.addThing = function(thing){
 		var btnBG = shift(bg,0.1);
 		createCSSSelector(c, 
 			"background:"+thing.background+";"+
-			"background-color:"+bg.toString()+";"+
-			"color:"+color.toString()+";"
+			"color:"+color.toCSS()+";"
 		);
 		createCSSSelector(btn,
 			"background:"+thing.background+";"+
-			"border-color:"+border.toString()
+			"border-color:"+border.toCSS()
 		);
 		createCSSSelector(btn+":focus,"+btn+".focus",
-			"background-color:"+shift(btnBG,0.1).toString()+";"+
-			"border-color:"+shift(btnBG,0.25).toString()
+			"background-color:"+shift(btnBG,0.1).toCSS()+";"+
+			"border-color:"+shift(btnBG,0.25).toCSS()
 		);
 		createCSSSelector(btn+":hover,"+btn+":active,"+btn+":active, .open > .dropdown-toggle",
-			"background-color:"+shift(btnBG,0.1).toString()+";"+
-			"border-color:"+shift(btnBG,0.12).toString()
+			"background-color:"+shift(btnBG,0.1).toCSS()+";"+
+			"border-color:"+shift(btnBG,0.12).toCSS()
 		);
 		createCSSSelector(dropdown,
-			"background-color:"+bg.toString()+";"+
-			"border-color:"+border.toString()
+			"background-color:"+bg.toCSS()+";"+
+			"border-color:"+border.toCSS()
 		);
 		createCSSSelector(dropdownItem+":hover",
-			"background-color:"+shift(hover,0.05).toString()+";"
+			"background-color:"+shift(hover,0.05).toCSS()+";"
 		);
 	}
 

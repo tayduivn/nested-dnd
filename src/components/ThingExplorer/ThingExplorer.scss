@@ -88,15 +88,6 @@ body {
   margin-top: 0;
 }
 
-#notification-holder{
-  position:absolute;
-  bottom:0;
-  left:0;
-  width:100%;
-  z-index:1078;
-  margin:0;
-}
-
 /*
  * Placeholder dashboard ideas
  */
@@ -117,6 +108,8 @@ body {
 }
 
 #thingView{
+  padding:0px;
+
   .properties{
     max-width:500px;
   }
@@ -133,6 +126,20 @@ body {
   .icons-preview{
     text-align: center;
   }
+
+  .notification-holder{
+    margin:0;
+    border-radius:0;
+
+    .btn-sm, .input-sm{
+      margin: -5px 5px;
+    }
+  }
+
+}
+
+#thingSearch{
+  margin-bottom:0;
 }
 
 .icon-option{

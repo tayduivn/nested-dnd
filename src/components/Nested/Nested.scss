@@ -11,6 +11,7 @@ html, body {
   padding-top:10px;
   min-height: 100%;
 }
+
 #title{
   padding: 15px;
   margin: 0;
@@ -21,6 +22,10 @@ html, body {
     max-height: 80vh;
     overflow-x: hidden;
     overflow-y: auto;
+}
+.description.alert-default{
+  text-align: left;
+  font-size: 1.3em;
 }
 
 h1{

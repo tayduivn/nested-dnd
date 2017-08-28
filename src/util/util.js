@@ -12,6 +12,15 @@ Math.rand = function(min,max){// eslint-disable-line
 	return parseFloat(Math.floor(Math.random()*(max-min+1)))+parseFloat(min);
 }
 
+function copyToClipboard(text) {
+	var textField = document.createElement('textarea')
+	textField.innerText = text
+	document.body.appendChild(textField)
+	textField.select()
+	document.execCommand('copy')
+	textField.remove()
+}
+
 function uniq(a) {
 	var prims = {"boolean":{}, "number":{}, "string":{}}, objs = [];
 
@@ -88,4 +97,4 @@ function weightedDiceChoose(arr){
 
 
 
-export {uniq,choose,weightedChoose,weightedDiceChoose}
+export {uniq,choose,weightedChoose,weightedDiceChoose,copyToClipboard}

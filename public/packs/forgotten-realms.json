@@ -6,7 +6,6 @@
   "dependencies": [
     "dnd"
   ],
-  "defaultSeed": "Great Wheel > Prime Material Plane > Realmspace > Toril > Faerûn > Northwest Faerûn > Sword Coast > Neverwinter > Blacklake District > tavern",
   "things": {
     "Prime Material Plane": {
       "contains": [

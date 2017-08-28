@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "Adds missing things, icons and colors for things.",
   "author": "Cattegy",
-  "dependencies": [
-    "orteil-nested"
-  ],
+  "dependencies": ["orteil-nested"],
   "things": {
     "rocketship": {},
     "attic": {},
@@ -21,68 +19,34 @@
       "icon": "gi gi-sleeveless-jacket"
     },
     "shoes": {
-      "icon": [
-        "gi gi-boots",
-        "gi gi-steeltoe-boots"
-      ]
+      "icon": ["gi gi-boots", "gi gi-steeltoe-boots"]
     },
     "jungle tree": {
-      "icon": [
-        "gi gi-palm-tree",
-        "gi gi-pine-tree",
-        "fa fa-tree"
-      ]
+      "icon": ["gi gi-palm-tree", "gi gi-pine-tree", "fa fa-tree"]
     },
     "insect queen": {
       "icon": "gi gi-chess-queen"
     },
     "amphibian": {
-      "icon": [
-        "gi gi-frog",
-        "gi gi-toad-teeth",
-        "gi gi-salamander"
-      ]
+      "icon": ["gi gi-frog", "gi gi-toad-teeth", "gi gi-salamander"]
     },
     "reptile": {
-      "icon": [
-        "gi gi-turtle-shell",
-        "gi gi-turtle",
-        "gi gi-tortoise",
-        "gi gi-gecko"
-      ]
+      "icon": ["gi gi-turtle-shell", "gi gi-turtle", "gi gi-tortoise", "gi gi-gecko"]
     },
     "poultry": {
-      "icon": [
-        "gi gi-chicken",
-        "gi gi-duck"
-      ]
+      "icon": ["gi gi-chicken", "gi gi-duck"]
     },
     "herbivorous mammal": {
-      "icon": [
-        "gi gi-elephant-head",
-        "gi gi-rhinoceros-horn"
-      ]
+      "icon": ["gi gi-elephant-head", "gi gi-rhinoceros-horn"]
     },
     "predatory mammal": {
-      "icon": [
-        "gi gi-fox-head",
-        "gi gi-boar-tusks",
-        "gi gi-wolf-head",
-        "gi gi-wolf-howl",
-        "gi gi-lynx-head",
-        "gi gi-lion",
-        "gi gi-tiger"
-      ]
+      "icon": ["gi gi-fox-head", "gi gi-boar-tusks", "gi gi-wolf-head", "gi gi-wolf-howl", "gi gi-lynx-head", "gi gi-lion", "gi gi-tiger"]
     },
     "bear": {
       "icon": "gi gi-panda"
     },
     "push-button": {
-      "icon": [
-        "gi gi-lever",
-        "gi gi-button-finger",
-        "gi gi-power-button"
-      ]
+      "icon": ["gi gi-lever", "gi gi-button-finger", "gi gi-power-button"]
     },
     "computer file": {
       "icon": [
@@ -107,13 +71,7 @@
       ]
     },
     "medieval coat": {
-      "icon": [
-        "gi gi-cloak-dagger",
-        "gi gi-wing-cloak",
-        "gi gi-cloak",
-        "gi gi-cape",
-        "gi gi-robe"
-      ]
+      "icon": ["gi gi-cloak-dagger", "gi gi-wing-cloak", "gi gi-cloak", "gi gi-cape", "gi gi-robe"]
     },
     "medieval weapon": {
       "icon": [
@@ -183,70 +141,37 @@
       ]
     },
     "unusual stone": {
-      "icon": [
-        "gi gi-crystal-cluster",
-        "gi gi-crystal-growth",
-        "gi gi-crystal-shine",
-        "gi gi-floating-crystal"
-      ]
+      "icon": ["gi gi-crystal-cluster", "gi gi-crystal-growth", "gi gi-crystal-shine", "gi gi-floating-crystal"]
     },
     "unusual plant": {
-      "icon": [
-        "gi gi-lotus-flower",
-        "gi gi-lotus",
-        "gi gi-incense",
-        "gi gi-garlic"
-      ]
+      "icon": ["gi gi-lotus-flower", "gi gi-lotus", "gi gi-incense", "gi gi-garlic"]
     },
     "future bathroom stuff": {
-      "icon": [
-        "fa fa-bathtub",
-        "fa fa-shower"
-      ]
+      "icon": ["fa fa-bathtub", "fa fa-shower"]
     },
     "future living-room stuff": {
-      "icon": [
-        "gi gi-table",
-        "fa fa-table",
-        "gi gi-desk-lamp"
-      ]
+      "icon": ["gi gi-table", "fa fa-table", "gi gi-desk-lamp"]
     },
     "future bedroom stuff": {
-      "icon": [
-        "gi gi-bed",
-        "fa fa-bed",
-        "gi gi-desk-lamp"
-      ]
+      "icon": ["gi gi-bed", "fa fa-bed", "gi gi-desk-lamp"]
     },
     "future decoration stuff": {
       "icon": "gi gi-desk-lamp"
     },
     "wing": {
-      "icon": [
-        "gi gi-bat-wing",
-        "gi gi-curly-wing",
-        "gi gi-feathered-wing",
-        "gi gi-fluffy-wing"
-      ]
+      "icon": ["gi gi-bat-wing", "gi gi-curly-wing", "gi gi-feathered-wing", "gi gi-fluffy-wing"]
     },
     "beak": {
       "icon": "gi gi-triple-beak"
     },
     "tail": {
-      "icon": [
-        "gi gi-fox-tail",
-        "gi gi-armadillo-tail",
-        "gi gi-scorpion-tail"
-      ]
+      "icon": ["gi gi-fox-tail", "gi gi-armadillo-tail", "gi gi-scorpion-tail"]
     },
     "dog": {
       "icon": "gi gi-sniffing-dog"
     },
     "needle": {
-      "icon": [
-        "gi gi-sewing-needle",
-        "gi gi-triple-needle"
-      ]
+      "icon": ["gi gi-sewing-needle", "gi gi-triple-needle"]
     },
     "doll": {
       "icon": "gi gi-voodoo-doll"
@@ -255,43 +180,22 @@
       "icon": "gi gi-bullets"
     },
     "gun": {
-      "icon": [
-        "gi gi-pistol-gun",
-        "gi gi-bolter-gun",
-        "gi gi-ray-gun",
-        "gi gi-sentry-gun",
-        "gi gi-laser-gun"
-      ]
+      "icon": ["gi gi-pistol-gun", "gi gi-bolter-gun", "gi gi-ray-gun", "gi gi-sentry-gun", "gi gi-laser-gun"]
     },
     "wound": {
-      "icon": [
-        "gi gi-bleeding-wound",
-        "gi gi-large-wound",
-        "gi gi-open-wound",
-        "gi gi-ragged-wound",
-        "gi gi-rough-wound",
-        "gi gi-scar-wound",
-        "gi gi-spotted-wound",
-        "gi gi-stitched-wound"
-      ]
+      "icon": ["gi gi-bleeding-wound", "gi gi-large-wound", "gi gi-open-wound", "gi gi-ragged-wound", "gi gi-rough-wound", "gi gi-scar-wound", "gi gi-spotted-wound", "gi gi-stitched-wound"]
     },
     "pen": {
       "icon": "gi gi-fountain-pen"
     },
     "note": {
-      "icon": [
-        "fa fa-sticky-note",
-        "fa fa-sticky-note-o"
-      ]
+      "icon": ["fa fa-sticky-note", "fa fa-sticky-note-o"]
     },
     "feathers": {
       "icon": "gi gi-two-feathers"
     },
     "glass": {
-      "icon": [
-        "gi gi-cracked-glass",
-        "gi gi-shattered-glass"
-      ]
+      "icon": ["gi gi-cracked-glass", "gi gi-shattered-glass"]
     },
     "bowl": {
       "icon": "gi gi-bubbling-bowl"
@@ -652,14 +556,7 @@
       "icon": "gi gi-parmecia"
     },
     "planet": {
-      "icon": [
-        "fa fa-globe fa-spin",
-        "gi gi-earth-asia-oceania gi-spin",
-        "gi gi-earth-africa-europe gi-spin",
-        "gi gi-earth-america gi-spin",
-        "fa flaticon-nature-3",
-        "fa flaticon-nature-3"
-      ],
+      "icon": ["fa fa-globe fa-spin", "gi gi-earth-asia-oceania gi-spin", "gi gi-earth-africa-europe gi-spin", "gi gi-earth-america gi-spin", "fa flaticon-nature-3", "fa flaticon-nature-3"],
       "background": "black",
       "textColor": "DodgerBlue"
     },
@@ -668,14 +565,7 @@
       "background": "black"
     },
     "terraformed planet": {
-      "icon": [
-        "fa fa-globe fa-spin",
-        "gi gi-earth-asia-oceania gi-spin",
-        "gi gi-earth-africa-europe gi-spin",
-        "gi gi-earth-america gi-spin",
-        "fa flaticon-nature-3",
-        "fa flaticon-nature-3"
-      ],
+      "icon": ["fa fa-globe fa-spin", "gi gi-earth-asia-oceania gi-spin", "gi gi-earth-africa-europe gi-spin", "gi gi-earth-america gi-spin", "fa flaticon-nature-3", "fa flaticon-nature-3"],
       "background": "black",
       "textColor": "DodgerBlue"
     },
@@ -687,10 +577,7 @@
       "icon": "fa flaticon-technology-1"
     },
     "named visitor": {
-      "icon": [
-        "fa flaticon-technology",
-        "fa flaticon-alien-with-aqualung"
-      ]
+      "icon": ["fa flaticon-technology", "fa flaticon-alien-with-aqualung"]
     },
     "future planet": {
       "icon": "fa flaticon-spherical-shape-with-vertical-lines",
@@ -703,26 +590,12 @@
       "textColor": "purple"
     },
     "medieval planet": {
-      "icon": [
-        "fa fa-globe fa-spin",
-        "gi gi-earth-asia-oceania gi-spin",
-        "gi gi-earth-africa-europe gi-spin",
-        "gi gi-earth-america gi-spin",
-        "fa flaticon-nature-3",
-        "fa flaticon-nature-3"
-      ],
+      "icon": ["fa fa-globe fa-spin", "gi gi-earth-asia-oceania gi-spin", "gi gi-earth-africa-europe gi-spin", "gi gi-earth-america gi-spin", "fa flaticon-nature-3", "fa flaticon-nature-3"],
       "background": "black",
       "textColor": "DodgerBlue"
     },
     "ancient planet": {
-      "icon": [
-        "fa fa-globe fa-spin",
-        "gi gi-earth-asia-oceania gi-spin",
-        "gi gi-earth-africa-europe gi-spin",
-        "gi gi-earth-america gi-spin",
-        "fa flaticon-nature-3",
-        "fa flaticon-nature-3"
-      ],
+      "icon": ["fa fa-globe fa-spin", "gi gi-earth-asia-oceania gi-spin", "gi gi-earth-africa-europe gi-spin", "gi gi-earth-america gi-spin", "fa flaticon-nature-3", "fa flaticon-nature-3"],
       "background": "black",
       "textColor": "DodgerBlue"
     },
@@ -764,69 +637,38 @@
       "textColor": "white"
     },
     "continent": {
-      "icon": [
-        "fa flaticon-australia-map",
-        "fa flaticon-africa-map",
-        "fa flaticon-south-america"
-      ],
-      "background": "#87CEEB",
+      "icon": ["fa flaticon-australia-map", "fa flaticon-africa-map", "fa flaticon-south-america"],
+      "background": "skyblue",
       "textColor": "DarkGreen"
     },
     "future continent": {
-      "icon": [
-        "fa flaticon-australia-map",
-        "fa flaticon-africa-map",
-        "fa flaticon-south-america"
-      ],
-      "background": "#87CEEB",
+      "icon": ["fa flaticon-australia-map", "fa flaticon-africa-map", "fa flaticon-south-america"],
+      "background": "skyblue",
       "textColor": "DarkGreen"
     },
     "ancient continent": {
-      "icon": [
-        "fa flaticon-australia-map",
-        "fa flaticon-africa-map",
-        "fa flaticon-south-america"
-      ],
-      "background": "#87CEEB",
+      "icon": ["fa flaticon-australia-map", "fa flaticon-africa-map", "fa flaticon-south-america"],
+      "background": "skyblue",
       "textColor": "DarkGreen"
     },
     "medieval continent": {
-      "icon": [
-        "fa flaticon-australia-map",
-        "fa flaticon-africa-map",
-        "fa flaticon-south-america"
-      ],
-      "background": "#87CEEB",
+      "icon": ["fa flaticon-australia-map", "fa flaticon-africa-map", "fa flaticon-south-america"],
+      "background": "skyblue",
       "textColor": "DarkGreen"
     },
     "country": {
-      "icon": [
-        "fa flaticon-map",
-        "fa flaticon-map-1",
-        "fa flaticon-map-2",
-        "fa flaticon-map-3"
-      ],
-      "background": "#87CEEB",
+      "icon": ["fa flaticon-map", "fa flaticon-map-1", "fa flaticon-map-2", "fa flaticon-map-3"],
+      "background": "skyblue",
       "textColor": "DarkGreen"
     },
     "medieval land": {
-      "icon": [
-        "fa flaticon-map",
-        "fa flaticon-map-1",
-        "fa flaticon-map-2",
-        "fa flaticon-map-3"
-      ],
-      "background": "#87CEEB",
+      "icon": ["fa flaticon-map", "fa flaticon-map-1", "fa flaticon-map-2", "fa flaticon-map-3"],
+      "background": "skyblue",
       "textColor": "DarkGreen"
     },
     "ancient land": {
-      "icon": [
-        "fa flaticon-map",
-        "fa flaticon-map-1",
-        "fa flaticon-map-2",
-        "fa flaticon-map-3"
-      ],
-      "background": "#87CEEB",
+      "icon": ["fa flaticon-map", "fa flaticon-map-1", "fa flaticon-map-2", "fa flaticon-map-3"],
+      "background": "skyblue",
       "textColor": "DarkGreen"
     },
     "region": {
@@ -851,10 +693,7 @@
       "icon": "fa flaticon-suburb"
     },
     "medieval monument": {
-      "icon": [
-        "gi gi-water-fountain",
-        "gi gi-ionic-column"
-      ]
+      "icon": ["gi gi-water-fountain", "gi gi-ionic-column"]
     },
     "living center": {
       "icon": "fa flaticon-suburb"
@@ -901,17 +740,11 @@
       "background": "#00BEA6 linear-gradient(#0057BE, #00BEA6)"
     },
     "sea": {
-      "icon": [
-        "fa flaticon-yacht",
-        "gi gi-at-sea"
-      ],
+      "icon": ["fa flaticon-yacht", "gi gi-at-sea"],
       "background": "#00BEA6 linear-gradient(#0057BE, #00BEA6)"
     },
     "lake": {
-      "icon": [
-        "fa flaticon-yacht",
-        "gi gi-at-sea"
-      ],
+      "icon": ["fa flaticon-yacht", "gi gi-at-sea"],
       "background": "#00BEA6 linear-gradient(#0057BE, #00BEA6)"
     },
     "battlefield": {
@@ -924,16 +757,13 @@
     },
     "galactic life": {
       "icon": "fa flaticon-alien-with-aqualung pulse animated infinite",
-      "background": "#00FF00",
-      "textColor": "#8B008B"
+      "background": "lime",
+      "textColor": "darkmagenta"
     },
     "space animal": {
-      "icon": [
-        "gi gi-alien-skull",
-        "gi gi-alien-stare"
-      ],
-      "background": "#00FF00",
-      "textColor": "#8B008B"
+      "icon": ["gi gi-alien-skull", "gi gi-alien-stare"],
+      "background": "lime",
+      "textColor": "darkmagenta"
     },
     "land life": {
       "icon": "gi gi-rabbit",
@@ -976,86 +806,46 @@
       "background": "slategray"
     },
     "medieval clutter": {
-      "icon": [
-        "gi gi-broom",
-        "gi gi-knife-fork",
-        "gi gi-cooking-pot",
-        "gi gi-candle-holder",
-        "gi gi-wood-axe",
-        "gi gi-hand-saw",
-        "gi gi-quill-ink",
-        "gi gi-scissors"
-      ]
+      "icon": ["gi gi-broom", "gi gi-knife-fork", "gi gi-cooking-pot", "gi gi-candle-holder", "gi gi-wood-axe", "gi gi-hand-saw", "gi gi-quill-ink", "gi gi-scissors"]
     },
     "dungeon tower": {
       "icon": "gi gi-stone-tower",
       "background": "slategray"
     },
     "plain": {
-      "icon": [
-        "fa flaticon-desert",
-        "fa flaticon-nature-2"
-      ],
+      "icon": ["fa flaticon-desert", "fa flaticon-nature-2"],
       "background": "KHAKI"
     },
     "ancient plain": {
-      "icon": [
-        "fa flaticon-desert",
-        "fa flaticon-nature-2"
-      ],
+      "icon": ["fa flaticon-desert", "fa flaticon-nature-2"],
       "background": "KHAKI"
     },
     "forest": {
-      "icon": [
-        "fa flaticon-forest",
-        "fa flaticon-nature-2"
-      ],
+      "icon": ["fa flaticon-forest", "fa flaticon-nature-2"],
       "background": "LIGHTGREEN"
     },
     "trees": {
-      "icon": [
-        "fa flaticon-forest",
-        "fa flaticon-nature-2"
-      ],
+      "icon": ["fa flaticon-forest", "fa flaticon-nature-2"],
       "background": "LIGHTGREEN"
     },
     "jungle": {
-      "icon": [
-        "fa flaticon-forest",
-        "fa flaticon-nature-2"
-      ],
+      "icon": ["fa flaticon-forest", "fa flaticon-nature-2"],
       "background": "LIGHTGREEN"
     },
     "ancient jungle": {
-      "icon": [
-        "fa flaticon-forest",
-        "fa flaticon-nature-2"
-      ],
+      "icon": ["fa flaticon-forest", "fa flaticon-nature-2"],
       "background": "LIGHTGREEN"
     },
     "ancient forest": {
-      "icon": [
-        "fa flaticon-forest",
-        "fa flaticon-nature-2"
-      ],
+      "icon": ["fa flaticon-forest", "fa flaticon-nature-2"],
       "background": "LIGHTGREEN"
     },
     "mountain": {
-      "icon": [
-        "fa flaticon-hills",
-        "gi gi-mountain-cave",
-        "gi gi-mountains",
-        "gi gi-mountaintop"
-      ],
+      "icon": ["fa flaticon-hills", "gi gi-mountain-cave", "gi gi-mountains", "gi gi-mountaintop"],
       "background": "saddlebrown"
     },
     "ancient mountain": {
-      "icon": [
-        "fa flaticon-hills",
-        "gi gi-mountain-cave",
-        "gi gi-mountains",
-        "gi gi-mountaintop"
-      ],
+      "icon": ["fa flaticon-hills", "gi gi-mountain-cave", "gi gi-mountains", "gi gi-mountaintop"],
       "background": "saddlebrown"
     },
     "cave": {
@@ -1071,10 +861,7 @@
       "background": "lightslategray"
     },
     "sprowseship": {
-      "icon": [
-        "fa fa-space-shuttle",
-        "fa flaticon-ufo"
-      ],
+      "icon": ["fa fa-space-shuttle", "fa flaticon-ufo"],
       "background": "lightslategray"
     },
     "future commercial building": {
@@ -1113,18 +900,11 @@
       "textColor": "darkblue"
     },
     "fish": {
-      "icon": [
-        "gi gi-fishing",
-        "gi gi-tropical-fish",
-        "gi gi-angler-fish"
-      ],
+      "icon": ["gi gi-fishing", "gi gi-tropical-fish", "gi gi-angler-fish"],
       "background": "#00BEA6"
     },
     "cetacean": {
-      "icon": [
-        "gi gi-sperm-whale",
-        "gi gi-dolphin"
-      ],
+      "icon": ["gi gi-sperm-whale", "gi gi-dolphin"],
       "background": "#00BEA6"
     },
     "sea life": {
@@ -1149,18 +929,11 @@
       "background": "seashell"
     },
     "shark": {
-      "icon": [
-        "gi gi-shark-jaws",
-        "gi gi-shark-fin"
-      ],
+      "icon": ["gi gi-shark-jaws", "gi gi-shark-fin"],
       "background": "lightslategray"
     },
     "crustacean": {
-      "icon": [
-        "gi gi-crab-claw",
-        "gi gi-crab",
-        "gi gi-sad-crab"
-      ],
+      "icon": ["gi gi-crab-claw", "gi gi-crab", "gi gi-sad-crab"],
       "background": "brown"
     },
     "cnidaria": {
@@ -1168,27 +941,15 @@
       "background": "#00BEA6"
     },
     "mollusk": {
-      "icon": [
-        "gi gi-squid",
-        "gi gi-octopus",
-        "gi gi-snail"
-      ],
+      "icon": ["gi gi-squid", "gi gi-octopus", "gi gi-snail"],
       "background": "seashell"
     },
     "clam": {
-      "icon": [
-        "gi gi-oyster-pearl",
-        "gi gi-scallop"
-      ],
+      "icon": ["gi gi-oyster-pearl", "gi gi-scallop"],
       "background": "seashell"
     },
     "bird": {
-      "icon": [
-        "gi gi-bird-claw",
-        "gi gi-bird-limb",
-        "gi gi-bird-mask",
-        "gi gi-bird-twitter"
-      ],
+      "icon": ["gi gi-bird-claw", "gi gi-bird-limb", "gi gi-bird-mask", "gi gi-bird-twitter"],
       "background": "skyblue"
     },
     "sky life": {
@@ -1223,28 +984,11 @@
       "background": "black"
     },
     "small mammal": {
-      "icon": [
-        "gi gi-mouse",
-        "gi gi-seated-mouse",
-        "gi gi-rabbit",
-        "gi gi-bat"
-      ],
+      "icon": ["gi gi-mouse", "gi gi-seated-mouse", "gi gi-rabbit", "gi gi-bat"],
       "background": "saddlebrown"
     },
     "insect": {
-      "icon": [
-        "gi gi-spider-alt",
-        "gi gi-angular-spider",
-        "gi gi-hanging-spider",
-        "gi gi-masked-spider",
-        "gi gi-long-antennae-bug",
-        "fa fa-bug",
-        "gi gi-scarab-beetle",
-        "gi gi-bee",
-        "gi gi-butterfly",
-        "gi gi-dragonfly",
-        "gi gi-insect-jaws"
-      ],
+      "icon": ["gi gi-spider-alt", "gi gi-angular-spider", "gi gi-hanging-spider", "gi gi-masked-spider", "gi gi-long-antennae-bug", "fa fa-bug", "gi gi-scarab-beetle", "gi gi-bee", "gi gi-butterfly", "gi gi-dragonfly", "gi gi-insect-jaws"],
       "background": "maroon"
     },
     "grass": {
@@ -1252,10 +996,7 @@
       "background": "forestgreen"
     },
     "dinosaur": {
-      "icon": [
-        "gi gi-dinosaur-rex",
-        "gi gi-dinosaur-bones"
-      ],
+      "icon": ["gi gi-dinosaur-rex", "gi gi-dinosaur-bones"],
       "background": "maroon"
     },
     "snake": {
@@ -1437,17 +1178,7 @@
       "background": "saddlebrown"
     },
     "leaf": {
-      "icon": [
-        "fa fa-leaf",
-        "fa fa-envira",
-        "fa fa-pagelines",
-        "gi gi-curled-leaf",
-        "gi gi-falling-leaf",
-        "gi gi-maple-leaf",
-        "gi gi-vine-leaf",
-        "gi gi-zigzag-leaf",
-        "gi gi-linden-leaf"
-      ],
+      "icon": ["fa fa-leaf", "fa fa-envira", "fa fa-pagelines", "gi gi-curled-leaf", "gi gi-falling-leaf", "gi gi-maple-leaf", "gi gi-vine-leaf", "gi gi-zigzag-leaf", "gi gi-linden-leaf"],
       "background": "forestgreen"
     },
     "caveman settlement": {
@@ -1492,26 +1223,13 @@
       "icon": "gi gi-bookshelf"
     },
     "tree": {
-      "icon": [
-        "fa fa-tree",
-        "gi gi-palm-tree",
-        "gi gi-pine-tree"
-      ]
+      "icon": ["fa fa-tree", "gi gi-palm-tree", "gi gi-pine-tree"]
     },
     "snow": {
-      "icon": [
-        "fa fa-snowflake",
-        "gi gi-snowflake-1",
-        "gi gi-snowflake-2"
-      ]
+      "icon": ["fa fa-snowflake", "gi gi-snowflake-1", "gi gi-snowflake-2"]
     },
     "precipitation": {
-      "icon": [
-        "fa fa-bolt",
-        "gi gi-snowing",
-        "gi gi-heavy-rain",
-        "gi gi-raining"
-      ]
+      "icon": ["fa fa-bolt", "gi gi-snowing", "gi gi-heavy-rain", "gi gi-raining"]
     },
     "diamond": {
       "icon": "gi gi-cut-diamond"
@@ -1558,28 +1276,16 @@
       "icon": "gi gi-portal"
     },
     "person": {
-      "icon": [
-        "fa fa-female",
-        "fa fa-male"
-      ]
+      "icon": ["fa fa-female", "fa fa-male"]
     },
     "ancient person": {
-      "icon": [
-        "fa fa-female",
-        "fa fa-male"
-      ]
+      "icon": ["fa fa-female", "fa fa-male"]
     },
     "future person": {
-      "icon": [
-        "fa fa-female",
-        "fa fa-male"
-      ]
+      "icon": ["fa fa-female", "fa fa-male"]
     },
     "tourist": {
-      "icon": [
-        "fa fa-female",
-        "fa fa-male"
-      ]
+      "icon": ["fa fa-female", "fa fa-male"]
     },
     "woman": {
       "icon": "fa fa-female"
@@ -1654,13 +1360,7 @@
       "icon": "gi gi-shirt"
     },
     "hat": {
-      "icon": [
-        "gi gi-western-hat",
-        "gi gi-robin-hood-hat",
-        "gi gi-pointy-hat",
-        "gi gi-pirate-hat",
-        "gi gi-jester-hat"
-      ]
+      "icon": ["gi gi-western-hat", "gi gi-robin-hood-hat", "gi gi-pointy-hat", "gi gi-pirate-hat", "gi gi-jester-hat"]
     },
     "medieval hat": {
       "icon": "gi gi-robin-hood-hat"
@@ -1787,26 +1487,17 @@
       "textColor": "yellow"
     },
     "car": {
-      "icon": [
-        "gi gi-city-car",
-        "fa fa-car"
-      ],
+      "icon": ["gi gi-city-car", "fa fa-car"],
       "background": "black",
       "textColor": "red"
     },
     "driven car": {
-      "icon": [
-        "gi gi-city-car",
-        "fa fa-car"
-      ],
+      "icon": ["gi gi-city-car", "fa fa-car"],
       "background": "black",
       "textColor": "red"
     },
     "garage": {
-      "icon": [
-        "gi gi-city-car",
-        "fa fa-car"
-      ],
+      "icon": ["gi gi-city-car", "fa fa-car"],
       "background": "gray"
     },
     "paragraph": {
@@ -1921,10 +1612,7 @@
       "icon": "gi gi-dead-head"
     },
     "cat": {
-      "icon": [
-        "gi gi-black-cat",
-        "gi gi-white-cat"
-      ]
+      "icon": ["gi gi-black-cat", "gi gi-white-cat"]
     },
     "psyche": {
       "icon": "fa flaticon-interface"
@@ -2048,10 +1736,7 @@
     }
   },
   "tables": {
-    "PERSON": [
-      "*MAN*",
-      "*WOMAN*"
-    ],
+    "PERSON": ["*MAN*", "*WOMAN*"],
     "WOMAN": {
       "concatenate": true,
       "rows": [
@@ -2169,10 +1854,7 @@
       "rows": [
         {
           "weight": 1,
-          "value": [
-            "Elvis Presley",
-            "Gabe Newell"
-          ]
+          "value": ["Elvis Presley", "Gabe Newell"]
         },
         {
           "weight": 1999,
@@ -2296,16 +1978,11 @@
       "rows": [
         {
           "hasWeightedRows": true,
-          "rows": [
-            {
-              "weight": 1,
-              "value": "Mc"
-            },
-            {
-              "weight": 29,
-              "value": ""
-            }
-          ]
+          "rows": [{
+              "weight": 1, "value": "Mc"
+            }, {
+              "weight": 29, "value": ""
+            }]
         },
         {
           "tableWeight": 2,
@@ -2514,33 +2191,11 @@
         }
       ]
     },
-    "MEDIEVAL PERSON": [
-      "*MEDIEVAL MAN*",
-      "*MEDIEVAL WOMAN*"
-    ],
+    "MEDIEVAL PERSON": ["*MEDIEVAL MAN*", "*MEDIEVAL WOMAN*"],
     "MEDIEVAL WOMAN": {
       "concatenate": true,
       "rows": [
-        [
-          "Millicent",
-          "Alinor",
-          "Eleanor",
-          "Agnes",
-          "Alice",
-          "Avice",
-          "Beatrice",
-          "Cecily",
-          "Emma",
-          "Isabella",
-          "Joan",
-          "Juliana",
-          "Margery",
-          "Matilda",
-          "Roh",
-          "Morgan",
-          "Elizabeth",
-          "Kethleen"
-        ],
+        ["Millicent", "Alinor", "Eleanor", "Agnes", "Alice", "Avice", "Beatrice", "Cecily", "Emma", "Isabella", "Joan", "Juliana", "Margery", "Matilda", "Roh", "Morgan", "Elizabeth", "Kethleen"],
         " ",
         "*MEDIEVAL LASTNAME*"
       ]
@@ -2548,28 +2203,7 @@
     "MEDIEVAL MAN": {
       "concatenate": true,
       "rows": [
-        [
-          "Adam",
-          "Geoffrey",
-          "Gilbert",
-          "Henry",
-          "Hugh",
-          "John",
-          "Nicholas",
-          "Peter",
-          "Ralf",
-          "Richard",
-          "Robert",
-          "Roger",
-          "Simon",
-          "Thomas",
-          "Walter",
-          "William",
-          "Robin",
-          "Albin",
-          "Bayard",
-          "Erwin"
-        ],
+        ["Adam", "Geoffrey", "Gilbert", "Henry", "Hugh", "John", "Nicholas", "Peter", "Ralf", "Richard", "Robert", "Roger", "Simon", "Thomas", "Walter", "William", "Robin", "Albin", "Bayard", "Erwin"],
         " ",
         "*MEDIEVAL LASTNAME*"
       ]
@@ -2577,60 +2211,8 @@
     "MEDIEVAL LASTNAME": {
       "concatenate": true,
       "rows": [
-        [
-          "Strong",
-          "Tall",
-          "Grand",
-          "Bold",
-          "Big",
-          "Small",
-          "Fine",
-          "Good",
-          "Glad",
-          "Green",
-          "Blue",
-          "Red",
-          "Black",
-          "White",
-          "Pale",
-          "Gray",
-          "Gold",
-          "Silver",
-          "Dark",
-          "Light",
-          "Brave",
-          "Sly"
-        ],
-        [
-          "ington",
-          "son",
-          "house",
-          "door",
-          "castle",
-          "forest",
-          "tree",
-          "leaf",
-          "wind",
-          "rain",
-          "snow",
-          "rock",
-          "stone",
-          "river",
-          "sea",
-          "ship",
-          "smith",
-          "craft",
-          "cook",
-          "worth",
-          "might",
-          "wolf",
-          "bear",
-          "sheep",
-          "pig",
-          "fox",
-          "hunt",
-          "dragon"
-        ]
+        ["Strong", "Tall", "Grand", "Bold", "Big", "Small", "Fine", "Good", "Glad", "Green", "Blue", "Red", "Black", "White", "Pale", "Gray", "Gold", "Silver", "Dark", "Light", "Brave", "Sly"],
+        ["ington", "son", "house", "door", "castle", "forest", "tree", "leaf", "wind", "rain", "snow", "rock", "stone", "river", "sea", "ship", "smith", "craft", "cook", "worth", "might", "wolf", "bear", "sheep", "pig", "fox", "hunt", "dragon"]
       ]
     },
     "ANCIENT PERSON": {
@@ -2740,45 +2322,17 @@
     "ANCIENT WOMAN": "*ANCIENT PERSON*",
     "ANCIENT MAN": {
       "hasWeightedRows": true,
-      "rows": [
-        {
-          "weight": 1,
-          "value": "Dave"
-        },
-        {
-          "weight": 249,
-          "value": "*ANCIENT PERSON*"
-        }
-      ]
+      "rows": [{
+          "weight": 1, "value": "Dave"
+        }, {
+          "weight": 249, "value": "*ANCIENT PERSON*"
+        }]
     },
-    "FUTURE PERSON": [
-      "*FUTURE MAN*",
-      "*FUTURE WOMAN*"
-    ],
+    "FUTURE PERSON": ["*FUTURE MAN*", "*FUTURE WOMAN*"],
     "FUTURE MAN": {
       "concatenate": true,
       "rows": [
-        [
-          "Bob",
-          "Zaphod",
-          "Zorvax",
-          "Zerebius",
-          "Borbon",
-          "Bradbury",
-          "Isaac",
-          "Werber",
-          "Omni",
-          "Robion",
-          "Shossur",
-          "Alistor",
-          "Clonos",
-          "Sorbel",
-          "Boodin",
-          "Bagget",
-          "Three",
-          "Twelve",
-          "Twenty"
-        ],
+        ["Bob", "Zaphod", "Zorvax", "Zerebius", "Borbon", "Bradbury", "Isaac", "Werber", "Omni", "Robion", "Shossur", "Alistor", "Clonos", "Sorbel", "Boodin", "Bagget", "Three", "Twelve", "Twenty"],
         " ",
         "*FUTURE LASTNAME*"
       ]
@@ -2786,27 +2340,7 @@
     "FUTURE WOMAN": {
       "concatenate": true,
       "rows": [
-        [
-          "Alice",
-          "Trillian",
-          "Zeria",
-          "Zinda",
-          "Myriad",
-          "Shosset",
-          "Tary",
-          "Wayt",
-          "Cassidy",
-          "Millanda",
-          "Replika",
-          "Simia",
-          "Mirrix",
-          "Bariona",
-          "Sossis",
-          "Kroassent",
-          "Five",
-          "Seven",
-          "Fourteen"
-        ],
+        ["Alice", "Trillian", "Zeria", "Zinda", "Myriad", "Shosset", "Tary", "Wayt", "Cassidy", "Millanda", "Replika", "Simia", "Mirrix", "Bariona", "Sossis", "Kroassent", "Five", "Seven", "Fourteen"],
         " ",
         "*FUTURE LASTNAME*"
       ]
@@ -2814,62 +2348,8 @@
     "FUTURE LASTNAME": {
       "concatenate": true,
       "rows": [
-        [
-          "Zar",
-          "Star",
-          "Solar",
-          "Jaro",
-          "Mera",
-          "Gar",
-          "Dar",
-          "Bar",
-          "Mar",
-          "Mor",
-          "Dor",
-          "Kar",
-          "Kra",
-          "Sbur",
-          "Bostro",
-          "Astro",
-          "Cosmo",
-          "Poly",
-          "Beeble",
-          "Pro",
-          "Nano",
-          "Shimmer",
-          "Glimmer",
-          "Wander",
-          "Lea",
-          "Magna"
-        ],
-        [
-          "bion",
-          "bius",
-          "micus",
-          "bicus",
-          "dion",
-          "dius",
-          "billion",
-          "million",
-          "bistor",
-          "bostrud",
-          "wund",
-          "brox",
-          "biotis",
-          "saurus",
-          "boticus",
-          "meld",
-          "sweep",
-          "block",
-          "dine",
-          "zine",
-          "nople",
-          "neon",
-          "ba",
-          "zor",
-          "zar",
-          "klor"
-        ]
+        ["Zar", "Star", "Solar", "Jaro", "Mera", "Gar", "Dar", "Bar", "Mar", "Mor", "Dor", "Kar", "Kra", "Sbur", "Bostro", "Astro", "Cosmo", "Poly", "Beeble", "Pro", "Nano", "Shimmer", "Glimmer", "Wander", "Lea", "Magna"],
+        ["bion", "bius", "micus", "bicus", "dion", "dius", "billion", "million", "bistor", "bostrud", "wund", "brox", "biotis", "saurus", "boticus", "meld", "sweep", "block", "dine", "zine", "nople", "neon", "ba", "zor", "zar", "klor"]
       ]
     },
     "MEMORY": {
@@ -2878,36 +2358,9 @@
         {
           "concatenate": true,
           "rows": [
-            [
-              "Biking",
-              "Hiking",
-              "Swimming",
-              "Flying kites",
-              "Playing",
-              "Playing baseball",
-              "Stargazing",
-              "Playing soccer",
-              "Playing basketball",
-              "Playing chess",
-              "Playing checkers",
-              "Playing video-games",
-              "Watching TV",
-              "Cooking"
-            ],
+            ["Biking", "Hiking", "Swimming", "Flying kites", "Playing", "Playing baseball", "Stargazing", "Playing soccer", "Playing basketball", "Playing chess", "Playing checkers", "Playing video-games", "Watching TV", "Cooking"],
             " with my ",
-            [
-              "mother",
-              "father",
-              "parents",
-              "grand-father",
-              "grand-mother",
-              "grand-parents",
-              "uncle",
-              "aunt",
-              "cousin",
-              "sister",
-              "brother"
-            ],
+            ["mother", "father", "parents", "grand-father", "grand-mother", "grand-parents", "uncle", "aunt", "cousin", "sister", "brother"],
             [
               "",
               {
@@ -2917,23 +2370,7 @@
                   [
                     "a child",
                     "young",
-                    [
-                      7,
-                      8,
-                      9,
-                      10,
-                      11,
-                      12,
-                      13,
-                      14,
-                      15,
-                      16,
-                      17,
-                      18,
-                      19,
-                      20,
-                      21
-                    ]
+                    [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
                   ]
                 ]
               }
@@ -2944,29 +2381,11 @@
         {
           "concatenate": true,
           "rows": [
-            [
-              "Kissing",
-              "Cuddling with",
-              "Watching movies with",
-              "Staying up late with",
-              "Sharing secrets with",
-              "Sharing childhood memories with",
-              "Feeling close to",
-              "Laying my arm around"
-            ],
+            ["Kissing", "Cuddling with", "Watching movies with", "Staying up late with", "Sharing secrets with", "Sharing childhood memories with", "Feeling close to", "Laying my arm around"],
             " ",
-            [
-              "that one person",
-              "my best friend",
-              "my love interest",
-              "my crush"
-            ],
+            ["that one person", "my best friend", "my love interest", "my crush"],
             " in ",
-            [
-              "middle school",
-              "high school",
-              "college"
-            ],
+            ["middle school", "high school", "college"],
             "."
           ]
         },
@@ -2984,26 +2403,14 @@
                 "concatenate": true,
                 "rows": [
                   "went on a trip with ",
-                  [
-                    "my partner",
-                    "my family",
-                    "my friends"
-                  ]
+                  ["my partner", "my family", "my friends"]
                 ]
               },
               {
                 "concatenate": true,
                 "rows": [
                   "learned ",
-                  [
-                    "I",
-                    "my son",
-                    "my daughter",
-                    "my sister",
-                    "my brother",
-                    "my father",
-                    "my mother"
-                  ],
+                  ["I", "my son", "my daughter", "my sister", "my brother", "my father", "my mother"],
                   " was ill"
                 ]
               },
@@ -3013,13 +2420,7 @@
                 "concatenate": true,
                 "rows": [
                   "broke my ",
-                  [
-                    "leg",
-                    "ankle",
-                    "elbow",
-                    "knee",
-                    "nose"
-                  ]
+                  ["leg", "ankle", "elbow", "knee", "nose"]
                 ]
               },
               "broke up with my partner",
@@ -3029,19 +2430,7 @@
                   "lost my ",
                   {
                     "tableWeight": 1.5,
-                    "rows": [
-                      "dog",
-                      "cat",
-                      "bunny",
-                      "hamster",
-                      "gerbil",
-                      "bird",
-                      "goldfish",
-                      "ferret",
-                      "rat",
-                      "iguana",
-                      "pet spider"
-                    ]
+                    "rows": ["dog", "cat", "bunny", "hamster", "gerbil", "bird", "goldfish", "ferret", "rat", "iguana", "pet spider"]
                   }
                 ]
               }
@@ -3053,15 +2442,7 @@
           "concatenate": true,
           "rows": [
             "That one unforgettable ",
-            [
-              "book",
-              "movie",
-              "video game",
-              "trip",
-              "kiss",
-              "person I met",
-              "party"
-            ],
+            ["book", "movie", "video game", "trip", "kiss", "person I met", "party"],
             "."
           ]
         }
@@ -3105,14 +2486,7 @@
             "concatenate": true,
             "rows": [
               "I... I just want ",
-              [
-                "a friend",
-                "friends",
-                "someone to hug",
-                "a family",
-                "someone who understands me",
-                "to have kids"
-              ],
+              ["a friend", "friends", "someone to hug", "a family", "someone who understands me", "to have kids"],
               "."
             ]
           },
@@ -3130,16 +2504,7 @@
             "concatenate": true,
             "rows": [
               "If only I was ",
-              [
-                "a pirate",
-                "a dolphin",
-                "an unicorn",
-                "a panda",
-                "a cyborg",
-                "a robot",
-                "a superhero",
-                "invisible"
-              ],
+              ["a pirate", "a dolphin", "an unicorn", "a panda", "a cyborg", "a robot", "a superhero", "invisible"],
               "."
             ]
           },
@@ -3155,20 +2520,7 @@
             "concatenate": true,
             "rows": [
               "I'm ",
-              [
-                "worthless",
-                "terrible",
-                "just a bad person",
-                "just not a good person",
-                "so awful",
-                "so alone. I need help",
-                "never going to amount to anything",
-                "no good. My mom was right",
-                "not that bad, I guess",
-                "a faker",
-                "so bad at this",
-                "too nice for my own good"
-              ],
+              ["worthless", "terrible", "just a bad person", "just not a good person", "so awful", "so alone. I need help", "never going to amount to anything", "no good. My mom was right", "not that bad, I guess", "a faker", "so bad at this", "too nice for my own good"],
               "."
             ]
           },
@@ -3178,10 +2530,7 @@
             "concatenate": true,
             "rows": [
               "I should learn a new ",
-              [
-                "skill",
-                "language"
-              ],
+              ["skill", "language"],
               "."
             ]
           },
@@ -3194,10 +2543,7 @@
             "concatenate": true,
             "rows": [
               "I should call ",
-              [
-                "her",
-                "him"
-              ],
+              ["her", "him"],
               " and say sorry."
             ]
           },
@@ -3206,16 +2552,8 @@
             "concatenate": true,
             "rows": [
               "I miss ",
-              [
-                "him",
-                "her",
-                "them"
-              ],
-              [
-                ". So much",
-                "",
-                ""
-              ],
+              ["him", "her", "them"],
+              [". So much", "", ""],
               "."
             ]
           },
@@ -3223,19 +2561,9 @@
             "concatenate": true,
             "rows": [
               "I ",
-              [
-                "wish I was",
-                "should be",
-                "want to be"
-              ],
+              ["wish I was", "should be", "want to be"],
               " ",
-              [
-                "more generous",
-                "nicer",
-                "more popular",
-                "more interesting",
-                "more romantic"
-              ],
+              ["more generous", "nicer", "more popular", "more interesting", "more romantic"],
               "."
             ]
           },
@@ -3243,14 +2571,7 @@
             "concatenate": true,
             "rows": [
               "I don't suck at ",
-              [
-                "singing",
-                "painting",
-                "dancing",
-                "writing",
-                "video-games",
-                "maths"
-              ],
+              ["singing", "painting", "dancing", "writing", "video-games", "maths"],
               ". People just think I do."
             ]
           },
@@ -3258,21 +2579,7 @@
             "concatenate": true,
             "rows": [
               "Nobody must know about ",
-              [
-                "my balding hair",
-                "my parents",
-                "this",
-                "me",
-                "my drinking problem",
-                "my health problems",
-                "what I do in the shower",
-                "what I did",
-                "what I'm about to do",
-                "what I'm doing",
-                "the movies I watch",
-                "the books I read",
-                "the websites I go on"
-              ],
+              ["my balding hair", "my parents", "this", "me", "my drinking problem", "my health problems", "what I do in the shower", "what I did", "what I'm about to do", "what I'm doing", "the movies I watch", "the books I read", "the websites I go on"],
               "."
             ]
           },
@@ -3317,29 +2624,9 @@
         {
           "concatenate": true,
           "rows": [
-            [
-              "I need",
-              "I want",
-              "I might need",
-              "I should get",
-              "What I want is",
-              "What I need right now is",
-              "I'll just get"
-            ],
+            ["I need", "I want", "I might need", "I should get", "What I want is", "What I need right now is", "I'll just get"],
             " ",
-            [
-              "some new shoes",
-              "a new TV",
-              "a new computer",
-              "another car",
-              "a bigger house",
-              "a better job",
-              "a lover",
-              "more pets",
-              "a makeover",
-              "a good movie",
-              "a nice dinner in town"
-            ],
+            ["some new shoes", "a new TV", "a new computer", "another car", "a bigger house", "a better job", "a lover", "more pets", "a makeover", "a good movie", "a nice dinner in town"],
             "."
           ]
         },
@@ -3348,14 +2635,7 @@
             "concatenate": true,
             "rows": [
               "My ",
-              [
-                "butt",
-                "nose",
-                "foot",
-                "ear",
-                "forehead",
-                "back"
-              ],
+              ["butt", "nose", "foot", "ear", "forehead", "back"],
               " is itchy."
             ]
           },
@@ -3363,21 +2643,9 @@
             "concatenate": true,
             "rows": [
               "My ",
-              [
-                "head",
-                "leg",
-                "arm",
-                "belly",
-                "back",
-                "shoulder"
-              ],
+              ["head", "leg", "arm", "belly", "back", "shoulder"],
               " ",
-              [
-                "feels weird",
-                "feels icky",
-                "hurts",
-                "feels strange"
-              ],
+              ["feels weird", "feels icky", "hurts", "feels strange"],
               "."
             ]
           },
@@ -3385,14 +2653,7 @@
             "concatenate": true,
             "rows": [
               "I should see a doctor for my ",
-              [
-                "eyes",
-                "brain",
-                "head",
-                "chest",
-                "legs",
-                "back"
-              ],
+              ["eyes", "brain", "head", "chest", "legs", "back"],
               "."
             ]
           }
@@ -3405,17 +2666,9 @@
                 "concatenate": true,
                 "rows": [
                   "This ",
-                  [
-                    "marriage",
-                    "relationship"
-                  ],
+                  ["marriage", "relationship"],
                   " ",
-                  [
-                    "is a failure",
-                    "is a disaster",
-                    "was a mistake",
-                    "isn't working"
-                  ]
+                  ["is a failure", "is a disaster", "was a mistake", "isn't working"]
                 ]
               },
               "I regret getting married",
@@ -3429,58 +2682,25 @@
           {
             "concatenate": true,
             "rows": [
-              [
-                "I just can't stand the taste of",
-                "I am not going to finish",
-                "I paid way too much for",
-                "I don't really like"
-              ],
+              ["I just can't stand the taste of", "I am not going to finish", "I paid way too much for", "I don't really like"],
               " ",
-              [
-                "this hamburger",
-                "this steak",
-                "this salad",
-                "this pasta",
-                "this sandwich",
-                "this pizza",
-                "this meal",
-                "this beer",
-                "this soda"
-              ],
+              ["this hamburger", "this steak", "this salad", "this pasta", "this sandwich", "this pizza", "this meal", "this beer", "this soda"],
               "."
             ]
           },
           {
             "concatenate": true,
             "rows": [
-              [
-                "I hate that show",
-                "That show is revolting",
-                "I hate that show, but I'm going to watch it anyway",
-                "My parents used to watch that show",
-                "There's nothing on TV",
-                "That's a stupid movie",
-                "I've seen that movie already"
-              ],
+              ["I hate that show", "That show is revolting", "I hate that show, but I'm going to watch it anyway", "My parents used to watch that show", "There's nothing on TV", "That's a stupid movie", "I've seen that movie already"],
               "."
             ]
           },
           {
             "concatenate": true,
             "rows": [
-              [
-                "Wait, ",
-                "Hold on. ",
-                "Ugh. ",
-                "Ugh, I told them ",
-                ""
-              ],
+              ["Wait, ", "Hold on. ", "Ugh. ", "Ugh, I told them ", ""],
               "I'm allergic to ",
-              [
-                "shrimp",
-                "soy",
-                "pineapple"
-              ],
+              ["shrimp", "soy", "pineapple"],
               "."
             ]
           }

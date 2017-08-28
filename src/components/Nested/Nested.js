@@ -87,6 +87,18 @@ class Nested extends React.Component {
 		//toggleAnimation(document.getElementsByClassName("child"));
 
 		/*document.getElementById("contains").className = "row animated "+(zoomOut?"zoomOutRight":"zoomOutLeft");*/
+		if(isNaN(index)){
+			var currID = this.state.instance.id;
+			if(this.state.instance && window.location.hash != "#"+currID){
+				window.history.pushState(null, null, '#'+currID);
+			}
+			return;
+		}
+		
+		if(window.location.hash != "#"+index){
+			window.history.pushState(null, null, '#'+index);
+		}
+
 		var instance = instanceStore.get(index);
 		if(!instance.grown){
 			instance.grow();
@@ -119,7 +131,7 @@ class Nested extends React.Component {
 								if(typeof child === "string"){
 									return (
 										<div key={index} className="col-xs-12">
-											<div className="alert alert-warning">{child}</div>
+											<div className="description alert alert-default">{child}</div>
 										</div>
 									)
 								}

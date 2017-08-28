@@ -1,20 +1,16 @@
 import tableStore from '../stores/tableStore.js'
 
-function Contain(string){
-	if(typeof string !== "string"){
-		throw new Error("expecting string");
-	}
-
-	this.value = tableStore.roll(string);
+function Contain(value){
+	this.value = tableStore.roll(value);
 	this.makeProb = 100;
 	this.makeAmount = 1;
 	this.isEmbedded = false;
 
 	//extract modifiers out of the value
-	var doEmbed = string.charAt(0) === ".";
+	var doEmbed = this.value.charAt(0) === ".";
 	if(doEmbed){
 		this.isEmbedded = true;
-		this.value = string.substring(1);
+		this.value = this.value.substring(1);
 	}
 
 	var valueArray = this.value.split(",");

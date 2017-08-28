@@ -3,6 +3,7 @@ import { Button, Modal,FormGroup,ControlLabel,FormControl, Radio } from 'react-b
 import Select from 'react-select';
 
 import thingStore from '../stores/thingStore';
+import tableStore from '../stores/tableStore';
 import Contain from '../util/Contain';
 
 class SettingsModal extends React.Component {
@@ -37,15 +38,18 @@ class SettingsModal extends React.Component {
 		this.filterSeedOptions = this.filterSeedOptions.bind(this);
 	}
 
-	componentWillUpdate(nextProps, nextState){
+	componentWillReceiveProps(nextProps, nextState){
 		if(this.props.seedOptions.length !== nextProps.seedOptions.length){
+			var state = {};
 			if(!this.state.seed.length){
-				nextState.seedOptions = nextProps.seedOptions;
+				state.seedOptions = nextProps.seedOptions;
 			}
 			if(this.state.originalSeed !== nextProps.seed){
-				nextState.originalSeed = nextProps.seed;
-				nextState.seed = nextProps.seed.split(">").map((s)=>s.trim());
+				state.originalSeed = nextProps.seed;
+				state.seed = nextProps.seed.split(">").map((s)=>s.trim());
+				state.seedOptions = this.getSeedContains(state.seed)
 			}
+			this.setState(state);
 		}
 	}
 
@@ -59,7 +63,7 @@ class SettingsModal extends React.Component {
 	}
 
 	filterSeedOptions(options, filterString, values){
-		if(values.length === 0){
+		if(values.length === 0 && this.state.seed.length){
 			return this.state.seedOptions;
 		}
 
@@ -86,12 +90,22 @@ class SettingsModal extends React.Component {
 		if(!lastThing.contains)
 			return [];
 		
-		lastThing.contains.forEach((contain) => {
-			contain = new Contain(contain);
-			if(contain.makeProb === 100 && thingStore.exists(contain.value)){
-				seedOptions.push({value:contain.value, label:contain.value});
+		for(var i = 0; i < lastThing.contains.length; i++){
+			var contain = lastThing.contains[i];
+			if(tableStore.isRollable(contain)){
+				continue;
+			} 
+			var check = new Contain(contain);
+			if(check.makeProb !== 100) continue;
+
+			if(thingStore.exists(check.value)){
+				if(check.isEmbedded){
+					lastThing.contains.push(...thingStore.get(check.value).contains)
+					continue;
+				}else
+					seedOptions.push({value:check.value, label:check.value});
 			}
-		})
+		}
 		return seedOptions;
 	}
 
@@ -105,8 +119,9 @@ class SettingsModal extends React.Component {
 	handleSubmit(event) {
 		if(!this.state.seed.length){
 			localStorage.removeItem("seed");
+		}else{
+			localStorage["seed"] = this.state.seed.map((o)=>(o.value?o.value:o)).join(" > ");
 		}
-		localStorage["seed"] = this.state.seed.map((o)=>o.value).join(" > ");
 
 		if(this.state.pack === "custom"){
 			var packs = this.state.customPacks.split("\n");

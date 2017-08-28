@@ -94,16 +94,26 @@ class Instance{
 			child = new Contain(child);
 
 			if(!child.isIncluded()) continue;
-
-			//this is just a plain string
-			if(!thingStore.exists(child.value)){
-				if(child.value.trim().length)
-					children.push(child.value.trim()); 
-				continue;
-			}
-
-			var thing = thingStore.get(child.value);
+			
 			for (var ii=0; ii <  child.makeAmount; ii++){
+
+				if(tableStore.isTableID(child.value) && child.isEmbedded){
+					var insertThings = tableStore.get(child.value);
+					blueprint.splice(i,1,...insertThings);
+					i--;
+					continue;
+				}
+
+				//do each time becuase could be rollable
+				var value = tableStore.roll(child.value);
+
+				if(!thingStore.exists(value)){ //this is just a plain string
+					if(value.trim().length)
+						children.push(value.trim()); 
+					continue;
+				}
+				var thing = thingStore.get(value);
+
 				if(child.isEmbedded){
 					var insertThings = thing.contains;
 					blueprint.splice(i,1,...insertThings);
@@ -122,7 +132,7 @@ class Instance{
 
 var instanceStore = {};
 instanceStore.get = function(index){
-	if(typeof index == "string" && thingStore.exists(index)){
+	if(typeof index === "string" && thingStore.exists(index)){
 		var thing = thingStore.get(index);
 		if(thing.uniqueInstance !== false) 
 			return instances[thing.uniqueInstance];

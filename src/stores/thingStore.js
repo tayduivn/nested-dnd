@@ -14,7 +14,7 @@ class Thing{
 		
 		//extend the existing thing
 		if(things[options.name]){
-			options = Object.assign({}, things[options.name], options );
+			options = Object.assign({}, things[options.name].originalOptions, options );
 		}
 
 		//set functions. These are not in saveOptions because we don't want to copy isa functions
@@ -22,7 +22,7 @@ class Thing{
 		this.afMake = options.afterMake;
 		this.b4Render = options.beforeRender;
 		this.cssClass = null;
-
+		this.originalOptions = options;
 		saveOptions(this,options);
 	
 		//save
@@ -40,7 +40,6 @@ class Thing{
 			_t.background = options.background;
 			_t.textColor = options.textColor;
 			_t.autoColor = options.autoColor;
-			_t.originalOptions = options;
 		}
 
 		/*  do extend and set defaults */
@@ -171,6 +170,7 @@ thingStore.filter = function(str){
 }
 
 thingStore.exists = function(name){
+	if(name.startsWith('.')) name = name.substring(1);
 	return typeof things[new Contain(name).value] !== "undefined";
 }
 
@@ -181,11 +181,21 @@ thingStore.get = function(name){
 	return things[name];
 }
 
+thingStore.getGenericThingNames = function(){
+	var genericThings = Object.values(things).filter((t)=> 
+		!(/^[A-Z]/).test(t.name) && t.uniqueInstance !== true && typeof t.uniqueInstance !== "number");
+
+	return genericThings.map((t)=>t.name).sort();
+}
+
 thingStore.getSortedThingNames = function(){
 	return Object.keys(things).sort();
 }
 
-thingStore.getThings = function(){
+thingStore.getThings = function(names){
+	if(names){
+		return names.map((name) => things[name]);
+	}
 	return things;
 }
 
