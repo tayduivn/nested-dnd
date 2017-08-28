@@ -65,10 +65,10 @@ PackLoader.load = function(callback){
 
 	var packs = localStorage["packs"];
 	if(!packs){
-		localStorage["packs"] = packs = this.packmap[0];
-	}else{
-		packs = packs.split(",");
+		localStorage["packs"] = packs = this.packmap["nested-orteil"];
 	}
+	
+	packs = packs.split(",");
 
 	//load each pack
 	var numFetched = 0;

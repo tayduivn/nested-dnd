@@ -13,7 +13,7 @@ class SettingsModal extends React.Component {
 
 		var pack = "custom";
 		for(var name in PackLoader.packmap){
-			if(localStorage.packs === PackLoader.packmap[name]){
+			if(localStorage.packs && localStorage.packs === PackLoader.packmap[name]){
 				pack = name;
 			}
 		}
@@ -23,7 +23,7 @@ class SettingsModal extends React.Component {
 
 		this.state = {
 			pack: pack,
-			customPacks: localStorage.packs.replace(/,/g,"\n").replace(/\..\/packs\//g,""),
+			customPacks: (localStorage.packs) ? localStorage.packs.replace(/,/g,"\n") : "",
 			seed: seed,
 			originalSeed: seed,
 			seedOptions: seedOptions
