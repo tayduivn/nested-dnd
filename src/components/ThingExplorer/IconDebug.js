@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import thingStore from '../../stores/thingStore.js';
 import tableStore from '../../stores/tableStore.js'
+import iconStore from '../../stores/iconStore.js'
 import {uniq} from '../../util/util.js';
 
 class IconList extends React.Component{
@@ -47,74 +48,36 @@ class IconDebug extends React.Component{
 		if(!tableStore.isTableID("*GAME ICONS*"))
 			return;
 
-		var gameicons = tableStore.get("GAME ICONS");
-		var faicons = tableStore.get("FONTAWESOME ICONS");
+		var icons = iconStore.iconOptions;
 		
 		var matches = {};
 		var nearMatches = {};
 		var nameGenMatches = {};
 		var things = thingStore.getThings();
 
-		//msg+="\""+name+"\": { \"icon\": \"gi gi-dragon-head\" },\n";
-
-		thingStore.filter("dragon").forEach(function(name){
-			if(!things[name].icon)
-				matches[name] = ["gi gi-dragon-head","gi gi-double-dragon"];
-		});
-		thingStore.filter("thoughts").forEach(function(name){
-			if(!things[name].icon)
-				matches[name] = ["fa flaticon-interface"];
-		});
-		thingStore.filter("psyche").forEach(function(name){
-			if(!things[name].icon)
-				matches[name] = ["fa flaticon-interface"];
-		});
-		thingStore.filter("shop").forEach(function(name){
-			if(!things[name].icon)
-				matches[name] = ["gi gi-shop"];
-		});
-
 		things.forEach((thingName) => {
 			var t = things[thingName];
 			if(t.icon) return;
 
-			gameicons.filter((icon) => icon.split("-").includes(t.name))
+			icons.filter((icon) => icon.label.split("-").includes(t.name))
 				.forEach((icon) => {
 					if(!matches[t.name]) matches[t.name] = [];
-					matches[t.name].push("gi gi-"+icon+"");
+					matches[t.name].push(icon.value);
 				});
 
-			faicons.filter((icon) => icon.split("-").includes(t.name))
-				.forEach((icon) => {
-					if(!matches[t.name]) matches[t.name] = [];
-					matches[t.name].push("fa fa-"+icon+"");
-				});
-
-			gameicons.filter((icon) => icon.includes(t.name))
+			icons.filter((icon) => icon.label.includes(t.name))
 				.forEach((icon) => {
 					if(!nearMatches[t.name]) nearMatches[t.name] = [];
-					nearMatches[t.name].push("gi gi-"+icon+"");
-				});
-
-			faicons.filter((icon) => icon.includes(t.name))
-				.forEach((icon) => {
-					if(!nearMatches[t.name]) nearMatches[t.name] = [];
-					nearMatches[t.name].push("fa fa-"+icon+"");
+					nearMatches[t.name].push(icon.value);
 				});
 
 			if(t.namegen instanceof Array){
 				t.namegen.forEach((choice) => {
 					if(typeof choice !== "string") return;
-					gameicons.filter((icon) => icon.split("-").includes(choice))
+					icons.filter((icon) => icon.label.split("-").includes(choice))
 						.forEach((icon) => {
 							if(!nameGenMatches[t.name]) nameGenMatches[t.name] = [];
-							nameGenMatches[t.name].push("gi gi-"+icon+"");
-						});
-
-					faicons.filter((icon) => icon.split("-").includes(choice))
-						.forEach((icon) => {
-							if(!nameGenMatches[t.name]) nameGenMatches[t.name] = [];
-							nameGenMatches[t.name].push("fa fa-"+icon+"");
+							nameGenMatches[t.name].push(icon.value);
 						});
 				})
 			}

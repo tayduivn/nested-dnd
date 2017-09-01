@@ -7,6 +7,7 @@ import { IconDebug } from './ThingExplorer/IconDebug.js'
 import Settings from './Settings.js';
 
 import './App.css';
+import './colors.css';
 
 class Nav extends Component {
 	render(){
@@ -27,7 +28,7 @@ class Nav extends Component {
 					<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul className="nav navbar-nav">
 							<li><Link to={process.env.PUBLIC_URL + '/nested'}>Nested</Link></li>
-							<li><Link to={process.env.PUBLIC_URL + '/things'}>Thing Explorer</Link></li>
+							<li><Link to={process.env.PUBLIC_URL + '/things'}>Pack Editor</Link></li>
 						</ul>
 						<ul className="nav navbar-nav navbar-right">
 							<li><Settings /><IconDebug show={false}></IconDebug></li>

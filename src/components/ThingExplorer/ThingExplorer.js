@@ -2,204 +2,201 @@ import React from 'react';
 import { Checkbox } from 'react-bootstrap';
 
 import thingStore from '../../stores/thingStore.js';
-import tableStore from '../../stores/tableStore.js'
 import PackLoader from '../../util/PackLoader.js';
-import {uniq,copyToClipboard} from '../../util/util.js';
-import ThingChoice from './ThingChoice';
-import ThingView from './ThingView';
+import {valueIsUndefined} from '../../util/util.js';
+import ThingChoices from './ThingChoice';
+import ThingView from '../ThingView/ThingView';
+import NewPackInfo from './NewPackInfo';
+import SaveThingAction from '../../actions/SaveThingAction';
+import ExportPackAction from '../../actions/ExportPackAction';
 
 import './ThingExplorer.css';
 
-class NewPack extends React.Component{
-	constructor(props){
-		super(props);
-		this.copyThings = this.copyThings.bind(this);
-		this.copyTables = this.copyTables.bind(this);
-		this.createNewThing = this.createNewThing.bind(this);
-	}
-	createNewThing(){
-		var value = document.getElementById("newThingName").value;
-		var newThing = thingStore.add({name: value});
-		this.props.updatePack(null, {}, newThing);
-	}
-	copyThings(){
-		var str = JSON.stringify(this.props.newPack.things);
-		copyToClipboard(str.substring(1,str.length-1));
-		console.log(str);
-	}
-	copyTables(){
-		var str = JSON.stringify(this.props.newPack.tables);
-		copyToClipboard(str.substring(1,str.length-1));
-		console.log(str);
-	}
-	render(){
-		var numThings = Object.keys(this.props.newPack.things).length;
-		var numTables = Object.keys(this.props.newPack.tables).length;
-		var hasData = numTables || numThings;
-		var addThing = (<span className="form-inline">
-				<input className="form-control input-sm" id="newThingName" type="text" />
-				<button className="btn btn-sm btn-default" onClick={this.createNewThing}>Add Thing</button>
-			</span>);
+const DEBUG = false;
 
-		var message = (<div>Update things to generate your own pack {addThing}</div>);
-		if(hasData){
-			message = (<div>
-				your new pack has <strong>{numThings}</strong> new things and <strong>{numTables}</strong> new tables 
-				{addThing}
-				<div className="pull-right">	
-					<button className="btn btn-sm btn-success" onClick={this.copyThings}>copy things</button>
-					<button className="btn btn-sm btn-success" onClick={this.copyTables}>copy tables</button>
-				</div>
-			</div>);
+function getInitialState(){
+	var newPack = {things: {},tables:{}};
+
+	if(localStorage.newPack){
+		try{
+			newPack = JSON.parse(localStorage.newPack);
+			PackLoader.addPack(newPack);
+			if(DEBUG) console.log("ThingExplorer localStorage.newPack # of things "+Object.keys(newPack.things).length);
+		}catch(e) {
+			console.error("ThingExplorer -- could not parse localStorage.newPack: "+localStorage.newPack)
+			console.error(e);
 		}
-
-		return (<div className={"notification-holder alert "+(hasData ? "alert-success" : "alert-primary")}>
-			{message}
-		</div>);
 	}
+
+	return {
+		filteredThings: thingStore.sortedThingNames,
+		currentThing: thingStore.get(thingStore.sortedThingNames[0]),
+		lookupName: thingStore.sortedThingNames[0],
+		newPack: newPack
+	};
 }
 
 class ThingExplorer extends React.Component{
 	constructor(props){
 		super(props);
-		this.state = {
-			things: null,
-			currentThing: null,
-			newPack: {things: {},tables:{}}
-		};
 
-		this.thingsList = [];
-		this.thingNames = [];
-		this.thingOptions = [];
-		this.iconsOptions = [];
+		this.state = {
+			filteredThings: null,
+			currentThing: null, 
+			lookupName: null,  
+			newPack: {things: {},tables:{}},
+			addedThings: []
+		};
 
 		this.filterList = this.filterList.bind(this);
 		this.selectThing = this.selectThing.bind(this);
-		this.updatePack = this.updatePack.bind(this);
+		this.updateThing = this.updateThing.bind(this);
+		this.saveThing = this.saveThing.bind(this);
+		this.exportPack = this.exportPack.bind(this);
 	}
-	getThings() {
-		this.thingNames = thingStore.getSortedThingNames();
-		this.thingsList = thingStore.getThings(this.thingNames);
-		this.thingOptions = thingStore.getGenericThingNames()
-			.map((name) =>{ return {value:name,label:name} });
-	}
+
 	componentDidMount() {
-		if(this.thingsList.length){
-			var state = {
-				things: this.thingsList,
-				currentThing: this.thingsList[0]
-			};
-			this.setState(state)
+		if(thingStore.sortedThingNames.length){
+			this.setState(getInitialState());
 			return;
 		}
 
-    var _this = this;
+		var _this = this;
 		PackLoader.load(function(packs){
-			_this.getThings();
+			thingStore.processAll();
 
-			//load icons options
-			uniq(tableStore.get("*GAME ICONS*")).forEach(function(icon){
-				_this.iconsOptions.push({ value: "gi gi-"+icon, label: icon.replace(/-/g," ") })
-			})
-			uniq(tableStore.get("*FONTAWESOME ICONS*")).forEach(function(icon){
-				_this.iconsOptions.push({ value: "fa fa-"+icon, label: icon.replace(/-/g," ") })
-			});
-			_this.iconsOptions = _this.iconsOptions.sort(function(a,b){ 
-				return a.label.localeCompare(b.label) 
+			thingStore.bindListener('ThingExplorer',()=>{
+				_this.setState({filteredThings: _this.doFilter(_this.state.query, _this.state.isMissingIcons)});
 			});
 
-			var state = {
-				things: _this.thingsList,
-				currentThing: _this.thingsList[0]
-			};
-			_this.setState(state)
+			_this.setState(getInitialState())
 		});
-  }
+	}
+
+	componentWillUnmount(){
+		thingStore.unbindListener('ThingExplorer');
+	}
+
+	exportPack(packName){
+		ExportPackAction(packName, this.state.newPack)
+	}
+
+	/**
+	 * setting value to null will reset the property to its original value
+	 * before it was edited. 
+ 	 */
+	updateThing(property, value, reset){
+		var thing = this.state.currentThing;
+
+		const doReset = reset	|| value === thing.originalOptions[property] 
+			|| (valueIsUndefined(value) && thing.originalOptions[property] === undefined);
+		
+		thing[property] = (doReset) ? thingStore.resetProperty(thing, property) : value;
+
+		//updated. thingStore handles _updatedProps for resets
+		if(!doReset && !thing._updatedProps.includes(property) ){	
+				thing._updatedProps.push(property);
+		}
+		
+		if(property === "isa") 
+			thing = thing.processIsa(true);
+
+		this.setState({currentThing:thing});
+
+	}
+
+	saveThing(lookupName, isDelete){
+		SaveThingAction.call(this, lookupName, isDelete)
+	}
 
 	doFilter(query, isMissingIcons){
-		var result;
-
 		if(!query && !isMissingIcons){
-			result = this.thingsList;
+			return thingStore.sortedThingNames;
 		}
-		else{
-			result = this.thingsList.filter((t) => {
-				var match= (t.name.toLowerCase().includes(query) || (t.isa && t.isa.toLowerCase().includes(query)));
-				var missingIcon = t.getIcon() === "empty";
-				if(!isMissingIcons) return match;
-				else if(!query) return missingIcon;
-				return match && missingIcon;
-			});
-		}
-		return result;
+
+		return thingStore.sortedThingNames.filter((name) => {
+			var match	= false;
+			var t;
+
+			if(query){
+				match = name.toLowerCase().includes(query)
+				if(!match){
+					t = thingStore.get(name);
+					match = (t.isa && t.isa.toLowerCase().includes(query));
+				}
+				if(!match || !isMissingIcons) return match;
+			}
+
+			//process isMissingIcons
+			if(!t) t = thingStore.get(name);
+			return !t.icon;
+		});
 	}
 
 	filterList(event){
+		var query = this.state.query;
+		var isMissingIcons = this.state.isMissingIcons;
 		var state = {};
-		if(event.currentTarget.name === "query")
-			state.query = event.target.value.toLowerCase();
-		if(event.currentTarget.name === "isMissingIcons")
-			state.isMissingIcons = event.currentTarget.checked;
 
-		state.things = this.doFilter(state.query, state.isMissingIcons);
+		if(event){
+			if(event.currentTarget.name === "query"){
+				query = state.query = event.target.value.toLowerCase();
+			}
+			if(event.currentTarget.name === "isMissingIcons"){
+				isMissingIcons = state.isMissingIcons = event.currentTarget.checked;
+			}
+		}
+
+		var things = this.doFilter(query, isMissingIcons);
+		if(!things.equals(this.state.things))
+			state.filteredThings = things;
+
 		this.setState(state);
 	}
 
-	selectThing(thing){
-		this.setState({currentThing: thing});
-	}
-	updatePack(originalName, updates, newThing){
-		if(originalName){
-			updates = Object.assign({}, thingStore.get(originalName).originalOptions, updates )
+	selectThing(name){
+		if(!this.state.currentThing || name !== this.state.currentThing.name){
+			//need to process isa every time in case super was changed
+			this.setState({
+				currentThing: thingStore.get(name).processIsa(true),
+				lookupName: name
+			});
 		}
-		
-		var newThings =  Object.assign({}, this.state.newPack.things, { [newThing.name]: updates } )
-		var newPack = Object.assign({}, this.state.newPack, {
-			things: newThings });
-
-		this.getThings();
-
-		this.setState({
-			things: this.doFilter(this.state.query),
-			currentThing: newThing,
-			newPack: newPack
-		});
-
-		console.log(JSON.stringify(this.state.newPack.things));
 	}
 
 	render(){
-		if(!this.state.things) 
-			return <div>LOADING</div>;
-		var things = this.state.things;
-		var thingList = things.map((thing) => (
-			<ThingChoice key={thing.name} thing={thing} currentThing={this.state.currentThing} selectFunc={this.selectThing} />
-		) );
+		if(DEBUG){
+			console.log("ThingExplorer RENDER ---------------------");
+		}
+
+		const page = (
+			<div className="row">
+				<div id="thingSearch" className="col-sm-3 col-md-2 sidebar">
+					<div className="search form-group has-feedback">
+						<input type="text" name="query" className="form-control" placeholder="Search" onChange={this.filterList}/>
+						<span className="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
+					</div>
+					<Checkbox className="col-xs-12" name="isMissingIcons" onChange={this.filterList} value={this.state.isMissingIcons}>
+						Missing an icon
+					</Checkbox>
+					<ThingChoices things={this.state.filteredThings} currentThing={this.state.currentThing} 
+						currentThingName={this.state.lookupName} 
+						selectFunc={this.selectThing} saveThing={this.saveThing} />
+				</div>
+				<div id="thingView" className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 ">
+					
+					<div className="main">
+						<ThingView thing={this.state.currentThing} thingID={this.state.lookupName} 
+							updateThing={this.updateThing} saveThing={this.saveThing} />
+					</div>
+				</div>
+			</div>
+		)
 
 		return (
 			<div className="container-fluid">
-				<div className="row">
-					<div className="col-sm-3 col-md-2 sidebar">
-						<div id="thingSearch" className="form-group has-feedback">
-							<input type="text" name="query" className="form-control" placeholder="Search" onChange={this.filterList}/>
-							<span className="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
-						</div>
-						<Checkbox className="col-xs-12" name="isMissingIcons" onChange={this.filterList} value={this.state.isMissingIcons}>
-							Missing an icon
-						</Checkbox>
-						<div className="list-group">{thingList}</div>
-					</div>
-					<div id="thingView" className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 ">
-						<NewPack newPack={this.state.newPack} updatePack={this.updatePack} />
-						<div className="main">
-							<ThingView 
-								thing={this.state.currentThing} 
-								thingOptions={this.thingOptions}
-								iconsOptions={this.iconsOptions}
-								updatePack={this.updatePack} />
-						</div>
-					</div>
-				</div>
+				<NewPackInfo newPack={this.state.newPack} export={this.exportPack} />
+				{ (!thingStore.sortedThingNames.length) ? <p>No things are defined</p> : page }
 			</div>
 		)
 	}

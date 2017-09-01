@@ -2,91 +2,102 @@ import tableStore from './tableStore.js';
 import Styler from '../util/Styler.js';
 import Contain from '../util/Contain.js'
 
+import { binaryFind, clean } from '../util/util.js';
+
 let things = {};
 let thingStore = {};
 
+thingStore.isaOptions = []; // generic options to select from a dropdown
+thingStore.sortedThingNames = []; 
+
+const BLANK_NAME = " ";
+
+let updateCallbacks = {};
+var DEBUG = false;
+var DEBUG_THING = "Prime Material Plane";
+
 class Thing{
 	constructor(options){
-
-		//data clean
-		if(options.background) options.background = options.background.toLowerCase();
-		if(options.textColor) options.textColor = options.textColor.toLowerCase();
+		if(DEBUG && options.name === DEBUG_THING) {
+			console.log("Thing constructor: "+DEBUG_THING);
+		}
 		
 		//extend the existing thing
 		if(things[options.name]){
-			options = Object.assign({}, things[options.name].originalOptions, options );
+			options = { ...things[options.name].originalOptions, ...options };
 		}
 
 		//set functions. These are not in saveOptions because we don't want to copy isa functions
+		this.name = options.name;
 		this.b4Make = options.beforeMake;
 		this.afMake = options.afterMake;
 		this.b4Render = options.beforeRender;
-		this.cssClass = null;
-		this.originalOptions = options;
-		saveOptions(this,options);
-	
-		//save
-		if(this.name)
-			things[""+this.name] = this;
+		this.isa = options.isa;
+		this.originalOptions = options; // stores what is load in by the files. NOT newPack data.
+		this._updatedProps = (options._updatedProps) ? options._updatedProps : []; //private attr used in Thing Explorer
+		this._newPack = {}; // the user-created new pack loaded by the pack editor
+		this._beforeIsa = {}; // after all packs (inc. newPack has loaded)
 
-		function saveOptions(_t, options){
-			_t.name = options.name;
-			_t.isa = options.isa;
-			_t.contains = options.contains;
-			_t.namegen = options.namegen;
-			_t.uniqueInstance = options.uniqueInstance;
-			_t.data = options.data;
-			_t.icon = options.icon;
-			_t.background = options.background;
-			_t.textColor = options.textColor;
-			_t.autoColor = options.autoColor;
-		}
+		this._saveOptions(options);
 
 		/*  do extend and set defaults */
 		var isaProcessed = false;
-		this.processIsa = function(){
-			if(isaProcessed) return;
+		this.processIsa = function(newIsa){
+			if(DEBUG && this.name === DEBUG_THING) {
+				console.log("Thing.processIsa: "+DEBUG_THING);
+			}
 
+			// need this if there is a newPack. Stores the state before any isa ever runs
+			if(!isaProcessed){
+				this._beforeIsa = {...clean(this)};
+				delete this._beforeIsa.originalOptions;
+				delete this._beforeIsa.processIsa;
+				delete this._beforeIsa._updatedProps;
+			}
+
+			if(isaProcessed && !newIsa) return this;
+
+			//clear previous isa data
+			if(isaProcessed && newIsa){ 
+				var resetOptions = {...this._beforeIsa};
+				this._updatedProps.forEach((prop)=>resetOptions[prop] = this[prop]);
+				this._saveOptions(resetOptions);
+			}
+
+			//recurse
 			if(this.isa){
-
-				//whoops -- is itself
-				if(this.isa === this.name){
-					this.isa = null;
-					return;
-				}
-
-				var superThing = thingStore.get(this.isa);
-				superThing.processIsa();
-
-				saveOptions(this, Object.assign({}, clean(superThing), clean(this) ));
+				var superThing = thingStore.get(this.isa).processIsa();
+				this._saveOptions({...clean(superThing), ...clean(this)});
 			}
-
-			/* TODO: temporary */
-			if((/^[A-Z]/).test(this.name) && this.uniqueInstance !== false && !this.uniqueInstance){
-				this.uniqueInstance = true;
-			}
-			if(this.autoColor !== false && !this.autoColor) this.autoColor = true;
-			if(!this.contains) this.contains = [];
-			if(!this.data) this.data = {};
-			if(!this.icon) this.icon = "empty";
-			if(this.namegen === "" || this.namegen === this.name) this.namegen = false;
-			this.cssClass = Styler.getClass(this);
-			Styler.addThing(this);
-
+			this._setDefaults(this);
 			isaProcessed = true;
-
 			return this;
 		}
+	}
 
-		function clean(obj) {
-			Object.assign({},obj);
-		  for (var propName in obj) { 
-		    if (obj[propName] === undefined) {
-		      delete obj[propName];
-		    }
-		  }
-		  return obj;
+	// these things can be inherited from isa
+	_saveOptions({ contains, namegen, uniqueInstance, data, icon, name, background, textColor, autoColor }){
+		this.contains = contains;
+		this.namegen = namegen;
+		this.uniqueInstance = uniqueInstance;
+		this.data = data;
+		this.icon = cleanIcon(icon);
+		this.background = Styler.cleanColor(background, name, textColor);
+		this.textColor = Styler.cleanColor(textColor);
+		this.autoColor = autoColor;
+	}
+
+	// happens after proccess isa so parent isa's will overwrite these values
+	_setDefaults({name, isa, namegen = false, contains = [], uniqueInstance, data = {}, autoColor = true }){
+		this.isa = (isa === name) ? null : isa;
+		this.namegen = (namegen === this.name) ? false : namegen;
+		this.contains = contains;
+		this.uniqueInstance = uniqueInstance;
+		if(uniqueInstance === undefined && (/^[A-Z]/).test(name)){
+			this.uniqueInstance = true;
 		}
+		this.data = data;
+		this.autoColor = autoColor;
 	}
 
 	beforeMake(instance, thing){
@@ -95,11 +106,15 @@ class Thing{
 		if(!thing) thing = this;
 
 		//super
-		if(this.isa) things[this.isa].beforeMake(instance, thing);
+		if(this.isa) {
+			thing = things[this.isa].beforeMake(instance, thing);
+		}
 
 		if(this.b4Make) {
-			this.b4Make.call(thing, instance);
+			thing = this.b4Make.call(thing, instance);
 		}
+
+		return thing;
 	}
 	
 	afterMake(instance, thing){
@@ -139,9 +154,23 @@ class Thing{
 	}
 
 	getIcon(){
-		if(this.icon && this.icon.roll) 
-			return this.icon.roll();
-		return this.icon;
+		if(!this.icon) return "";
+
+		return tableStore.roll(this.icon);
+	}
+}
+
+//fa-spin and gi-spin do the same thing, so clean them up
+function cleanIcon(icon){
+	const gi = / gi-spin /g;
+	const fa = / fa-spin /g;
+	const slow = " spin animated infinite ";
+
+	if(typeof icon === "string"){
+		return (" "+icon+" ").replace(gi,slow).replace(fa,slow).trim();
+	}
+	else if(icon && icon.map){
+		return icon.map((i) => (" "+i+" ").replace(gi,slow).replace(fa,slow).trim())
 	}
 }
 
@@ -151,18 +180,72 @@ Thing.prototype.thingStore = thingStore;
 thingStore.add = function(options){
 	if(options instanceof Array){
 		options = {contains:[].concat(options)}
-	}		
-	return new Thing(options).processIsa();
+	}
+	var addingNew = options.name && !thingStore.exists(options.name);
+
+	//name cleanup
+	if(options.name && options.name !== BLANK_NAME)
+		options.name = options.name.trim();
+
+	var thing = new Thing(options).processIsa();
+
+	if(thing.name){
+
+		//add to the sorted names array
+		var result = binaryFind(this.sortedThingNames, thing.name)
+		if(!result.found) this.sortedThingNames.splice(result.index,0,thing.name);
+
+		//add to the generic names array
+		if(isGeneric(thing)){
+			result = binaryFind(this.isaOptions, thing.name)
+			if(!result.found) this.isaOptions.splice(result.index,0,thing.name);
+		}
+
+		things[thing.name] = thing;
+		if(addingNew)
+			doCallbacks()
+	}
+
+	return thing;
 }
 
-thingStore.addAll = function(obj){
+function doCallbacks(){
+	Object.values(updateCallbacks).forEach((callback) => callback());
+}
+
+thingStore.bindListener = function(name, callback){
+	updateCallbacks[name] = callback;
+}
+thingStore.unbindListener = function(name, callback){
+	delete updateCallbacks[name];
+}
+
+thingStore.addAll = function(obj, isTemp){
 	for(var name in obj){
-		var thing = obj[name];
-		if(thing instanceof Array){
-			thing = {contains:[].concat(thing)}
+		var options = obj[name];
+		if(options === false){
+			delete things[name];
+			continue;
 		}
-		thing = new Thing(Object.assign({name:""+name}, thing));
+		if(options instanceof Array){
+			options = {contains:[...obj] }
+		}
+
+		var thing = new Thing(Object.assign({name:""+name}, options));
+
+		if(isTemp && things[name]){
+			thing._newPack = options; // what was set in the pack
+			thing.originalOptions = things[name].originalOptions;
+		}
+
+		if(thing.name)
+			things[thing.name] = thing;
 	}
+
+	//sort
+	this.sortedThingNames = Object.keys(things).sort(); 
+	this.isaOptions = getGenericThingNames(this.sortedThingNames);
+	doCallbacks();
 }
 
 thingStore.filter = function(str){
@@ -170,6 +253,8 @@ thingStore.filter = function(str){
 }
 
 thingStore.exists = function(name){
+	if(typeof name !== "string") return false;
+
 	if(name.startsWith('.')) name = name.substring(1);
 	return typeof things[new Contain(name).value] !== "undefined";
 }
@@ -181,22 +266,119 @@ thingStore.get = function(name){
 	return things[name];
 }
 
-thingStore.getGenericThingNames = function(){
-	var genericThings = Object.values(things).filter((t)=> 
-		!(/^[A-Z]/).test(t.name) && t.uniqueInstance !== true && typeof t.uniqueInstance !== "number");
-
-	return genericThings.map((t)=>t.name).sort();
-}
-
-thingStore.getSortedThingNames = function(){
-	return Object.keys(things).sort();
-}
-
 thingStore.getThings = function(names){
 	if(names){
 		return names.map((name) => things[name]);
 	}
 	return things;
+}
+
+thingStore.rename = function(oldName,newName){
+	if(things[newName]){
+		throw new Error(newName+" is already a thing. Can't rename "+oldName);
+	}
+	if(!things[oldName]){
+		return thingStore.add({name: newName});
+	}
+
+	if (oldName !== newName) {
+    thingStore.add({ ...this.get(oldName), name: newName})
+    this.delete(oldName, true)
+	}
+
+	//edit sorted names array
+	var newIndex = binaryFind(this.sortedThingNames, newName);
+	this.sortedThingNames.splice(newIndex.index,0,newName);
+
+	//edit generic names array
+	if(isGeneric(things[newName])){
+		newIndex = binaryFind(this.isaOptions, newName);
+		this.isaOptions.splice(newIndex.index,0,newName);
+	}
+	
+	doCallbacks();
+
+	return things[newName];
+}
+
+thingStore.delete = function(name, dontCallback){
+	if(!things[name]) return;
+
+  var oldIndex = binaryFind(this.sortedThingNames, name)
+  this.sortedThingNames.splice(oldIndex.index,1);
+
+	if(isGeneric(things[name])){
+		oldIndex = binaryFind(this.isaOptions, name)
+		this.isaOptions.splice(oldIndex.index,1);
+	}
+
+  delete things[name];
+
+  if(!dontCallback){
+  	doCallbacks();
+  }
+}
+
+thingStore.resetProperty = function(thing, property){
+	thing[property] = undefined;
+
+	if(typeof thing === "string") thing = thingStore.get(thing);
+	if(thing.originalOptions[property] !== undefined){
+		thing[property] = thing.originalOptions[property];
+	}
+
+	if(thing.isa){
+		thing[property] = findAncestorWithProperty.call(thing,property);
+	}
+
+	
+	// if this property is the same as the current new Pack, it hasn't been updated
+	if(thing._newPack[property]){
+		if(thing[property] === thing._newPack[property])
+			thing._updatedProps.splice(thing._updatedProps.indexOf(property),1);
+		else if(!thing._updatedProps.includes(property)){
+			thing._updatedProps.push(property);
+		}
+	}
+	// if it's not in the new pack, but it's the same as the original, it hasn't been updated
+	else if(thing[property] === thing.originalOptions[property]){
+		thing._updatedProps.splice(thing._updatedProps.indexOf(property),1);
+	}else if(!thing._updatedProps.includes(property)){
+		thing._updatedProps.push(property);
+	}
+
+	thing._setDefaults(thing); 
+	return thing[property];
+
+	function findAncestorWithProperty(property){
+		if(this[property] !== undefined) return this[property];
+
+		if(this.isa) return findAncestorWithProperty.call(thingStore.get(this.isa), property);
+
+		return;
+	}
+}
+
+thingStore.processAll = function(nameArr){
+	if(DEBUG) console.log("thingStore.processAll "+((nameArr) ? nameArr.length : Object.keys(things).length) )
+
+	if(nameArr){
+		nameArr.forEach((name) => { if(things[name]) things[name].processIsa(true) })
+	}
+	else{
+		for(var name in things){
+			things[name].processIsa(true);
+		}
+	}
+}
+
+function isGeneric(thing){
+	var u = thing.uniqueInstance;
+	return !(/^[A-Z]/).test(thing.name) && u !== true && typeof u !== "number"
+}
+
+function getGenericThingNames(names){
+	return names.filter((name) => isGeneric(things[name]))
 }
 
 export default thingStore;

@@ -52,6 +52,8 @@ class Table {
 
 
 tableStore.roll = function(obj){
+	if(obj === undefined) return obj;
+	
 	if(obj.constructor === ({}).constructor && obj.rows){
 		obj = new Table(obj);
 	}
@@ -67,12 +69,14 @@ tableStore.roll = function(obj){
 	var parts = obj.split("|")
 	if(parts.length !== 1){
 		obj = new Table({rows: parts, concatenate: true}).roll();
-	}
-	obj = parts[0];
+	}else
+		obj = parts[0];
 
 	if(this.isTableID(obj)){
-		obj = this.get(obj).roll();
+		obj = this.get(obj);
 	}
+
+	if(obj.roll) obj = obj.roll();
 
 	return obj;
 }
@@ -97,13 +101,9 @@ tableStore.get = function(str){
 	if(table.constructor === ({}).constructor){
 		table = tables[str] = new Table(tables[str]);
 	}
-	else if(typeof table === "string" && Table.isTableID(table)){
+	else if(typeof table === "string" && this.isTableID(table)){
 		// is an alias for another table
 		return this.get(table);
-	}
-
-	if(!table.roll){
-		throw new Error("Table cannot be rolled");
 	}
 
 	return table;

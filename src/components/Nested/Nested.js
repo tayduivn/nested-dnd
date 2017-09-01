@@ -8,38 +8,45 @@ import Ancestors from './Ancestors.js';
 
 import './Nested.css';
 
+var currentInstanceId = null;
+
 class Nested extends React.Component {
 	constructor(){
 		super();
 		this.state = {
-			instance:null
+			instance: null
 		};
 	}
-	//if user clicks the nav bar, this will fire. Need to update seed to root.
+	//if user updates the hash or clicks the navbar this will fire
 	componentWillUpdate(){
 		var id = parseInt(window.location.hash.replace('#',''),10);
-		if(this.state.instance && this.state.instance.id !== id){
+		if(id && this.state.instance && this.state.instance.id !== id){
 			this.setInstance(id);
+		}
+		else{
+			
 		}
 	}
 	//set hash to root onload
-	componentDidMount(){
+	componentWillMount(){
 		var _this = this;
 
-		if(this.state.instance)
-			window.location.hash = "#"+this.state.instance.id;
-		else
-			window.location.hash = "#0";
+		if(currentInstanceId){
+			this.setState({instance: instanceStore.get(currentInstanceId)})
+			window.location.hash = "#"+currentInstanceId;
+		}
+		else{
+			PackLoader.load(function(packs){
+				var hash = _this.getSeed(packs)
+				window.location.hash = "#"+hash;
 
-		PackLoader.load(function(packs){
-
-			_this.getSeed(packs);
-
-			//handle back button
-			window.addEventListener('hashchange',_this.handleUrlChange);
-		});
+				//handle back button
+				window.addEventListener('hashchange',_this.handleUrlChange);
+			});
+		}
 	}
 	componentWillUnmount(){
+		currentInstanceId = (this.state.instance) ? this.state.instance.id : null;
 		window.removeEventListener('hashchange',this.handleUrlChange);
 	}
 	handleUrlChange(){
@@ -57,8 +64,9 @@ class Nested extends React.Component {
 
 		seed = seed.split(">");
 		if(seed.length === 1){
-			if(instanceStore.get(0))
+			if(instanceStore.get(0)){
 				return this.setInstance(0);
+			}
 
 			seed = seed[0];
 			if(!thingStore.exists(seed)){
@@ -116,6 +124,8 @@ class Nested extends React.Component {
 			document.getElementById("title").className="animated fadeIn";
 
 		this.setState({"instance": instance});
+
+		return instance.id;
 	}
 	render() {
 		if(!this.state.instance)
@@ -132,7 +142,8 @@ class Nested extends React.Component {
 							transitionAppearTimeout={50}
 							transitionEnterTimeout={50}
 							transitionLeave={false}>
-							{inst.children.map( (child,index) => {
+							{(!inst.children.length) ? <div className="col-xs-12">Contains nothing.</div> : 
+							inst.children.map( (child,index) => {
 								if(typeof child === "string"){
 									return (
 										<div key={index} className="col-xs-12">
@@ -141,13 +152,16 @@ class Nested extends React.Component {
 									)
 								}
 								var instance = instanceStore.get(child);
-								var inner = <div className={"child-inner "+instance.cssClass}
+								var hasChildren = instance.thing.contains.length !== 0;
+								var cssClass = instance.cssClass + (hasChildren ? " link":"");
+								var inner = <div className={"child-inner "+cssClass}
+									data-thing={instance.thing.name}
 									style={{color:instance.textColor}}>
 											<i className={instance.icon}></i>
 											<h1>{instance.name}</h1>
 										</div>;
 
-								if(instance.thing.contains.length === 0){
+								if(!hasChildren){
 									return (
 										<div key={child}
 											className="child col-lg-2 col-md-3 col-sm-4 col-xs-6" 

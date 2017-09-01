@@ -7,9 +7,63 @@ Array.prototype.roll = function(){ // eslint-disable-line
 	return tableStore.roll(result);
 }
 
+Array.prototype.equals = function (array) { // eslint-disable-line
+		// if the other array is a falsy value, return
+		if (!array)
+				return false;
+
+		// compare lengths - can save a lot of time 
+		if (this.length !== array.length)
+				return false;
+
+		for (var i = 0, l=this.length; i < l; i++) {
+				// Check if we have nested arrays
+				if (this[i] instanceof Array && array[i] instanceof Array) {
+						// recurse into the nested arrays
+						if (!this[i].equals(array[i]))
+								return false;       
+				}           
+				else if (this[i] !== array[i]) { 
+						// Warning - two different object instances will never be equal: {x:20} != {x:20}
+						return false;   
+				}           
+		}       
+		return true;
+}
+// Hide method from for-in loops
+Object.defineProperty(Array.prototype, "equals", {enumerable: false}); // eslint-disable-line
+
 Math.rand = function(min,max){// eslint-disable-line
 	//Return a number between min and max, included.
 	return parseFloat(Math.floor(Math.random()*(max-min+1)))+parseFloat(min);
+}
+
+function clean(obj) {
+	Object.assign({},obj);
+	for (var propName in obj) { 
+		if (obj[propName] === undefined) {
+			delete obj[propName];
+		}
+	}
+	return obj;
+}
+
+// essentially makes up for the default values when constructing a thing
+// need to know if value should be unset (set to undefined) in pack
+function valueIsUndefined(value){
+	return (value === undefined || value === false) ? true
+				: (value === null) ? false // null means overwrite other packs to set this blank, or ignore isa value
+				: (typeof value === "string") ? value === "" 
+				: (value.constructor && value.constructor.name === "Array") ? value.equals([]) 
+				: !Object.keys(value).length;
+}
+
+function downloadJSON(obj,filename) {
+	var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+	var dlAnchorElem = document.getElementById('downloadAnchorElem');
+	dlAnchorElem.setAttribute("href", dataStr);
+	dlAnchorElem.setAttribute("download", filename+".json");
+	dlAnchorElem.click();
 }
 
 function copyToClipboard(text) {
@@ -95,6 +149,36 @@ function weightedDiceChoose(arr){
 	}
 }
 
+function binaryFind(arr, searchElement) {
+	var minIndex = 0;
+	var maxIndex = arr.length - 1;
+	var currentIndex;
+	var currentElement;
+
+	while (minIndex <= maxIndex) {
+		currentIndex = (minIndex + maxIndex) / 2 | 0;
+		currentElement = arr[currentIndex];
+
+		if (currentElement < searchElement) {
+			minIndex = currentIndex + 1;
+		}
+		else if (currentElement > searchElement) {
+			maxIndex = currentIndex - 1;
+		}
+		else {
+			return { // Modification
+				found: true,
+				index: currentIndex
+			};
+		}
+	}      
+
+	return { // Modification
+		found: false,
+		index: currentElement < searchElement ? currentIndex + 1 : currentIndex
+	};
+}
 
 
-export {uniq,choose,weightedChoose,weightedDiceChoose,copyToClipboard}
+
+export {uniq,choose,weightedChoose,weightedDiceChoose,copyToClipboard,binaryFind,clean,valueIsUndefined,downloadJSON}

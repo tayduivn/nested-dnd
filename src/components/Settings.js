@@ -17,17 +17,22 @@ class SettingsModal extends React.Component {
 				pack = name;
 			}
 		}
-		var seed = (props.seed) ? props.seed : "";
+
+		var seed = (localStorage.seed) ? localStorage.seed : "";
 		seed = seed.split(">").map((s)=>s.trim());
-		var seedOptions = (seed.length) ? this.getSeedContains(seed) : props.seedOptions;
 
 		this.state = {
 			pack: pack,
-			customPacks: (localStorage.packs) ? localStorage.packs.replace(/,/g,"\n") : "",
 			seed: seed,
 			originalSeed: seed,
-			seedOptions: seedOptions
-		};
+			customPacks: (localStorage.packs) ? localStorage.packs.replace(/,/g,"\n") : "",
+			seedOptions: []
+		}
+
+		var _this = this;
+		PackLoader.load(function(){
+			_this.setState(_this.getSeedContains(seed))
+		});
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleChangeSeed = this.handleChangeSeed.bind(this);
@@ -36,17 +41,11 @@ class SettingsModal extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps, nextState){
-		if(this.props.seedOptions.length !== nextProps.seedOptions.length){
-			var state = {};
-			if(!this.state.seed.length){
-				state.seedOptions = nextProps.seedOptions;
-			}
-			if(this.state.originalSeed !== nextProps.seed){
-				state.originalSeed = nextProps.seed;
-				state.seed = nextProps.seed.split(">").map((s)=>s.trim());
-				state.seedOptions = this.getSeedContains(state.seed)
-			}
-			this.setState(state);
+		if(!this.state.seed.length && nextProps.allThingOptions !== this.props.allThingOptions){
+			this.setState({
+				//initialOptions: this.getInitialOptions(nextState.seed),
+				seedOptions: nextProps.allThingOptions
+			});
 		}
 	}
 
@@ -64,56 +63,89 @@ class SettingsModal extends React.Component {
 			return this.state.seedOptions;
 		}
 
+		var unfoundValues = [].concat(values);
+
 		return this.state.seedOptions.filter((op) => {
-			return op.value.includes(filterString)
+			var index = unfoundValues.findIndex((option) => option.value === op.value);
+			var selected = index !== -1;
+			if(selected){
+				unfoundValues.splice(index,1);
+			}
+			return !selected && op.value.includes(filterString)
 		})
 	}
 
-	getSeedContains(values){
-		if(values.length === 0){
-			return this.props.seedOptions;
+	getSeedContains(seed){
+
+		//set clearableValue
+		if(typeof seed[0] === "string"){
+			seed = seed.map((name, index)=>({
+				value:name,
+				label:name,
+				clearableValue: (seed.length === 1 || index === seed.length-1)
+			}));
+		}else{
+			seed = seed.map((option, index) => (
+				{...option, clearableValue: (seed.length === 1 || index === seed.length-1) }
+			));
 		}
 
-		var seedOptions = [];
-		var lastThing = values[values.length - 1];
+		if(seed.length === 0){
+			return {
+				seedOptions: this.props.allThingOptions,
+				seed: seed
+			};
+		}
+
+		var seedOptions = [].concat(seed);
+
+		var lastThing = seed[seed.length - 1];
 		if(lastThing.value)
 			lastThing = lastThing.value;
 
-		if(!thingStore.exists(lastThing)){
+		if(!lastThing || !thingStore.exists(lastThing)){
 			return [];
 		}
 
-		lastThing = thingStore.get(lastThing);
-		if(!lastThing.contains)
-			return [];
-		
-		for(var i = 0; i < lastThing.contains.length; i++){
-			var contain = lastThing.contains[i];
+		var contains = thingStore.get(lastThing).contains;
+		if(!contains) return [];
+		contains = [...contains]; //copy it
+
+		for(var i = 0; i < contains.length; i++){
+			var contain = contains[i];
 			if(tableStore.isRollable(contain)){
 				continue;
 			} 
 			var check = new Contain(contain);
 			if(check.makeProb !== 100) continue;
 
-			if(thingStore.exists(check.value)){
+			if(check.value && thingStore.exists(check.value)){
 				if(check.isEmbedded){
-					lastThing.contains.push(...thingStore.get(check.value).contains)
+					contains.push(...thingStore.get(check.value).contains)
 					continue;
-				}else
+				}else{
 					seedOptions.push({value:check.value, label:check.value});
+				}
 			}
 		}
-		return seedOptions;
+		return {
+			seedOptions: seedOptions,
+			seed: seed
+		}
 	}
 
 	handleChangeSeed(values){
-		this.setState({ 
-			seed: values,
-			seedOptions: this.getSeedContains(values)
-		});
+		this.setState(this.getSeedContains(values));
 	}
 
 	handleSubmit(event) {
+		var confirm = true;
+		if(localStorage["newPack"]){
+			confirm = window.confirm("This will clear your changes in the Pack Editor. Are you sure?")
+		}
+		if(!confirm) return;
+		delete localStorage["newPack"]
+
 		if(!this.state.seed.length){
 			localStorage.removeItem("seed");
 		}else{
@@ -122,10 +154,6 @@ class SettingsModal extends React.Component {
 
 		if(this.state.pack === "custom"){
 			var packs = this.state.customPacks.split("\n");
-			packs.forEach(function(str, index){
-				if(!str.startsWith("http"))
-					packs[index] = "./packs/"+str
-			});
 			localStorage["packs"] = packs.join(",");
 		}else{
 			localStorage["packs"] = PackLoader.packmap[this.state.pack];
@@ -150,7 +178,7 @@ class SettingsModal extends React.Component {
 							<ControlLabel>Seed</ControlLabel>
 							<Select name="seed" value={this.state.seed} onChange={this.handleChangeSeed}
 								multi={true} clearValueText="Use default seed" filterOptions={this.filterSeedOptions}
-								options={this.props.seedOptions} />
+								options={ this.state.seedOptions } />
 						</FormGroup>
 
 						<FormGroup>
@@ -188,7 +216,7 @@ class Settings extends React.Component{
 		this.state = { 
 			showModal: false,
 			thingNames: [],
-			seedOptions: []
+			allThingOptions: []
 		};
 	}
 
@@ -198,22 +226,22 @@ class Settings extends React.Component{
 
 	open(e) {
 		e.preventDefault();
+		var state = {
+			showModal: true
+		};
 
-		var thingNames = thingStore.getSortedThingNames();
-		var seedOptions = thingNames.map( (name) =>{ return {value:name,label:name} });
+		if(!this.state.thingNames.equals(thingStore.sortedThingNames)){
+			state.thingNames = thingStore.sortedThingNames;
+			state.allThingOptions = state.thingNames.map( (name) =>{ return {value:name,label:name} });
+		}
 
-		this.setState({ 
-			seed: localStorage.seed,
-			showModal: true,
-			thingNames: thingNames,
-			seedOptions: seedOptions
-		});
+		this.setState(state);
 	}
 	render(){
 		return (
 			<a onClick={(e) => this.open(e)}>
-				<i className="fa fa-gear"/>
-				<SettingsModal modal={this} seed={this.state.seed} seedOptions={this.state.seedOptions} thingNames={this.state.thingNames} />
+				<i className="fa fa-gear"/> Settings
+				<SettingsModal modal={this} seed={this.state.seed} allThingOptions={this.state.allThingOptions} />
 			</a>
 		);
 	}

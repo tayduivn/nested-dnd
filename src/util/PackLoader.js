@@ -1,49 +1,57 @@
 import thingStore from '../stores/thingStore.js';
 import tableStore from '../stores/tableStore.js';
+import iconStore from '../stores/iconStore.js';
 
-let gameicons = require('../_data/game-icons.json');
 let vm = require('vm');
+let gameicons = require('../_data/game-icons.json');
+
+const DEBUG = false;
 
 var packsAreLoaded = false;
+var packsAreLoading = false;
+
 var result = {
 	defaultSeed: "",
 	tables: []
 };
+var holdCallbacks = [];
 
 var PackLoader = {};
 
+PackLoader.packs = {};
+
 PackLoader.packmap =  {
-	"dnd": "nested-dnd-data.json,dnd.js,forgotten-realms.json",
+	"dnd": "nested-dnd-data.json,dnd.json,dnd.js,forgotten-realms.json",
 	"nested-orteil":"nested-orteil.json,nested-orteil-extended.json"
 }
 
 class Pack{
-	constructor(options){
-		this.name = options.name;
-		this.version = options.version;
-		this.description = options.description;
-		this.author = options.author;
-		this.dependencies = options.dependencies;
-		this.defaultSeed = options.defaultSeed;
-		this.things = options.things || {};
-		this.tables = options.tables || [];
-		this.beforeLoad = options.beforeLoad;
-		this.afterLoad = options.afterLoad;
+	constructor({name, version, description, author, dependencies = [], defaultSeed, things = {}, tables = {}, beforeLoad, afterLoad}){
+		this.name = name;
+		this.version = version;
+		this.description = description;
+		this.author = author;
+		this.dependencies = dependencies;
+		this.defaultSeed = defaultSeed;
+		this.things = things;
+		this.tables = tables;
+		this.beforeLoad = beforeLoad;
+		this.afterLoad = afterLoad;
 	}
-	load(result){
+	load(result, isTemp){
 		if(typeof this.beforeLoad === "function")
 			this.beforeLoad(thingStore, tableStore);
 
 		if(this.defaultSeed)
 				result.defaultSeed = this.defaultSeed;
 
-		thingStore.addAll(this.things);
-		tableStore.addAll(this.tables);
+		thingStore.addAll(this.things, isTemp);
+		tableStore.addAll(this.tables, isTemp);
 
 		if(typeof this.afterLoad === "function")
 			this.afterLoad(thingStore, tableStore);
 
-		console.log("Loaded pack: "+this.name
+		if(DEBUG) console.log("Loaded pack: "+this.name
 			+"\n\t Added "+Object.keys(this.things).length+" things."
 			+"\n\t Added "+Object.keys(this.tables).length+" tables.");
 	}
@@ -56,12 +64,32 @@ class Pack{
 	}
 }
 
+PackLoader.getPackOptions = function(){
+	var options = Object.keys(PackLoader.packs).map((p)=>{return { label:p,value:p }});
+	options = [{ value: 'new', label: 'create new pack' }].concat(options);
+	return {
+		options: options,
+		complete: true
+	};
+}
+
+PackLoader.addPack = function(pack){
+	new Pack(pack).load({},true);
+	thingStore.processAll(Object.keys(pack.things));
+}
+
 PackLoader.load = function(callback){
 	if(packsAreLoaded){
 		callback(result);
-		return result;
+		return;
 	}
+	holdCallbacks.push(callback);
+	if(packsAreLoading) return;
+
+	packsAreLoading = true;
+
 	new Pack(gameicons).load();
+	iconStore.load();
 
 	var packs = localStorage["packs"];
 	if(!packs){
@@ -76,7 +104,13 @@ PackLoader.load = function(callback){
 		url = (url.indexOf('http://') === 0 || url.indexOf('https://') === 0) ? url :
 				process.env.PUBLIC_URL + '/packs/' + url;
 
-		fetch(url).then(function(response){
+		fetch(url,{ 
+			headers: {
+				'Pragma': 'no-cache',
+		    'Cache-Control': 'no-cache'
+		  }
+		})
+		.then(function(response){
 			if(url.endsWith('.json'))
 				return response.json();
 			else
@@ -86,7 +120,7 @@ PackLoader.load = function(callback){
 			if(typeof pack === "string"){
 				pack = vm.runInThisContext(pack, 'remote_modules/nestedscript.js');
 			}
-			packs[index] = new Pack(pack);
+			packs[index] = PackLoader.packs[pack.name] = new Pack(pack);
 			numFetched++;
 
 			//done
@@ -104,7 +138,10 @@ PackLoader.load = function(callback){
 				}
 				
 				packsAreLoaded = true;
-				callback(result);
+				packsAreLoading = false
+
+				holdCallbacks.forEach((callback) => callback(result));
+				holdCallbacks = [];
 			}
 		})
 		.catch((error) => {

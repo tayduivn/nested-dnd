@@ -1,0 +1,21 @@
+{
+	"name":"test",
+	"defaultSeed":"defaultSeed",
+	"tables":{},
+	"things":{
+		"defaultSeed": {
+			"background":"white"
+		},
+		"hasBackground": {
+			"background":"white"
+		},
+		"testNameMe":{
+		},
+		"clearme":{
+			"namegen":"cleared",
+			"data":{
+				"cleared":true
+			}
+		}
+	}
+}

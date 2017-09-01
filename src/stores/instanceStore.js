@@ -11,28 +11,21 @@ let instances = [];
  */
 class Instance{
 	constructor(thing){
-		thing.beforeMake(this);
 
+		thing = thing.beforeMake(this);
+
+		this.thing = thing;
 		this.id = null;
 		this.parent = null;
 		this.children = []; //indexes of children and string descriptions
-		this.thing = thing;
 		this.grown = false;
+		this.data = thing.data;
 		this.name = thing.getName();
 		this.icon = thing.getIcon();
-		this.cssClass = thing.cssClass;
-		this.textColor = thing.textColor;
-		this.data = thing.data;
-
-		if(thing.autoColor){
-			var color = Styler.strToColor(this.name);
-			if(color){
-				this.cssClass+=" "+color;
-				this.textColor = null;
-			}
-		}
-		if(this.icon === "empty")
-			this.cssClass += " empty";
+		
+		var { cssClass, textColor } = Styler.getClass(this.name, this.icon, thing);
+		this.textColor = textColor;
+		this.cssClass = cssClass;
 
 		this.id = instances.length;
 		if(thing.uniqueInstance === true) 
@@ -115,9 +108,10 @@ class Instance{
 				var thing = thingStore.get(value);
 
 				if(child.isEmbedded){
-					var insert = thing.contains;
-					blueprint.splice(i,1,...insert);
-					i--;
+					if(thing.contains && thing.contains.length){
+						blueprint.splice(i,1,...thing.contains);
+						i--;
+					}
 				}else{
 					var New = instanceStore.add(thing);  
 					New.parent=this.id;
@@ -162,6 +156,10 @@ instanceStore.add = function(thing){
 	var instance = new Instance(thing);
 	instances.push(instance);
 	return instance;
+}
+
+instanceStore.delete = function(instance){
+	return instances.splice(instance.id, 1);
 }
 
 //convenience for packs to access Instance functions;

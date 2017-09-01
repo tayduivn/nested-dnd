@@ -1,3 +1,4 @@
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/_variables";
 
 h1,h2,h3,h4,h5{
   text-align:left;
@@ -26,4 +27,143 @@ h1,h2,h3,h4,h5{
 
 .navbar-nav > li > a{
   cursor: pointer;
+}
+
+.form-group-lg .glyphicon{
+  line-height:42px;
+  width:42px;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+
+  &:active,&:focus,&:active:focus{
+    outline:0;
+  }
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+
+.title {
+  .form-control{
+    border-top:0;
+    border-left:0;
+    border-right:0;
+    font-size:36px;
+    box-shadow:none;
+    padding: 5px 10px;
+    height:auto;
+  }
+  .form-control-feedback{
+    top:10px;
+    height:50px;
+  }
+}
+
+.clearable .form-control-feedback{
+  cursor: pointer;
+  pointer-events: auto;
+  color:#999;
+  z-index:4;
+
+  &:hover{
+    color: $brand-danger;
+  }
+}
+
+.not-clearable .form-control-feedback{
+  display: none;
+}
+
+.form-control:disabled{
+  cursor: default;
+}
+
+.form-inline .Select{
+  display: inline-table;
+  .Select-input {
+      position: absolute;
+      top: 0
+  }
+  .Select-value-label {
+      display: block;
+  }
+  .Select-value {
+      position: relative;
+      white-space: normal;
+  }
+}
+
+i.animated{
+  animation-duration:2s;
+}
+
+.spinReverse {
+  animation-name: spin-reverse;
+  animation-timing-function:linear;
+}
+
+.spin {
+  animation-name: fa-spin;
+  animation-timing-function:linear;
+}
+
+i.spin{
+  animation-duration: 3s;
+}
+
+i.spinReverse{
+  animation-duration: 3s;
+}
+
+i.flash{
+  animation-duration:6s;
+}
+
+i.pulse{
+  animation-duration:1s;
+}
+
+
+
+@-webkit-keyframes spin-reverse {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(-359deg);
+  }
+}
+
+@keyframes spin-reverse {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(-359deg);
+  }
 }
