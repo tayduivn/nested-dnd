@@ -3,13 +3,11 @@
 	"defaultSeed":"defaultSeed",
 	"tables":{},
 	"things":{
-		"defaultSeed": {
-			"background":"white"
+		"parent": {
+			"background":"red"
 		},
-		"hasBackground": {
-			"background":"white"
-		},
-		"testNameMe":{
+		"child":{
+			"isa":"parent"
 		},
 		"clearme":{
 			"namegen":"cleared",

@@ -127,9 +127,9 @@ class ContainsList extends React.Component {
 						{type}
 					</InputGroup.Addon>
 				</InputGroup>
-				<div className="delete-btn btn" data-index={index} data-value={value}  onClick={this.handleRemove}>
+				<Button className="delete-btn" data-index={index} data-value={value}  onClick={this.handleRemove}>
 					<span><i className="fa fa-trash" /></span>
-				</div>
+				</Button>
 				<HelpBlock>{this.helpText[index]}</HelpBlock>
 			</FormGroup>
 			)

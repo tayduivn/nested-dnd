@@ -29,6 +29,9 @@ export default class IsASelect extends React.Component {
 		});
 	}
 	shouldComponentUpdate(nextProps){
+		if(DEBUG){
+			console.log("* Acheron background: "+thingStore.get("Acheron").background);
+		}
 		var changed = nextProps.value !== this.props.value 
 				|| !Object.values(nextProps.status).equals(Object.values(this.props.status));
 		if(DEBUG) 
@@ -87,6 +90,9 @@ export default class IsASelect extends React.Component {
 	render (){
 		if(DEBUG) 
 			console.log("-------  IsASelect RENDER "+this.props.value)
+		if(DEBUG){
+			console.log("* Acheron background: "+thingStore.get("Acheron").background);
+		}
 
 		const value = (this.props.value === undefined) ? BLANK_VALUE: this.props.value;
 		const helpText = (this.justAdded) ? <span><i className="fa fa-check"/> added new thing <strong>{value}</strong></span> : "";

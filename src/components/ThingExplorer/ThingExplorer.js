@@ -88,6 +88,13 @@ class ThingExplorer extends React.Component{
 	updateThing(property, value, reset){
 		var thing = this.state.currentThing;
 
+		if(DEBUG){
+			if(thing !== thingStore.get(this.state.lookupName)){
+				console.error("ThingExplorer -- rogue thing not in thingStore");
+			}
+			console.log("Update "+thing.name+" "+property+": "+value+"  (reset: "+reset);
+		}
+
 		const doReset = reset	|| value === thing.originalOptions[property] 
 			|| (valueIsUndefined(value) && thing.originalOptions[property] === undefined);
 		
@@ -101,12 +108,25 @@ class ThingExplorer extends React.Component{
 		if(property === "isa") 
 			thing = thing.processIsa(true);
 
+		if(DEBUG){
+			console.log("* Acheron background: "+thingStore.get("Acheron").background);
+		}
+
 		this.setState({currentThing:thing});
 
 	}
 
 	saveThing(lookupName, isDelete){
-		SaveThingAction.call(this, lookupName, isDelete)
+		var state = SaveThingAction.call(this, lookupName, isDelete);
+		if(DEBUG){
+			if(state.currentThing && state.currentThing !== thingStore.get(state.currentThing.name)){
+				console.error("ThingExplorer -- rogue thing not in thingStore");
+			}
+		} 
+		if(DEBUG){
+			console.log("* Acheron background: "+thingStore.get("Acheron").background);
+		}
+		this.setState(state);
 	}
 
 	doFilter(query, isMissingIcons){
@@ -155,12 +175,19 @@ class ThingExplorer extends React.Component{
 	}
 
 	selectThing(name){
+		if(DEBUG){
+			console.log("*~~~~~~~~~ Acheron background: "+thingStore.get("Acheron").background);
+		}
 		if(!this.state.currentThing || name !== this.state.currentThing.name){
 			//need to process isa every time in case super was changed
-			this.setState({
+			var state = {
 				currentThing: thingStore.get(name).processIsa(true),
 				lookupName: name
-			});
+			}
+			if(DEBUG){
+				console.log("*$$$$$$$$ Acheron background: "+thingStore.get("Acheron").background);
+			}
+			this.setState(state);
 		}
 	}
 
@@ -186,7 +213,7 @@ class ThingExplorer extends React.Component{
 				<div id="thingView" className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 ">
 					
 					<div className="main">
-						<ThingView thing={this.state.currentThing} thingID={this.state.lookupName} 
+						<ThingView thing={ {...this.state.currentThing} } thingID={this.state.lookupName} 
 							updateThing={this.updateThing} saveThing={this.saveThing} />
 					</div>
 				</div>

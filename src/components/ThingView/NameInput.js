@@ -11,6 +11,9 @@ export default class NameInput extends React.Component {
 		this.handleClear = this.handleClear.bind(this);
 	}
 	shouldComponentUpdate(nextProps){
+		if(DEBUG){
+			console.log("* Acheron background: "+thingStore.get("Acheron").background);
+		}
 		return !Object.values(this.props).equals(Object.values(nextProps));
 	}
 	componentWillUpdate(nextProps){

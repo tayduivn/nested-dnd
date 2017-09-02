@@ -14,7 +14,7 @@ const BLANK_NAME = " ";
 
 let updateCallbacks = {};
 var DEBUG = false;
-var DEBUG_THING = "Prime Material Plane";
+var DEBUG_THING = "universe";
 
 class Thing{
 	constructor(options){
@@ -35,16 +35,21 @@ class Thing{
 		this.isa = options.isa;
 		this.originalOptions = options; // stores what is load in by the files. NOT newPack data.
 		this._updatedProps = (options._updatedProps) ? options._updatedProps : []; //private attr used in Thing Explorer
-		this._newPack = {}; // the user-created new pack loaded by the pack editor
-		this._beforeIsa = {}; // after all packs (inc. newPack has loaded)
+		this._newPack = (options._newPack) ? options._newPack : {}; // the user-created new pack loaded by the pack editor
+		this._beforeIsa = (options._beforeIsa) ? options._beforeIsa : {}; // after all packs (inc. newPack has loaded)
+		this._areMe = (options._areMe) ? options._areMe : []; // things that have .isa set to me
 
 		this._saveOptions(options);
 
 		/*  do extend and set defaults */
 		var isaProcessed = false;
-		this.processIsa = function(newIsa){
+		this.processIsa = function(newIsa, areMe){
 			if(DEBUG && this.name === DEBUG_THING) {
 				console.log("Thing.processIsa: "+DEBUG_THING);
+			}
+
+			if(areMe && !this._areMe.includes(areMe)) {
+				this._areMe.push(areMe);
 			}
 
 			// need this if there is a newPack. Stores the state before any isa ever runs
@@ -59,14 +64,14 @@ class Thing{
 
 			//clear previous isa data
 			if(isaProcessed && newIsa){ 
-				var resetOptions = {...this._beforeIsa};
+				var resetOptions = {...this._beforeIsa, ...this._newPack};
 				this._updatedProps.forEach((prop)=>resetOptions[prop] = this[prop]);
 				this._saveOptions(resetOptions);
 			}
 
 			//recurse
 			if(this.isa){
-				var superThing = thingStore.get(this.isa).processIsa();
+				var superThing = thingStore.get(this.isa).processIsa(false, this.name);
 				this._saveOptions({...clean(superThing), ...clean(this)});
 			}
 			this._setDefaults(this);
@@ -228,7 +233,7 @@ thingStore.addAll = function(obj, isTemp){
 			continue;
 		}
 		if(options instanceof Array){
-			options = {contains:[...obj] }
+			options = {contains: [...obj[name]] }
 		}
 
 		var thing = new Thing(Object.assign({name:""+name}, options));
@@ -281,19 +286,13 @@ thingStore.rename = function(oldName,newName){
 		return thingStore.add({name: newName});
 	}
 
+	newName = newName.trim();
+
 	if (oldName !== newName) {
-    thingStore.add({ ...this.get(oldName), name: newName})
-    this.delete(oldName, true)
-	}
+		var thing = thingStore.add({ ...this.get(oldName), name: newName});
+		thing._areMe.forEach((t) => things[t].isa = newName);
 
-	//edit sorted names array
-	var newIndex = binaryFind(this.sortedThingNames, newName);
-	this.sortedThingNames.splice(newIndex.index,0,newName);
-
-	//edit generic names array
-	if(isGeneric(things[newName])){
-		newIndex = binaryFind(this.isaOptions, newName);
-		this.isaOptions.splice(newIndex.index,0,newName);
+		this.delete(oldName, true)
 	}
 	
 	doCallbacks();
@@ -304,33 +303,33 @@ thingStore.rename = function(oldName,newName){
 thingStore.delete = function(name, dontCallback){
 	if(!things[name]) return;
 
-  var oldIndex = binaryFind(this.sortedThingNames, name)
-  this.sortedThingNames.splice(oldIndex.index,1);
+	var oldIndex = binaryFind(this.sortedThingNames, name)
+	this.sortedThingNames.splice(oldIndex.index,1);
 
 	if(isGeneric(things[name])){
 		oldIndex = binaryFind(this.isaOptions, name)
 		this.isaOptions.splice(oldIndex.index,1);
 	}
 
-  delete things[name];
+	delete things[name];
 
-  if(!dontCallback){
-  	doCallbacks();
-  }
+	if(!dontCallback){
+		doCallbacks();
+	}
 }
 
 thingStore.resetProperty = function(thing, property){
 	thing[property] = undefined;
 
 	if(typeof thing === "string") thing = thingStore.get(thing);
-	if(thing.originalOptions[property] !== undefined){
-		thing[property] = thing.originalOptions[property];
-	}
+	
+	thing[property] = thing.originalOptions[property];
+	thing._beforeIsa[property] = thing.originalOptions[property];
 
-	if(thing.isa){
+	//process isa just for this field
+	if(thing.isa && property !== "isa" && property !== "name"){
 		thing[property] = findAncestorWithProperty.call(thing,property);
 	}
-
 	
 	// if this property is the same as the current new Pack, it hasn't been updated
 	if(thing._newPack[property]){

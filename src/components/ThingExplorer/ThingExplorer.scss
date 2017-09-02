@@ -211,6 +211,7 @@ body {
   }
   #containsList{
     .delete-btn{
+      border:0;
       &:hover,&:focus,&:active,&:focus:active{
         background:transparent;
         border:0;

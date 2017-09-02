@@ -55,7 +55,7 @@ class PackSelect extends React.Component {
 				<FormGroup>
 					<ControlLabel>export pack:</ControlLabel>
 					{' '}
-					<Select.Async
+					<Select.Async clearable={false}
 						loadOptions={this.loadOptions}
 						name="form-field-name"
 						value={this.state.selectedPack}

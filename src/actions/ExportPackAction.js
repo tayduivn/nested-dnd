@@ -29,7 +29,7 @@ function ExportPackAction(packName, newPack){
 		packName = 'nested-dnd-newpack';
 	}
 	var str = JSON.stringify(newPack);
-	downloadJSON(str, packName);
+	downloadJSON(newPack, packName);
 	if(DEBUG) console.log(str);
 	copyToClipboard(str);
 }

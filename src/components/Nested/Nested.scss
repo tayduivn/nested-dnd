@@ -65,17 +65,24 @@ i.gi{
 
 
 .child-inner{
-	background: #eee;
+	background: inherit;
 	cursor: pointer;
 	padding:15px 0;
 	height:150px;
 	position:relative;
   text-align: center;
+  white-space:pre-wrap;
 }
 
 .child{
-  color:#888;
+  color: inherit;
   margin-bottom:30px;
+
+  &:hover, &:focus{
+    color: inherit;
+    background:inherit;
+    text-decoration: none;
+  }
 }
 a.child{
   text-decoration: none;
@@ -84,13 +91,13 @@ a.child{
 /* Can't do .child-inner.link or instance.cssClass won't work */
 .link{
   /* these options will be overwritten if there is an instance.cssClass */
-  color: #337ab7;
+  color: inherit;
   box-shadow:0px 0px 4px rgba(0, 0, 0, 0.4);
-  background: #fff;
+  background: inherit;
 
   &:hover, &:focus{
-    color: #337ab7;
-    background:#eee;
+    color: inherit;
+    background:inherit;
     text-decoration: none;
   }
 }

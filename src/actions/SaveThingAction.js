@@ -2,10 +2,10 @@ import thingStore from '../stores/thingStore.js';
 import {clean,valueIsUndefined} from '../util/util.js';
 
 const BLANK_NAME = " ";
-const DEBUG = false;
+const DEBUG = true;
 
 function SaveThingAction(lookupName, isDelete){
-	if(DEBUG) console.log("SaveThingAction. "+(isDelete ? "DELETE" : ""));
+	if(DEBUG) console.log("SaveThingAction. "+lookupName+" "+(isDelete ? "DELETE" : ""));
 
 	var state = {};
 	if(isDelete){
@@ -15,7 +15,27 @@ function SaveThingAction(lookupName, isDelete){
 		state = addBlankThing.call(this);
 	}
 	else{
-		var thing = (lookupName === this.state.lookupName) ? this.state.currentThing : thingStore.get(lookupName);
+
+		//get it fresh every time, just in case this.state.currentThing has gone rogue
+		var thing = thingStore.get(lookupName);
+		
+		//------------ DataCleanup
+		if(thing !== BLANK_NAME) thing.name = thing.name.trim();
+		if(lookupName !== BLANK_NAME) lookupName = lookupName.trim();
+		try{ //JSON format
+			thing.namegen = JSON.parse(thing.namegen);
+		}catch(e){}
+		try{ //JSON format
+			thing.data = JSON.parse(thing.data);
+		}catch(e){}
+		if(thing.contains){
+			thing.contains.forEach((c,i) =>{
+				try{ //JSON format
+					thing.contains[i] = JSON.parse(c);
+				}catch(e){}
+			})
+		}
+
 
 		if(lookupName === thing.name){
 			state = updatePack.call(this, thing);
@@ -23,6 +43,8 @@ function SaveThingAction(lookupName, isDelete){
 			state = updatePackRename.call(this, lookupName, thing);
 		}
 	}
+
+	//wrap
 	if(state.updatedThings){
 		state.newPack = {...this.state.newPack, things: state.updatedThings };
 		delete state.updatedThings;
@@ -36,7 +58,10 @@ function SaveThingAction(lookupName, isDelete){
 			console.log(state.newPack);
 		} 
 	}
-	this.setState(state);
+	if(DEBUG){
+		console.log(state);
+	}
+	return state;
 }
 
 function addBlankThing(){
@@ -66,8 +91,6 @@ function updatePack(thing){
 	return state;
 }
 
-
-
 function updatePackRename(oldName, thing){
 	var state = {};
 
@@ -89,6 +112,13 @@ function updatePackRename(oldName, thing){
 	//this affects the filter list and makes available to render
 	thing = thingStore.rename(oldName, thing.name);
 	thing._updatedProps = [];
+
+	// store updates for all the things that are this thing
+	thing._areMe.forEach((name) => {
+		if(!state.updatedThings[name])
+			state.updatedThings[name] = {};
+		state.updatedThings[name].isa = thing.name;
+	})
 
 	//saving the currently open thing -- do last so it can find the thing
 	if(oldName === this.state.lookupName){

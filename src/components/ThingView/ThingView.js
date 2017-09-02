@@ -2,6 +2,8 @@ import React from 'react';
 import { Button, Row, Col, ButtonToolbar } from 'react-bootstrap';
 
 import instanceStore from '../../stores/instanceStore';
+import thingStore from '../../stores/thingStore';
+import tableStore from '../../stores/tableStore';
 import {valueIsUndefined} from '../../util/util.js';
 
 import NameInput from './NameInput'
@@ -33,21 +35,24 @@ export default class ThingView extends React.Component{
 	}
 
 	componentWillReceiveProps(nextProps){
+		if(DEBUG){
+			console.log("* Acheron background: "+thingStore.get("Acheron").background);
+		}
 		if(DEBUG) console.log("\t ThingView.componentWillReceiveProps")
 
 		//if displaying a thing
 		if(nextProps.thing){
 
 			//switching to a new thing
-			if(this.props.thing && this.props.thing.name !== nextProps.thing.name){
-				if(this.state.isValid){
+			if(this.props.thing && this.props.thingID !== nextProps.thingID){
+				if(this.state.isValid && Object.keys(this.validation).length){
 					this.handleSave();
 				}
 				this.validation = {};
 			}
 
 			//same thing, check for updates
-			else{
+			else if(nextProps.thing._updatedProps){
 				//set validation state to success by default if isUpdated
 				//children will call back to validate if invalid
 				Object.keys(this.validation).forEach((prop) => {  //remove
@@ -57,6 +62,7 @@ export default class ThingView extends React.Component{
 				nextProps.thing._updatedProps.forEach((prop) => this.validation[prop] = true); //add
 				this._setStateIsValid();
 			}
+
 		}
 	}
 	//need to clean up invalid stuff
@@ -118,20 +124,13 @@ export default class ThingView extends React.Component{
 				return;
 		}
 
-		try{ //JSON format
-			this.props.thing.namegen = JSON.parse(this.props.thing.namegen);
-		}catch(e){}
-		try{ //JSON format
-			this.props.thing.data = JSON.parse(this.props.thing.data);
-		}catch(e){}
+		this.validation = {};
+		this.setState({ 
+			isValid: false
+		});
 
 		//need to pass initial name so can save on thing switching
 		this.props.saveThing(this.props.thingID);
-
-		this.setState({ 
-			validation: [],
-			isValid: false
-		});
 	}
 
 	handleDelete(){
@@ -166,7 +165,7 @@ export default class ThingView extends React.Component{
 	}
 
 	render(){
-		if(!this.props.thing)
+		if(!this.props.thingID)
 			return <p></p>;
 
 		const isUpdated = Object.keys(this.validation).length > 0;
@@ -197,7 +196,7 @@ export default class ThingView extends React.Component{
 
 				</Col>
 				<Col lg={2} md={3} sm={4} xs={6}>
-					<Preview {...this.props.thing} thing={this.props.thing} />
+					<Preview {...this.props.thing} thing={this.props.thingID} />
 					<Button bsStyle={this.props.thing.name.length ? "default" : "danger"} onClick={this.handleDelete} className="delete-btn">
 						<i className="fa fa-trash"></i> Delete
 					</Button>
@@ -234,7 +233,12 @@ class Preview extends React.Component{
 		return changed;
 	}
 	render(){
-		this.instance = instanceStore.add(this.props.thing);
+		
+		this.instance = instanceStore.add(thingStore.get(this.props.thing));
+		try{
+			this.instance.name = tableStore.roll(JSON.parse(this.instance.thing.namegen));
+		}catch(e){}
+
 		const t = this.instance;
 
 		return (

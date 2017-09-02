@@ -116,6 +116,35 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
   }
 }
 
+@keyframes colorchange
+{
+  0%   {background: red;}
+  25%  {background: yellow;}
+  50%  {background: blue;}
+  75%  {background: green;}
+  100% {background: red;}
+}
+
+@-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
+{
+  0%   {background: red;}
+  25%  {background: yellow;}
+  50%  {background: blue;}
+  75%  {background: green;}
+  100% {background: red;}
+}
+
+.colorchange {
+  animation: colorchange 10s infinite;
+  -webkit-animation: colorchange 10s infinite;
+  color:black;
+
+  &.fa, &.gi, &.glyphicon{
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
 .rainbow, .child-inner.rainbow{
 	color:black;
 	text-shadow: 1px 1px white;
@@ -141,6 +170,16 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
     box-shadow:none;
     color: #FFFACD;
     text-shadow: 0px 0px 15px 2px rgba(255,255,255,0.86);
+  }
+}
+
+.ocean {
+  background: #00BEA6 linear-gradient(#00BEA6,#0057BE);
+  @include darkBG(#00BEA6);
+
+  &.fa, &.gi, &.glyphicon{
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 
