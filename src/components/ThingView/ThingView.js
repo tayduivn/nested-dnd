@@ -4,7 +4,6 @@ import { Button, Row, Col, ButtonToolbar } from 'react-bootstrap';
 import instanceStore from '../../stores/instanceStore';
 import thingStore from '../../stores/thingStore';
 import tableStore from '../../stores/tableStore';
-import {valueIsUndefined} from '../../util/util.js';
 
 import NameInput from './NameInput'
 import IsASelect from './IsASelect'
@@ -19,12 +18,14 @@ export default class ThingView extends React.Component{
 		this.validation = {};
 
 		this.state ={
-			isValid: false
+			isValid: false,
+			instance: this._createPreview(props.thingID)
 		}
 		this.handleSave = this.handleSave.bind(this);		
 		this.handleDelete = this.handleDelete.bind(this);
 		this.validate = this.validate.bind(this);
 		this.getStatus = this.getStatus.bind(this);
+		this.setPreview = this.setPreview.bind(this);
 	}
 
 	shouldComponentUpdate(nextProps, nextState){
@@ -40,29 +41,36 @@ export default class ThingView extends React.Component{
 		}
 		if(DEBUG) console.log("\t ThingView.componentWillReceiveProps")
 
+		var instance;
+
 		//if displaying a thing
-		if(nextProps.thing){
+		if(!nextProps.thing) 
+			return;
 
-			//switching to a new thing
-			if(this.props.thing && this.props.thingID !== nextProps.thingID){
-				if(this.state.isValid && Object.keys(this.validation).length){
-					this.handleSave();
-				}
-				this.validation = {};
+		//switching to a new thing
+		if(this.props.thing && this.props.thingID !== nextProps.thingID){
+			if(this.state.isValid && Object.keys(this.validation).length){
+				this.handleSave();
 			}
+			this.validation = {};
 
-			//same thing, check for updates
-			else if(nextProps.thing._updatedProps){
-				//set validation state to success by default if isUpdated
-				//children will call back to validate if invalid
-				Object.keys(this.validation).forEach((prop) => {  //remove
-					if(!nextProps.thing._updatedProps.includes(prop))
-						delete this.validation[prop];
-				})
-				nextProps.thing._updatedProps.forEach((prop) => this.validation[prop] = true); //add
-				this._setStateIsValid();
-			}
+			instance = this._createPreview(nextProps.thingID);
+			this.setState({instance:instance});
+		}
 
+		//same thing, check for updates
+		else if(nextProps.thing._updatedProps){
+			//set validation state to success by default if isUpdated
+			//children will call back to validate if invalid
+			Object.keys(this.validation).forEach((prop) => {  //remove
+				if(!nextProps.thing._updatedProps.includes(prop))
+					delete this.validation[prop];
+			})
+			nextProps.thing._updatedProps.forEach((prop) => this.validation[prop] = true); //add
+			this._setStateIsValid();
+
+			instance = this._createPreview(nextProps.thingID);
+			this.setState({instance:instance});
 		}
 	}
 	//need to clean up invalid stuff
@@ -71,6 +79,26 @@ export default class ThingView extends React.Component{
 		if(!this.state.isValid){
 			this._revertToValid();
 		}
+		if(this.state.instance){
+			instanceStore.delete(this.state.instance);
+		}
+	}
+
+	_createPreview(thingID){
+		if(this.state && this.state.instance){
+			instanceStore.delete(this.state.instance);
+		}
+
+		var instance;
+		try{
+			instance = instanceStore.add(thingID);	
+			try{
+				instance.name = tableStore.roll(JSON.parse(instance.thing.namegen));
+			}catch(e){}
+		}catch(e){
+			console.error(e); // handle render error
+		}
+		return instance;
 	}
 
 	_revertToValid(){
@@ -95,6 +123,7 @@ export default class ThingView extends React.Component{
 		}
 	}
 
+
 	validate(property, validationState){
 		if(DEBUG) console.log("ThingView.validate: "+property+": "+validationState);
 
@@ -105,6 +134,13 @@ export default class ThingView extends React.Component{
 			this.validation = { ...this.validation, [property]: validationState !== "error" };
 		}
 		this._setStateIsValid();
+	}
+
+	setPreview(property, value){
+		if(property === "background") property = "cssClass"
+		this.setState(prevState => ({
+			instance: {...prevState.instance, [property]: value } 
+		})); 
 	}
 
 	handleSave(thingName){
@@ -141,21 +177,36 @@ export default class ThingView extends React.Component{
 	getStatus(property){
 		var value = this.props.thing[property];
 		var valBeforeNewPack = this.props.thing.originalOptions[property]; // after the pack files were loaded
-		var valAfterNewPack = this.props.thing._beforeIsa[property];// after the newPack was loaded from localstorage
-		var isSavedInNewPack = this.props.thing._newPack && this.props.thing._newPack[property]; 
+		var valInNewPack = this.props.newPack && this.props.newPack[property]; 
 
 		var isUpdated = this.props.thing._updatedProps.includes(property);
 
-		if(property === "data" || property === "namegen"){
-			try{ value = JSON.parse(value) }catch(e){}
-			value = (typeof value === "string") ? value : JSON.stringify(value);
-			valBeforeNewPack = (typeof valBeforeNewPack === "string") ? valBeforeNewPack : JSON.stringify(valBeforeNewPack);
-			valAfterNewPack = (typeof valAfterNewPack === "string") ? valAfterNewPack : JSON.stringify(valAfterNewPack);
+		if(property === "contains" && value){
+			var currentSave = valInNewPack || valBeforeNewPack || [];
+			var sameNum = value.length === currentSave.length;
+			currentSave = [...currentSave];
+
+			isUpdated = value.map((contain, index) => {
+				if(sameNum){
+					return currentSave[index] !== contain;
+				}else{
+					var i = currentSave.indexOf(contain);
+					if(i !== -1) currentSave.splice(i,1);
+					
+					return (i === -1)
+				}
+			});
 		}
 
+		// stringify to compare
+		try{ value = JSON.parse(value) }catch(e){} // parse if first if possible
+		value = (typeof value === "string") ? value : JSON.stringify(value);
+		valBeforeNewPack = (typeof valBeforeNewPack === "string") ? valBeforeNewPack : JSON.stringify(valBeforeNewPack);
+
+
 		// if it wasn't updated, enable if it wasn't set by isa
-		var isEnabled = (isUpdated) ? true : (valAfterNewPack !== undefined) // set in pack
-			|| (valAfterNewPack === undefined && !valueIsUndefined(value) && isSavedInNewPack) // wasn't set by isa
+		var isEnabled = (isUpdated) ? true : (valInNewPack !== undefined) // set in new pack
+			|| (valBeforeNewPack !== undefined) //set in pack
 			|| false;
 
 		//if updated and different from the original pack files 
@@ -188,16 +239,16 @@ export default class ThingView extends React.Component{
 					<IsASelect value={this.props.thing.isa} status={isaStatus} thingName={this.props.thing.name}
 						addThing={this.handleSave} handleChange={this.props.updateThing} validate={this.validate} />
 					
-					<CategoryTabs thing={this.props.thing}  
-						handleChange={this.props.updateThing} getStatus={this.getStatus} validate={this.validate}  />
+					<CategoryTabs thing={this.props.thing} 
+						handleChange={this.props.updateThing} getStatus={this.getStatus} validate={this.validate} setPreview={this.setPreview} />
 
 					<SubmitButton name={this.props.thing.name} isValid={this.state.isValid} isUpdated={isUpdated}
 						handleSave={this.handleSave} handleDelete={this.handleDelete} />
 
 				</Col>
 				<Col lg={2} md={3} sm={4} xs={6}>
-					<Preview {...this.props.thing} thing={this.props.thingID} />
-					<Button bsStyle={this.props.thing.name.length ? "default" : "danger"} onClick={this.handleDelete} className="delete-btn">
+					<Preview {...this.state.instance} />
+					<Button bsStyle={this.props.thing.name && this.props.thing.name.length ? "default" : "danger"} onClick={this.handleDelete} className="delete-btn">
 						<i className="fa fa-trash"></i> Delete
 					</Button>
 				</Col>
@@ -207,47 +258,27 @@ export default class ThingView extends React.Component{
 }
 
 class Preview extends React.Component{
-	constructor(){
-		super();
-		this.instance = null;
-	}
-	componentWillUnmount(){
-		if(this.instance) {
-			instanceStore.delete(this.instance);
-			this.instance = null;
-		}
-	}
-	shouldComponentUpdate(nextProps){
-		const t = this.props;
-		const t2 = nextProps;
-		var changed = (t2.icon !== t.icon 
-			|| t2.namegen !== t.namegen
-			|| t2.name !== t.name
-			|| t2.background !== t.background
-			|| t2.textColor !== t.textColor
-		);
-		if(this.instance && changed) {
-			instanceStore.delete(this.instance);
-			this.instance = null;
-		}
-		return changed;
-	}
 	render(){
+		const t = this.props;
+
+		const contains = (t.thing) ? t.thing.getContains() : [];
+
+		const children = (contains) ? contains.map((child, i) => (<li key={i}>
+			{(typeof child === "string") ? child : (child instanceof Array ) ? child.join(", ") : child.name }
+		</li>)) : [];
 		
-		this.instance = instanceStore.add(thingStore.get(this.props.thing));
-		try{
-			this.instance.name = tableStore.roll(JSON.parse(this.instance.thing.namegen));
-		}catch(e){}
-
-		const t = this.instance;
-
 		return (
-		<div className={ t.children.length ? "child link" : "child"}>
+		<div id="preview">
 			<h5>PREVIEW</h5>
-			<div className={"child-inner "+t.cssClass} style={{color:t.textColor}}>
-				<i className={t.icon}></i>
-				<h1>{t.name}</h1>
+			<div className={ t.children && t.children.length ? "child link" : "child"}>
+				<div className={"child-inner "+t.cssClass} style={{color:t.textColor}}>
+					<i className={t.icon}></i>
+					<h1>{t.name}</h1>
+				</div>
 			</div>
+			<ul>
+				{children}
+			</ul>
 		</div>);
 	}
 }

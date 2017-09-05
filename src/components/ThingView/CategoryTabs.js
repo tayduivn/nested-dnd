@@ -46,7 +46,7 @@ export default class CategoryTabs extends React.Component{
 
 		const data = this._valToString(this.props.thing.data);
 		const namegen = this._valToString(this.props.thing.namegen);
-		const contains = (this.props.thing.contains) ? this.props.thing.contains : [];
+		const contains = (this.props.thing.contains) ? [...this.props.thing.contains] : [];
 
 		return (
 			<Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example"

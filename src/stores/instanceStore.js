@@ -12,23 +12,30 @@ let instances = [];
 class Instance{
 	constructor(thing){
 
-		thing = thing.beforeMake(this);
+		if(!thing){
+			throw new Error("Thing is required to make a new instance");
+		}
 
-		this.thing = thing;
+		var result = thing.beforeMake(this);
+
+		this.thing = result.thing;
+		this.isa = result.isa;
 		this.id = null;
 		this.parent = null;
 		this.children = []; //indexes of children and string descriptions
 		this.grown = false;
-		this.data = thing.data;
-		this.name = thing.getName();
-		this.icon = thing.getIcon();
+		this.data = thing.data || {};
+
 		
-		var { cssClass, textColor } = Styler.getClass(this.name, this.icon, thing);
+		this.name = thing.getName(this.isa);
+		this.icon = thing.getIcon(this.isa);
+		
+		var { cssClass, textColor } = Styler.getClass(this.name, this.icon, thing, this.isa);
 		this.textColor = textColor;
 		this.cssClass = cssClass;
 
 		this.id = instances.length;
-		if(thing.uniqueInstance === true) 
+		if(thing.isUnique() === true) 
 			thing.uniqueInstance = this.id;
 
 		thing.afterMake(this);
@@ -54,7 +61,7 @@ class Instance{
 	//process contains into instances
 	grow(){
 		this.children = [];
-		var blueprint = this.thing.contains;
+		var blueprint = this.thing.getContains(this.isa);
 
 		var children = this.children;
 		for(var i = 0,child; i < blueprint.length; i++){
@@ -143,11 +150,11 @@ instanceStore.add = function(thing){
 	if(typeof thing === "undefined")
 		throw new Error("thing is required when creating an Instance.");
 
+	if(typeof thing === "string")
+		thing = thingStore.get(thing);
+
 	if(!thing.thingStore)
 		throw new Error("thing must be an instanceof Thing. Tried to make instance with: "+thing);
-
-	if(thing.isa && !thingStore.exists(thing.isa))
-		throw new Error("trying to extend a non-existent thing "+thing.isa);
 
 	if(thing.uniqueInstance instanceof Number && instances[thing.uniqueInstance]){
 		throw new Error("Cannot make more than one instance of "+thing.name);

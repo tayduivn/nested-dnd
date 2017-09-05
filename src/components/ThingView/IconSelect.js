@@ -17,6 +17,7 @@ class IconSelect extends React.Component{
 		super();
 		this.handleChange = this.handleChange.bind(this);
 		this.handleChangeAnim = this.handleChangeAnim.bind(this);
+		this.handleClickChosen = this.handleClickChosen.bind(this);
 
 		this.iconArr = [];
 	}
@@ -27,8 +28,7 @@ class IconSelect extends React.Component{
 		if(DEBUG) console.log("\t\t IconSelect.handleChange: "+value);
 
 		if(value === null){ //reset!
-			this.props.saveProperty("icon",null,true);
-			return;
+			return this.props.saveProperty("icon",null,true);
 		}
 
 		value = value.split(",");
@@ -51,7 +51,7 @@ class IconSelect extends React.Component{
 
 		//re-flatten
 		if(value.length === 1) value = value[0];
-		if(value === "") value = undefined;
+		if(value === "") value = null;
 
 		if(DEBUG) console.log("\t\t\t save icon: "+value);
 		this.props.saveProperty("icon",value);
@@ -64,7 +64,13 @@ class IconSelect extends React.Component{
 		this.animArr[index] = anim;
 		this.handleChange(this.iconArr.join(","));
 	}
-
+	handleClickChosen({value}){
+		var index = this.iconArr.indexOf(value);
+		if(index !== -1){
+			value+= " "+this.animArr[index]+" animated infinite"
+		}
+		this.props.setPreview("icon",value);
+	}
 	_parseIconArr(value){
 		this.iconArr = [];
 		var animArr = this.animArr = [];
@@ -102,11 +108,12 @@ class IconSelect extends React.Component{
 				<Col sm={12} md={6} >
 					<FormGroup validationState={validationState}>
 						<VirtualizedSelect name="icon" value={this.iconArr} simpleValue
-							onChange={this.handleChange} onValueClick={(e) => console.log(arguments) }
+							onChange={this.handleChange}
 							clearable={this.props.status.isClearable} 
 							clearAllText="Clear changes" clearRenderer={Styler.selectClear} resetValue={null}
 							ref={(select) => this.virtualSelect = select }
 							optionRenderer={renderIcon} options={ iconStore.iconOptions }
+							onValueClick={this.handleClickChosen}
 							multi={true} matchProp="label" ignoreCase={false} searchable={true}  />
 					</FormGroup>
 				</Col>

@@ -152,7 +152,7 @@ class Nested extends React.Component {
 									)
 								}
 								var instance = instanceStore.get(child);
-								var hasChildren = instance.thing.contains.length !== 0;
+								var hasChildren = instance.thing.contains && instance.thing.contains.length !== 0;
 								var cssClass = instance.cssClass + (hasChildren ? " link":"");
 								var inner = <div className={"child-inner "+cssClass}
 									data-thing={instance.thing.name}

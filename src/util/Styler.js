@@ -65,7 +65,7 @@ Styler.renderColorOption = function(option){
 	);
 }
 
-Styler.cleanColor = function(color, name, secondaryColor){
+Styler.cleanColor = function(color, name){
 	if(typeof color !== "string"){
 		// null is acceptible - prevents isa from overwriting
 		return (color === null) ? null : undefined;
@@ -83,14 +83,16 @@ Styler.cleanColor = function(color, name, secondaryColor){
 
 	//class could not be found. Add class
 	if(name){
-		return addThing(name, color, secondaryColor);
+		return addThing(name, color);
 	}
 
 	return color;
 }
 
-Styler.getClass = function(instanceName, icon, { name, autoColor, background, textColor }){
-	var cssClass = (autoColor) ? strToColor(instanceName) : "";
+Styler.getClass = function(instanceName, icon, thing, isa){
+	var cssClass = (thing.autoColor || thing.autoColor === undefined) ? strToColor(instanceName) : "";
+	var background = thing.getBackground(isa);
+	var textColor = thing.getTextColor(isa);
 
 	if(cssClass !== ""){
 		//was autocolored
@@ -220,10 +222,10 @@ var addThing = (function(){
 		}
 	};
 
-	return function(name, background, textColor){
+	return function(name, background){
 		var className = makeSafeForCSS(name);
 
-		var found = rules.find((r) => r.rule === background+textColor);
+		var found = rules.find((r) => r.rule === background);
 		if(found){
 			return found.className;
 		}
@@ -231,13 +233,12 @@ var addThing = (function(){
 		allClasses.push(className);
 		rules.push({
 			className: className,
-			rule: background+textColor
+			rule: background
 		})
 
 		var bg = Color(background.split(" ")[0]);
 		var hover = shift(bg,0.05);
 		var border = hover;
-		var color = (textColor) ? Color(textColor) : shift(bg,0.5);
 
 		var c="."+className;
 		var btn=c+".parent .btn.btn-default";
@@ -246,8 +247,7 @@ var addThing = (function(){
 		var btnBG = shift(bg,0.1);
 
 		createCSSSelector(c, 
-			"background:"+background+";"+
-			"color:"+color.toCSS()+";"
+			"background:"+background+";"
 		);
 		createCSSSelector(btn,
 			"background:"+background+";"+

@@ -18,14 +18,14 @@ pack.things["mirror plane"] ={ beforeRender: function(instance){
 	var instanceStore = instance.instanceStore;
 	var thingStore = instance.thing.thingStore;
 
-	if(typeof instance.data.mirrors === "string"){
+	if(typeof instance.data.mirrorsID === undefined){
 		var index = thingStore.get(instance.data.mirrors).uniqueInstance;
 		if(typeof index==='number'){
-			instance.data.mirrors = index;
+			instance.data.mirrorsID = index;
 		}else return;
 	}
 
-	var mirrorInstance = instanceStore.get(instance.data.mirrors);
+	var mirrorInstance = instanceStore.get(instance.data.mirrorsID);
 	if(!mirrorInstance.grown) 
 		mirrorInstance.grow();
 
@@ -50,7 +50,7 @@ pack.things["mirror plane"] ={ beforeRender: function(instance){
 			child.id = newId;
 			child.parent = instance.id;
 			child.thing = childThing;
-			child.data.mirrors = mirrorChild.id;
+			child.data.mirrorsID = mirrorChild.id;
 			child.data.mirrorChildrenCopy = null;
 
 			instance.children.push(child.id);
@@ -75,12 +75,62 @@ pack.things["fey mirror plane"] ={ beforeRender: function(instance){
 pack.things["ethereal mirror plane"] ={ beforeRender: function(instance){
 	createMirrorPlane(instance, "ethereal mirror plane");
 }}
+pack.things["humanoid"] = {
+	afterMake: function(instance, tableStore){
+		
+		// get gender
+		var gender = instance.data.gender;
+		if(!gender){
+			gender = instance.data.gender = (Math.rand(1,250) === 1) ? "genderqueer" : (Math.rand(0,1)) ? "male" : "female";
+		}
 
+		//get name
+		var name = instance.name;
+		if(instance.name === this.name){
+			if(gender === "male"){
+				name = tableStore.get("MALE NAME").roll();
+			}
+			else if(gender === "male"){
+				name = tableStore.get("FEMALE NAME").roll();
+			}
+			else{
+				name = tableStore.get(["FEMALE","MALE"].roll()+" NAME").roll();
+			}
+			instance.name = name+" ("+this.name+")";
+		}
+
+	}
+}
+
+/* 
+TODO ICONS
+
+DISABLED
+blindfold, blind
+silenced
+
+HARMED
+pummeled
+coma
+vomiting
+one-eyed
+internal injury
+
+SAD
+tear
+frown
+
+shrug
+sleepy
+frown
+
+*/
+
+/*
 var genderedThings = {};
-
 pack.things["person"]={
 	beforeMake:function(instance){
-		
+	
 		const gender = (Math.rand(0,1)) ? "man" : "woman";
 		const originalThing = this;
 		const things = this.thingStore;
@@ -102,10 +152,10 @@ pack.things["person"]={
 		thing.getName = createName.bind(thing);
 
 		genderedThings[newThingName] = thing;
-		thing.processIsa(true);
 		return thing;
 	}
 }
+*/
 
 function createMirrorPlane(instance, name){
 	var instanceStore = instance.instanceStore;

@@ -18,10 +18,12 @@ var holdCallbacks = [];
 
 var PackLoader = {};
 
+var newPack = {things:{}, tables:{}};
+
 PackLoader.packs = {};
 
 PackLoader.packmap =  {
-	"dnd": "nested-dnd-data.json,dnd.json,dnd.js,forgotten-realms.json",
+	"dnd": "nested-dnd-data.json,behindthetables.json,dnd.json,dnd.js,forgotten-realms.json",
 	"nested-orteil":"nested-orteil.json,nested-orteil-extended.json"
 }
 
@@ -45,7 +47,13 @@ class Pack{
 		if(this.defaultSeed)
 				result.defaultSeed = this.defaultSeed;
 
-		thingStore.addAll(this.things, isTemp);
+		try{
+			thingStore.addAll(this.things, isTemp);
+		}catch(errorsArr){
+			console.error("Errors loading things in pack "+this.name)
+			errorsArr.forEach((e) => console.error(e));
+		}
+		
 		tableStore.addAll(this.tables, isTemp);
 
 		if(typeof this.afterLoad === "function")
@@ -54,6 +62,11 @@ class Pack{
 		if(DEBUG) console.log("Loaded pack: "+this.name
 			+"\n\t Added "+Object.keys(this.things).length+" things."
 			+"\n\t Added "+Object.keys(this.tables).length+" tables.");
+
+		return {
+			things: this.things,
+			tables: this.tables
+		}
 	}
 	checkDependencies(loaded){
 		var _this = this;
@@ -73,9 +86,8 @@ PackLoader.getPackOptions = function(){
 	};
 }
 
-PackLoader.addPack = function(pack){
-	new Pack(pack).load({},true);
-	thingStore.processAll(Object.keys(pack.things));
+PackLoader.getNewPack = function(){
+	return newPack;
 }
 
 PackLoader.load = function(callback){
@@ -136,6 +148,8 @@ PackLoader.load = function(callback){
 				if(!localStorage["seed"]){
 					localStorage["seed"] = result.defaultSeed;
 				}
+
+				newPack = loadNewPack();
 				
 				packsAreLoaded = true;
 				packsAreLoading = false
@@ -151,6 +165,21 @@ PackLoader.load = function(callback){
 			console.error(error);
 		});
 	});
+}
+
+function loadNewPack(){
+	var newPack = {things:{}, tables:{}};
+	if(localStorage.newPack){
+		try{
+			var pack = JSON.parse(localStorage.newPack);
+			newPack = new Pack(pack).load({},true);
+			if(DEBUG) console.log("PackLoader localStorage.newPack # of things "+Object.keys(newPack.things).length);
+		}catch(e) {
+			console.error("PackLoader -- could not parse localStorage.newPack: "+localStorage.newPack)
+			console.error(e);
+		}
+	}
+	return newPack;
 }
 
 export default PackLoader;

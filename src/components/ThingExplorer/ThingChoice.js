@@ -73,13 +73,14 @@ class ThingChoice extends React.Component{
 		const t = thingStore.get(this.props.name);
 		const icon = t.getIcon();
 		const name = this.props.name.trim().length ? this.props.name : <em>new thing</em> ;
+		const isa = (t.isa && t.isa.join) ? t.isa.join(", ") : t.isa;
 
 		return (
 			<ListGroupItem id={encodeURIComponent(this.props.name)} 
 				active={this.props.selected}
 				onClick={this.handleClick}>
 				<h4 className="no-margin"><i className={icon}></i> {name}</h4>
-				{t.isa}
+				{isa}
 			</ListGroupItem>
 		)
 	}

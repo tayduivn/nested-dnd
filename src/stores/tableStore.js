@@ -98,6 +98,11 @@ tableStore.get = function(str){
 		str = str.substring(1, str.length-1);
 
 	var table = tables[str];
+	if(!table){
+		console.error("Table with name "+str+" could not be found")
+		return [];
+	}
+
 	if(table.constructor === ({}).constructor){
 		table = tables[str] = new Table(tables[str]);
 	}

@@ -1,5 +1,4 @@
 import thingStore from '../stores/thingStore.js';
-import {clean,valueIsUndefined} from '../util/util.js';
 
 const BLANK_NAME = " ";
 const DEBUG = true;
@@ -8,6 +7,8 @@ function SaveThingAction(lookupName, isDelete){
 	if(DEBUG) console.log("SaveThingAction. "+lookupName+" "+(isDelete ? "DELETE" : ""));
 
 	var state = {};
+	var newPack = this.state.newPack.things[lookupName];
+
 	if(isDelete){
 		state = deleteThing.call(this, lookupName);
 	}
@@ -18,29 +19,17 @@ function SaveThingAction(lookupName, isDelete){
 
 		//get it fresh every time, just in case this.state.currentThing has gone rogue
 		var thing = thingStore.get(lookupName);
+		if(lookupName !== BLANK_NAME) lookupName = lookupName.trim();
 		
 		//------------ DataCleanup
-		if(thing !== BLANK_NAME) thing.name = thing.name.trim();
-		if(lookupName !== BLANK_NAME) lookupName = lookupName.trim();
-		try{ //JSON format
-			thing.namegen = JSON.parse(thing.namegen);
-		}catch(e){}
-		try{ //JSON format
-			thing.data = JSON.parse(thing.data);
-		}catch(e){}
-		if(thing.contains){
-			thing.contains.forEach((c,i) =>{
-				try{ //JSON format
-					thing.contains[i] = JSON.parse(c);
-				}catch(e){}
-			})
-		}
-
+		var updates = thing.save();
+		updates = {...newPack, ...updates};
+		updates = extractUpdates(thing, this.state.newPack.things, updates);
 
 		if(lookupName === thing.name){
-			state = updatePack.call(this, thing);
+			state = updatePack.call(this, thing, updates);
 		}else{
-			state = updatePackRename.call(this, lookupName, thing);
+			state = updatePackRename.call(this, lookupName, thing, updates);
 		}
 	}
 
@@ -82,21 +71,21 @@ function deleteThing(name){
 	return state;
 }
 
-function updatePack(thing){
+function updatePack(thing, updates){
 	var state = {};
-	state.updatedThings = extractUpdates.call(this, thing);
+	state.updatedThings = updates;
 	if(thing.name === this.state.lookupName){
 		state.currentThing = thing;
 	}
 	return state;
 }
 
-function updatePackRename(oldName, thing){
+function updatePackRename(oldName, thing, updates){
 	var state = {};
 
 	state.addedThings = deleteIfWasAddedByUser.call(this, oldName);
 	
-	state.updatedThings = extractUpdates.call(this, thing);
+	state.updatedThings = updates;
 
 	// if the old name was not added by the user
 	if(oldName !== BLANK_NAME){
@@ -111,14 +100,6 @@ function updatePackRename(oldName, thing){
 
 	//this affects the filter list and makes available to render
 	thing = thingStore.rename(oldName, thing.name);
-	thing._updatedProps = [];
-
-	// store updates for all the things that are this thing
-	thing._areMe.forEach((name) => {
-		if(!state.updatedThings[name])
-			state.updatedThings[name] = {};
-		state.updatedThings[name].isa = thing.name;
-	})
 
 	//saving the currently open thing -- do last so it can find the thing
 	if(oldName === this.state.lookupName){
@@ -152,30 +133,14 @@ function updatePackDelete(lookupName){
 }
 
 // extract the updated values into the updates object
-function extractUpdates(thing){
-	var updates = {}, updatedThings;
-	thing._updatedProps.forEach((prop) => {
-		if(valueIsUndefined(thing[prop])) thing[prop] = undefined;
-		
-		if(thing[prop] !== thing.originalOptions[prop])
-			updates[prop] = thing[prop]
-		else // reset the value
-			updates[prop] = undefined
-	});
-
-	// if there is already a new pack, combine
-	if(thing._newPack){
-		updates = {...thing._newPack, ...updates};
-		updates = clean(updates);
-	}
-	thing._newPack = updates;
-	thing._updatedProps = [];
+function extractUpdates(thing, newThings, updates){
+	var updatedThings;
 
 	// if there are updates, add them, otherwise keep as-is
 	if(Object.keys(updates).length)
-		updatedThings = {...this.state.newPack.things, [thing.name]: updates}
+		updatedThings = {...newThings, [thing.name]: updates}
 	else{
-		updatedThings = this.state.newPack.things;
+		updatedThings = newThings;
 		delete updatedThings[thing.name];
 	}
 

@@ -15,24 +15,11 @@ import './ThingExplorer.css';
 const DEBUG = false;
 
 function getInitialState(){
-	var newPack = {things: {},tables:{}};
-
-	if(localStorage.newPack){
-		try{
-			newPack = JSON.parse(localStorage.newPack);
-			PackLoader.addPack(newPack);
-			if(DEBUG) console.log("ThingExplorer localStorage.newPack # of things "+Object.keys(newPack.things).length);
-		}catch(e) {
-			console.error("ThingExplorer -- could not parse localStorage.newPack: "+localStorage.newPack)
-			console.error(e);
-		}
-	}
-
 	return {
 		filteredThings: thingStore.sortedThingNames,
 		currentThing: thingStore.get(thingStore.sortedThingNames[0]),
 		lookupName: thingStore.sortedThingNames[0],
-		newPack: newPack
+		newPack: PackLoader.getNewPack()
 	};
 }
 
@@ -63,8 +50,6 @@ class ThingExplorer extends React.Component{
 
 		var _this = this;
 		PackLoader.load(function(packs){
-			thingStore.processAll();
-
 			thingStore.bindListener('ThingExplorer',()=>{
 				_this.setState({filteredThings: _this.doFilter(_this.state.query, _this.state.isMissingIcons)});
 			});
@@ -87,6 +72,7 @@ class ThingExplorer extends React.Component{
  	 */
 	updateThing(property, value, reset){
 		var thing = this.state.currentThing;
+		var newPack = this.state.newPack.things[this.state.lookupName];
 
 		if(DEBUG){
 			if(thing !== thingStore.get(this.state.lookupName)){
@@ -95,19 +81,12 @@ class ThingExplorer extends React.Component{
 			console.log("Update "+thing.name+" "+property+": "+value+"  (reset: "+reset);
 		}
 
-		const doReset = reset	|| value === thing.originalOptions[property] 
-			|| (valueIsUndefined(value) && thing.originalOptions[property] === undefined);
-		
-		thing[property] = (doReset) ? thingStore.resetProperty(thing, property) : value;
+		// don't reset when equals originalOptions -- annoying while typing
+		const doReset = reset || (valueIsUndefined(value) && thing.originalOptions[property] === undefined);
+		const inNewPack = newPack && newPack[property] !== undefined;
 
-		//updated. thingStore handles _updatedProps for resets
-		if(!doReset && !thing._updatedProps.includes(property) ){	
-				thing._updatedProps.push(property);
-		}
+		(doReset) ? thingStore.resetProperty(thing, property, inNewPack) : thing.setProperty(property, value);
 		
-		if(property === "isa") 
-			thing = thing.processIsa(true);
-
 		if(DEBUG){
 			console.log("* Acheron background: "+thingStore.get("Acheron").background);
 		}
@@ -142,14 +121,17 @@ class ThingExplorer extends React.Component{
 				match = name.toLowerCase().includes(query)
 				if(!match){
 					t = thingStore.get(name);
-					match = (t.isa && t.isa.toLowerCase().includes(query));
+					if(typeof t.isa === "string")
+						match = t.isa.toLowerCase().includes(query)
+					else if(t.isa && t.isa.find)
+						match = t.isa.find((str) => str.toLowerCase().includes(query)) !== undefined;
 				}
 				if(!match || !isMissingIcons) return match;
 			}
 
 			//process isMissingIcons
 			if(!t) t = thingStore.get(name);
-			return !t.icon;
+			return !t.icon && !t.isa;
 		});
 	}
 
@@ -181,7 +163,7 @@ class ThingExplorer extends React.Component{
 		if(!this.state.currentThing || name !== this.state.currentThing.name){
 			//need to process isa every time in case super was changed
 			var state = {
-				currentThing: thingStore.get(name).processIsa(true),
+				currentThing: thingStore.get(name),
 				lookupName: name
 			}
 			if(DEBUG){
@@ -214,7 +196,7 @@ class ThingExplorer extends React.Component{
 					
 					<div className="main">
 						<ThingView thing={ {...this.state.currentThing} } thingID={this.state.lookupName} 
-							updateThing={this.updateThing} saveThing={this.saveThing} />
+							updateThing={this.updateThing} saveThing={this.saveThing} newPack={this.state.newPack.things[this.state.lookupName]}/>
 					</div>
 				</div>
 			</div>

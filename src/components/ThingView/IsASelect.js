@@ -6,8 +6,8 @@ import thingStore from '../../stores/thingStore';
 import Styler from '../../util/Styler';
 
 const BLANK_VALUE = <span>&nbsp;</span>;
-const DEBUG = false;
-const resetValue = {label: null, value: null}
+const DEBUG = true;
+const RESET_VALUE = {label: null, value: "DO THE RESET PLEASE AND THANK YOU"}
 
 export default class IsASelect extends React.Component {
 	constructor(){
@@ -22,17 +22,16 @@ export default class IsASelect extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 		this.onNewOptionClick = this.onNewOptionClick.bind(this);
 		this.onInputKeyDown = this.onInputKeyDown.bind(this);
+		this.handleSelectedClick = this.handleSelectedClick.bind(this);
 	}
 	componentDidMount() {
 		thingStore.bindListener('IsASelect',()=>{
 			this.setState({options: this._getIsaOptions() });
 		});
 	}
-	shouldComponentUpdate(nextProps){
-		if(DEBUG){
-			console.log("* Acheron background: "+thingStore.get("Acheron").background);
-		}
-		var changed = nextProps.value !== this.props.value 
+	shouldComponentUpdate(nextProps, nextState){
+		var changed = nextState !== this.state 
+				|| nextProps.value !== this.props.value 
 				|| !Object.values(nextProps.status).equals(Object.values(this.props.status));
 		if(DEBUG) 
 			console.log("\tIsASelect.shouldComponentUpdate: "+changed)
@@ -55,18 +54,28 @@ export default class IsASelect extends React.Component {
 
 		if(this.select) this.select.blurInput();
 	}
-	handleChange({value}){
-		if(DEBUG) console.log("IsASelect.handleChange -- "+value);
+	handleChange(values){
+		if(DEBUG) console.log("IsASelect.handleChange -- "+values);
+
+		values = values.split(",");
+
+		// don't allow thingname
+		var indexOfName = values.indexOf(this.props.thingName);
+		if(indexOfName !== -1){
+			values.splice(indexOfName,1);
+		}
+
+		var value = (values.length === 1) ? values[0] : values;
 
 		// clear value and continue. Not null because can't inherit isa property
-		if(value === this.props.thingName || value === false){
+		if(value === ""){
 			value = undefined;
 		}
 
 		if(value === this.props.value) // no change
 			return;
 		
-		if(value === null) // reset - clear to original
+		if(value === RESET_VALUE.value) // reset - clear to original
 			return this.props.handleChange("isa", undefined, true);
 
 		this.justAdded = false;
@@ -74,7 +83,6 @@ export default class IsASelect extends React.Component {
 		if(DEBUG) console.log("\t do updateThing");
 		this.props.handleChange("isa",value);
 	}
-
 	onInputKeyDown(event) {
 		if(event.keyCode === 13) {
 			// Override default ENTER behavior -- must click to create
@@ -86,30 +94,31 @@ export default class IsASelect extends React.Component {
 			}
 		}
 	}
-	
+	handleSelectedClick({value}){
+		window.location.hash = "#"+encodeURIComponent(value);
+	}
 	render (){
 		if(DEBUG) 
 			console.log("-------  IsASelect RENDER "+this.props.value)
-		if(DEBUG){
-			console.log("* Acheron background: "+thingStore.get("Acheron").background);
-		}
 
-		const value = (this.props.value === undefined) ? BLANK_VALUE: this.props.value;
-		const helpText = (this.justAdded) ? <span><i className="fa fa-check"/> added new thing <strong>{value}</strong></span> : "";
+		const value = (this.props.value === undefined) ? [] : this.props.value;
+		const helpText = (this.justAdded) ? <span><i className="fa fa-check"/> added new thing <strong>{value}</strong></span> 
+			: "";
 		
 		return (
 		<FormGroup validationState={this.props.status.isUpdated?"success":null} className={this.props.status.isEnabled ? "" : "fake-disabled"}>
 			<label>Is a...</label>
 			<Creatable name="isa" value={value} 
 				onChange={this.handleChange}
-				clearable={this.props.status.isClearable} clearValueText="Clear changes" resetValue={resetValue} 
+				clearable={this.props.status.isClearable} clearValueText="Clear changes" resetValue={[RESET_VALUE]} 
 				options={this.state.options} 
+				multi={true} simpleValue
 				clearRenderer={Styler.selectClear}
 				onNewOptionClick={this.onNewOptionClick}
 				promptTextCreator={promptCreateNew} 
 				ref={(createable) => this.select = (createable) ? createable.select : null}
 				shouldKeyDownEventCreateNewOption={_false} 
-				onInputKeyDown={this.onInputKeyDown} />
+				onInputKeyDown={this.onInputKeyDown} onValueClick={this.handleSelectedClick} />
 			<HelpBlock>{helpText}</HelpBlock>
 		</FormGroup>);
 	} 

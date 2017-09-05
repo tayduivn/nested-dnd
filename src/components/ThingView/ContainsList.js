@@ -18,10 +18,9 @@ class ContainsList extends React.Component {
 		this._validate(props);
 	}
 	shouldComponentUpdate(nextProps){
-		return !nextProps.list.equals(this.props.list) 
+		return nextProps.list.equals(this.props.list)
 			|| !Object.values(nextProps.status).equals(Object.values(this.props.status));
 	}
-
 	//validate
 	componentWillUpdate(nextProps){
 		if(DEBUG) console.log("\t ContainsList.componentWillUpdate");
@@ -32,26 +31,20 @@ class ContainsList extends React.Component {
 		this.validationState = [];
 		this.helpText = [];
 		if(!props.status.isUpdated) return true;
-
-		var newPack = (props.thing._newPack.contains) ? [...props.thing._newPack.contains] : [];
+		const list = props.list || [];
 		var isValid = true;
-		var sameNum = newPack.length === props.list.length;
 
-		props.list.forEach((contain, index) => {
+		list.forEach((contain, index) => {
 			var state, txt = "";
+
 			if(!contain){
 				state = "error";
 				isValid = false;
 				txt = <span>value is required.</span>;
 			}
-			else if(sameNum){
-				if(newPack[index] !== contain) state = "success";
+			else if(props.status.isUpdated[index]){
+				state = "success";
 			}
-			else{
-				var i = newPack.indexOf(contain);
-				if(i === -1 || !newPack.splice(i,1).length)
-					state = "success";
-			} 
 				
 			this.validationState.push(state);
 			this.helpText.push(txt);
@@ -64,20 +57,25 @@ class ContainsList extends React.Component {
 	}
 	handleChange(e){
 		var index = e.target.getAttribute("data-index");
-		var list = [...this.props.list];
-		list.splice(index,1,e.target.value);
+		var list = this.props.list;
+
+		list.splice(index,1, e.target.value);
 
 		if(DEBUG) console.log("\t\t handleChange: "+list.join(", "))
 		this.props.handleChange("contains", list);
 	}
 	handleAdd(){
-		this.props.handleChange("contains", this.props.list.concat([""]) );
+		var list = this.props.list.concat([""]);
+		this.props.handleChange("contains", list);
 	}
 	handleRemove(e){
-		var index = e.target.getAttribute("data-index");
-		var value = e.target.getAttribute("data-value");
-		var list = [...this.props.list];
+		var index = e.currentTarget.getAttribute("data-index");
+		var value = e.currentTarget.getAttribute("data-value");
+		var list = this.props.list;
+
 		list.splice(index,1);
+		if(list.length === 0) list = undefined;
+
 		if(DEBUG) console.log("\t\t handleRemove:  removed "+value+" -- "+list.join(", "))
 		this.props.handleChange("contains", list);
 	}
