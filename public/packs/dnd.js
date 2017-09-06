@@ -77,29 +77,102 @@ pack.things["ethereal mirror plane"] ={ beforeRender: function(instance){
 }}
 pack.things["humanoid"] = {
 	afterMake: function(instance, tableStore){
-		
+
 		// get gender
 		var gender = instance.data.gender;
+		var transgender = false;
 		if(!gender){
 			gender = instance.data.gender = (Math.rand(1,250) === 1) ? "genderqueer" : (Math.rand(0,1)) ? "male" : "female";
+			transgender = (Math.rand(1,100) === 1);
 		}
 
-		//get name
-		var name = instance.name;
-		if(instance.name === this.name){
-			if(gender === "male"){
-				name = tableStore.get("MALE NAME").roll();
+		// get race
+		if(instance.data.race === undefined){
+			instance.data.race = (checkIsa(instance.thing,"playable race")) ? instance.thing.name : false;
+			if(!instance.data.race){
+				var demographics = findAncestorData(instance,"race-demographics");
+				if(demographics){
+					instance.data.race = tableStore.roll(demographics);
+				}
 			}
-			else if(gender === "male"){
-				name = tableStore.get("FEMALE NAME").roll();
+		}
+		if(!instance.data.race) instance.data.race = "human";
+		var raceData = instance.thing.thingStore.get(instance.data.race).getData();
+
+		//get age
+		if(instance.data.age === undefined){
+			var maxAge = raceData["age max"];
+			var adultAge = raceData["age adult"];
+			var diff = maxAge-adultAge;
+			var threshold1 = Math.floor(0.0625*diff+adultAge);
+			var threshold2 = Math.floor(0.3125*diff+adultAge);
+			var threshold3 = Math.floor(0.5625*diff+adultAge);
+
+			var ageGroup = tableStore.get("AGE GROUPS").roll();
+			if(ageGroup === "young adult"){
+				instance.data.age = Math.rand(adultAge,threshold1);
+			}
+			else if(ageGroup === "adult"){
+				instance.data.age = Math.rand(threshold1+1,threshold2);
+			}
+			else if(ageGroup === "middleAged"){
+				instance.data.age = Math.rand(threshold2+1,threshold3);
 			}
 			else{
-				name = tableStore.get(["FEMALE","MALE"].roll()+" NAME").roll();
+				instance.data.age = Math.rand(threshold3+1,adultAge);
 			}
-			instance.name = name+" ("+this.name+")";
+		}
+		
+		//if name is capitalized, return
+		if(instance.thing.isUnique()){
+			if(!instance.thing.namegen && instance.thing.isa && instance.thing.isa !== "humanoid")
+				instance.name = instance.name+" ("+instance.thing.isa+")";
+		}
+		else{
+			//get name
+			var name = instance.name;
+			if(instance.name === this.name){
+				if(gender === "male"){
+					name = tableStore.get("MALE NAME").roll();
+				}
+				else if(gender === "male"){
+					name = tableStore.get("FEMALE NAME").roll();
+				}
+				else{
+					name = tableStore.get(["FEMALE","MALE"].roll()+" NAME").roll();
+				}
+				instance.name = name+" ("+this.name+")";
+			}
 		}
 
+		if(instance.data.gender !== "genderqueer" && transgender){
+			instance.data.gender = "transgender "+instance.data.gender;
+		}
+
+		// put person description in
+		var msg = instance.data.gender+" "+instance.data.race+", "+instance.data.age+" years old";
+		instance.children.push(msg);
 	}
+}
+
+function findAncestorData(instance, property){
+	if(!instance.parent)
+		return undefined;
+
+	if(instance.data[property] !== undefined)
+		return instance.data[property];
+	
+	return findAncestorData(instance.instanceStore.get(instance.parent), property);
+}
+
+function checkIsa(thing, str){
+	if(!thing.isa){
+		return false;
+	}
+	if(thing.isa === str){
+		return thing.name;
+	}
+	return checkIsa(thing.thingStore.get(thing.isa), str);
 }
 
 /* 

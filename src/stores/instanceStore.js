@@ -10,7 +10,7 @@ let instances = [];
  * 
  */
 class Instance{
-	constructor(thing){
+	constructor(thing, parentId){
 
 		if(!thing){
 			throw new Error("Thing is required to make a new instance");
@@ -19,18 +19,16 @@ class Instance{
 		var result = thing.beforeMake(this);
 
 		this.thing = result.thing;
-		this.isa = result.isa;
 		this.id = null;
-		this.parent = null;
+		this.parent = (parentId) ? parentId : null;
 		this.children = []; //indexes of children and string descriptions
 		this.grown = false;
-		this.data = thing.data || {};
-
 		
-		this.name = thing.getName(this.isa);
-		this.icon = thing.getIcon(this.isa);
+		this.data = thing.getData();
+		this.name = thing.getName();
+		this.icon = thing.getIcon();
 		
-		var { cssClass, textColor } = Styler.getClass(this.name, this.icon, thing, this.isa);
+		var { cssClass, textColor } = Styler.getClass(this.name, this.icon, thing, thing.getIsa(), instances[parentId]);
 		this.textColor = textColor;
 		this.cssClass = cssClass;
 
@@ -60,8 +58,7 @@ class Instance{
 	
 	//process contains into instances
 	grow(){
-		this.children = [];
-		var blueprint = this.thing.getContains(this.isa);
+		var blueprint = this.thing.getContains();
 
 		var children = this.children;
 		for(var i = 0,child; i < blueprint.length; i++){
@@ -78,7 +75,7 @@ class Instance{
 					child = tableStore.add(child);
 				}
 				else{
-					var inst = instanceStore.add(thingStore.add(child));
+					var inst = instanceStore.add(thingStore.add(child), this.id);
 					inst.parent = this.id;
 					children.push(inst.id);
 					continue;
@@ -115,12 +112,13 @@ class Instance{
 				var thing = thingStore.get(value);
 
 				if(child.isEmbedded){
-					if(thing.contains && thing.contains.length){
+					var contains = thing.getContains();
+					if(contains && contains.length){
 						blueprint.splice(i,1,...thing.contains);
 						i--;
 					}
 				}else{
-					var New = instanceStore.add(thing);  
+					var New = instanceStore.add(thing, this.id);  
 					New.parent=this.id;
 					children.push(New.id);
 				}
@@ -146,21 +144,21 @@ instanceStore.get = function(index){
 	return instances[index];
 }
 
-instanceStore.add = function(thing){
-	if(typeof thing === "undefined")
+instanceStore.add = function(thing, parentId){
+	if(typeof thing === "undefined" || thing === null || thing === false)
 		throw new Error("thing is required when creating an Instance.");
 
 	if(typeof thing === "string")
 		thing = thingStore.get(thing);
 
-	if(!thing.thingStore)
+	if(thing && !thing.thingStore)
 		throw new Error("thing must be an instanceof Thing. Tried to make instance with: "+thing);
 
 	if(thing.uniqueInstance instanceof Number && instances[thing.uniqueInstance]){
 		throw new Error("Cannot make more than one instance of "+thing.name);
 	}
 	
-	var instance = new Instance(thing);
+	var instance = new Instance(thing, parentId);
 	instances.push(instance);
 	return instance;
 }

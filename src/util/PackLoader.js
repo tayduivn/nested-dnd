@@ -23,7 +23,7 @@ var newPack = {things:{}, tables:{}};
 PackLoader.packs = {};
 
 PackLoader.packmap =  {
-	"dnd": "nested-dnd-data.json,behindthetables.json,dnd.json,dnd.js,forgotten-realms.json",
+	"dnd": "nested-dnd-data.json,behindthetables.json,dnd.json,dnd.js",
 	"nested-orteil":"nested-orteil.json,nested-orteil-extended.json"
 }
 
@@ -88,6 +88,17 @@ PackLoader.getPackOptions = function(){
 
 PackLoader.getNewPack = function(){
 	return newPack;
+}
+
+PackLoader.setNewPack = function(data){
+	//delete
+	if(data === null){
+		delete localStorage.newPack;
+		newPack = {things:{}, tables:{}};
+		return newPack;
+	}
+	newPack = data;
+	localStorage.newPack = JSON.stringify(data);
 }
 
 PackLoader.load = function(callback){

@@ -32,18 +32,21 @@ class Ancestors extends React.Component {
 			parent = <SplitButton 
 				title={title} href={"#"+this.parentID}
 				onClick={() => this.page.setInstance(this.parentID,true)}
-				id="ancestorDropdown">
+				id="ancestorDropdown" 
+				className={parentInst.cssClass}
+				style={{color:parentInst.textColor}}>
 					{ancestors}
 				</SplitButton>;
 		}else{
-			parent = (<a className="btn btn-default" href={"#"+this.parentID}
-				onClick={() => this.page.setInstance(this.parentID,true)}>
+			parent = (<a  
+				href={"#"+this.parentID} className={"btn btn-default "+parentInst.cssClass}
+				onClick={() => this.page.setInstance(this.parentID,true)} 
+				style={{color:parentInst.textColor}}>
 				{title}
 			</a>)
 		}
 
-		return (<span className={"parent "+parentInst.cssClass}
-				style={{color:parentInst.textColor}}>
+		return (<span className={"parent "+parentInst.cssClass} style={{color:parentInst.textColor}}>
 				{parent}
 				</span>)
 	}

@@ -54,10 +54,11 @@ export default class IsASelect extends React.Component {
 
 		if(this.select) this.select.blurInput();
 	}
-	handleChange(values){
-		if(DEBUG) console.log("IsASelect.handleChange -- "+values);
+	handleChange(options){
+		if(DEBUG) console.log("IsASelect.handleChange -- "+options);
 
-		values = values.split(",");
+		var values = [];
+		options.forEach((op) => values.push(op.value));
 
 		// don't allow thingname
 		var indexOfName = values.indexOf(this.props.thingName);
@@ -112,8 +113,7 @@ export default class IsASelect extends React.Component {
 				onChange={this.handleChange}
 				clearable={this.props.status.isClearable} clearValueText="Clear changes" resetValue={[RESET_VALUE]} 
 				options={this.state.options} 
-				multi={true} simpleValue
-				clearRenderer={Styler.selectClear}
+				multi={true} clearRenderer={Styler.selectClear}
 				onNewOptionClick={this.onNewOptionClick}
 				promptTextCreator={promptCreateNew} 
 				ref={(createable) => this.select = (createable) ? createable.select : null}

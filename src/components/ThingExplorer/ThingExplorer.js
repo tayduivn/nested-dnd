@@ -43,11 +43,6 @@ class ThingExplorer extends React.Component{
 	}
 
 	componentDidMount() {
-		if(thingStore.sortedThingNames.length){
-			this.setState(getInitialState());
-			return;
-		}
-
 		var _this = this;
 		PackLoader.load(function(packs){
 			thingStore.bindListener('ThingExplorer',()=>{

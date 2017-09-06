@@ -155,7 +155,7 @@ class Thing{
 			return tableStore.roll(this.namegen);
 
 		var isa = this.getIsa();
-		if(isa.namegen) 
+		if(isa.namegen || !this.name) 
 			return isa.getName();
 
 		if(this.name) 
@@ -172,6 +172,16 @@ class Thing{
 		if(isa) return isa.getIcon();
 
 		return "";
+	}
+
+	getData(){
+		if(this.data !== undefined)
+			return {...this.data};
+		
+		var isa = this.getIsa();
+		if(isa) return isa.getData()
+
+		return {};
 	}
 
 	getBackground(){
@@ -195,8 +205,9 @@ class Thing{
 	}
 
 	getContains(){
-		if(this.contains)
+		if(this.contains && this.contains.length)
 			return this.contains;
+
 		var isa = this.getIsa();
 		if(isa)
 			return isa.getContains();
@@ -206,7 +217,7 @@ class Thing{
 	getIsa(){
 		if(!this.isa) return false;
 
-		var isa = (this.isa.roll) ? tableStore.roll(this.isa) : this.isa;
+		var isa = (this.isa.roll && this.isa.length) ? tableStore.roll(this.isa) : this.isa;
 
 		if(typeof isa === "string"){
 			if(thingStore.exists(isa))

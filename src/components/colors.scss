@@ -7,27 +7,32 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
 @mixin button-variant($color, $background, $border) {
   background-color: $background;
   border-color: $border;
+  color: $color;
 
   &:focus,
   &.focus {
     background-color: darken($background, 10%);
-        border-color: darken($border, 25%);
+    border-color: darken($border, 15%);
+    color: $color;
   }
   &:hover {
     background-color: darken($background, 10%);
-        border-color: darken($border, 12%);
+    border-color: darken($border, 12%);
+    color: $color;
   }
   &:active,
   &.active, .open > .dropdown-toggle {
     background-color: darken($background, 10%);
     border-color: darken($border, 12%);
     background-image: none;
+    color: $color;
 
     &:hover,
     &:focus,
     &.focus {
       background-color: darken($background, 17%);
-      border-color: darken($border, 25%);
+      border-color: darken($border, 15%);
+      color: $color;
     }
   }
   &.disabled,
@@ -38,6 +43,7 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
     &.focus {
       background-color: $background;
       border-color: $border;
+      color: $color;
     }
   }
 
@@ -60,7 +66,7 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
     }
   }
 
-  &.parent .btn{
+  &.parent .btn.btn-default{
   	@include button-variant(
   		adjust-color($color, $lightness: 55%), 
 		adjust-color($color, $lightness: 10%), 
@@ -89,9 +95,9 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
     }
   }
 
-  &.parent .btn{
+  &.parent .btn.btn-default{
   	@include button-variant(
-  		adjust-color($color, $lightness: -30%), 
+  		adjust-color($color, $lightness: $color-adjust), 
 		adjust-color($color, $lightness: -10%), 
 		adjust-color($color, $lightness: -15%))
   }
@@ -147,7 +153,6 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
 
 .rainbow, .child-inner.rainbow{
 	color:black;
-	text-shadow: 1px 1px white;
 	background: red; /* For browsers that do not support gradients */
   background: -webkit-linear-gradient(top left, magenta, orange, yellow, SpringGreen, cyan); /* For Safari 5.1 to 6.0 */
   background: -moz-linear-gradient(right bottom, magenta, orange, yellow, SpringGreen, cyan); /* For Firefox 3.6 to 15 */
@@ -156,7 +161,9 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
   &.fa, &.gi, &.glyphicon{
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: none;
+  }
+  &.parent .btn.btn-default{
+    background-color: SpringGreen;
   }
 }
 
@@ -181,22 +188,26 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
+  &.parent .btn.btn-default{
+    background: #00BEA6 linear-gradient(#00BEA6,#0057BE);
+  }
 }
 
-.sharkverse{
+.sharkverse, .sharkverse.child-inner:hover{
   background-image:url('http://orteil.dashnet.org/nestedSharkverse.png');
 }
-.baconverse{
+.baconverse, .baconverse.child-inner:hover{
   background-color: maroon;
   color:white;
   background-image:url('http://orteil.dashnet.org/nestedBaconverse.png');
 }
-.doughnutverse{
+.doughnutverse, .doughnutverse.child-inner:hover{
   background-color: pink;
   background-image:url('http://orteil.dashnet.org/nestedDoughnutverse.png');
   color:#000;
   text-shadow: 1px 1px MOCCASIN;
 }
-.lasagnaverse{
+.lasagnaverse, .lasagnaverse.child-inner:hover{
   background-image:url('http://orteil.dashnet.org/nestedLasagnaverse.png');
 }

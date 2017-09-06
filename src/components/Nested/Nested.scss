@@ -26,23 +26,15 @@ html, body {
 .description.alert-default{
   text-align: left;
   font-size: 1.3em;
+  margin-top:-25px;
+  margin-bottom:30px;
+  padding: 0;
 }
 
 h1{
 	.btn{
 		font-size: 0.7em;
 		vertical-align: middle;
-    color: inherit;
-    
-    &:hover,&:focus,&.focus,&:active,&.active{
-      color: inherit;
-    }
-    .open > .dropdown-toggle{
-      color: inherit;
-      &:hover,&:focus,&.focus{
-        color: inherit;
-      }
-    }
 	}
 }
 
@@ -119,8 +111,15 @@ a.child{
 div.child .child-inner{
   cursor:default;
 }
+
 .child-inner.empty {
-	height:auto;
+	display:table;
+  width:100%;
+  text-align:center;
+  h1{
+    display: table-cell;
+    vertical-align: middle;
+  }
 }
 .child-inner.empty i{
 	display:none;

@@ -66,6 +66,7 @@ Styler.renderColorOption = function(option){
 }
 
 Styler.cleanColor = function(color, name){
+
 	if(typeof color !== "string"){
 		// null is acceptible - prevents isa from overwriting
 		return (color === null) ? null : undefined;
@@ -73,32 +74,32 @@ Styler.cleanColor = function(color, name){
 
 	color = color.toLowerCase();
 
-	if(allClasses.includes(color)){
-		return color;
-	}
-	var index = html5hexcodes.indexOf(color);
-	if ( index !== -1 ){
-		return html5colors[index];
-	}
-
-	//class could not be found. Add class
-	if(name){
-		return addThing(name, color);
-	}
-
 	return color;
 }
 
-Styler.getClass = function(instanceName, icon, thing, isa){
+Styler.getClass = function(instanceName, icon, thing, isa, parent){
 	var cssClass = (thing.autoColor || thing.autoColor === undefined) ? strToColor(instanceName) : "";
 	var background = thing.getBackground(isa);
 	var textColor = thing.getTextColor(isa);
-
+	var index = html5hexcodes.indexOf(background);
+	
 	if(cssClass !== ""){
 		//was autocolored
 		textColor = null;
-	}else if(allClasses.includes(background)){
+	}
+	else if(allClasses.includes(background)){
 		cssClass = background;
+	}
+	else if ( index !== -1 ){
+		cssClass = html5colors[index];
+	}
+	else if(background){  //add class
+		cssClass = addThing(instanceName, background, textColor);
+	}
+	else if(parent){
+		cssClass = parent.cssClass;
+		if(parent.textColor)
+			textColor = Color(parent.textColor).darkenByAmount((Math.random()/10)-0.05).toCSS();
 	}
 
 	if(!icon || icon.length === 0 || (icon.trim && icon.trim().length === 0)){
@@ -222,7 +223,7 @@ var addThing = (function(){
 		}
 	};
 
-	return function(name, background){
+	return function(name, background, textColor){
 		var className = makeSafeForCSS(name);
 
 		var found = rules.find((r) => r.rule === background);
@@ -239,6 +240,7 @@ var addThing = (function(){
 		var bg = Color(background.split(" ")[0]);
 		var hover = shift(bg,0.05);
 		var border = hover;
+		var color = (textColor) ? Color(textColor) : shift(bg,0.5);
 
 		var c="."+className;
 		var btn=c+".parent .btn.btn-default";
@@ -247,7 +249,13 @@ var addThing = (function(){
 		var btnBG = shift(bg,0.1);
 
 		createCSSSelector(c, 
-			"background:"+background+";"
+			"background:"+background+";"+
+			"color:"+color.toCSS()+";"
+		);
+		createCSSSelector(c+".link.child-inner:hover", 
+			"background:"+background+";"+
+			"color:"+color.toCSS()+";"+
+			"opacity:0.75;"
 		);
 		createCSSSelector(btn,
 			"background:"+background+";"+

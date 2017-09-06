@@ -40,6 +40,10 @@ class SettingsModal extends React.Component {
 		this.filterSeedOptions = this.filterSeedOptions.bind(this);
 	}
 
+	shouldComponentUpdate(nextProps, nextState){
+		return true;
+	}
+
 	componentWillReceiveProps(nextProps, nextState){
 		if(!this.state.seed.length && nextProps.allThingOptions !== this.props.allThingOptions){
 			this.setState({
@@ -113,20 +117,26 @@ class SettingsModal extends React.Component {
 
 		for(var i = 0; i < contains.length; i++){
 			var contain = contains[i];
-			if(tableStore.isRollable(contain)){
-				continue;
-			} 
-			var check = new Contain(contain);
-			if(check.makeProb !== 100) continue;
+			if(!contain) continue;
 
-			if(check.value && thingStore.exists(check.value)){
-				if(check.isEmbedded){
-					contains.push(...thingStore.get(check.value).contains)
+			if(contain.constructor.name !== "Object"){
+				if(tableStore.isRollable(contain)){
 					continue;
-				}else{
-					seedOptions.push({value:check.value, label:check.value});
+				} 
+				var check = new Contain(contain);
+				if(check.makeProb !== 100) continue;
+				if(check.value && thingStore.exists(check.value)){
+					if(check.isEmbedded){
+						contains.push(...thingStore.get(check.value).contains)
+						continue;
+					}else{
+						seedOptions.push({value:check.value, label:check.value});
+					}
 				}
 			}
+			else{ //embedded object
+				//do nothing?
+			}			
 		}
 		return {
 			seedOptions: seedOptions,

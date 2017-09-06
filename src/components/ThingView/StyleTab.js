@@ -6,7 +6,7 @@ import Styler from '../../util/Styler';
 import IconSelect from './IconSelect';
 
 const RESET_VALUE = ",,"
-const DEBUG = true;
+const DEBUG = false;
 
 export default class StyleTab extends React.Component{
 	render(){
@@ -47,6 +47,10 @@ class ColorDropdown extends React.Component {
 		}
 
 		var value = values.split(",")
+
+		if(value.length === 1){
+			value = value[0];
+		}
 
 		if(value === undefined || value === "default" || value === "") //blank select
 			value = null;

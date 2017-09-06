@@ -1,4 +1,5 @@
 import thingStore from '../stores/thingStore.js';
+import PackLoader from '../util/PackLoader';
 
 const BLANK_NAME = " ";
 const DEBUG = true;
@@ -41,7 +42,8 @@ function SaveThingAction(lookupName, isDelete){
 
 	if(state.newPack){
 		state.newPack.tables = {}; // temp until I do a table explorer
-		localStorage.newPack = JSON.stringify(state.newPack)
+		PackLoader.setNewPack(state.newPack);
+		
 		if(DEBUG){
 			console.log("-------------- SaveThingAction -------------");
 			console.log(state.newPack);

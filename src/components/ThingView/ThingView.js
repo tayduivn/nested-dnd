@@ -88,6 +88,8 @@ export default class ThingView extends React.Component{
 		if(this.state && this.state.instance){
 			instanceStore.delete(this.state.instance);
 		}
+		
+		if(!thingID) return null;
 
 		var instance;
 		try{
@@ -270,7 +272,7 @@ class Preview extends React.Component{
 		return (
 		<div id="preview">
 			<h5>PREVIEW</h5>
-			<div className={ t.children && t.children.length ? "child link" : "child"}>
+			<div className={ children && children.length ? "child link" : "child"}>
 				<div className={"child-inner "+t.cssClass} style={{color:t.textColor}}>
 					<i className={t.icon}></i>
 					<h1>{t.name}</h1>

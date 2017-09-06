@@ -39,7 +39,7 @@ class PackSelect extends React.Component {
 	clear(){
 		var doDelete = window.confirm("Are you sure you want to delete your changes?");
 		if(doDelete){
-			delete localStorage.newPack;
+			PackLoader.setNewPack(null);
 			window.location.reload();
 		}
 	}

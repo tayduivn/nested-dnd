@@ -63,6 +63,8 @@ class Nested extends React.Component {
 		var seed = localStorage["seed"];
 
 		seed = seed.split(">");
+
+		// non-nested seed
 		if(seed.length === 1){
 			if(instanceStore.get(0)){
 				return this.setInstance(0);
@@ -89,6 +91,7 @@ class Nested extends React.Component {
 			else if(instanceStore.get(0))
 				return this.setInstance(0);
 			else{
+				//first one
 				current = instanceStore.add(thingStore.get(name));
 			}
 			console.log("loaded "+current.name);
@@ -136,7 +139,7 @@ class Nested extends React.Component {
 					<h1 id="title" key={inst.name} >
 						<Ancestors parent={inst.parent} page={this} />    <i className={inst.icon}></i> {inst.name}
 					</h1>
-						<CSSTransitionGroup id="contains" className="row auto-clear"
+						<CSSTransitionGroup id="contains" className="row"
 							transitionName="slide-up"
 							transitionAppear={true}
 							transitionAppearTimeout={50}
@@ -152,7 +155,8 @@ class Nested extends React.Component {
 									)
 								}
 								var instance = instanceStore.get(child);
-								var hasChildren = instance.thing.contains && instance.thing.contains.length !== 0;
+								var childContains = instance.thing.getContains();
+								var hasChildren = childContains && childContains.length !== 0;
 								var cssClass = instance.cssClass + (hasChildren ? " link":"");
 								var inner = <div className={"child-inner "+cssClass}
 									data-thing={instance.thing.name}

@@ -63,7 +63,7 @@ tableStore.roll = function(obj){
 	}
 
 	if(typeof obj !== "string"){
-		throw  new Error("Expecting string");
+		return obj;
 	}
 
 	var parts = obj.split("|")

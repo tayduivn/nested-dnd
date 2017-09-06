@@ -106,6 +106,193 @@
       "Masculine",
       "Supine"
     ],
+    "APPEARANCE":{
+    	"rows":[
+    		"*APPEARANCE BODY*| and |*APPEARANCE HAIR*",
+    		"*APPEARANCE BODY*| and |*APPEARANCE FACE*",
+    		"*APPEARANCE FACE*| and |*APPEARANCE CLOTHES*",
+    		"*APPEARANCE FACE*| and |*APPEARANCE HAIR*"
+    	],
+      "source": {
+        "author": "OrkishBlade",
+        "url": "https://www.reddit.com/r/BehindTheTables/comments/3zr0h4/npc_appearance_personality_faith_and_flaws/"
+      }
+    },
+    "APPEARANCE CLOTHES":[
+    	{
+        "concatenate": true,
+        "rows": [
+          "wears ",
+          ["an earring", "two earrings", "a small chain about the neck", "a large chain about the neck", "a tight choker about the neck", "a brooch", "a ring", "several rings", "a bracelet", "a nose ring", "a medallion", "an ornate belt"],
+          " made of ",
+          [
+            "steel",
+            "bronze",
+            "pewter",
+            "silver",
+            "gold",
+            "platinum",
+            "copper",
+            {
+              "concatenate": true,
+              "rows": [
+                ["one","two","three"],
+                ["amethyst", "crystal", "diamond", "emerald", "jade", "obsidian", "opal", "pearl", "ruby", "sapphire", "topaz", "turquoise"],
+                " gems"
+              ]
+            }
+          ]
+        ]
+      },
+      {
+        "concatenate": true,
+        "rows": [
+          "wearing ",
+          ["red","brown","black","light gray","dark gray","tan"],
+          " clothes that are ",
+          ["crisp and new", "fashionable and hip", "a bit old-fashioned", "of the highest quality", "faded, but in good condition", "faded and patched", "torn in places; missing buttons", "tattered and worn"]
+        ]
+      }
+    ],
+    "APPEARANCE BODY": [
+      {
+        "concatenate": true,
+        "rows": [
+          "is ",
+          ["unusually short", "short in stature", "average height", "slightly above average height", "well above average height", "unusually tall"]
+        ]
+      },
+      {
+        "concatenate": true,
+        "rows": [
+          "is ",
+          [
+            "thin and delicate",
+            "of average build",
+            "well-muscled",
+            "slightly overweight",
+            "grotesquely obese",
+            "lean and lanky",
+            "lithe and lean",
+            "thin and wiry",
+            "sinewy and strong",
+            "flabby and weak",
+            "lumpy or bent",
+            "thin and flimsy",
+            "soft and chubby",
+            "thin and petite",
+            "pudgy",
+            "big and broad",
+            "stocky and strong",
+            "bony",
+            "wide and ponderous",
+            "covered in hair"
+          ]
+        ]
+      },
+      {
+        "concatenate": true,
+        "rows": [
+          "has ",
+          ["powerful hands", "delicate hands", "rough hands", "soft hands", "a dagger tattoo", "an arrow tattoo", "an anchor tattoo", "a skull tattoo", "a pair of crossed bones tattoo", "a snake tattoo", "a scorpion tattoo", "a spider web tattoo", "a heart tattoo", "a ring of thorns tattoo", "a mermaid tattoo", "a dragon tattoo"]
+        ]
+      }
+    ],
+    "APPEARANCE FACE": {
+      "rows": [
+        {
+          "concatenate": true,
+          "rows": [
+            "has ",
+            [
+              "sleepy eyes",
+              "shifty eyes",
+              "watery eyes",
+              "bright eyes",
+              "cold eyes",
+              "smiling eyes",
+              "close-set eyes",
+              "wild eyes",
+              "distant eyes",
+              "a lazy eye",
+              "piercing eyes",
+              "watchful eyes",
+              "dark eyes",
+              "hooded eyes",
+              "eyes of two different colors",
+              "slightly crossed eyes",
+              "wide eyes",
+              "beautiful eyes",
+              "beady eyes",
+              "penetrating eyes"
+            ]
+          ]
+        },
+        {
+          "concatenate": true,
+          "rows": [
+            "has ",
+            ["full lips", "buck-teeth", "thin lips", "rotting teeth", "crooked teeth", "a broken or missing tooth", "pursed lips", "dry, cracked lips", "one or more false teeth", "a mouth that hangs open"]
+          ]
+        },
+        {
+          "concatenate": true,
+          "rows": [
+            "has ",
+            ["a crooked nose", "a bulbous nose", "a narrow nose", "a button nose", "a long nose", "a broad nose", "an angular nose", "a round nose", "a broken nose", "a hawk-like nose", "a wide nose", "a delicate nose"]
+          ]
+        },
+        {
+          "concatenate": true,
+          "rows": [
+            "has ",
+            ["a pronounced chin", "a cleft chin", "a dimple on the chin", "a rounded chin", "a sharp jawline", "a square jaw", "a round jaw", "an underbite"]
+          ]
+        },
+        {
+          "concatenate": true,
+          "rows": [
+            "has ",
+            ["high cheekbones", "tight, drawn cheeks", "chubby cheeks", "an unpleasant pustule", "a large mole", "a beauty mark", "freckles", "terrible scarring"]
+          ]
+        },
+        {
+          "concatenate": true,
+          "rows": [
+            "has ",
+            ["a jagged scar", "a dark purple scar", "an angry red scar", "a long, thin scar"]
+          ]
+        }
+      ]
+    },
+    "APPEARANCE HAIR": {
+      "concatenate": true,
+      "rows": [
+        "has ",
+        [
+          "thick hair",
+          "wispy hair",
+          "straight hair",
+          "wavy hair",
+          "curly hair",
+          "wiry hair",
+          "oily hair",
+          "lush hair",
+          "poofy hair",
+          "long braids",
+          "braids tight against the head",
+          "very long hair",
+          "greasy hair",
+          "unruly hair",
+          "an unusual hairstyle",
+          "an outdated hairstyle",
+          "a high-maintenance hairstyle",
+          "short-cropped hair",
+          "a shaved head",
+          "no hair at all"
+        ]
+      ]
+    },
     "BOOK NAME": {
       "rows": [
         {
