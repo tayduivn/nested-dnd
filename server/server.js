@@ -9,7 +9,9 @@ const path = require('path');
 process.env.PWD = process.cwd();
 
 if (process.env.NODE_ENV === 'production') {
-	app.use('/', express.static(path.join(process.env.PWD, '/../client/build')));
+	const staticPath = express.static(path.join(process.env.PWD, '/../client/build');
+	app.use('/', staticPath);
+	console.log("Serving static files at / from "+staticPath);
 }
 
 app.get("/api/hello", (req, res) => {
