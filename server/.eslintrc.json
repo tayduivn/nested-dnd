@@ -1,9 +1,14 @@
 {
-	"env":{
+	"env": {
 		"node": true
 	},
-    "extends": [
-        "plugin:node/recommended"
-    ],
-    "plugins": ["node"]
+	"extends": [
+		"plugin:node/recommended"
+	],
+	"plugins": [
+		"node"
+	],
+	"rules": {
+		"node/no-unpublished-require": "off"
+	}
 }

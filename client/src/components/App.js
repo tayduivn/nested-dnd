@@ -6,12 +6,12 @@ import ThingExplorer from "./ThingExplorer/ThingExplorer.js";
 import { IconDebug } from "./ThingExplorer/IconDebug.js";
 import Characters from "./Characters/Characters.js";
 import Settings from "./Settings.js";
+import Login, { Account } from "./Login.js";
 
 import "./App.css";
 import "./colors.css";
 
 class Nav extends Component {
-
 	render() {
 		return (
 			<nav className="navbar navbar-default navbar-fixed-top">
@@ -65,6 +65,9 @@ class Nav extends Component {
 								<Settings />
 								<IconDebug show={false} />
 							</li>
+							<li>
+								<Account />
+							</li>
 						</ul>
 					</div>
 				</div>
@@ -88,14 +91,15 @@ class App extends Component {
 	}
 
 	callApi() {
-		return fetch("/api/hello")
+		var _this = this;
+		return fetch("/hello")
 			.then((response)=>{
-				let body = response.json();
+				let body = response.text();
 				if (response.status !== 200) throw Error(body.message);
 				return body;
 			})
-			.then((json)=>{
-				this.setState({"response":JSON.stringify(json)});
+			.then((text)=>{
+				_this.setState({"response":text});
 			});
 	}
 
@@ -122,6 +126,14 @@ class App extends Component {
 						<Route
 							path={process.env.PUBLIC_URL + "/characters"}
 							component={Characters}
+						/>
+						<Route
+							path={process.env.PUBLIC_URL + "/login"}
+							render={()=><Login title="Login" url="login" />}
+						/>
+						<Route
+							path={process.env.PUBLIC_URL + "/signup"}
+							render={()=><Login title="Signup" url="signup" />}
 						/>
 					</Switch>
 				</div>

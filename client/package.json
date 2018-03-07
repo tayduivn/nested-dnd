@@ -2,7 +2,7 @@
   "name": "nested-dnd-client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001/",
+  "proxy": "http://localhost:5000/api",
   "homepage": "https://nested-dnd.herokuapp.com",
   "dependencies": {
     "animate.css": "^3.5.2",

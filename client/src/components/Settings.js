@@ -27,11 +27,11 @@ class SettingsModal extends React.Component {
 			originalSeed: seed,
 			customPacks: (localStorage.packs) ? localStorage.packs.replace(/,/g,"\n") : "",
 			seedOptions: []
-		}
+		};
 
 		var _this = this;
 		PackLoader.load(function(){
-			_this.setState(_this.getSeedContains(seed))
+			_this.setState(_this.getSeedContains(seed));
 		});
 
 		this.handleChange = this.handleChange.bind(this);
@@ -55,10 +55,10 @@ class SettingsModal extends React.Component {
 
 	handleChange(event) {
 		if(event.target.name === "pack"){
-			this.setState({ seed: "" })
-			this.setState({ pack: event.target.value })
+			this.setState({ seed: "" });
+			this.setState({ pack: event.target.value });
 		}else	if(event.target.name === "customPacks"){
-			this.setState({ customPacks: event.target.value })
+			this.setState({ customPacks: event.target.value });
 		}
 	}
 
@@ -75,8 +75,8 @@ class SettingsModal extends React.Component {
 			if(selected){
 				unfoundValues.splice(index,1);
 			}
-			return !selected && op.value.includes(filterString)
-		})
+			return !selected && op.value.includes(filterString);
+		});
 	}
 
 	getSeedContains(seed){
@@ -127,7 +127,7 @@ class SettingsModal extends React.Component {
 				if(check.makeProb !== 100) continue;
 				if(check.value && thingStore.exists(check.value)){
 					if(check.isEmbedded){
-						contains.push(...thingStore.get(check.value).contains)
+						contains.push(...thingStore.get(check.value).contains);
 						continue;
 					}else{
 						seedOptions.push({value:check.value, label:check.value});
@@ -141,7 +141,7 @@ class SettingsModal extends React.Component {
 		return {
 			seedOptions: seedOptions,
 			seed: seed
-		}
+		};
 	}
 
 	handleChangeSeed(values){
@@ -151,10 +151,10 @@ class SettingsModal extends React.Component {
 	handleSubmit(event) {
 		var confirm = true;
 		if(localStorage["newPack"]){
-			confirm = window.confirm("This will clear your changes in the Pack Editor. Are you sure?")
+			confirm = window.confirm("This will clear your changes in the Pack Editor. Are you sure?");
 		}
 		if(!confirm) return;
-		delete localStorage["newPack"]
+		delete localStorage["newPack"];
 
 		if(!this.state.seed.length){
 			localStorage.removeItem("seed");
@@ -242,7 +242,7 @@ class Settings extends React.Component{
 
 		if(!this.state.thingNames.equals(thingStore.sortedThingNames)){
 			state.thingNames = thingStore.sortedThingNames;
-			state.allThingOptions = state.thingNames.map( (name) =>{ return {value:name,label:name} });
+			state.allThingOptions = state.thingNames.map( (name) =>{ return {value:name,label:name}; });
 		}
 
 		this.setState(state);

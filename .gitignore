@@ -13,6 +13,10 @@
 /client/src/**/*.css
 !/client/src/assets/font/*.css
 
+# server
+/server/data
+/server/config.js
+
 # misc
 .DS_Store
 .env.local
