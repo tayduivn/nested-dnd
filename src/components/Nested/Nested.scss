@@ -35,6 +35,7 @@ h1{
 	.btn{
 		font-size: 0.7em;
 		vertical-align: middle;
+    text-shadow: none;
 	}
 }
 
@@ -69,6 +70,8 @@ i.gi{
 .child{
   color: inherit;
   margin-bottom:30px;
+  text-shadow: none;
+  font-weight: normal;
 
   &:hover, &:focus{
     color: inherit;
@@ -100,10 +103,10 @@ a.child{
 .child h1{
 	text-align: center;
 	font-size: 1em;
-	font-weight: normal;
-	margin:10px 0 15px 0;
+	margin:5px 0 10px 0;
 	width:100%;
-	padding:0 10px;
+	padding:5px 10px;
+  font-weight: inherit;
 	position:absolute;
 	bottom:0;
 	left:0;

@@ -1,0 +1,1628 @@
+{
+  "characters": [
+    {
+      "name": "",
+      "player": "Katie",
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "Alarm",
+              "Detect Magic",
+              "Hunter's Mark"
+            ]
+          },
+          "label": "Ranger",
+          "level": 3,
+          "name": "Ranger (Revised)",
+          "subclasses": {
+            "Favored Enemy": "Humanoids",
+            "Fighting Style": "Archery",
+            "Ranger Conclave": "Beast Master",
+            "Animal Companion": "Thestral"
+          }
+        }
+      ],
+      "abilities": {
+        "Charisma": {
+          "base": 10
+        },
+        "Constitution": {
+          "base": 8
+        },
+        "Dexterity": {
+          "base": 12
+        },
+        "Intelligence": {
+          "base": 16
+        },
+        "Strength": {
+          "base": 8
+        },
+        "Wisdom": {
+          "base": 17
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Chaotic Neutral",
+        "bond": "I suffer awful visions of a coming disaster and will do anything to prevent it.",
+        "flaw": "I remember every insult I’ve received and nurse a silent resentment toward anyone who’s ever wronged me.",
+        "ideal": "The natural world is more important than all the constructs of civilization.",
+        "name": "Outlander",
+        "personality": "I have a lesson for every situation, drawn from observing nature. I once ran twenty-five miles without stopping to warn to my clan of an approaching horde. I’d do it again if I had to.",
+        "specialty": "",
+        "startingCoin": "100g"
+      },
+      "body": {
+        "eyes": "",
+        "hair": "",
+        "height": "",
+        "skin": "",
+        "weight": ""
+      },
+      "equipment": {
+        "armor": "Leather Armor",
+        "containers": [
+          {
+            "content": [
+              "A troll's necklace worn as a belt"
+            ]
+          },
+          {
+            "content": [
+              "bedroll, mess kit, tinderbox, 10 torches, rations (10 days), water skin, hempen rope (50 feet), 1 essence of dittany"
+            ],
+            "name": "Backpack",
+            "notes": [
+              "Explorer's"
+            ]
+          }
+        ],
+        "items": [
+          "shortsword",
+          "longbow",
+          "potion of healing"
+        ],
+        "weapons": "2 Shortswords, Longbow"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Gnoll"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Investigation",
+            "Stealth",
+            "Insight"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            ""
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Half-Orc"
+      }
+    },
+    {
+      "name": "Crescende Wine-Spiller",
+      "player": "Stuart",
+      "abilities": {
+        "Charisma": {
+          "base": 15
+        },
+        "Constitution": {
+          "base": 13
+        },
+        "Dexterity": {
+          "base": 14
+        },
+        "Intelligence": {
+          "base": 8
+        },
+        "Strength": {
+          "base": 10
+        },
+        "Wisdom": {
+          "base": 12
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Chaotic Neutral",
+        "bond": "I am destined to find The Hall of the Mountain King. I dream of being a star in a Hollywood movie, whatever that means.",
+        "flaw": "I have a tendency to spill wine.",
+        "ideal": "I like seeing the smiles on people’s faces when I perform. That’s all that matters.",
+        "name": "Entertainer",
+        "personality": "I'm an overfed, long-haired, leaping gnome. I love a good insult, even one directed at me",
+        "specialty": "",
+        "startingCoin": "15g"
+      },
+      "body": {
+        "age": 75,
+        "eyes": "Green",
+        "hair": "Sandy Brown",
+        "height": "3'3\"",
+        "skin": "Light",
+        "weight": "120 lb."
+      },
+      "class": "Bard",
+      "classLabel": "Bard",
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "Vicious Mockery",
+              "Friends",
+              "Hideous Laughter",
+              "Faerie Fire",
+              "Sleep",
+              "Healing Word"
+            ]
+          },
+          "label": "Bard",
+          "level": 1,
+          "name": "Bard"
+        }
+      ],
+      "equipment": {
+        "armor": "Leather Armor",
+        "containers": [
+          {
+            "content": [
+              "disguise kit",
+              "1 costume",
+              "the favor of an admirer"
+            ],
+            "name": "Backpack",
+            "notes": [
+              "Entertainer's"
+            ]
+          }
+        ],
+        "items": [
+          "longsword",
+          "dagger"
+        ],
+        "weapons": "Longsword, Dagger, Lute, Flute (wand)"
+      },
+      "features": [
+        {
+          "desc": "You can always find a place to perform nightly and receive food and lodging",
+          "name": "By Popular Demand"
+        }
+      ],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Gobbledegook"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Acrobatics",
+            "Deception",
+            "Performance",
+            "Persuasion",
+            "Stealth"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            "Flute",
+            "Lute",
+            "Harpsichord",
+            "Disguise kit",
+            "Drum"
+          ],
+          "notes": [
+            "Bard - 3 instrument",
+            "Entertainer - Disguide, +1 instrument"
+          ]
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Gnome (Forest)"
+      }
+    },
+    {
+      "abilities": {
+        "Charisma": {
+          "base": 15
+        },
+        "Constitution": {
+          "base": 14
+        },
+        "Dexterity": {
+          "base": 12
+        },
+        "Intelligence": {
+          "base": 13
+        },
+        "Strength": {
+          "base": 10
+        },
+        "Wisdom": {
+          "base": 8
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Lawful Neutral",
+        "bond": "I will face any challenge to win the approval of my family.",
+        "flaw": "I too often hear veiled insults and threats in every word addressed to me, and I’m quick to anger",
+        "ideal": "It is my duty to respect the authority of those above me, just as those below me must respect mine",
+        "name": "Noble",
+        "personality": "If you do me an injury, I will crush you, ruin your name, and salt your fields",
+        "specialty": "",
+        "startingCoin": "25 g"
+      },
+      "body": {
+        "age": "",
+        "eyes": "",
+        "hair": "",
+        "height": "",
+        "skin": "",
+        "weight": ""
+      },
+      "class": "Sorcerer",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "Light",
+              "Prestidigitation",
+              "Ray of Frost",
+              "Shocking Grasp",
+              "Shield",
+              "Magic Missile"
+            ]
+          },
+          "level": 1,
+          "name": "Sorcerer",
+          "subclasses": {
+            "Dragon Ancestor": "Silver",
+            "Sorcerous Origin": "Draconic Bloodline"
+          }
+        }
+      ],
+      "equipment": {
+        "containers": [
+          {
+            "content": [
+              "A set of fine clothes, a signet ring, a scroll of pedigree"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "dagger",
+          "Light Crossbow"
+        ],
+        "weapons": "Light Crossbow, Dagger (2)"
+      },
+      "features": [],
+      "level": 1,
+      "name": "Draco Malfoy",
+      "player": "Sebastian",
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Draconic",
+            "Veelan"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Arcana",
+            "Intimidation",
+            "History",
+            "Persuasion"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            "Wizard's chess"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Human"
+      },
+      "shield": false
+    },
+    {
+      "abilities": {
+        "Charisma": {
+          "base": 15
+        },
+        "Constitution": {
+          "base": 14
+        },
+        "Dexterity": {
+          "base": 12
+        },
+        "Intelligence": {
+          "base": 13
+        },
+        "Strength": {
+          "base": 10
+        },
+        "Wisdom": {
+          "base": 8
+        }
+      },
+      "advantages": [],
+      "armor": false,
+      "background": {
+        "alignment": "Lawful Neutral",
+        "bond": "I will face any challenge to win the approval of my family.",
+        "flaw": "I too often hear veiled insults and threats in every word addressed to me, and I’m quick to anger",
+        "ideal": "It is my duty to respect the authority of those above me, just as those below me must respect mine",
+        "name": "Noble",
+        "personality": "If you do me an injury, I will crush you, ruin your name, and salt your fields",
+        "specialty": "",
+        "startingCoin": "75 g"
+      },
+      "body": {
+        "age": "",
+        "eyes": "",
+        "hair": "",
+        "height": "",
+        "skin": "",
+        "weight": ""
+      },
+      "class": "Sorcerer",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "True Strike",
+              "Fire Bolt",
+              "Ray of Frost",
+              "Mending",
+              "Burning Hands",
+              "Comprehend Languages",
+              "Feather Fall"
+            ]
+          },
+          "level": 2,
+          "name": "Sorcerer",
+          "subclasses": {
+            "Dragon Ancestor": "Silver",
+            "Sorcerous Origin": "Draconic Bloodline"
+          }
+        }
+      ],
+      "equipment": {
+        "containers": [
+          {
+            "content": [
+              "A set of fine clothes, a signet ring, a scroll of pedigree"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "dagger",
+          "Light Crossbow"
+        ],
+        "weapons": "Light Crossbow, Dagger (2)"
+      },
+      "features": [],
+      "level": 2,
+      "name": "Draco Malfoy",
+      "player": "Sebastian",
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Draconic",
+            "Veelan"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Arcana",
+            "Intimidation",
+            "History",
+            "Persuasion"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            "Wizard's chess"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Human"
+      },
+      "shield": false
+    },
+    {
+      "abilities": {
+        "Charisma": {
+          "base": 15
+        },
+        "Constitution": {
+          "base": 14
+        },
+        "Dexterity": {
+          "base": 12
+        },
+        "Intelligence": {
+          "base": 13
+        },
+        "Strength": {
+          "base": 10
+        },
+        "Wisdom": {
+          "base": 8
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Lawful Neutral",
+        "bond": "I will face any challenge to win the approval of my family.",
+        "flaw": "I too often hear veiled insults and threats in every word addressed to me, and I’m quick to anger",
+        "ideal": "It is my duty to respect the authority of those above me, just as those below me must respect mine",
+        "name": "Noble",
+        "personality": "If you do me an injury, I will crush you, ruin your name, and salt your fields",
+        "specialty": "",
+        "startingCoin": "115 g"
+      },
+      "body": {
+        "age": "18",
+        "eyes": "Silver",
+        "hair": "Blonde",
+        "height": "5'9\"",
+        "skin": "Light",
+        "weight": "66 kg"
+      },
+      "class": "Sorcerer",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "True Strike",
+              "Fire Bolt",
+              "Ray of Frost",
+              "Mending",
+              "Burning Hands",
+              "Comprehend Languages",
+              "Feather Fall",
+              "Suggestion"
+            ]
+          },
+          "level": 3,
+          "name": "Sorcerer",
+          "subclasses": {
+            "Dragon Ancestor": "Silver",
+            "Metamagic": [
+              "Careful Spell",
+              "Empowered Spell"
+            ],
+            "Sorcerous Origin": "Draconic Bloodline"
+          }
+        }
+      ],
+      "equipment": {
+        "containers": [
+          {
+            "content": [
+              "Set of fine clothes, Malfoy signet ring, scroll of pedigree, creepy doll"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "dagger",
+          "Light Crossbow"
+        ],
+        "weapons": "Light Crossbow, Dagger (2)"
+      },
+      "features": [],
+      "level": 3,
+      "name": "Draco Malfoy",
+      "player": "Sebastian",
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Draconic",
+            "Veelan"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Arcana",
+            "Intimidation",
+            "History",
+            "Deception"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            "Wizard's chess"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Human"
+      },
+      "raceLabel": false,
+      "shield": false
+    },
+    {
+      "name": "Locke",
+      "player": "Mark",
+      "abilities": {
+        "Charisma": {
+          "base": 10
+        },
+        "Constitution": {
+          "base": 13
+        },
+        "Dexterity": {
+          "base": 14
+        },
+        "Intelligence": {
+          "base": 12
+        },
+        "Strength": {
+          "base": 8
+        },
+        "Wisdom": {
+          "base": 15
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Lawful Good",
+        "bond": "I owe a debt I can never repay to the person who took pity on me",
+        "flaw": "I will never fully trust anyone other than myself",
+        "ideal": "We have to take care of each other, because no one else is going to do it.",
+        "name": "Urchin",
+        "personality": "I think anyone who’s nice to me is hiding evil intent",
+        "specialty": "",
+        "startingCoin": "10g"
+      },
+      "body": {
+        "age": 120,
+        "eyes": "",
+        "hair": "",
+        "height": "",
+        "skin": "",
+        "weight": ""
+      },
+      "class": "Cleric",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {
+              "Fog Cloud": "prepared",
+              "Thunderwave": "prepared"
+            },
+            "spells": [
+              "Fog Cloud",
+              "Thunderwave",
+              "Thaumaturgy",
+              "Guidance",
+              "Sacred Flame"
+            ]
+          },
+          "level": 1,
+          "name": "Cleric",
+          "subclasses": {
+            "Philosophical Domain": "Tempest Domain"
+          }
+        }
+      ],
+      "equipment": {
+        "armor": "Leather Armor",
+        "containers": [
+          {
+            "content": [
+              "a small knife, a map of the city you grew up in, a pet mouse, a token to remember your parents by"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "hasShield": true,
+        "items": [
+          "Light Crossbow",
+          "Mace"
+        ],
+        "weapons": "Light Crossbow, Mace"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "History",
+            "Insight",
+            "Perception",
+            "Sleight of Hand",
+            "Stealth"
+          ],
+          "notes": [
+            "Perception: Elf",
+            "Urchin:Sleight of Hand Stealth"
+          ]
+        },
+        "tools": {
+          "list": [
+            "disguise kit",
+            "thieves’ tools"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Elf (Wood)"
+      },
+      "raceLabel": "Veela",
+      "shield": true
+    },
+    {
+      "name": "Locke",
+      "player": "Mark",
+      "abilities": {
+        "Charisma": {
+          "base": 10
+        },
+        "Constitution": {
+          "base": 13
+        },
+        "Dexterity": {
+          "base": 14
+        },
+        "Intelligence": {
+          "base": 12
+        },
+        "Strength": {
+          "base": 8
+        },
+        "Wisdom": {
+          "base": 15
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Lawful Good",
+        "bond": "I owe a debt I can never repay to the person who took pity on me",
+        "flaw": "I will never fully trust anyone other than myself",
+        "ideal": "We have to take care of each other, because no one else is going to do it.",
+        "name": "Urchin",
+        "personality": "I think anyone who’s nice to me is hiding evil intent",
+        "specialty": "",
+        "startingCoin": "60g"
+      },
+      "body": {
+        "age": 120,
+        "eyes": "",
+        "hair": "",
+        "height": "",
+        "skin": "",
+        "weight": ""
+      },
+      "class": "Cleric",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {
+              "Fog Cloud": "prepared",
+              "Thunderwave": "prepared"
+            },
+            "spells": [
+              "Fog Cloud",
+              "Thunderwave",
+              "Thaumaturgy",
+              "Guidance",
+              "Sacred Flame"
+            ]
+          },
+          "level": 2,
+          "name": "Cleric",
+          "subclasses": {
+            "Philosophical Domain": "Tempest Domain"
+          }
+        }
+      ],
+      "equipment": {
+        "armor": "Leather Armor",
+        "containers": [
+          {
+            "content": [
+              "a small knife, a map of the city you grew up in, a pet mouse, a token to remember your parents by",
+              "Potion of Healing (1)"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "hasShield": true,
+        "items": [
+          "Light Crossbow",
+          "Mace",
+          "Potion of Healing"
+        ],
+        "weapons": "Light Crossbow, Mace"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Veelan"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Medicine",
+            "Insight",
+            "Perception",
+            "Sleight of Hand",
+            "Stealth"
+          ],
+          "notes": [
+            "Perception: Elf",
+            "Urchin:Sleight of Hand Stealth"
+          ]
+        },
+        "tools": {
+          "list": [
+            "disguise kit",
+            "thieves’ tools"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Elf (Wood)",
+        "raceLabel": "Veela"
+      },
+      "shield": true
+    },
+    {
+      "name": "Locke",
+      "player": "Mark",
+      "abilities": {
+        "Charisma": {
+          "base": 10
+        },
+        "Constitution": {
+          "base": 13
+        },
+        "Dexterity": {
+          "base": 14
+        },
+        "Intelligence": {
+          "base": 12
+        },
+        "Strength": {
+          "base": 8
+        },
+        "Wisdom": {
+          "base": 15
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Lawful Good",
+        "bond": "I owe a debt I can never repay to the person who took pity on me",
+        "flaw": "I will never fully trust anyone other than myself",
+        "ideal": "We have to take care of each other, because no one else is going to do it.",
+        "name": "Urchin",
+        "personality": "I think anyone who’s nice to me is hiding evil intent",
+        "specialty": "",
+        "startingCoin": "42g"
+      },
+      "body": {
+        "age": 120,
+        "eyes": "Brown",
+        "hair": "Brown",
+        "height": "",
+        "skin": "Light",
+        "weight": ""
+      },
+      "class": "Cleric",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {
+              "Fog Cloud": "prepared",
+              "Gust of Wind": "prepared",
+              "Shatter": "prepared",
+              "Thunderwave": "prepared"
+            },
+            "spells": [
+              "Sacred Flame",
+              "Thaumaturgy",
+              "Guidance",
+              "Fog Cloud",
+              "Thunderwave",
+              "Gust of Wind",
+              "Shatter"
+            ]
+          },
+          "level": 3,
+          "name": "Cleric",
+          "subclasses": {
+            "Philosophical Domain": "Tempest Domain"
+          }
+        }
+      ],
+      "equipment": {
+        "armor": "Leather Armor",
+        "containers": [
+          {
+            "content": [
+              "small knife, a map of the city you grew up in, a pet mouse, a token to remember your parents by, bag of 1000 ball bearings",
+              "1 potion of healing, 1 potion of climbing, Mirror of Daggers"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "Light Crossbow",
+          "Shortsword",
+          "Mace",
+          "Longbow of Wolves",
+          "Mirror of Daggers",
+          "Potion of Healing",
+          "Potion of Climbing"
+        ],
+        "weapons": "Light crossbow, 2 shortswords, mace"
+      },
+      "features": [],
+      "level": 3,
+      "name": "Locke",
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Veelan"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Medicine",
+            "Insight",
+            "Perception",
+            "Sleight of Hand",
+            "Stealth"
+          ],
+          "notes": [
+            "Perception: Elf",
+            "Urchin:Sleight of Hand Stealth"
+          ]
+        },
+        "tools": {
+          "list": [
+            "disguise kit",
+            "thieves’ tools"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "label": "Veela",
+        "name": "Elf (Wood)"
+      },
+      "shield": true
+    },
+    {
+      "name": "Neville Longbottom",
+      "player": "Chris",
+      "abilities": {
+        "Charisma": {
+          "base": 15
+        },
+        "Constitution": {
+          "base": 14
+        },
+        "Dexterity": {
+          "base": 12
+        },
+        "Intelligence": {
+          "base": 13
+        },
+        "Strength": {
+          "base": 10
+        },
+        "Wisdom": {
+          "base": 8
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Neutral Good",
+        "bond": "I protect those who cannot protect themselves",
+        "flaw": "I’m convinced of the significance of my destiny, and blind to my shortcomings and the risk of failure",
+        "ideal": " People deserve to be treated with dignity and respect.",
+        "name": "Folk Hero",
+        "personality": "If someone is in trouble, I’m always ready to lend help.",
+        "specialty": "",
+        "startingCoin": "10g"
+      },
+      "body": {
+        "age": "",
+        "eyes": "",
+        "hair": "",
+        "height": "",
+        "skin": "",
+        "weight": ""
+      },
+      "class": "Sorcerer",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "Light",
+              "Prestidigitation",
+              "Ray of Frost",
+              "Shocking Grasp",
+              "Shield",
+              "Magic Missile"
+            ]
+          },
+          "level": 1,
+          "name": "Sorcerer",
+          "subclasses": {
+            "Sorcerous Origin": "Wild Magic"
+          }
+        }
+      ],
+      "equipment": {
+        "containers": [
+          {
+            "content": [
+              "Woodcarver’s tools, shovel, iron pot"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "dagger",
+          "Light Crossbow"
+        ],
+        "weapons": "Two daggers, light crossbow"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Insight",
+            "Persuasion",
+            "Animal Handling",
+            "Survival"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            "Woodcarver’s tools",
+            "vehicles (land)"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Human"
+      },
+      "shield": false
+    },
+    {
+      "name": "Neville Longbottom",
+      "player": "Chris",
+      "abilities": {
+        "Charisma": {
+          "base": 15
+        },
+        "Constitution": {
+          "base": 14
+        },
+        "Dexterity": {
+          "base": 12
+        },
+        "Intelligence": {
+          "base": 13
+        },
+        "Strength": {
+          "base": 10
+        },
+        "Wisdom": {
+          "base": 8
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Neutral Good",
+        "bond": "I protect those who cannot protect themselves",
+        "flaw": "I’m convinced of the significance of my destiny, and blind to my shortcomings and the risk of failure",
+        "ideal": "People deserve to be treated with dignity and respect.",
+        "name": "Folk Hero",
+        "personality": "If someone is in trouble, I’m always ready to lend help.",
+        "specialty": "",
+        "startingCoin": "60g"
+      },
+      "body": {
+        "age": "",
+        "eyes": "",
+        "hair": "",
+        "height": "",
+        "skin": "",
+        "weight": ""
+      },
+      "class": "Sorcerer",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "Mage Hand",
+              "Prestidigitation",
+              "Minor Illusion",
+              "Shocking Grasp",
+              "Detect Magic",
+              "Disguise Self",
+              "Magic Missile"
+            ]
+          },
+          "level": 2,
+          "name": "Sorcerer",
+          "subclasses": {
+            "Sorcerous Origin": "Wild Magic"
+          }
+        }
+      ],
+      "equipment": {
+        "containers": [
+          {
+            "content": [
+              "Woodcarver’s tools, shovel, iron pot"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "dagger",
+          "Light Crossbow"
+        ],
+        "weapons": "Two daggers, light crossbow"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Insight",
+            "Persuasion",
+            "Animal Handling",
+            "Survival"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            "Woodcarver’s tools",
+            "vehicles (land)"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Human"
+      },
+      "shield": false
+    },
+    {
+      "name": "Neville Longbottom",
+      "player": "Chris",
+      "abilities": {
+        "Charisma": {
+          "base": 15
+        },
+        "Constitution": {
+          "base": 14
+        },
+        "Dexterity": {
+          "base": 13
+        },
+        "Intelligence": {
+          "base": 8
+        },
+        "Strength": {
+          "base": 10
+        },
+        "Wisdom": {
+          "base": 12
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Neutral Good",
+        "bond": "I protect those who cannot protect themselves",
+        "flaw": "I’m convinced of the significance of my destiny, and blind to my shortcomings and the risk of failure",
+        "ideal": "People deserve to be treated with dignity and respect.",
+        "name": "Folk Hero",
+        "personality": "If someone is in trouble, I’m always ready to lend help.",
+        "specialty": "",
+        "startingCoin": "100g"
+      },
+      "body": {
+        "age": "",
+        "eyes": "",
+        "hair": "",
+        "height": "",
+        "skin": "",
+        "weight": ""
+      },
+      "class": "Sorcerer",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "Mage Hand",
+              "Prestidigitation",
+              "Minor Illusion",
+              "Shocking Grasp",
+              "Detect Magic",
+              "Disguise Self",
+              "Magic Missile",
+              "Hold Person"
+            ]
+          },
+          "level": 3,
+          "name": "Sorcerer",
+          "subclasses": {
+            "Sorcerous Origin": "Wild Magic"
+          }
+        }
+      ],
+      "equipment": {
+        "containers": [
+          {
+            "content": [
+              "woodcarver’s tools, shovel, iron pot",
+              "1 potion of healing"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "dagger",
+          "Light Crossbow",
+          "Potion of Healing"
+        ],
+        "weapons": "Two daggers, light crossbow"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Insight",
+            "Persuasion",
+            "Animal Handling",
+            "Survival"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            "Woodcarver’s tools",
+            "vehicles (land)"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Human"
+      },
+      "shield": false
+    },
+    {
+      "name": "The Watcher",
+      "player":"Tony",
+      "abilities": {
+        "Charisma": {
+          "base": 10
+        },
+        "Constitution": {
+          "base": 12
+        },
+        "Dexterity": {
+          "base": 8
+        },
+        "Intelligence": {
+          "base": 15
+        },
+        "Strength": {
+          "base": 13
+        },
+        "Wisdom": {
+          "base": 14
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Chaotic Good",
+        "bond": "I am the last of my tribe, and it is up to me to ensure their names enter legend.",
+        "flaw": "There’s no room for caution in a life lived to the fullest.",
+        "ideal": "It is each person’s responsibility to make the most happiness for the whole tribe.",
+        "name": "Outlander",
+        "personality": "I’m driven by a wanderlust that led me away from home.  I place no stock in wealthy or well-mannered folk. Money and manners won’t save you from a hungry owlbear.",
+        "specialty": "",
+        "startingCoin": "60g"
+      },
+      "body": {
+        "age": "",
+        "eyes": "Brown",
+        "hair": "Black",
+        "height": "8 ft",
+        "skin": "Dark",
+        "weight": "348 lb."
+      },
+      "class": "Wizard",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "Mage Hand",
+              "Message",
+              "Poison Spray",
+              "Find Familiar",
+              "Hideous Laughter",
+              "Mage Armor",
+              "Sleep",
+              "Unseen Servant",
+              "Magic Missile",
+              "False Life",
+              "Burning Hands"
+            ]
+          },
+          "level": 2,
+          "name": "Wizard",
+          "subclasses": {
+            "Arcane Tradition": "School of Divination"
+          }
+        }
+      ],
+      "equipment": {
+        "containers": [
+          {
+            "content": [
+              "Spellbook"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "Quarterstaff"
+        ],
+        "weapons": "Quarterstaff"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Giant"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Arcana",
+            "Medicine",
+            "Athletics",
+            "Survival"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            "Cartographer's Tools"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "label": "Half Giant",
+        "name": "Half-Orc"
+      }
+    },
+    {
+      "name": "The Watcher",
+      "player":"Tony",
+      "abilities": {
+        "Charisma": {
+          "base": 10
+        },
+        "Constitution": {
+          "base": 12
+        },
+        "Dexterity": {
+          "base": 8
+        },
+        "Intelligence": {
+          "base": 15
+        },
+        "Strength": {
+          "base": 13
+        },
+        "Wisdom": {
+          "base": 14
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Neutral Good",
+        "bond": "I am the last of my tribe, and it is up to me to ensure their names enter legend.",
+        "flaw": "There’s no room for caution in a life lived to the fullest.",
+        "ideal": "It is each person’s responsibility to make the most happiness for the whole tribe.",
+        "name": "Outlander",
+        "personality": "I’m driven by a wanderlust that led me away from home.  I place no stock in wealthy or well-mannered folk. Money and manners won’t save you from a hungry owlbear.",
+        "specialty": "",
+        "startingCoin": "86g"
+      },
+      "body": {
+        "age": "",
+        "eyes": "Brown",
+        "hair": "Black",
+        "height": "8 ft",
+        "skin": "Dark",
+        "weight": "348 lb."
+      },
+      "class": "Wizard",
+      "classLabel": false,
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "Mage Hand",
+              "Message",
+              "Poison Spray",
+              "Find Familiar",
+              "Hideous Laughter",
+              "Mage Armor",
+              "Sleep",
+              "Unseen Servant",
+              "Magic Missile",
+              "False Life",
+              "Burning Hands",
+              "Misty Step",
+              "Acid Arrow"
+            ]
+          },
+          "level": 3,
+          "name": "Wizard",
+          "subclasses": {
+            "Arcane Tradition": "School of Divination"
+          }
+        }
+      ],
+      "equipment": {
+        "containers": [
+          {
+            "content": [
+              "Spellbook",
+              "a hunting trap, trophy from an animal you killed, set of traveler’s clothes",
+              "healing biscuits 1 hp each (4), jar of very special bees"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "Quarterstaff",
+          "dagger",
+          "Jar of Special Bees"
+        ],
+        "weapons": "Quarterstaff, Dagger (2)"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Giant"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Arcana",
+            "Medicine",
+            "Athletics",
+            "Survival"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            "Cartographer's Tools"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "label": "Half Giant",
+        "name": "Half-Orc"
+      }
+    }
+  ],
+  "dependencies": [
+    "harry-potter-founders"
+  ],
+  "name": "thailand-characters"
+}

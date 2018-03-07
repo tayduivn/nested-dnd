@@ -12,15 +12,12 @@ let instances = [];
 class Instance{
 	constructor(thing, parentId){
 
-		if(!thing){
-			throw new Error("Thing is required to make a new instance");
-		}
+		this.parent = (parentId) ? parentId : null;
 
 		var result = thing.beforeMake(this);
 
-		this.thing = result.thing;
+		this.thing = thing = result.thing;
 		this.id = null;
-		this.parent = (parentId) ? parentId : null;
 		this.children = []; //indexes of children and string descriptions
 		this.grown = false;
 		
@@ -148,8 +145,15 @@ instanceStore.add = function(thing, parentId){
 	if(typeof thing === "undefined" || thing === null || thing === false)
 		throw new Error("thing is required when creating an Instance.");
 
-	if(typeof thing === "string")
-		thing = thingStore.get(thing);
+	if(thing.isa instanceof Array)
+		thing = tableStore.roll(thing.isa);
+
+	if(typeof thing === "string"){
+		if(thingStore.exists(thing))
+			thing = thingStore.get(thing);
+		else
+			throw new Error("Trying to make instance of non-existent thing "+thing);
+	}
 
 	if(thing && !thing.thingStore)
 		throw new Error("thing must be an instanceof Thing. Tried to make instance with: "+thing);

@@ -1,1 +1,6208 @@
-{"name":"dnd","version":"0.0.0","description":"","author":"Cattegy","dependencies":["nested-dnd-data","behind-the-tables"],"defaultSeed":"Great Wheel > Prime Material Plane > crystal sphere > planet > continent > coastal kingdom > province > village > tavern","things":{"Acheron":{"isa":"fiendish plane"},"Arcadia":{"isa":"celestial plane"},"Arvandor":{"isa":"celestial plane","namegen":"Arvandor (also known as Arborea or Olympus)"},"Astral Plane":{"background":"rainbow","contains":["silver astral pool",".astral color pool, 3-10"],"icon":"gi gi-circle-claws"},"Astral Sea":{"background":"rainbow","contains":["Acheron","Arcadia","Arvandor","Pandemonium","Seven Heavens/Mount Celestia","Tarterus/Carceri","Twin Paradises/Bytopia","The Outlands","Elysium","Gehenna","Gladsheim/Ysgard","Hades/The Gray Waste","Happy Hunting Grounds/Beastlands","The Nine Hells","Nirvana/Mechanus"],"icon":"gi gi-water-bolt"},"Blacklake District":{"contains":["tavern"],"isa":"city district"},"Blood Rift":{"isa":"fiendish plane"},"Border Ethereal":{"contains":["Ethereal Prime Material","Ethereal Inner Planes"],"isa":"ethereal plane"},"Brightwater":{"isa":"celestial plane"},"Celestial Planes":{"background":"gold","contains":["Arvandor","Brightwater","Dwarfhome","Dweomerheart","The Gates of the Moon","Golden Hills","Green Fields","The House of Knowledge","The House of the Triad"],"icon":"gi gi-hand-of-god"},"City of Judgment":{"background":"darkgray","contains":["Crystal Spire"],"isa":"city"},"Clangor":{"isa":"fiendish plane"},"Concordant Opposition/Outlands":false,"Coterminous Planes":{"background":"black","contains":["Ethereal Plane","Astral Plane","Plane of Shadow"],"icon":"gi gi-abstract-076 spinReverse animated infinite","textColor":"white"},"Crystal Spire":{"background":"darkgray","contains":["Kelemvor"],"isa":"castle"},"Deep Caverns":{"isa":"fiendish plane"},"Deep Ethereal":{"background":"darkslategray","icon":"gi gi-heavy-fall"},"Dwarfhome":{"isa":"celestial plane"},"Dweomerheart":{"isa":"celestial plane"},"Elemental Chaos":{"background":"colorchange","contains":["Elemental Plane of Air","Elemental Plane of Earth","Elemental Plane of Fire","Elemental Plane of Water","Positive Energy Plane","Negative Energy Plane","Limbo","The Abyss"],"icon":["gi gi-abstract-038 spin animated infinite","gi gi-abstract-040 swing animated infinite","gi gi-abstract-026 spinReverse animated infinite","gi gi-abstract-006 jello animated infinite"]},"Elemental Plane of Air":{"contains":["Borealis","Citadel of Ice and Steel","Taifun: Palace of Tempests","Elemental Foundation of Air","citadel, 0-3","gaseous bubble, 3-7","floating liquid sphere, 3-7","asteroid, 0-2"],"isa":"air plane"},"Elemental Plane of Earth":{"contains":["The Great Dismal Delve","The Sevenfold Mazework","The Pale River","The Iron Crucible","The Aviary","Elemental Foundation of Earth"],"isa":"earth plane"},"Elemental Plane of Fire":{"contains":["City of Brass","Elemental Foundation of Fire"],"isa":"fire plane"},"Elemental Plane of Water":{"contains":["Elemental Foundation of Water"],"isa":"water plane"},"Elysium":{"isa":"celestial plane"},"Ethereal Inner Planes":{"data":{"mirrors":"Inner Planes"},"icon":"gi gi-at-sea"},"Ethereal Plane":{"contains":["Border Ethereal","Deep Ethereal","Ravenloft"],"isa":"ethereal plane"},"Ethereal Prime Material":{"data":{"mirrorChildrenCopy":"[6, 7, 8]","mirrors":"Prime Material Plane"},"isa":"ethereal mirror plane"},"Faerûn":{"contains":["Northwest Faerûn","North Faerûn","Northeast Faerûn","West Faerûn","Interior Faerûn","East Faerûn","Southwest Faerûn","South Faerûn","Southeast Faerûn"],"isa":"continent"},"Fated Depths":{"isa":"fiendish plane"},"Feywild":{"data":{"mirrorChildrenCopy":"[6, 7, 8]","mirrors":"Prime Material Plane"},"isa":"fey mirror plane"},"Fiendish Planes":{"contains":["River of Blood","The Abyss","The Nine Hells","Nishrek","The Supreme Throne","The Barrens of Doom and Despair","Blood Rift","Clangor","Deep Caverns","The Demonweb Pits","Fated Depths","Fury's Heart","Hammergrim"],"isa":"fiendish plane"},"Fugue Plane":{"background":"darkgray","contains":["City of Judgment"],"icon":"fa fa-square"},"Fury's Heart":{"isa":"fiendish plane"},"Gehenna":{"isa":"fiendish plane"},"Gladsheim/Ysgard":{"isa":"celestial plane"},"Golden Hills":{"isa":"celestial plane"},"Great Dismal Delve":{"background":"sienna","icon":"gi gi-falling-rocks","textColor":"navajowhite"},"Great Wheel":{"contains":["Prime Material Plane","Mirror Planes","Transitive Planes","Inner Planes","Outer Planes"],"icon":["gi gi-ship-wheel"],"isa":"cosmology"},"Green Fields":{"isa":"celestial plane"},"Hades/The Gray Waste":{"background":"gray","isa":"fiendish plane"},"Hammergrim":{"isa":"fiendish plane"},"Happy Hunting Grounds/Beastlands":{"isa":"celestial plane"},"Inner Planes":{"background":"wheat","contains":["Elemental Plane of Air","Elemental Plane of Earth","Elemental Plane of Fire","Elemental Plane of Water","Positive Energy Plane","Negative Energy Plane"],"icon":"gi gi-at-sea"},"Kelemvor":{"icon":"gi gi-reaper-scythe","isa":"human"},"Limbo":{"background":"gray","contains":["*RANDOM*"],"icon":"gi gi-time-trap"},"Mirror Planes":{"background":"white","contains":["Shadowfell","Feywild"],"icon":"gi gi-abstract-076 spinReverse animated infinite","textColor":"black"},"Negative Energy Plane":{"background":"gray","icon":"fa fa-minus"},"Neutral Planes":{"background":"gainsboro","contains":["Dragon Eyrie","Heliopolis","House of Nature","Jotunheim","Warrior's Rest"],"icon":"gi gi-abstract-038"},"Neverwinter":{"contains":["Neverwinter City Core","Beggar's Nest","Blacklake District","docks","peninsula"],"isa":"city"},"Neverwinter City Core":{"contains":["Castle of Neverwinter","Halls of Justice","The Moonstone Mask","clocktower"],"isa":"city","namegen":"City Core"},"Neverwinter Wood":{"contains":["Mount Hotenow"],"isa":"forest"},"Nirvana/Mechanus":{"isa":"fiendish plane"},"Nishrek":{"isa":"fiendish plane"},"Northwest Faerûn":{"contains":["Sword Coast","The High Forest","Icewind Dale","Mithral Hall","The Silver Marches"],"isa":"province"},"Outer Planes":{"background":"wheat","contains":["The Abyss","Acheron","Arcadia","Concordant Opposition/Outlands","Elysium","Gehenna","Gladsheim/Ysgard","Hades/The Gray Waste","Happy Hunting Grounds/Beastlands","Limbo","The Nine Hells","Nirvana/Mechanus","Arvandor","Pandemonium","Seven Heavens/Mount Celestia","Tarterus/Carceri","Twin Paradises/Bytopia"],"icon":"gi gi-cartwheel"},"Outer Planes (Tree)":{"background":"wheat","contains":["Celestial Planes","Fiendish Planes","Neutral Planes"],"icon":"gi gi-tree-branch","namegen":"Outer Planes"},"Pandemonium":{"isa":"fiendish plane"},"Plane of Shadow":{"icon":"gi gi-james-bond-aperture spinReverse animated infinite","isa":"Shadowfell"},"Positive Energy Plane":{"background":"lightgreen","icon":"fa fa-plus"},"Prime Material Plane":{"contains":["crystal sphere, 1-5","Realmspace"],"isa":"material plane","namegen":"Prime Material"},"Ravenloft":{"background":"black","contains":["Barovia",".demiplane"],"icon":"gi gi-evil-bat","namegen":"Demiplane of Dread (Ravenloft)","textColor":"indianred"},"Realmspace":{"contains":["Toril"],"isa":"crystal sphere","namegen":"Realmspace (The Forgotten Realms)"},"River of Blood":{"isa":"fiendish plane"},"Seven Heavens/Mount Celestia":{"isa":"celestial plane"},"Shadowfell":{"data":{"mirrors":"Prime Material Plane"},"isa":"undead mirror plane"},"Sword Coast":{"contains":["Neverwinter Wood","Neverwinter","Waterdeep, the City of Splendors","Luskan, the City of Sails","town of Leilon","Sword Mountains","Ardeep Forest","Mere of Dead Men"],"isa":"beach"},"Sword Mountains":{"contains":["Icespire Peak"],"isa":"mountain"},"Tarterus/Carceri":{"isa":"fiendish plane"},"The Abyss":{"isa":"abyssal plane"},"The Aviary":{"contains":["avariel, 5-20"],"isa":"cave"},"The Barrens of Doom and Despair":{"isa":"fiendish plane"},"The Demonweb Pits":{"isa":"fiendish plane"},"The Gates of the Moon":{"isa":"celestial plane"},"The House of Knowledge":{"isa":"celestial plane"},"The House of the Triad":{"isa":"celestial plane"},"The Iron Crucible":{"background":"sienna","isa":"portal","namegen":"The Iron Crucible: portal to |*ELEMENTS*| plane"},"The Nine Hells":{"isa":"fiendish plane"},"The Outlands":{},"The Pale River":{"background":"sienna","icon":"gi gi-river","namegen":"The Pale River","textColor":"skyblue"},"The Supreme Throne":{"isa":"fiendish plane"},"Toril":{"contains":["Faerûn","Anadia","Karpri","Chandos","Glyth","H'Catha","Coliar","Garden","sun"],"isa":"planet"},"Transitive Planes":{"background":"wheat","contains":["Ethereal Plane","Astral Plane"],"icon":"gi gi-dust-cloud"},"Twin Paradises/Bytopia":{"isa":"celestial plane"},"World Axis":{"contains":["Prime Material Plane","Shadowfell","Feywild","Astral Sea","Elemental Chaos"],"icon":"gi gi-abstract-043 pulse animated infinite","isa":"cosmology"},"World Tree":{"contains":["Prime Material Plane","Inner Planes","Coterminous Planes","Outer Planes (Tree)","The Outlands","Fugue Plane"],"icon":"glyphicon glyphicon-tree-deciduous","isa":"cosmology"},"aarakocra":{"data":{"age adult":3,"age max":30},"isa":"playable race"},"aberration":{"icon":"gi gi-mighty-boosh"},"abyssal plane":{"background":"black","contains":["hostile citadel, 1-3","hostile palace, 1-3","hostile temple, 1-5"],"icon":"fa flaticon-black-hole spin animated infinite"},"acid":{"icon":"gi gi-acid"},"acid weapon":{"background":"limegreen","icon":["gi gi-acid"]},"acolyte":{"icon":["gi gi-prayer","gi gi-kneeling","gi gi-robe"]},"adventuring gear":{"icon":"gi gi-backpack"},"air genasi":{"isa":"genasi"},"air plane":{"background":"aliceBlue","contains":["citadel, 0-3","gaseous bubble, 3-7","floating liquid sphere, 3-7","asteroid, 0-2"],"icon":"gi gi-fluffy-cloud"},"alchemist's supplies":{"icon":["gi gi-magic-potion","gi gi-potion-ball","gi gi-standing-potion","gi gi-fire-bottle","gi gi-snow-bottle","gi gi-square-bottle"]},"ammunition":{"icon":["gi gi-quiver"]},"amulet":{"background":"indigo","icon":["gi gi-gem-necklace","gi gi-necklace"],"textColor":"gold"},"amulet of health":{"isa":"amulet"},"amulet of proof against detection and location":{"isa":"amulet"},"amulet of the planes":{"isa":"amulet"},"ape":{"icon":"gi gi-monkey"},"archmage":{"icon":"gi gi-overlord-helm"},"armor":{"icon":"gi gi-armor-vest"},"arrows":{"icon":"gi gi-target-arrows"},"assassin":{"icon":"gi gi-assassin-pocket","isa":"humanoid"},"astral color pool":{"icon":"gi gi-portal","namegen":"*COLORS*| astral pool"},"avariel":{"isa":"elf","name":"avariel"},"backpack":{"icon":"gi gi-backpack"},"bag of beans":{"icon":"gi gi-swap-bag"},"bag of holding":{"icon":"gi gi-knapsack"},"bag of tricks":{"icon":"gi gi-knapsack"},"bagpipes":{"icon":"glyphicon glyphicon-music"},"bandit":{"icon":["gi gi-rogue","gi gi-sprint"]},"bandit captain":{"icon":["gi gi-rogue","gi gi-sprint"]},"bar":{"contains":["barkeep","menu","keg, 2-10","safebox"],"icon":["gi gi-beer-stein"]},"bard":{"contains":["performing \"|*SONG*|\"","*APPEARANCE*",["flute","lute","pan flute","lyre","viol"],["bagpipes","drum","dulcimer","shawm"]],"icon":["fa fa-pied-piper-alt","gi gi-sing"],"isa":"humanoid"},"barkeep":{"isa":"humanoid"},"barn":{"background":"white","contains":["cow, 2-4","chicken, 2-8","sheep, 2-6","hayloft"],"icon":"gi gi-barn","textColor":"darkred"},"barrel":{"icon":"gi gi-barrel"},"barren planet":{"background":"black","icon":"fa flaticon-big-moon"},"basic poison":{"background":"green","icon":"gi gi-poison-bottle"},"basket":{"icon":"fa fa-shopping-basket"},"bat":{"icon":["gi gi-bat","gi gi-bat-wing","gi gi-evil-bat"]},"battlefield":{"background":"darkred","icon":"gi gi-bloody-sword"},"beach":{"background":"navajowhite","icon":"fa flaticon-palm-trees","textColor":"darkblue"},"beast":{"icon":["gi gi-beast-eye","gi gi-gluttonous-smile","gi gi-sharp-smile"]},"bed":{"background":"floralwhite","icon":"gi gi-bed","textColor":"firebrick"},"bedroll":{"icon":["gi gi-bandage-roll"],"isa":"adventuring gear"},"bedroom":{"contains":["bed","bed, 50%","chest, 0-2","bookshelf, 0-1"],"icon":["gi gi-wooden-door"]},"beer":{"background":"black","icon":["fa fa-beer","gi gi-beer-bottle","gi gi-beer-stein"],"namegen":["Wheat Ale","Porter Mead","Mead","Buttery Ale","Pear Cider","Root Beer","Ginger Beer","Fizzy ale"],"textColor":"goldenrod"},"bell":{"icon":["gi gi-ringing-bell","fa fa-bell","fa fa-bell-o"]},"berserker":{"icon":"gi gi-barbarian"},"blacksmith":{"isa":"humanoid"},"blanket":{"icon":"gi gi-bandage-roll"},"block and tackle":{"background":"khaki","icon":["gi gi-rope-coil"]},"bludgeoning weapon":{"icon":["gi gi-flanged-mace","gi gi-mace-head","gi gi-wood-club","gi gi-spiked-mace","gi gi-hammer-drop"]},"boar":{"icon":"gi gi-boar-tusks"},"bones":{"background":"oldlace","icon":"gi gi-jawbone"},"book":{"icon":["gi gi-open-book","gi gi-black-book","gi gi-white-book","fa fa-book"],"namegen":"*BOOK NAME*"},"bookshelf":{"contains":["book, 3-10"],"icon":"gi gi-bookshelf"},"boots":{"background":"tan","icon":["gi gi-boots","gi gi-steeltoe-boots","gi gi-walking-boot"],"textColor":"saddlebrown"},"boots of elvenkind":{"isa":"boots"},"boots of levitation":{"isa":"boots"},"boots of speed":{"isa":"boots"},"boots of striding and springing":{"isa":"boots"},"boots of the winterlands":{"isa":"boots"},"bowl of commanding water elementals":{"icon":["gi gi-water-splash"]},"breastplate":{"icon":"gi gi-breastplate"},"breastplate +1":{"isa":"breastplate"},"breastplate +2":{"isa":"breastplate"},"breastplate +3":{"isa":"breastplate"},"breastplate of acid resistance":{"isa":"breastplate"},"breastplate of cold resistance":{"isa":"breastplate"},"breastplate of fire resistance":{"isa":"breastplate"},"breastplate of force resistance":{"isa":"breastplate"},"breastplate of lightning resistance":{"isa":"breastplate"},"breastplate of necrotic resistance":{"isa":"breastplate"},"breastplate of poison resistance":{"isa":"breastplate"},"breastplate of psychic resistance":{"isa":"breastplate"},"breastplate of radiant resistance":{"isa":"breastplate"},"bucket":{"icon":"fa fa-bitbucket"},"calligrapher's supplies":{"icon":["gi gi-quill","gi gi-quill-ink","gi gi-folded-paper","gi gi-papers"]},"caltrops":{"icon":["gi gi-spikes","gi gi-spikes-half","gi gi-spikes-init"]},"camel":{"icon":"gi gi-camel-head"},"campfire":{"icon":"gi gi-campfire"},"candle":{"icon":["gi gi-candle-flame","gi gi-candle-holder","gi gi-candle-light"]},"capital city":{"icon":"fa fa-fort-awesome","isa":"city","textColor":"darkslategray"},"carpenter's tools":{"icon":"gi gi-hammer-nails"},"cartographer's tools":{"icon":"gi gi-compass"},"castle":{"icon":"fa flaticon-castle"},"cat":{"icon":["gi gi-black-cat","gi gi-white-cat"]},"cave":{"background":"saddlebrown","icon":"gi gi-mountain-cave","isa":"dungeon"},"celestial":{"icon":["gi gi-angel-outfit","gi gi-angel-wings","gi gi-curly-wing","gi gi-fluffy-wing"]},"celestial plane":{"background":"gold","contains":["citadel, 1-3","palace, 1-3","temple, 1-5"],"icon":"fa flaticon-religion-cross"},"cemetery":{"background":"black","contains":["grave, 4-10","priest, 0-1"],"icon":"gi gi-graveyard","textColor":"silver"},"chain":{"icon":"fa fa-chain"},"chest":{"icon":["gi gi-chest","gi gi-locked-chest","gi gi-open-chest"]},"chicken":{"icon":"gi gi-chicken","background":"wheat","textColor":"darkred"},"city":{"icon":"fa flaticon-castle"},"city district":{"icon":"fa flaticon-suburb"},"climber's kit":{"icon":"gi gi-stake-hammer"},"cloak":{"icon":"gi gi-cloak"},"cloak of arachnida":{"icon":"gi gi-cloak"},"cloak of displacement":{"icon":"gi gi-cloak"},"cloak of elvenkind":{"icon":"gi gi-cloak"},"cloak of protection":{"icon":"gi gi-cloak"},"cloak of the bat":{"icon":"gi gi-cloak"},"cloak of the manta ray":{"icon":"gi gi-cloak"},"club":{"icon":["gi gi-wood-club"]},"coastal kingdom":{"background":"papayawhip","contains":["capital city, 0-1","port city, 1-3","city, 1-3","town, 2-8","province, 3-6","mountain, 0-2","lake, 0-2","forest, 0-3"],"isa":"kingdom","textColor":"darkblue"},"cobbler's tools":{"icon":"gi gi-flat-hammer"},"common clothes":{"icon":["gi gi-mail-shirt","gi gi-shirt"]},"component pouch":{"icon":"gi gi-swap-bag"},"construct":{"icon":["gi gi-robot-golem","gi gi-vintage-robot","gi gi-robot-leg","fa flaticon-technology"]},"continent":{"background":"darkgreen","contains":["coastal kingdom, 1-4","landlocked kingdom, 3-8","wasteland, 50%","sea, 0-2"],"icon":["fa flaticon-africa-map","fa flaticon-australia-map","fa flaticon-south-america"],"textColor":"antiquewhite"},"cook's utensils":{"icon":["gi gi-knife-fork","gi gi-chef-toque"]},"cosmology":{"background":"antiquewhite","contains":[[".Great Wheel",".World Axis",".World Tree"]],"icon":"gi gi-abstract-011"},"costume clothes":{"icon":"gi gi-jester-hat"},"cow":{"icon":"gi gi-bull"},"crab":{"icon":["gi gi-crab-claw","gi gi-crab","gi gi-sad-crab"]},"crossbow bolt case":{"icon":"gi gi-quiver"},"crowbar":{"icon":"gi gi-crowbar"},"crystal":{"icon":"gi gi-floating-crystal"},"crystal sphere":{"background":"black","contains":["star","star, 3%","planet, 2-5","ocean planet, 1-2"],"icon":"gi gi-crystal-shine pulse animated infinite","namegen":"*PLANET PREFIX*|*PLANET SUFFIX*|space","textColor":"mediumpurple"},"cult fanatic":{"icon":["gi gi-cultist","gi gi-robe","gi gi-hood","gi gi-cowled"]},"cultist":{"icon":["gi gi-cultist","gi gi-robe","gi gi-hood","gi gi-cowled"]},"dagger":{"icon":["gi gi-broad-dagger","gi gi-plain-dagger","gi gi-sacrificial-dagger"]},"deep gnome":{},"diamond":{"icon":"gi gi-cut-diamond"},"dice set":{"icon":"gi gi-rolling-dices"},"dragon":{"icon":["gi gi-dragon-head","gi gi-double-dragon","gi gi-wyvern"]},"dragon scale mail":{"icon":"gi gi-spiked-armor"},"dragon slayer":{"icon":"gi gi-winged-sword"},"dragon turtle":{"icon":["gi gi-dragon-head","gi gi-double-dragon"]},"dragonborn":{"data":{"age adult":15,"age max":80},"icon":"gi gi-dragon-head","isa":"playable race"},"drink":{"icon":"gi gi-glass-shot","namegen":["Pumpkin juice","Milk","Apple juice"]},"druid":{},"drum":{"icon":"gi gi-music-spell"},"dulcimer":{"icon":"fa fa-music"},"dungeon":{"icon":"gi gi-hole-ladder"},"dust of sneezing and choking":{"icon":"gi gi-cool-spices"},"dwarf":{"data":{"age adult":20,"age max":350},"icon":["gi gi-dwarf-face","gi gi-beard"],"isa":"playable race"},"eagle":{"icon":"gi gi-eagle-emblem"},"earth genasi":{"isa":"genasi"},"earth plane":{"background":"sienna","contains":["mountain, 1-6","wizard tower, 0-3","mine, 0-3","city, 2-5","town, 2-5"],"icon":"gi gi-rock"},"eladrin":{"isa":"elf"},"elemental":{"icon":["glyphicon glyphicon-fire","gi gi-water-bolt","fa flaticon-gas","gi gi-rock"]},"elephant":{"icon":"gi gi-elephant-head"},"elf":{"data":{"age adult":20,"age max":750},"icon":["gi gi-woman-elf-face","gi gi-elf-ear"],"isa":"playable race"},"emblem":{"icon":"gi gi-condor-emblem"},"ethereal mirror plane":{"background":"whitesmoke","isa":"mirror plane","textColor":null},"ethereal plane":{"background":"whitesmoke","icon":"gi gi-cloud-ring gi-spin"},"eversmoking bottle":{"background":"lightslategray","icon":"gi gi-bottle-vapors wobble animated infinite","textColor":"gainsboro"},"faction":{"icon":["gi gi-backup","fa fa-users","gi gi-minions","fa fa-group","gi gi-dark-squad","gi gi-ages"]},"farm":{"background":"wheat","contains":["hovel","well","barn","planted field, 1-3"],"icon":"fa flaticon-hay-rolls"},"farming village":{"background":"lightgoldenrodyellow","icon":"fa flaticon-hay-rolls","namegen":"village","textColor":"goldenrod"},"fey":{"icon":"gi gi-fairy"},"fey mirror plane":{"background":"lavenderblush","isa":"mirror plane","textColor":"purple"},"fey plane":{"background":"lavenderblush","contains":["citadel, 1-3","palace, 1-3","temple, 1-5"],"icon":"gi gi-fairy","textColor":"purple"},"fiend":{"icon":["gi gi-daemon-skull","gi gi-gooey-daemon"]},"fiend (demon)":{"isa":"fiend"},"fiend (devil)":{"isa":"fiend"},"fiend (shapechanger)":{"isa":"fiend"},"fiendish plane":{"background":"darkred","contains":["citadel, 1-3","palace, 1-3","temple, 1-5"],"icon":"gi gi-daemon-skull"},"fire genasi":{"isa":"genasi"},"fire plane":{"background":"darkRed","contains":["tower, 1-10","city, 1-2","volcano, 1-3","castle, 1-2","palace, 2-3"],"icon":"gi gi-flamed-leaf gi-rotate-45"},"fire weapon":{"background":"firebrick","icon":["gi gi-flaming-arrow"]},"fireplace":false,"flask":{"icon":["gi gi-bubbling-flask","gi gi-fizzing-flask","gi gi-round-bottom-flask","fa fa-flask"]},"flute":{"icon":"gi gi-pan-flute"},"food":{"icon":["gi gi-roast-chicken","gi gi-meat","gi gi-carrot","gi gi-cherry","gi gi-chicken-leg","gi gi-steak"],"namegen":"*DINNER*"},"for sale: smithy, rural":{"contains":["chain shirt","breastplate","chain mail","shield","dagger","handaxe","spear","battleaxe","greatsword","longsword","shortsword","chain","grappling hook","hammer","miner's pick","piton","iron pot","whetstone","carpenter's tools","smith's tools"],"icon":"gi gi-cash","textColor":"goldenrod"},"forest":{"background":"forestgreen","icon":["fa flaticon-forest","*ICON TREES*"],"textColor":"palegreen"},"frog":{"icon":"gi gi-frog"},"garden":{"icon":"gi gi-carrot"},"gas giant":{"background":"black","icon":"fa flaticon-moon","textColor":"papayawhip"},"gaseous bubble":{"icon":["gi gi-bubbles","fa flaticon-gas"],"namegen":"*COLORS*| gaseous bubble"},"genasi":{"data":{"age adult":20,"age max":120},"isa":"playable race"},"ghost":{"icon":"gi gi-ghost"},"gladiator":{"icon":["gi gi-spartan","gi gi-crested-helmet","gi gi-muscle-up","gi gi-strong"]},"glaive":{"background":"white","textColor":"gray"},"gnoll":{"icon":"gi gi-anubis"},"gnome":{"data":{"age adult":20,"age max":500},"icon":"fa fa-child","isa":"playable race"},"goblinoid":{"icon":["gi gi-gluttonous-smile","gi gi-sharp-smile","gi gi-sly"]},"goliath":{"data":{"age adult":20,"age max":99},"isa":"playable race"},"grappling hook":{"icon":"gi gi-meat-hook"},"grave":{"icon":"gi gi-pirate-grave","namegen":["*MALE NAME*","*FEMALE NAME*"]},"grimlock":{"icon":["gi gi-troll","gi gi-pig-face"]},"guard":{"icon":["gi gi-guards","gi gi-guarded-tower","gi gi-barbute"]},"halberd":{"icon":["gi gi-sharp-halberd","gi gi-halberd"]},"half-elf":{"data":{"age adult":20,"age max":180},"icon":["gi gi-elf-ear","gi gi-woman-elf-face"],"isa":"playable race"},"half-orc":{"data":{"age adult":14,"age max":75},"icon":"gi gi-orc-head","isa":"playable race"},"half-red dragon veteran":{"icon":["gi gi-dragon-head","gi gi-double-dragon"]},"halfling":{"data":{"age adult":20,"age max":250},"icon":"fa fa-child","isa":"playable race"},"hammer":{"icon":"gi gi-stake-hammer"},"harpy":{"icon":"gi gi-harpy"},"hat":{"icon":"gi gi-robin-hood-hat"},"hayloft":{"icon":"fa flaticon-hay-rolls"},"healer's kit":{"background":"white","icon":"gi gi-hospital-cross","textColor":"darkred"},"hearth":{"background":"darkred","icon":"gi gi-campfire","textColor":"gold"},"heavy armor":{"background":"silver","icon":"gi gi-breastplate","textColor":"dimgray"},"hempen rope":{"background":"wheat","icon":"gi gi-rope-coil"},"herbalism kit":{"background":"forestgreen","icon":"gi gi-falling-leaf"},"high elf":{"isa":"elf"},"hill dwarf":{"isa":"dwarf"},"hooded lantern":{"background":"maroon","icon":"gi gi-lantern-flame","textColor":"darkorange"},"horn":{"icon":"gi gi-hunting-horn"},"hot drink":{"icon":["fa fa-coffee","gi gi-coffee-mug","gi gi-coffee-cup"],"namegen":["Hot tea","Herbal tea","Coffee","Hot cocoa"]},"hourglass":{"icon":["gi gi-empty-hourglass","gi gi-hourglass"]},"house":false,"hovel":{"background":"wheat","contains":["hovel interior","humanoid, 0-1","cow, 25%","chicken, 1-3","sheep, 0-2","garden"],"icon":"gi gi-house","namegen":"*LASTNAME*| hovel","textColor":["saddlebrown","peru","sienna","brown","maroon"]},"hovel interior":{"contains":["bed, 1-2","chest, 1-2","hearth","humanoid, 0-2","barrel, 0-2","carpenter's tools, 25%","shovel"],"icon":"gi gi-house","namegen":"inside the hovel"},"human":{"data":{"age adult":20,"age max":99},"isa":"playable race"},"human, shapechanger":{"icon":["gi gi-shadow-follower","gi gi-invisible","gi gi-two-shadows","gi gi-duality-mask"]},"humanoid":{"background":"navy","contains":["*APPEARANCE*","background"],"icon":["fa fa-smile-o","fa fa-child","fa fa-male","fa fa-meh-o","gi gi-sensuousness","fa fa-street-view","glyphicon glyphicon-user","fa fa-user","fa fa-user-circle","fa fa-user-circle-o","fa fa-user-o","gi gi-pikeman"],"textColor":["tan","peru","oldlace","papayawhip","blanchedalmond","antiquewhite","moccasin","navajowhite","wheat","peachpuff","burlywood"]},"hydra":{"icon":"gi gi-hydra"},"imp":{"icon":["gi gi-imp-laugh","gi gi-imp"]},"ink":{"icon":["gi gi-quill-ink"]},"ink pen":{"icon":"glyphicon glyphicon-pencil"},"iron pot":{"icon":"gi gi-cauldron"},"iron spikes":{"icon":"gi gi-spikes-half"},"jeweler's tools":{"icon":"gi gi-magnifying-glass"},"jug":{"icon":"gi gi-jug"},"keg":{"background":"blanchedalmond","icon":["gi gi-barrel"],"namegen":["Wheat Ale kbackbaceg","Porter Mead keg","Mead keg","Buttery Ale keg","Pear Cider keg","Root Beer keg","Ginger Beer keg","Fizzy ale keg","Red wine cask","White wine cask","Sweet wine cask","Brandy cask"],"textColor":"saddlebrown"},"kingdom":{"background":"thistle","contains":["capital city, 0-1","city, 1-3","town, 4-10","province, 3-6","mountain, 0-2","lake, 0-2","forest, 0-3"],"icon":"fa flaticon-castle","namegen":"kingdom of |*PLANET PREFIX*|*PLANET SUFFIX*"},"knight":{"icon":["gi gi-black-knight-helm","gi gi-mounted-knight","gi gi-visored-helm"]},"kobold":{"icon":"gi gi-dragon-head"},"ladder":{"icon":["gi gi-ladder"]},"lake":{"background":"ocean","icon":"gi gi-at-sea"},"lamp":{"background":"maroon","icon":"gi gi-lantern-flame","textColor":"darkorange"},"landlocked kingdom":{"background":"papayawhip","contains":["capital city, 0-1","city, 1-3","town, 4-10","province, 3-6","mountain, 0-2","lake, 0-2","forest, 0-3"],"isa":"kingdom","textColor":"forestgreen"},"leatherworker's tools":{"icon":"gi gi-scissors"},"library":{"icon":"gi gi-bookshelf"},"light armor":{"background":"moccasin","icon":"gi gi-armor-vest","textColor":"saddlebrown"},"lightfoot halfling":{"isa":"halfling"},"lion":{"icon":"gi gi-lion"},"lizard":{"icon":"gi gi-lizard-tongue"},"lizardfolk":{"icon":"gi gi-lizardman"},"lock":{"icon":["fa fa-lock"]},"lute":{"icon":"fa fa-music"},"lyre":{"icon":"gi gi-lyre"},"mace":{"icon":["gi gi-flanged-mace","gi gi-spiked-mace"]},"mage":{"icon":["gi gi-third-eye","gi gi-cowled","gi gi-spiked-halo","gi gi-suspicious"]},"magnifying glass":{"icon":"gi gi-magnifying-glass"},"man":{"icon":["fa fa-male","gi gi-pikeman","gi gi-dwarf-face","gi gi-monk-face"],"namegen":"*MALE NAME* "},"manacles":{"icon":"gi gi-manacles"},"map or scroll case":{"icon":"gi gi-tied-scroll"},"mason's tools":{"icon":"gi gi-gear-hammer"},"material plane":{"background":"black","contains":["crystal sphere, 1-5"],"icon":"gi gi-abstract-076 spin animated infinite","textColor":"white"},"medallion of thoughts":{"icon":"gi-necklace"},"medium armor":{"background":"gainsboro","icon":["gi gi-leather-vest","gi gi-chain-mail"],"textColor":"rosybrown"},"menu":{"contains":["*DRINK SPECIAL*","food, 1-2","beer","wine","hot drink","drink"],"icon":["gi gi-folded-paper"]},"merchant's scale":{"icon":"gi gi-scales"},"mess kit":{"icon":"gi gi-knife-fork"},"miner's pick":{"icon":"gi gi-gold-mine"},"minotaur":{"icon":"gi gi-minotaur"},"mirror of life trapping":{"icon":"gi gi-mirror-mirror"},"mirror plane":{"contains":["fake"],"icon":"gi gi-abstract-076 spinReverse animated infinite"},"monk":{"icon":["gi gi-meditation","gi gi-monk-face"],"isa":"humanoid"},"monster":{"icon":["gi gi-monster-grasp","gi gi-gluttonous-smile","gi gi-sharp-smile","gi gi-steel-claws","gi gi-triple-claws"]},"monument":{"icon":["gi gi-water-fountain","gi gi-ionic-column"]},"moon":{"background":"black","icon":"fa flaticon-big-moon fa-spin"},"mountain":{"background":"saddlebrown","icon":["fa flaticon-hills","gi gi-mountain-cave","gi gi-mountains","gi gi-mountaintop"]},"mountain dwarf":{"isa":"dwarf"},"navigator's tools":{"icon":"gi gi-compass"},"net":{"icon":"gi gi-fishing-net"},"noble":{"icon":["gi gi-crown","gi gi-sharp-crown"]},"ocean":{"background":"ocean","icon":"gi gi-wave-crest wobble animated infinite"},"ocean planet":{"background":"black","icon":"fa flaticon-moon-1 spin animated infinite","textColor":"royalblue"},"octopus":{"icon":"gi gi-octopus"},"oil":{"icon":"fa fa-tint"},"ooze":{"icon":"gi gi-dripping-goo"},"orb":{"icon":"gi gi-orb-wand"},"orb of dragonkind":{"icon":["gi-orb-wand"]},"orc":{"icon":"gi gi-orc-head"},"owl":{"icon":"gi gi-owl"},"painter's supplies":{"icon":"fa fa-paint-brush"},"pan flute":{"icon":"gi gi-pan-flute"},"paper":{"icon":"gi gi-folded-paper"},"parchment":{"icon":"gi gi-papers"},"pegasus":{"icon":"gi gi-pegasus"},"perfume":{"icon":"gi gi-perfume-bottle"},"piercing weapon":{"icon":["gi gi-broad-dagger","gi gi-crossbow","gi gi-pocket-bow"]},"piton":{"icon":"gi gi-stake-hammer"},"planet":{"background":"black","contains":["continent, 1-5","underdark, 90%","polar continent, 0-2","ocean, 2-5"],"data":{"alignment-demographics":{"hasWeightedRows":true,"rows":[{"value":"Lawful Good","weight":80},{"value":"Neutral Good","weight":5},{"value":"Chaotic Good","weight":5},{"value":"Lawful Neutral","weight":5},{"value":"Neutral","weight":1},{"value":"Chaotic Neutral","weight":1},{"value":"Lawful Evil","weight":1},{"value":"Neutral Evil","weight":1},{"value":"Chaotic Evil","weight":1}]},"race-demographics":{"hasWeightedRows":true,"rows":[{"value":"human","weight":79},{"value":"halfling","weight":9},{"value":"elf","weight":5},{"value":"dwarf","weight":3},{"value":"gnome","weight":2},{"value":"half-elf","weight":2},{"value":"half-orc","weight":2}]}},"icon":["fa fa-globe spin animated infinite","gi gi-earth-asia-oceania spin animated infinite","gi gi-earth-africa-europe spin animated infinite","gi gi-earth-america spin animated infinite","fa flaticon-planet","gi gi-ringed-planet"],"textColor":"forestgreen"},"plant":{"icon":"gi gi-carnivorous-plant"},"planted field":{"icon":["gi gi-wheat","gi gi-corn","gi gi-carrot"]},"playable race":{"isa":"humanoid"},"playing card set":{"icon":"gi gi-card-random"},"poisoner's kit":{"icon":"gi gi-poison-bottle"},"polar continent":{"background":"turquoise","icon":["fa flaticon-map-2","fa flaticon-map-1"],"textColor":"white"},"pole":{"icon":"gi gi-fishing-pole"},"port city":{"background":"darkslategray","isa":"city","textColor":"wheat"},"portable ram":{"icon":"gi gi-log"},"portal":{"icon":["gi gi-magic-portal","gi gi-portal"]},"potion":{"icon":["gi gi-magic-potion","gi gi-potion-ball","gi gi-standing-potion"]},"priest":{"icon":["gi gi-prayer","gi gi-robe","gi gi-pope-crown","gi gi-monk-face"]},"prisoner":{"icon":["gi gi-prisoner","gi gi-imprisoned","gi gi-convict"],"isa":"humanoid"},"prostitute":{"icon":["gi gi-smitten","gi gi-sensuousness"]},"province":{"background":"darkslategray","contains":["town, 0-1","village, 3-7","farming village, 3-7","river, 0-2","cave, 0-2"],"icon":["fa flaticon-map","fa flaticon-map-1","fa flaticon-map-2","fa flaticon-map-3"],"textColor":"wheat"},"pseudodragon":{"icon":["gi gi-dragon-head","gi gi-double-dragon"]},"quiver":{"icon":"gi gi-quiver"},"rat":{"icon":"gi-mouse"},"raven":{"icon":"gi gi-raven"},"reliquary":{"icon":"gi gi-totem"},"rhinoceros":{"icon":"gi gi-rhinoceros-horn"},"ring":{"icon":["gi gi-diamond-ring","gi gi-ring"]},"river":{"background":"wheat","icon":"gi gi-river","textColor":"darkblue"},"robes":{"icon":"gi gi-robe"},"rock gnome":{"isa":"gnome"},"rod":{"icon":"gi gi-crystal-wand"},"rod of absorption":{"icon":"gi gi-orb-wand"},"rod of alertness":{"icon":"gi gi-orb-wand"},"rod of lordly might":{"icon":"gi gi-crystal-wand"},"rod of rulership":{"icon":"gi gi-crystal-wand"},"rod of security":{"icon":"gi gi-lunar-wand"},"sack":{"icon":"gi gi-knapsack"},"safebox":{"background":"lavender","icon":"gi gi-locked-chest"},"sahuagin":{"icon":"gi gi-lizardman"},"salamander":{"icon":"gi gi-salamander"},"scorpion":{"icon":["gi gi-scorpion-tail","gi gi-scorpion"]},"scout":{"icon":["gi gi-bowman","gi gi-run"]},"scroll":{"icon":["gi gi-scroll-unfurled","gi gi-tied-scroll"]},"sea":{"background":"ocean","icon":"gi gi-at-sea pulse animated infinite","textColor":null},"sealing wax":{"icon":"gi gi-wax-seal"},"seated table":{"contains":["commoner, 1-4","*DRINKS*, 0-4","food, 50%"],"icon":["gi gi-tabletop-players"],"isa":"table","namegen":""},"shadow":{"icon":["gi gi-shadow-follower","gi gi-two-shadows"]},"shawm":{"icon":"glyphicon glyphicon-music"},"sheep":{"icon":"gi gi-sheep","textColor":"white","background":"wheat"},"shield":{"icon":["gi gi-american-shield","gi gi-attached-shield","gi gi-roman-shield","gi gi-templar-shield","gi gi-viking-shield","gi gi-bordered-shield","gi gi-broken-shield","gi gi-checked-shield","gi gi-cracked-shield","gi gi-crenulated-shield","gi gi-edged-shield","gi gi-eye-shield","gi gi-fire-shield","gi gi-ice-shield","gi gi-lightning-shield","gi gi-magic-shield","gi gi-rosa-shield","gi gi-skull-shield","gi gi-slashed-shield","gi gi-winged-shield","gi gi-zebra-shield","gi gi-shield","gi gi-round-shield","fa fa-shield"]},"shirt":{"icon":"gi gi-shirt"},"shop":{"background":"navajowhite","contains":["shopkeeper","safebox"],"icon":"gi gi-shop","textColor":"saddlebrown"},"shopkeeper":{"isa":"humanoid"},"shovel":{"icon":"gi gi-spade"},"sickle":{"icon":["gi gi-sickle"]},"signal whistle":{"icon":"gi gi-whistle"},"signet ring":{"icon":"gi gi-ring"},"silk rope":{"background":"lavender","icon":"gi gi-rope-coil"},"silver astral pool":{"icon":"gi gi-portal"},"skeleton":{"icon":"gi-skeletal-hand"},"slashing weapon":{"icon":["gi gi-broadsword","gi gi-shard-sword","gi gi-whip","gi gi-battle-axe","gi gi-sickle"]},"sledge hammer":{"icon":"gi gi-hammer-drop"},"sling":{"icon":"gi gi-slingshot"},"smith's tools":{"icon":"gi gi-sword-smithing"},"smithy":{"background":"lightgray","icon":"gi gi-sword-smithing","textColor":"dimgray"},"smithy, rural":{"contains":["blacksmith","for sale: smithy, rural","safebox"],"isa":"smithy","namegen":"blacksmith"},"smithy, rural for sale":false,"soap":{"background":"azure","icon":"gi gi-bubbles"},"solar":{"icon":"gi gi-solar-system"},"spear":{"icon":["gi gi-spear-feather","gi gi-stone-spear"]},"spellbook":{"background":["aquamarine","paleturquoise","powderblue","lightgreen","turquoise","plum","lightsalmon"],"icon":"gi gi-book-cover"},"spider":{"icon":["gi gi-spider-alt","gi gi-spider-face","gi gi-spider-bot","gi gi-angular-spider","gi gi-hanging-spider","gi gi-masked-spider","gi gi-spider-web"]},"sprig of mistletoe":{"background":"firebrick","icon":"gi gi-three-leaves","textColor":"palegreen"},"spy":{"icon":["gi gi-lock-spy","gi gi-double-face-mask","gi gi-convince","gi gi-domino-mask"]},"spyglass":{"icon":"gi gi-spyglass"},"staff":{"icon":"gi gi-wizard-staff"},"star":{"background":"black","icon":"fa flaticon-sun fa-spin","textColor":"gold"},"steel mirror":{"icon":"gi gi-mirror-mirror"},"stout halfling":{"isa":"halfling"},"swamp":{"icon":"gi gi-swamp"},"swarm of tiny beasts":{"icon":"gi gi-beehive"},"sword":{"icon":["gi gi-croc-sword","gi gi-energy-sword","gi gi-fragmented-sword","gi gi-rune-sword","gi gi-shard-sword","gi gi-shining-sword","gi gi-spinning-sword","gi gi-sword-array","gi gi-sword-spade","gi gi-sword-spin","gi gi-winged-sword","gi gi-zeus-sword"]},"table":{"background":null,"icon":["gi gi-table"]},"tavern":{"background":"saddlebrown","contains":["*TAVERN TABLE*, 2-5","bar","hearth","bedroom, 1-5","bard, 0-1"],"icon":"gi gi-beer-stein","isa":"shop","namegen":"*TAVERN NAMES*","textColor":"#e5d092"},"tea":false,"temple":{"background":"lightgray","contains":["priest, 1-3","acolyte, 2-10"],"icon":"gi gi-church","namegen":"*TEMPLE NAMES*","textColor":"dimgray"},"tent":{"icon":"glyphicon glyphicon-tent"},"thieves' tools":{"icon":"gi gi-lock-picking"},"thug":{"icon":["gi gi-overkill","gi gi-angry-eyes","gi gi-confrontation","gi gi-muscle-fat","gi gi-one-eyed"]},"tiefling":{"data":{"age adult":20,"age max":120},"icon":"gi gi-bull-horns","isa":"playable race"},"tiger":{"icon":"gi gi-tiger"},"tinderbox":{"icon":"fa fa-fire"},"tome of clear thought":{"icon":"gi gi-book-cover"},"torch":{"icon":"gi gi-torch"},"totem":{"icon":["gi gi-totem","gi gi-snake-totem","gi gi-totem-head"]},"town":{"background":"wheat","icon":"fa flaticon-suburb","textColor":"darkslategray"},"townhall":{"contains":["jail"],"icon":"gi gi-medieval-gate","background":"lightgray"},"traveler's clothes":{"icon":"gi gi-shirt"},"tribal warrior":{"icon":"gi gi-barbarian"},"trident":{"icon":["gi gi-magic-trident","gi gi-harpoon-trident","gi gi-trident"]},"troll":{"icon":"gi gi-troll"},"undead":{"icon":["gi gi-raise-zombie","gi gi-shambling-zombie","gi gi-frankenstein-creature"]},"undead mirror plane":{"background":"gray","isa":"mirror plane","textColor":null},"underdark":{"background":"black","icon":"gi gi-dripping-stone"},"unicorn":{"icon":"gi gi-unicorn"},"veteran":{"icon":["gi gi-brutal-helm","gi gi-cracked-helm","gi gi-heavy-helm","gi gi-horned-helm"]},"vial":{"icon":"gi gi-vial"},"village":{"background":"wheat","contains":["tavern, 1-3","smithy, rural","temple","townhall","cemetery","farm, 1-3","hovel, 3-15"],"icon":"gi gi-village","textColor":"saddlebrown"},"viol":{"icon":"glyphicon glyphicon-music"},"vulture":{"icon":"gi gi-vulture"},"wand":{"icon":["gi gi-lunar-wand","gi gi-crystal-wand","gi gi-fairy-wand","gi gi-orb-wand"]},"wasteland":{"background":"papayawhip","icon":["fa flaticon-desert","fa flaticon-nature-4"],"textColor":null},"water genasi":{"isa":"genasi"},"water plane":{"background":"darkblue","contains":["ocean","tower, 1-10","city, 1-2","castle, 1-2","palace, 2-3"],"icon":"gi gi-at-sea"},"waterskin":{"background":"azure","icon":"gi gi-round-bottom-flask","textColor":"dodgerblue"},"wave":{"icon":["gi gi-wave-strike"]},"weaver's tools":{"icon":"gi gi-sewing-needle"},"well":{"icon":"gi gi-well"},"well of many worlds":{"icon":"gi gi-well"},"whetstone":{"icon":"gi gi-stone-block"},"whip":{"icon":"gi gi-whip"},"wine":{"background":"rosybrown","icon":["fa fa-glass","gi gi-wine-glass"],"namegen":["Red wine","White wine","Sweet wine","Brandy"],"textColor":"brown"},"wolf":{"icon":["gi gi-wolf-head","gi gi-wolf-howl"]},"woman":{"icon":["fa fa-female","gi gi-woman-elf-face"],"namegen":"*FEMALE NAME* "},"wondrous":{"background":"purple","icon":"fa flaticon-stars","textColor":"gold"},"wood elf":{"isa":"elf"},"woodcarver's tools":{"icon":"gi gi-screwdriver"},"wooden staff":{"icon":"gi gi-wizard-staff"},"wyvern":{"icon":"gi gi-wyvern"},"yew wand":{"background":"cornsilk","icon":"gi gi-crystal-wand","textColor":"peru"},"zombie":{"icon":["gi gi-shambling-zombie","gi gi-raise-zombie"]}},"tables":{"AGE GROUPS":{"hasWeightedRows":true,"rows":[{"value":"young adult","weight":3},{"value":"adult","weight":8},{"value":"middle aged","weight":3},{"value":"elderly","weight":1}]},"COLORS":["silver","silver","red","orange","yellow","green","blue","black"],"DINNER":{"concatenate":true,"rows":[["Stewed","Roasted","Fried","Boiled","Baked","Grilled","Seared","Steamed","Salted","Pickled"]," ",["Rabbit","Chicken","Duck","Mutton","Pork","Beef","Pheasant","Goose","Trout","Clams","Pork sausage","Duck sausage"]," with ",["Dumplings","Red cabbage","White cabbage","Shredded cabbage","Leeks","Lentils","Broccoli","Peas","Cauliflower","Kidney beans","String beans","White beans","Turnip mash","Sliced turnips","Asparagus","Sprouts","Sweet peppers","Red potatoes","Golden potatoes","Yams",""]," and ",["Carrots","Apples","Cherries","Tomatoes","Blueberries","Strawberries","Beets","Mushrooms","Radishes","Squash","Sweet onions","Red onions"]]},"DRINK SPECIAL":{"rows":["Tonight's special cocktail: Pixiewine. Each glass of this crisp, floral-scented wine is served with a pixie.","Tonight's special cocktail: Suckerpunch. Each glass of this potent purple-red punch has several small writhing tentacles that reach out of the glass to attach to your face with their suckers. It actually feels kind of nice.","Tonight's special: Bring-Your-Own-Horn. Bring the horn of your favorite beast or monstrous humanoid (any size!), and we'll fill it with cheap ale or wine for 2 cp.","Tonight's special cocktail: Mindbomb. It's made with absinthe and explosive powder.","Tonight's special cocktail: Fireball. Served by wizards of 5th level or higher.","Tonight's special cocktail: Stonebones. A powerful rum cocktail made with powder gorgon horn and basilisk eye. It's only partial paralysis."],"source":"BTT"},"DRINKS":["beer","wine","hot drink","drink"],"ELEMENTS":["air","earth","fire","water"],"FEMALE NAME":{"concatenate":true,"rows":[["Millicent","Alinor","Eleanor","Agnes","Alice","Avice","Beatrice","Cecily","Emma","Isabella","Joan","Juliana","Margery","Matilda","Roh","Morgan","Elizabeth","Kethleen"]," ","*LASTNAME*"]},"ICON DESERT":"fa flaticon-nature-4","ICON GALAXY":"fa flaticon-nature","ICON MESA":"fa flaticon-nature-3","ICON PLANET":"fa flaticon-nature-1","ICON PLANET CORE":"fa flaticon-planet-1","ICON PLANET RINGS":"fa flaticon-planet","ICON PLANETS":"fa flaticon-solar-system","ICON STAR SYSTEM":"fa flaticon-solar-system-1","ICON TREES":"fa flaticon-nature-2","LASTNAME":{"concatenate":true,"rows":[["Strong","Tall","Grand","Bold","Big","Small","Fine","Good","Glad","Green","Blue","Red","Black","White","Pale","Gray","Gold","Silver","Dark","Light","Brave","Sly"],["ington","son","house","door","castle","forest","tree","leaf","wind","rain","snow","rock","stone","river","sea","ship","smith","craft","cook","worth","might","wolf","bear","sheep","pig","fox","hunt","dragon"]]},"MALE NAME":{"concatenate":true,"rows":[["Adam","Geoffrey","Gilbert","Henry","Hugh","John","Nicholas","Peter","Ralf","Richard","Robert","Roger","Simon","Thomas","Walter","William","Robin","Albin","Bayard","Erwin"]," ","*LASTNAME*"]},"NAME":["*MALE NAME*","*FEMALE NAME*"],"PLANET PREFIX":["Kry","Tor","Ath","Eb","Aeb","Myst","Col","And","Kar","Chan","Gly","Kul","Raen","Ed","Gni","Con","Gin","Bor","Ter","Plu","Jup","Merc","Ven","Tar","Tur"],"PLANET SUFFIX":["ril","nei","pri","ill","atha","sel","ka","en","ra","la","myth","lyn","ion","ynn","to","iter","us","ury","lea","nov","omia","tera","ilia"],"SONG":[{"concatenate":true,"rows":[["Ballad of the ","Song of the ","The End of the "],"*SONG SUBJECTS*"]},{"concatenate":true,"rows":["The ","*SONG SUBJECTS*",[" in the ","'s "," and the "," to the "," on the "],"*SONG SUBJECTS*"]},{"concatenate":true,"rows":["A ","*SONG SUBJECTS*",[" in a ","'s "," and a "," to a "," on a "],"*SONG SUBJECTS*"]}],"SONG SUBJECTS":["Misty Swamp","Wife","Maiden Fair","Trout","Towers","Blacksmith","Summer","Winter","Fall","Rabbit","Husband","Squash","Forge","Sword","Lake"],"TAVERN PATRONS":{"hasWeightedRows":true,"rows":[{"value":"commoner","weight":15},{"value":"guard","weight":3},{"value":"druid","weight":2},{"value":"gladiator","weight":2},{"value":"knight","weight":2},{"value":"mage","weight":2},{"value":"veteran","weight":2},{"value":"acolyte","weight":1},{"value":"priest","weight":1},{"value":"spy","weight":1},{"value":"monk","weight":1},{"value":"noble","weight":1},{"value":"assassin","weight":1},{"value":"bandit","weight":1},{"value":"cultist","weight":1}]},"TAVERN TABLE":["table","seated table"],"TEMPLE NAMES":{"concatenate":true,"rows":[["Temple of the","Church of the","Chapel of the","House of the","Abbey of the","Cathedral of the","Shrine of the","Sanctuary of the","Priory of the"],[" "],["Blinding","Sacred","Holy","Unholy","Bloody","Cursed","Marvellous","Wondrous","Pious","Miraculous","Endless","Unending","Undying","Infinite","Unworldly","Worldly","Divine","Demonic","Ghostly","Monstrous","Tentacled","All-knowing","Rational","Pretty Good","Vengeful","Hallowed"],[" "],["Light","Star","Beam","Sphere","Goddess","God","Lords","Sisterhood","Brotherhood","Skies","Pact","Sect","Harmony","Discord","Child","Entity","Ghost","Builders","Makers","Guide","Wit","Story","Tale","Unicorn","Flame","Fountain","Locust","Squid","Gembaby","Father","Mother"]]},"WORLD CREATION":[{"concatenate":true,"rows":[" as one of many experiments by a council of gods trying to discover ",["The soul","True sentience and free-will","A purpose for their eternity","A new form of magic","A superior species that would some day replace them","A superior species that would some day serve them","A superior species that would be pit against another council's species in a game of war","A new non-naturally occurring material, such as plastic."]]}," by a single creator god"," by a momentary merge of the elemental planes"," as a peace offering between two warring gods"," as an offering of love from one god in love with another"," by a young, defiant god attempting to create something unheard of"," by an ancient civilization searching for the question to the answer of life, the universe, and everything"," when it was hatched from the egg of a world-bearing chicken"," by an immortal governing council. One of many that they created."," as the result of a wish spell"," by a child as a snow globe. The child in turn lives in a snow globe created by a child, who in turn..."," by the realm of imagination and become wholly realized through a chance run-in with the astral plane."," by a council of dragons who pieced it together from favored parts of their home worlds"," as an experiment run-amok by a god"," by bored gods, who frequently made worlds, trying to one-up each other"," by two worlds colliding together"," in the belly of a god-dragon, where her god-children warred, and was later cut out of her belly when one of her children committed matricide"," when a world-dragon was butchered and its parts were turned into the sky, water, land, etc."]}}
+{
+  "author": "Cattegy",
+  "backgrounds": {},
+  "characters": [],
+  "classes": {},
+  "defaultSeed": "Great Wheel > Prime Material Plane > crystal sphere > planet > continent > coastal kingdom > province > village > tavern",
+  "dependencies": [
+    "nested-dnd-data",
+    "behind-the-tables"
+  ],
+  "description": "",
+  "feats": {},
+  "name": "dnd",
+  "races": {},
+  "spells": {
+    "Chromatic Orb": {
+      "level": 1,
+      "school": "Evocation",
+      "cast_time": "1 action",
+      "range": "90 ft",
+      "components": {
+        "types": "VS",
+        "materials": "a diamond worth at least 50 gp"
+      },
+      "duration": "Instantaneous",
+      "dice": {
+        "attack": "Ranged",
+        "type": "acid, cold, fire, lightning, poison, or thunder",
+        "roll": "3d8"
+      },
+      "description": [
+        "You hurl a 4-inch-diameter sphere of energy at a creature that you can see within range. You choose acid, cold, fire, lightning, poison, or thunder for the type of orb you create, and then make a ranged spell attack against the target. If the attack hits, the creature takes 3d8 damage of the type you chose.",
+        "At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d8 for each slot level above 1st."
+      ]
+    },
+    "Witch Bolt":{
+      "cast_time": "1 action",
+      "range": "30 ft",
+      "level":1,
+      "concentration": true,
+      "components":{
+        "types":"VS",
+        "materials": "a twig from a tree that has been struck by lightning"
+      },
+      "duration": "Concentration, up to 1 min",
+      "school":"Evocation",
+      "dice": {
+        "roll": "1d12",
+        "type": "lightning",
+        "add_modifier": true,
+        "attack": true,
+        "progression":"1d12"
+      },
+      "description": [
+        "A beam of crackling, blue energy lances out toward a creature within range, forming a sustained arc of lightning between you and the target. Make a ranged spell attack against that creature. On a hit, the target takes 1d12 lightning damage, and on each of your turns for the duration, you can use your action to deal 1d12 lightning damage to the target automatically. The spell ends if you use your action to do anything else. The spell also ends if the target is ever outside the spell’s range or if it has total cover from you.",
+        "At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the initial damage increases by 1d12 for each slot level above 1st."
+      ]
+    },
+    "Floating Disk":{
+      "shortDesc": "Circular platform 3 feet wide"
+    },
+    "Expeditious Retreat":{
+      "shortDesc": "Move at an incredible pace"
+    },
+    "Second Wind": {
+      "isFeature": true,
+      "icon":"medical-pack",
+      "cast_time": "1 bonus action",
+      "range": "Self",
+      "dice": {
+        "roll": "1d10",
+        "type": "Healing",
+        "add_modifier": true
+      },
+      "description": [
+        "On your turn, you can use a bonus action to regain 1d10 + your fighter level hit points.",
+        "Once you use this feature, you must finish a short or long rest before you can use it again"
+      ]
+    },
+    "Cunning Action": {
+      "isFeature": true,
+      "cast_time": "1 bonus action",
+      "icon": "dodging",
+      "description": [
+        "You can take a bonus action on each of your turns in combat, only to take the Dash, Disengage, or Hide action.",
+        "With <strong>Fast Hands: </strong> You can take a Sleight of Hand action, use thieves' tools, or Use an Object"
+      ]
+    },
+    "Alarm": {
+      "shortDesc": "Alerts you when a creature enters the area"
+    },
+    "Deflect Missiles": {
+      "cast_time": "1 reaction",
+      "level": 0,
+      "isFeature": true,
+      "subtitle": "1 Ki Point to fire it back",
+      "icon": "return-arrow",
+      "range": "20/60 ft",
+      "description": [
+        "Deflect or catch the missile when you are hit by a ranged weapon Attack. When you do so, the damage you take from the Attack is reduced by 1d 10 + your Dexterity modifier + your monk level.",
+        "If you reduce the damage to 0, you can catch the missile if it is small enough for you to hold in one hand and you have at least one hand free. If you catch a missile in this way, you can spend 1 ki point to make a ranged Attack (range 20 feet/60 feet) with the weapon or piece of ammunition you just caught, as part of the same reaction. You make this Attack with proficiency, regardless of your weapon proficiencies, and the missile counts as a monk weapon for the Attack."
+      ],
+      "dice": {
+        "roll": true,
+        "attack": true,
+        "progression": true,
+        "add_modifier": true
+      }
+    },
+    "Flurry of Blows": {
+      "cast_time": "1 bonus action",
+      "icon": "fulguro-punch",
+      "isFeature": true,
+      "subtitle": "1 Ki Point",
+      "level": 1,
+      "description": [
+        "Immediately after you take the Attack action on Your Turn, you can spend 1 ki point to make two unarmed strikes as a Bonus Action.",
+        "If you have <strong>Open Hand Technique</strong>, you can impose one of these effects",
+        "• It must succeed on a Dexterity save or be knocked prone",
+        "• It must succeed on a Strength save or be pushed up to 15 feet away from you.",
+        "• It can't take reactions until the end of your next turn."
+      ],
+      "dice": {
+        "roll": true,
+        "attack": true,
+        "progression": true,
+        "add_modifier": true,
+        "type": "bludgeoning"
+      }
+    },
+    "Patient Defense": {
+      "cast_time": "1 bonus action",
+      "icon": "dodging",
+      "isFeature": true,
+      "subtitle": "1 Ki Point",
+      "level": 1,
+      "shortDesc": "Dodge",
+      "description": [
+        "You can spend 1 ki point to take the Dodge action as a Bonus Action on Your Turn."
+      ]
+    },
+    "Step of the Wind": {
+      "cast_time": "1 bonus action",
+      "icon": "sprint",
+      "isFeature": true,
+      "subtitle": "1 Ki Point",
+      "level": 1,
+      "shortDesc": "Disengage or Dash",
+      "description": [
+        "You can spend 1 ki point to take the Disengage or Dash action as a Bonus Action on Your Turn, and your jump distance is doubled for the turn."
+      ]
+    },
+    "Martial Arts": {
+      "cast_time": "1 bonus action",
+      "icon": "punch-blast",
+      "isFeature": true,
+      "level": 0,
+      "dice": {
+        "roll": "1d4",
+        "attack": true,
+        "progression": true,
+        "add_modifier": true
+      },
+      "description": [
+        "You gain the following benefits while you are unarmed or wielding only monk weapons and you aren't wearing armor or a shield.",
+        "• Can use Dex instead of Strength for Monk Weapons and Unarmed Strikes.",
+        "• Can use 1d4 for Monk Weapons and Unarmed Strikes.",
+        "• Can attack as a bonus action using an Unarmed Strike if you attacked with an Unarmed Strike or Monk Weapon.",
+        "Monk Weapons are shortswords, and any simple melee weapon that isn't 2 handed or heavy.",
+        "At Higher Levels: At level 5 the damage is 1d6, 1d8 at level 11, and 1d10 at level 17"
+      ]
+    },
+    "Thorn Whip": {
+      "cast_time": "1 action",
+      "level": 0,
+      "duration": "Instant",
+      "dice": {
+        "roll": "1d6",
+        "type": "piercing",
+        "attack": true,
+        "progression": "1d6"
+      },
+      "school": "Transmutation",
+      "range": "30 ft",
+      "components": {
+        "types": "VS",
+        "materials": "the stem of a plant with thorns"
+      },
+      "description": [
+        "You create a long, vine-like whip covered in thorns that lashes out at your command toward a creature in range. Make a melee spell attack against the target. If the attack hits, the creature takes 1d6 piercing damage, and if the creature is Large or smaller, you pull the creature up to 10 feet closer to you.",
+        "This spell’s damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6)."
+      ]
+    },
+    "Primeval Awareness": {
+      "cast_time": "1 action",
+      "level": 1,
+      "icon": "beast-eye",
+      "duration": "1 minute",
+      "isFeature": true,
+      "shortDesc": "Establish a powerful link to beasts and to the land around you",
+      "description": [
+        "Through sounds and gestures, you can communicate simple ideas to a beast. You learn its emotional state, whether it is affected by  magic of any sort, its short-term needs (such as food or safety), and actions you can take (if any) to persuade it to not attack. You cannot  use this ability against a creature that you have attacked within the past  10 minutes. You can use this unlimited times on your animal companion if you have one.",
+        "Alternatively, you can sense whether any of your favored enemies are present within 5 miles of you by spending 1 uninterrupted minute in concentration. This reveals which of your favored enemies are present, their numbers, and the creatures’ general direction and distance from you."
+      ]
+    },
+    "Animal Messenger": {
+      "description": [
+        "Choose a Tiny beast you can see within range. Specify a location you have visited, and a recipient who matches a general description. Speak a message of up to twenty-five words. The target beast travels for the duration of the spell towards the specified location, covering about 50 mi. per 24 hrs for a flying messenger or 25 mi. for other animals.",
+        "When the messenger arrives, it delivers your message to the creature that you described, replicating the sound of your voice. The messenger speaks only to a creature matching the description you gave. If the messenger doesn't reach its destination before the spell ends, the message is lost, and the beast makes its way back to where you cast this spell.",
+        "At Higher Levels: If you cast this spell using a spell slot of 3rd level or higher, the duration of the spell increases by 48 hours for each slot level above 2nd."
+      ],
+      "shortDesc": "Use a tiny beast to deliver a message"
+    },
+    "Augury": {
+      "description": [
+        "Recieve one of the following omens about a specific course of action that you plan to take within the next 30 mins.<ul><li>Weal: good results<li>Woe: bad results<li>Weal and woe: both good and bad results<li>Nothing: not especially good or bad</ul><p>The spell doesn't take into account any possible circumstances that might change the outcome.<p>If you cast the spell two or more times before completing your next long rest, there is a cumulative 25 percent chance for each casting after the first that you get a random reading."
+      ],
+      "shortDesc": "Cast gem-inlaid sticks, roll dragon bones, or lay out ornate cards to receive an omen"
+    },
+    "Barkskin": {
+      "shortDesc": "Improved armor"
+    },
+    "Blade Ward": {
+      "cast_time": "1 action",
+      "classes": [
+        "Ranger"
+      ],
+      "components": {
+        "types": "VS"
+      },
+      "concentration": true,
+      "description": [
+        "You extend your hand and trace a sigil of warding in the air. Until the end of your next turn, you have resistance against bludgeoning, piercing, and slashing damage dealt by weapon attacks."
+      ],
+      "duration": "1 round",
+      "level": 0,
+      "namegen": "Blade Ward",
+      "range": "Self",
+      "save": {},
+      "school": "Abjuration",
+      "shortDesc": "Ward yourself from physical damage"
+    },
+    "Bless": {
+      "shortDesc": "Help creatures attack or save"
+    },
+    "Calm Emotions": {
+      "description": [
+        "Attempt to suppress strong emotions in a group of people. Humanoids in a 20-foot-radius centered on a point you choose within range must make a Charisma saving throw a creature can choose to fail this saving throw if it wishes. If a creature fails, choose one of the following two effects.",
+        "A) Suppress any effect causing a target to be charmed or frightened.",
+        "B) Make a target indifferent about creatures of your choice that it is hostile toward. This indifference ends if the target is attacked or harmed or if it witnesses any of its friends being harmed. When the spell ends, the creature becomes hostile again"
+      ]
+    },
+    "Cloud of Daggers": {
+      "level": 2,
+      "cast_time": "1 action",
+      "classes": [
+        "Bard",
+        "Sorcerer",
+        "Wizard",
+        "Warlock"
+      ],
+      "components": {
+        "materials": "a sliver of glass",
+        "types": "VS"
+      },
+      "concentration": true,
+      "description": [
+        "You fill the air with spinning daggers in a cube 5 feet on each side, centered on a point you choose within range. A creature takes 4d4 slashing damage when it enters the spell’s area for the first time on a turn or starts its turn there.",
+        "At Higher Levels: When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 2d4 for each slot level above 2nd."
+      ],
+      "dice": {
+        "roll": "4d4",
+        "type": "slashing"
+      },
+      "duration": "Up to 1 minute",
+      "range": "60 ft",
+      "school": "Conjuration"
+    },
+    "Create or Destroy Water": {
+      "description": [
+        "You either create or destroy 10 gallons of clean water.",
+        "At Higher Levels: When you cast this spell using a spell slot of 2nd level or higher, you create or destroy 10 additional gallons of water, or the size of the cube increases by 5 feet, for each slot level above 1st."
+      ],
+      "shortDesc": "Create or destroy water"
+    },
+    "Darkvision": {
+      "shortDesc": "See in the dark",
+      "description": [
+        "You touch a willing creature to grant it the ability to see in the dark. For the duration, that creature has darkvision out to a range of 60 feet.",
+        "The creature can see in dim light within 60 ft. as if it were bright light, and in darkness as if it were dim light. The creature can't discern color in darkness, only shades of gray. "
+      ]
+    },
+    "Detect Evil and Good": {
+      "shortDesc": "Locate any aberration, celestial, elemental, fey, fiend, undead, or consecrated/desecrated objects"
+    },
+    "Detect Magic": {
+      "shortDesc": "See a faint aura around nearby magical objects and creatures"
+    },
+    "Detect Poison and Disease": {
+      "shortDesc": "Locate any posioned objects, poisonous creatures, or diseases"
+    },
+    "Detect Thoughts": {
+      "description": [
+        "Until the spell ends, you can read the mind of one creature you can see within 30 ft. If it has an Intelligence of 3 or lower or doesn't speak any language, it is unaffected. Questions verbally directed at it shape its thoughts.",
+        "You first learn surface thoughts. As an action, you can either shift your attention to another creature or probe deeper. If you probe deeper, they must make a WIS saving throw. If it fails, you gain insight into its reasoning, its emotional state, and something that looms large in its mind. If it succeeds, the spell ends. Either way, it knows that you are reading its mind, and unless you shift your attention to another creature, it can use its action to make an INT check contested by your INT check and if it succeeds, the spell ends.<p>You can detect creatures by searching for thoughts within 30 ft. The spell can penetrate barriers, but 2 ft of rock, 2 inches of metal, or a thin sheet of lead blocks you."
+      ]
+    },
+    "Disguise Self": {
+      "description": [
+        "You make yourself, including all belongings on your person, look different until the spell ends or you use your action to dismiss it. You can seem 1 foot shorter or taller and can appear thin, fat, or in between. You must adopt a form that has the same basic arrangement of limbs.<p>The changes wrought by this spell fail to hold up to physical inspection. For example, if you add a hat to your outfit, objects pass through the hat, and anyone who touches it would feel nothing.<p>To discern that you are disguised, a creature can use its action to inspect your appearance and must succeed on an Intelligence (Investigation) check against your spell save DC."
+      ]
+    },
+    "Druidcraft": {
+      "shortDesc": "Whisper to the spirits of nature and craft a natural or sensory effect",
+      "description": [
+        "You create one of the following effects within range:",
+        "• A tiny, harmless sensory effect that predicts what the weather will be at your location for the next 24 hours. This effect persists for 1 round.",
+        "• Instantly make a flower blossom, a seed pod open, or a leaf bud bloom.",
+        "• Create an instantaneous, harmless sensory effect, such as falling leaves, a puff of wind, the sound of a small animal, or the faint odor of skunk. The effect must fit in a 5-foot cube.",
+        "• Instantly light or snuff out a candle, a torch, or a small campfire."
+      ]
+    },
+    "Ensnaring Strike": {
+      "cast_time": "1 bonus action",
+      "classes": [
+        "Ranger"
+      ],
+      "components": {
+        "types": "V"
+      },
+      "concentration": true,
+      "description": [
+        "The next time you hit a creature with a weapon attack before this spell ends, a writhing mass of thorny vines appears at the point of impact, and the target must succeed on a Strength saving throw or be restrained by the magical vines until the spell ends. A Large or larger creature has advantage on this saving throw. If the target succeeds on the save, the vines shrivel away.",
+        "While restrained by this spell, the target takes 1d6 piercing damage at the start of each of its turns. A creature restrained by the vines or one that can touch the creature can use its action to make a Strength check against your spell save DC. On a success, the target is freed."
+      ],
+      "duration": "Concentration, up to 1 min",
+      "level": 1,
+      "namegen": "Ensnaring Strike",
+      "range": "Self",
+      "save": {
+        "success": "Not restrained",
+        "throw": "Strength"
+      },
+      "school": "Conjuration"
+    },
+    "Enhance Ability": {
+      "shortDesc": "Bestow a magical enhanccement",
+      "description": [
+        "Choose one - the creature you touch gains the effect until the spell ends.",
+        "• Bear's Endurance: Adv. on CON checks. 2d6 temp HP, lost when the spell ends.",
+        "• Bull's Strength: Adv. on STR checks, and carrying capacity doubles.",
+        "• Cat's Grace: Adv. on DEX checks. Doesn't take damage from falling 20 ft or less if it isn't incapacitated.",
+        "• Eagle's Splendor: Adv. on CHA checks.",
+        "• Fox's Cunning: Adv. on INT checks.",
+        "• Owl's Wisdom: Adv. on WIS checks.",
+        "At Higher Levels: When you cast this spell using a spell slot of 3rd level or higher, you can target one additional creature for each slot level above 2nd."
+      ]
+    },
+    "Find Traps": {
+      "shortDesc": "Sense the presence of any trap within 120 ft"
+    },
+    "False Life": {
+      "shortDesc": "Bolster yourself with a necromantic facsimile of life"
+    },
+    "Feather Fall": {
+      "description": [
+        "<strong>Reaction</strong> - When you or a creature within 60 ft of you falls <p>Choose up to five falling creatures within range. A falling creature's rate of descent slows to 60 ft per round until the spell ends. If the creature lands before the spell ends, it takes no falling damage and can land on its ft, and the spell ends for that creature."
+      ],
+      "shortDesc": "Slow down falling creatures"
+    },
+    "Find Familiar": {
+      "description": [
+        "Gain the service of a celestial, fey, or fiend (your choice) that takes an animal form you choose.<p>It always obeys your commands. In combat, has its own turn but can't attack. When it drops to 0 HP, it disappears.<p>While it is within <strong>100 ft</strong> of you, you can communicate with it telepathically. You can see through it's eyes and hear what it hears until the start of your next turn.<p>As an action, you can temporarily dismiss it and make it reappear as an action.<p>You only have one at a time. Casting this spell causes it to adopt a new form.<p>It can deliver a spell with a range of Touch if it is within 100 ft of you."
+      ],
+      "shortDesc": "bat, cat, crab, frog (toad), hawk, lizard, octopus, owl, poisonous snake, fish (quipper), rat, raven, sea horse, spider, or weasel"
+    },
+    "Locate Animals or Plants": {
+      "shortDesc": "Locate a beast or plant within 5 miles"
+    },
+    "Pass without Trace": {
+      "shortDesc": "A veil of shadows and silence."
+    },
+    "Locate Object": {
+      "shortDesc": "Locate a familiar object within 1,000 feet"
+    },
+    "Longstrider": {
+      "shortDesc": "Increase a creature's speed by 10 feet"
+    },
+    "Fog Cloud": {
+      "shortDesc": "Create a 20ft wide sphere of fog"
+    },
+    "Jump": {
+      "shortDesc": "Triple a creature's jump distance for 1 minute"
+    },
+    "Lesser Restoration": {
+      "shortDesc": "Cure a disease or a blinded, deafened, paralyzed, or poisoned condition"
+    },
+    "Gentle Repose": {
+      "shortDesc": "Prevent a corpse from decaying or becoming undead"
+    },
+    "Goodberry": {
+      "shortDesc": "10 berries that restore 1 HP each"
+    },
+    "Spike Growth": {
+      "shortDesc": "The ground sprouts spikes and thorns"
+    },
+    "Guidance": {
+      "shortDesc": "Improve a creature's ability check"
+    },
+    "Gust of Wind": {
+      "description": [
+        "A line of strong wind 60 ft long and 10 ft wide blasts from you for the spell's duration. Each creature that starts its turn in the line must succeed on a Strength saving throw or be pushed 15 ft away from you in a direction following the line.<p>Any creature in the line must spend 2 ft of movement for every 1 foot it moves when moving closer to you.<p>The gust disperses gas or vapor, and it extinguishes candles, torches, and similar unprotected flames in the area. It causes protected flames, such as those of lanterns, to dance wildly and has a 50 percent chance to extinguish them.<p>As a bonus action on each of your turns before the spell ends, you can change the direction in which the line blasts from you."
+      ]
+    },
+    "Hail of Thorns": {
+      "cast_time": "1 bonus action",
+      "classes": [
+        "Ranger"
+      ],
+      "components": {
+        "types": "V"
+      },
+      "concentration": true,
+      "description": [
+        "The next time you hit a creature with a ranged weapon attack before the spell ends, this spell creates a rain of thorns that sprouts from your ranged weapon or ammunition. In addition to the normal effect of the attack, the target of the attack and each creature within 5 feet of it must make a Dexterity saving throw. A creature takes 1d10 piercing damage on a failed save, or half as much damage on a successful one.",
+        "At Higher Levels. If you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d10 for each slot level above 1st (to a maximum of 6d10)."
+      ],
+      "duration": "Concentration, up to 1 min",
+      "level": 1,
+      "namegen": "Hail of Thorns",
+      "range": "Self",
+      "save": {
+        "save": "Half damage",
+        "throw": "Dexterity"
+      },
+      "school": "Conjuration"
+    },
+    "Hunter's Mark": {
+      "shortDesc": "Mark a creature and add 1d6 damage when you hit it with a weapon"
+    },
+    "Light": {
+      "shortDesc": "Touch an object and it sheds bright light"
+    },
+    "Mage Armor": {
+      "shortDesc": "Change a creature's armor to 13 + Dexterity modifier"
+    },
+    "Mage Hand": {
+      "description": [
+        "Appears at a point you choose within range. Lasts for the duration or until you dismiss it as an action. The hand vanishes if it is ever more than 30 ft away from you or if you cast it again",
+        "You can use your action to control it. You can move the hand up to 30 feet each time you use it.",
+        "The hand can't attack, activate magical items, carry more than 10 pounds, or extert more than 10 pounds of force."
+      ],
+      "shortDesc": "Summon a spectral, floating hand"
+    },
+    "Mending": {
+      "shortDesc": "Repair an object you touch"
+    },
+    "Message": {
+      "shortDesc": "Whisper a message at a distance"
+    },
+    "Minor Illusion": {
+      "shortDesc": "Create a sound or an image of an object",
+      "description": [
+        "You create a sound or an image of an object which lasts for the duration, or ends if you dismiss it as an action.",
+        "If you create a sound, its volume can range from a whisper to a scream. If you create an image it must be no larger than a 5-ft cube. The image can't create sound, light, smell, or any other sensory effect.",
+        "Physical things pass through the image and reveal it to be an illusion. A creature can also determine that it is an illusion with a successful Investigation check against your spell save DC. On success, the illusion becomes faint to the creature."
+      ]
+    },
+    "Misty Step": {
+      "shortDesc": "Briefly surrounded by silvery mist, you teleport a short distance"
+    },
+    "Prestidigitation": {
+      "description": [
+        "Create one of these effects within range.<p>• Create an instantaneous, harmless sensory effect, such as a shower of sparks, a puff of wind, faint musical notes, or an odd odor.<br>• Instantaneously light or snuff out a candle, a torch, or a small campfire.<br>• Instantaneously clean or soil an object no larger than 1 cubic foot.<br>• Chill, warm, or flavor up to 1 cubic foot of nonliving material for 1 hour.<br>• Make a color, a small mark, or a symbol appear on an object or a surface for 1 hour.<br>• Create a nonmagical trinket or an illusory image that can fit in your hand and that lasts until the end of your next turn.<p>If you cast this spell multiple times, you can have up to 3 of its non-instantaneous effects active at a time, and you can dismiss an effect as an action."
+      ],
+      "shortDesc": "A minor magical trick that novice spellcasters use for practice"
+    },
+    "Shield of Faith": {
+      "shortDesc": "A shimmering field of magical protection"
+    },
+    "Sleep": {
+      "shortDesc": "Send creatures into a magical slumber",
+      "description": ["Creatures within 20 ft of a point you choose within range are affected.",
+          "Roll 5d8. Starting with the creature that has the lowest current HP, each creature affected falls unconscious until the spell ends, the sleeper takes damage, or someone uses an action to shake the sleeper awake. Subtract each creature's HP from the total before moving onto the next lowest HP. HP must be equal to or less than the remainder to be affected.",
+          "Undead and creatures immune to being charmed aren't affected by this spell.",
+          "At Higher Levels: Roll an additional 2d8 for each slot level above 1st."
+        ]
+    },
+    "Suggestion": {
+      "description": "Suggest an activity (limited to a sentence or two) to a creature you can see within range that can hear and understand you. The suggestion must sound reasonable. Asking the creature to stab itself or do some other obviously harmful act ends the spell.<p>On a failed Wisdom save, it purses the course of action you described to the best of its ability. If the activity can be completed before the end of the duration, the spell ends when the activity finishes.<p>You can specify conditions that will trigger the activity. For example, you might suggest that a knight give her horse to the first beggar she meets. If the condition isn't met before the spell expires, the activity isn't performed.<p>If you or any of your companions damage the target, the spell ends."
+    },
+    "Tasha's Hideous Laughter": {
+      "cast_time": "1 action",
+      "classes": [
+        "Wizard"
+      ],
+      "components": {
+        "materials": "tiny tarts and a feather that is waved in the air",
+        "types": "VS"
+      },
+      "concentration": true,
+      "description": [
+        "A creature of your choice that you can see within range perceives everything as hilariously funny and falls into fits of laughter if this spell affects it. The target must succeed on a Wisdom saving throw or fall prone, becoming incapacitated and unable to stand up for the duration. A creature with an Intelligence score of 4 or less isn’t affected.",
+        "At the end of each of its turns, and each time it takes damage, the target can make another Wisdom saving throw. The target has advantage on the saving throw if it’s triggered by damage. On a success, the spell ends."
+      ],
+      "duration": "Concentration, up to 1 min",
+      "level": 1,
+      "namegen": "Tasha's Hideous Laughter",
+      "range": "30 ft",
+      "school": "Enchantment"
+    },
+    "Thaumaturgy": {
+      "description": [
+        "Create one of these effects within range.<p>• Your voice booms up to three times as loud as normal for 1 minute.<br>• Cause flames to flicker, brighten, dim, or change color for 1 minute.<br>• Cause harmless tremors in the ground for 1 minute.<br>• Create an instantaneous sound that originates from a point of your choice within range, such as a rumble of thunder, the cry of a raven, or ominous whispers.<br>• Instantaneously cause an unlocked door or window to fly open or slam shut.<br>• Alter the appearance of your eyes for 1 minute.<p>If you cast this spell multiple times, you can have up to three of its 1-minute effects active at a time, and you can dismiss such an effect as an action."
+      ],
+      "shortDesc": "Manifest a minor wonder, a sign of supernatural power"
+    },
+    "True Strike": {
+      "shortDesc": "Gain a temporary insight into the target's defenses"
+    },
+    "Unseen Servant": {
+      "description": [
+        "The servant springs into existence in an unoccupied space on the ground within range. It has AC 10, 1 HP, and a Strength of 2, and it can't attack. If it drops to 0 HP, the spell ends.<p>Once on each of your turns as a bonus action, you can mentally command the servant to move up to 15 ft and interact with an object. Once you give the command, the servant performs the task to the best of its ability until it completes the task, then waits for your next command.<p>If you command the servant to perform a task that would move it more than 60 ft away from you, the spell ends."
+      ],
+      "shortDesc": "An invisible, mindless, shapeless force that performs simple tasks at your command"
+    },
+    "Wrath of the Storm": {
+      "description": [
+        "When a creature within 5 feet of you that you can see hits you with an attack, you can use your reaction to cause the creature to make a Dexterity saving throw. The creature takes 2d8 lightning or thunder damage (your choice) on a failed saving throw, and half as much damage on a successful one"
+      ],
+      "dice": {
+        "roll": "2d8",
+        "type": "lightning or thunder"
+      },
+      "cast_time": "1 reaction",
+      "duration": "Instant",
+      "level": 1,
+      "isFeature": true,
+      "icon": "gi gi-lightning-storm",
+      "range": "5 ft",
+      "save": {
+        "throw": "Dexterity",
+        "success": "Half damage"
+      }
+    }
+  },
+  "tables": {
+    "AGE GROUPS": {
+      "hasWeightedRows": true,
+      "rows": [
+        {
+          "value": "young adult",
+          "weight": 3
+        },
+        {
+          "value": "adult",
+          "weight": 8
+        },
+        {
+          "value": "middle aged",
+          "weight": 3
+        },
+        {
+          "value": "elderly",
+          "weight": 1
+        }
+      ]
+    },
+    "CITY DISASTER": [
+      "an unnatural disease has broken out",
+      "arcane symbols have appeared randomly",
+      "sightings of strange beings",
+      "the earth has opened up",
+      "everyone has died and become undead"
+    ],
+    "CITY MOOD SETTING": [
+      [
+        "dawn",
+        "high noon",
+        "dusk"
+      ],
+      [
+        "sprawling"
+      ],
+      [
+        [
+          "dusk",
+          "streetlamps flicker",
+          "darkening streets"
+        ]
+      ],
+      [
+        "carts and hooves clatter on the stone",
+        "energetic chatter",
+        "music of a distant street busker"
+      ]
+    ],
+    "COLORS": [
+      "silver",
+      "silver",
+      "red",
+      "orange",
+      "yellow",
+      "green",
+      "blue",
+      "black"
+    ],
+    "DEFAULT ALIGNMENTS": {
+      "hasWeightedRows": true,
+      "rows": [
+        {
+          "value": "Lawful Good",
+          "weight": 80
+        },
+        {
+          "value": "Neutral Good",
+          "weight": 5
+        },
+        {
+          "value": "Chaotic Good",
+          "weight": 5
+        },
+        {
+          "value": "Lawful Neutral",
+          "weight": 5
+        },
+        {
+          "value": "Neutral",
+          "weight": 1
+        },
+        {
+          "value": "Chaotic Neutral",
+          "weight": 1
+        },
+        {
+          "value": "Lawful Evil",
+          "weight": 1
+        },
+        {
+          "value": "Neutral Evil",
+          "weight": 1
+        },
+        {
+          "value": "Chaotic Evil",
+          "weight": 1
+        }
+      ]
+    },
+    "DEFAULT LIVESTOCK": [
+      "sheep",
+      "cow",
+      "chicken",
+      "goat",
+      "pig"
+    ],
+    "DEFAULT MOUNTS": [
+      "riding horse",
+      "warhorse",
+      "draft horse"
+    ],
+    "DEFAULT PETS": [
+      "dog",
+      "cat",
+      "wolf"
+    ],
+    "DEFAULT RACES": {
+      "hasWeightedRows": true,
+      "rows": [
+        {
+          "value": "human",
+          "weight": 79
+        },
+        {
+          "value": "halfling",
+          "weight": 9
+        },
+        {
+          "value": "elf",
+          "weight": 5
+        },
+        {
+          "value": "dwarf",
+          "weight": 3
+        },
+        {
+          "value": "gnome",
+          "weight": 2
+        },
+        {
+          "value": "half-elf",
+          "weight": 2
+        },
+        {
+          "value": "half-orc",
+          "weight": 2
+        }
+      ]
+    },
+    "DEFAULT STATBLOCKS": {
+      "hasWeightedRows": true,
+      "rows": [
+        {
+          "value": "commoner",
+          "weight": 30
+        },
+        {
+          "value": "guard",
+          "weight": 5
+        },
+        {
+          "value": "druid",
+          "weight": 2
+        },
+        {
+          "value": "gladiator",
+          "weight": 2
+        },
+        {
+          "value": "knight",
+          "weight": 2
+        },
+        {
+          "value": "mage",
+          "weight": 2
+        },
+        {
+          "value": "veteran",
+          "weight": 2
+        },
+        {
+          "value": "acolyte",
+          "weight": 1
+        },
+        {
+          "value": "priest",
+          "weight": 1
+        },
+        {
+          "value": "spy",
+          "weight": 1
+        },
+        {
+          "value": "monk",
+          "weight": 1
+        },
+        {
+          "value": "noble",
+          "weight": 1
+        },
+        {
+          "value": "assassin",
+          "weight": 1
+        },
+        {
+          "value": "bandit",
+          "weight": 1
+        },
+        {
+          "value": "cultist",
+          "weight": 1
+        }
+      ]
+    },
+    "DINNER": {
+      "concatenate": true,
+      "rows": [
+        [
+          "Stewed",
+          "Roasted",
+          "Fried",
+          "Boiled",
+          "Baked",
+          "Grilled",
+          "Seared",
+          "Steamed",
+          "Salted",
+          "Pickled"
+        ],
+        " ",
+        [
+          "Rabbit",
+          "Chicken",
+          "Duck",
+          "Mutton",
+          "Pork",
+          "Beef",
+          "Pheasant",
+          "Goose",
+          "Trout",
+          "Clams",
+          "Pork sausage",
+          "Duck sausage"
+        ],
+        " with ",
+        [
+          "Dumplings",
+          "Red cabbage",
+          "White cabbage",
+          "Shredded cabbage",
+          "Leeks",
+          "Lentils",
+          "Broccoli",
+          "Peas",
+          "Cauliflower",
+          "Kidney beans",
+          "String beans",
+          "White beans",
+          "Turnip mash",
+          "Sliced turnips",
+          "Asparagus",
+          "Sprouts",
+          "Sweet peppers",
+          "Red potatoes",
+          "Golden potatoes",
+          "Yams",
+          ""
+        ],
+        " and ",
+        [
+          "Carrots",
+          "Apples",
+          "Cherries",
+          "Tomatoes",
+          "Blueberries",
+          "Strawberries",
+          "Beets",
+          "Mushrooms",
+          "Radishes",
+          "Squash",
+          "Sweet onions",
+          "Red onions"
+        ]
+      ]
+    },
+    "DRINK SPECIAL": {
+      "rows": [
+        "Tonight's special cocktail: Pixiewine. Each glass of this crisp, floral-scented wine is served with a pixie.",
+        "Tonight's special cocktail: Suckerpunch. Each glass of this potent purple-red punch has several small writhing tentacles that reach out of the glass to attach to your face with their suckers. It actually feels kind of nice.",
+        "Tonight's special: Bring-Your-Own-Horn. Bring the horn of your favorite beast or monstrous humanoid (any size!), and we'll fill it with cheap ale or wine for 2 cp.",
+        "Tonight's special cocktail: Mindbomb. It's made with absinthe and explosive powder.",
+        "Tonight's special cocktail: Fireball. Served by wizards of 5th level or higher.",
+        "Tonight's special cocktail: Stonebones. A powerful rum cocktail made with powder gorgon horn and basilisk eye. It's only partial paralysis."
+      ],
+      "source": "BTT"
+    },
+    "ELEMENTS": [
+      "air",
+      "earth",
+      "fire",
+      "water"
+    ],
+    "FEMALE NAME": {
+      "concatenate": true,
+      "rows": [
+        [
+          "Millicent",
+          "Alinor",
+          "Eleanor",
+          "Agnes",
+          "Alice",
+          "Avice",
+          "Beatrice",
+          "Cecily",
+          "Emma",
+          "Isabella",
+          "Joan",
+          "Juliana",
+          "Margery",
+          "Matilda",
+          "Roh",
+          "Morgan",
+          "Elizabeth",
+          "Kethleen"
+        ],
+        " ",
+        "*LASTNAME*"
+      ]
+    },
+    "GNOLL APPEARANCE": [
+      "Missing an arm",
+      "Human ribcage as a hat",
+      "Infested with maggots",
+      "Fur matted with dried blood",
+      "Missing an eye",
+      "Walks with a severe limp",
+      "Covered in burn wounds",
+      "Vestigial twin embedded on back",
+      "Loud, wheezing breaths",
+      "Drool is mildly acidic",
+      "Covered in weeping sores",
+      "Horrific smell of rot",
+      "Weapon still embedded in old wound"
+    ],
+    "GNOLL NAME": [
+      "Aargab",
+      "Immor",
+      "Alark",
+      "Oduk",
+      "Andak",
+      "Orrom",
+      "Ethak",
+      "Otal",
+      "Eyeth",
+      "Ulthak",
+      "lgnar",
+      "Ustar"
+    ],
+    "HUMAN FEMALE FIRSTNAME": [
+      "Azura",
+      "Brey ",
+      "Hallan",
+      "Kasaki",
+      "Lorelei",
+      "Mirabel",
+      "Pharana",
+      "Remora",
+      "Rosalyn",
+      "Sachil",
+      "Saidi",
+      "Tanika",
+      "Tura",
+      "Tylsa",
+      "Vencia",
+      "Xandrilla"
+    ],
+    "HUMAN FEMALE NAME": {
+      "concatenate": true,
+      "rows": [
+        "*HUMAN FEMALE FIRSTNAME*",
+        " ",
+        "*HUMAN LASTNAME*"
+      ]
+    },
+    "HUMAN LASTNAME": [
+      "Arkalis",
+      "Armanci",
+      "Bilger",
+      "Blackstrand",
+      "Brightwater",
+      "Carnavon",
+      "Caskajaro",
+      "Coldshore",
+      "Coyle",
+      "Cresthill",
+      "Cuttlescar",
+      "Daargen",
+      "Dalicarlia",
+      "Danamark",
+      "Donoghan",
+      "Drumwind",
+      "Dunhall",
+      "Ereghast",
+      "Falck",
+      "Fallenbridge",
+      "Faringray",
+      "Fletcher",
+      "Fryft",
+      "Goldrudder",
+      "Grantham",
+      "Graylock",
+      "Gullscream",
+      "Hindergrass",
+      "Iscalon",
+      "Kreel",
+      "Kroft",
+      "Lamoth",
+      "Leerstrom",
+      "Lynchfield",
+      "Moonridge",
+      "Netheridge",
+      "Oakenheart",
+      "Pyncion",
+      "Ratley",
+      "Redraven",
+      "Revenmar",
+      "Roxley",
+      "Sell",
+      "Seratolva",
+      "Shanks",
+      "Shattermast",
+      "Shaulfer",
+      "Silvergraft",
+      "Stavenger",
+      "Stormchapel",
+      "Strong",
+      "Swiller",
+      "Talandro ",
+      "Targana",
+      "Towerfall",
+      "Umbermoor",
+      "Van Devries",
+      "Van Gandt",
+      "Van Hyden",
+      "Varcona",
+      "Varzand",
+      "Voortham",
+      "Vrye",
+      "Webb",
+      "Welfer",
+      "Wilxes",
+      "Wintermere",
+      "Wygarthe",
+      "Zatchet",
+      "Zethergyll"
+    ],
+    "HUMAN MALE FIRSTNAME": [
+      "Anlow",
+      "Arando",
+      "Bram",
+      "Cale",
+      "Dalkon",
+      "Daylen",
+      "Dodd",
+      "Dungarth",
+      "Dyrk",
+      "Eandro",
+      "Falken",
+      "Feck",
+      "Fenton",
+      "Gryphero",
+      "Hagar",
+      "Jeras",
+      "Krynt",
+      "Lavant",
+      "Leyten",
+      "Madian",
+      "Malfier",
+      "Markus",
+      "Meklan",
+      "Namen",
+      "Navaren",
+      "Nerle",
+      "Nilus",
+      "Ningyan",
+      "Norris",
+      "Quentin",
+      "Semil",
+      "Sevenson",
+      "Steveren",
+      "Talfen",
+      "Tamond",
+      "Taran",
+      "Tavon",
+      "Tegan",
+      "Vanan",
+      "Vincent"
+    ],
+    "HUMAN MALE NAME": {
+      "concatenate": true,
+      "rows": [
+        "*HUMAN MALE FIRSTNAME*",
+        " ",
+        "*HUMAN LASTNAME*"
+      ]
+    },
+    "HUMAN MEDIEVAL LASTNAME": [
+      "Achard",
+      "Addinell",
+      "Adeney",
+      "Aguilon",
+      "Albelin",
+      "Alevi",
+      "Alis",
+      "Altard",
+      "Ansgot",
+      "Anzeray",
+      "Arundel",
+      "Aschuill",
+      "Asselin",
+      "Auber",
+      "Aubert",
+      "Auffrye",
+      "Aungier",
+      "Auvray",
+      "Azor",
+      "Bachiler",
+      "Baignard",
+      "Bailleul",
+      "Bainard",
+      "Baliol",
+      "Ballard",
+      "Barkentin",
+      "Basnage",
+      "Basset",
+      "Baudry",
+      "Baujot",
+      "Bauldry",
+      "Bauquemare",
+      "Bavent",
+      "Beaumanoir",
+      "Beaumarchais",
+      "Beaumont",
+      "Beauvallet",
+      "Becdelièvre",
+      "Bele",
+      "Belet",
+      "Bellecote",
+      "Belmis",
+      "Benoist",
+      "Beringar",
+      "Berners",
+      "Bernières",
+      "Bertran",
+      "Bigot",
+      "Blancbaston",
+      "Blangi",
+      "Blosbeville",
+      "Blouet",
+      "Bohon",
+      "Boisivon",
+      "Boislevesque",
+      "Boissel",
+      "Boivin",
+      "Bolam",
+      "Bolbec",
+      "Bondeville",
+      "Bonel",
+      "Bonenffant",
+      "Boneth",
+      "Bonvalet",
+      "Bordel",
+      "Bosanquet",
+      "Bosc",
+      "Bosiet",
+      "Bossard",
+      "Bostel",
+      "Boteler",
+      "Boterel",
+      "Botin",
+      "Bouchard",
+      "Bourchier",
+      "Bourdekin",
+      "Bourdet",
+      "Bourneville",
+      "Bradwardine",
+      "Brai",
+      "Braund",
+      "Brebeuf",
+      "Brereton",
+      "Bretel",
+      "Breteuil",
+      "Bretteville",
+      "Brèvedent",
+      "Brimou",
+      "Brinon",
+      "Briouse",
+      "Briqueville",
+      "Brix",
+      "Buci",
+      "Budi",
+      "Bulli",
+      "Burci",
+      "Burguet",
+      "Buron",
+      "Bursigni",
+      "Busnois",
+      "Busquent",
+      "Caen",
+      "Cailli",
+      "Caillot",
+      "Cairon",
+      "Calmette",
+      "Cambrai",
+      "Campion",
+      "Canaigres",
+      "Canouville",
+      "Caradas",
+      "Carbonnel",
+      "Cardon",
+      "Cardonell",
+      "Carnet",
+      "Carteret",
+      "Castillon",
+      "Caunter",
+      "Cavelier",
+      "Ceauce",
+      "Cely",
+      "Challenge",
+      "Chandos",
+      "Chartres",
+      "Chauncy",
+      "Cheney",
+      "Cherbourg",
+      "Cioches",
+      "Claville",
+      "Clerinell",
+      "Clinchamps",
+      "Coliar",
+      "Colleville",
+      "Colombelles",
+      "Colombieres",
+      "Comyn",
+      "Conteville",
+      "Corbet",
+      "Corbière",
+      "Corbon",
+      "Cormeilles",
+      "Corneilles",
+      "Corviser",
+      "Cosin",
+      "Couci",
+      "Couer",
+      "Courcelle",
+      "Courcelles",
+      "Courci",
+      "Courcon",
+      "Courcy",
+      "Courseume",
+      "Craon",
+      "Crevecoeur",
+      "Croc",
+      "Cruel",
+      "Cugey",
+      "Cul de Louf",
+      "Culai",
+      "Cumin",
+      "Curteys",
+      "d'Ouilli",
+      "d'Adreci",
+      "d'Aguillon",
+      "d'Albert",
+      "d'Alencon",
+      "Dalyngridge",
+      "d'Amboise",
+      "d'Ambray",
+      "Damours",
+      "d'Andeli",
+      "d'Andre",
+      "d'Angers",
+      "d'Angerville",
+      "d'Angleville",
+      "Danneville",
+      "d'Ansleville",
+      "Danvers",
+      "Darcy",
+      "Darell",
+      "d'Argentan",
+      "D'Argouges",
+      "d'Argues",
+      "d'Armentieres",
+      "d'Arques",
+      "d'Athenous",
+      "d'Aubernon",
+      "d'Auberville",
+      "d'Audrieu",
+      "d'Aufai",
+      "d'Aumale",
+      "Daunger",
+      "d'Aunon",
+      "D'Auvay",
+      "D'Auvrecher",
+      "d'Avranches",
+      "d'Avre",
+      "de Bailleul",
+      "de Balon",
+      "de Bans",
+      "de Bapaumes",
+      "de Barbes",
+      "de Beauchamp",
+      "de Beaufou",
+      "de Beaumais",
+      "de Beaumont",
+      "de Beauvais",
+      "de Bellehache",
+      "de Bellemare",
+      "de Bellièvre",
+      "de Belmeis",
+      "De Berchelai",
+      "de Bercheres",
+      "de Bernai",
+      "de Bernieres",
+      "de Berranger",
+      "de Berville",
+      "de Bethencourt",
+      "de Bienfaite",
+      "de Biville",
+      "de Blays",
+      "de Blundville",
+      "de Bouilon",
+      "de Bourgueville",
+      "de Breos",
+      "de Cahaihnes",
+      "de Calmesnil",
+      "de Caulmont",
+      "de Caux",
+      "de Challon",
+      "de Chefderue",
+      "de Civille",
+      "de Corbeil",
+      "de Cormeilles",
+      "de Coucy",
+      "de Courseilles",
+      "de Croismare",
+      "de Faicterau",
+      "De Felius",
+      "De Fry",
+      "de Genville",
+      "de Gosbeck",
+      "de Grieu",
+      "de Hanivel",
+      "de Hattes",
+      "de Herle",
+      "de Ireby",
+      "de La Champagne",
+      "de La Hay",
+      "de La Mare",
+      "de La Noue",
+      "de La Place",
+      "de La Porte",
+      "de La Reue",
+      "de La Roche",
+      "de Lampérière",
+      "de Lombelon",
+      "de Lorraine",
+      "de Malhortye",
+      "de Maromme",
+      "de Massard",
+      "de Mesniel",
+      "de Mesnildo",
+      "de Monchy",
+      "de Monluc",
+      "de Montchrestien",
+      "de Montfault",
+      "de Montgomery",
+      "de Moustiers",
+      "de Moy",
+      "de Munchesney",
+      "de Pardieu",
+      "de Perronet",
+      "de Pinchemont",
+      "de Recusson",
+      "de Rely",
+      "de Reymes",
+      "de Roncherolles",
+      "de Salynges",
+      "de Saussay",
+      "de Savage",
+      "de Seguzzo",
+      "de Servian",
+      "de Seyssel",
+      "de Tanie",
+      "de Tocni",
+      "de Toeni",
+      "de Valles",
+      "de Vandes",
+      "de Vaux",
+      "de Vesci",
+      "de Villy",
+      "de Viuepont",
+      "de Vymont",
+      "d'Ecouis",
+      "d'Engagne",
+      "d'Eresby",
+      "des Moutiers",
+      "des Vaux",
+      "d'Escalles",
+      "Deschamps",
+      "Desmares",
+      "d'Espagne",
+      "Destain",
+      "d'Eu",
+      "d'Evreux",
+      "d'Helion",
+      "d'Hericy",
+      "d'Houdetot",
+      "Digby",
+      "d'Incourt",
+      "Ditton",
+      "Dive Beugelin",
+      "d'Ivri",
+      "Dol Hugue",
+      "d'Olgeanc",
+      "d'Orbec",
+      "d'Orglande",
+      "d'Ornontville",
+      "Douai",
+      "Dreux",
+      "Droullin",
+      "Druel",
+      "du Bec",
+      "du Bois-Hebert",
+      "du Bosc-Roard",
+      "du Breuil",
+      "Du Buisson",
+      "Du Gouey",
+      "du Merle",
+      "Du Moucel",
+      "du Perche",
+      "Du Perron",
+      "du Quesnai",
+      "du Saussai",
+      "du Theil",
+      "du Tilleul",
+      "Dubosc",
+      "Dufay",
+      "Dufour",
+      "Duhamel",
+      "Dumont",
+      "d'Unepac",
+      "Dupasquier",
+      "Duquesne",
+      "Durandal",
+      "Durerie",
+      "Durjardin",
+      "Durville",
+      "Duval",
+      "Dyel",
+      "Ecouland",
+      "Elers",
+      "Emory",
+      "Engerrand",
+      "Erquemboure",
+      "Espec",
+      "Esteney",
+      "Evelyn",
+      "Eveque",
+      "Faceby",
+      "Faintree",
+      "Falaise",
+      "Fantosme",
+      "Faucon",
+      "Fecamp",
+      "Fergant",
+      "Ferrieres",
+      "Feu",
+      "Fitzalan",
+      "Fitzherbert",
+      "Fitzhugh",
+      "Fitzroy",
+      "Flambard",
+      "Folet",
+      "Foliot",
+      "Fonnereau",
+      "Fontemai",
+      "Fossard",
+      "Fougeres",
+      "Fourneaux",
+      "Framan",
+      "Fresle",
+      "Fribois",
+      "Froissart",
+      "Fromentin",
+      "Furnival",
+      "Gael",
+      "Gand",
+      "Garin",
+      "Gaveston",
+      "Gibard",
+      "Giffard",
+      "Gillain",
+      "Gilpin",
+      "Giscard",
+      "Glanville",
+      "Godart",
+      "Godefroy",
+      "Gomboult",
+      "Gouel",
+      "Goulaffre",
+      "Gournai",
+      "Grai",
+      "Grancourt",
+      "Grentemesnil",
+      "Grenteville",
+      "Greslet",
+      "Griffin",
+      "Grimoult",
+      "Grouchet",
+      "Groulart",
+      "Guéribout",
+      "Guernon",
+      "Gueron",
+      "Guideville",
+      "Guiffart",
+      "Guildersleeve",
+      "Guinand",
+      "Gurney",
+      "Guyot",
+      "Hachet",
+      "Halacre",
+      "Hallé",
+      "Hamage",
+      "Harcourt",
+      "Haute",
+      "Hauville",
+      "Hédiart",
+      "Hendry",
+      "Herbard",
+      "Heriet",
+      "Heuzé",
+      "Hewse",
+      "Hodenc",
+      "Holland",
+      "Hotot",
+      "Hue",
+      "Hugonin",
+      "Hynde",
+      "Ide",
+      "Jolland",
+      "Jubert",
+      "la Berviere",
+      "la Bruiere",
+      "la Cleve",
+      "la Foret",
+      "la Guierche",
+      "la Mare",
+      "la Pommeraie",
+      "la Riviere",
+      "La Vache",
+      "La Verrier",
+      "Labbé",
+      "Laci",
+      "l'Adoube",
+      "l'Aigle",
+      "Lallement",
+      "l'Ane",
+      "Lanquetot",
+      "l'Appeville",
+      "l'Archer",
+      "l'Aune",
+      "Le Barge",
+      "le Berruier",
+      "Le Blanc",
+      "le Blond",
+      "le Bouguignon",
+      "le Breton",
+      "Le Chandelier",
+      "Le Clerc",
+      "Le Conte",
+      "Le Cordier",
+      "Le Cornu",
+      "le Despensier",
+      "Le Doulcet",
+      "le Flamand",
+      "le Gaucher",
+      "Le Goix",
+      "Le Grant",
+      "Le Gras",
+      "Le Jumel",
+      "Le Lieur",
+      "Le Maistre",
+      "Le Marchant",
+      "le Marechal",
+      "Le Marinier",
+      "Le Masson",
+      "Le Paulmier",
+      "Le Pelletier",
+      "Le Pesant",
+      "le Poitevin",
+      "Le Prévost",
+      "le Roux",
+      "Le Roux",
+      "Le Seigneur",
+      "le Senechal",
+      "Le Sueur",
+      "Le Tellier",
+      "le Vicomte",
+      "Lefebre",
+      "l'Estourmi",
+      "Letre",
+      "Levasseur",
+      "Lhuillier",
+      "Libourg",
+      "Ligonier",
+      "L'ile",
+      "Linesi",
+      "Lisieux",
+      "Loges",
+      "Lorz",
+      "Loucelles",
+      "Louet",
+      "Louvet",
+      "Lovet",
+      "Lucy",
+      "Ludel",
+      "Lynom",
+      "Machault",
+      "Machel",
+      "Maci",
+      "Maignart",
+      "Malet",
+      "Mallebisse",
+      "Malleville",
+      "Mallilie",
+      "Mallory",
+      "Malvallet",
+      "Malveisin",
+      "Maminot",
+      "Mandeville",
+      "Manneilli",
+      "Mansel",
+      "Mantel",
+      "Marchés",
+      "Marchmain",
+      "Marci",
+      "Marescot",
+      "Margas",
+      "Mariage",
+      "Marillac",
+      "Marisco",
+      "Martel",
+      "Mathan",
+      "Maubenc",
+      "Maudit",
+      "Mauduit",
+      "Maunsell",
+      "Maurouard",
+      "Mautravers",
+      "Maynet",
+      "Medley",
+      "Mercier",
+      "Meri",
+      "Merteberge",
+      "Mesnage",
+      "Meulan",
+      "Meules",
+      "Meverel",
+      "Middleton",
+      "Mobec",
+      "Moion",
+      "Monceaux",
+      "Montacute",
+      "Montaigu",
+      "Montbrai",
+      "Mont-Canisi",
+      "Montfiquet",
+      "Montfort",
+      "Montgomery",
+      "Montgommeri",
+      "Moron",
+      "Morphew",
+      "Mortagne",
+      "Mortain",
+      "Mortemer",
+      "Mortmain",
+      "Moyaux",
+      "Mucedent",
+      "Munneville",
+      "Murdac",
+      "Musard",
+      "Musart",
+      "Mussegros",
+      "Mustel",
+      "Nelond",
+      "Neot",
+      "Nesdin",
+      "Neufmarche",
+      "Neuville",
+      "Noyers",
+      "Omand",
+      "Orlebar",
+      "Ormond",
+      "Osmond",
+      "Osmont",
+      "Ouistreham",
+      "Painel",
+      "Paixdecouer",
+      "Pancevolt",
+      "Pantoul",
+      "Papelion",
+      "Papon",
+      "Paris",
+      "Parry",
+      "Parthenai",
+      "Paschal",
+      "Pasquier",
+      "Pastforeire",
+      "Patris",
+      "Paumera",
+      "Peccoth",
+      "Peche",
+      "Peis",
+      "Pennant",
+      "Perci",
+      "Péricard",
+      "Perroy",
+      "Petremol",
+      "Peveril",
+      "Pevrel",
+      "Picard",
+      "Picot",
+      "Picvini",
+      "Pierrepont",
+      "Pinel",
+      "Pipin",
+      "Pippery",
+      "Piquiri",
+      "Pistres",
+      "Pithou",
+      "Plucknet",
+      "Poer",
+      "Poignant",
+      "Poillei",
+      "Pointel",
+      "Pont",
+      "Pont de l'Arche",
+      "Pontchardon",
+      "Port",
+      "Postel",
+      "Poussin",
+      "Prestcote",
+      "Puchot",
+      "Quesnel",
+      "Quièvremont",
+      "Quincarnon",
+      "Raimbeaucourt",
+      "Rainecourt",
+      "Raleigh",
+      "Rames",
+      "Raoullin",
+      "Rassent",
+      "Ravenot",
+      "Rennes",
+      "Renold",
+      "Restault",
+      "Reviers",
+      "Riebou",
+      "Rivière",
+      "Roard",
+      "Rocque",
+      "Roger",
+      "Romé",
+      "Romenel",
+      "Ros",
+      "Rosai",
+      "Rou",
+      "Roussel",
+      "Runeville",
+      "Sacquerville",
+      "Saint-Clair",
+      "Sainte-d'Aignaux",
+      "Saint-Germain",
+      "Saint-Helene",
+      "Saint-Leger",
+      "Saint-Ouen",
+      "Saint-Quentin",
+      "Saint-Sanson",
+      "Saint-Valeri",
+      "Saint-Waleri",
+      "Saisset",
+      "Sauvigni",
+      "Scolland",
+      "Séguier",
+      "Senarpont",
+      "Senlis",
+      "Sept-Meules",
+      "Simnel",
+      "Sollers",
+      "Somneri",
+      "Sourdeval",
+      "Strivelyn",
+      "Stukely",
+      "Tabraham",
+      "Taillebois",
+      "Taillepied",
+      "Talvace",
+      "Tessel",
+      "Thaon",
+      "Theroulde",
+      "Thibault",
+      "Thiboust",
+      "Thorel",
+      "Tibon",
+      "Tilly",
+      "Tinel",
+      "Tirel",
+      "Toclive",
+      "Torteval",
+      "Touchet",
+      "Tourlaville",
+      "Tourmente",
+      "Tournai",
+      "Tournebulle",
+      "Tournebut",
+      "Tourneville",
+      "Toustain",
+      "Tranchant",
+      "Trelli",
+      "Tulles",
+      "Urry",
+      "Valance",
+      "Valognes",
+      "Vastel",
+      "Vatteville",
+      "Vaubadon",
+      "Vauville",
+      "Vaux",
+      "Vavassour",
+      "Veci",
+      "Venois",
+      "Ventris",
+      "Ver",
+      "Verdun",
+      "Vernold",
+      "Vernon",
+      "Verrall",
+      "Vesci",
+      "Vesli",
+      "Veteripont",
+      "Vieuxpont",
+      "Villehardain",
+      "Villon",
+      "Vipont",
+      "Vis-de-Louf",
+      "Vis-de-Loup",
+      "Vitalis",
+      "Vivers",
+      "Viville",
+      "Voisin",
+      "Wadard",
+      "Warci",
+      "Watteau",
+      "Werables",
+      "Willoughby",
+      "Wissant",
+      "Ygou"
+    ],
+    "ICON DESERT": "fa flaticon-nature-4",
+    "ICON GALAXY": "fa flaticon-nature",
+    "ICON MESA": "fa flaticon-nature-3",
+    "ICON PLANET": "fa flaticon-nature-1",
+    "ICON PLANET CORE": "fa flaticon-planet-1",
+    "ICON PLANET RINGS": "fa flaticon-planet",
+    "ICON PLANETS": "fa flaticon-solar-system",
+    "ICON STAR SYSTEM": "fa flaticon-solar-system-1",
+    "ICON TREES": "fa flaticon-nature-2",
+    "LASTNAME": {
+      "concatenate": true,
+      "rows": [
+        [
+          "Strong",
+          "Tall",
+          "Grand",
+          "Bold",
+          "Big",
+          "Small",
+          "Fine",
+          "Good",
+          "Glad",
+          "Green",
+          "Blue",
+          "Red",
+          "Black",
+          "White",
+          "Pale",
+          "Gray",
+          "Gold",
+          "Silver",
+          "Dark",
+          "Light",
+          "Brave",
+          "Sly"
+        ],
+        [
+          "ington",
+          "son",
+          "house",
+          "door",
+          "castle",
+          "forest",
+          "tree",
+          "leaf",
+          "wind",
+          "rain",
+          "snow",
+          "rock",
+          "stone",
+          "river",
+          "sea",
+          "ship",
+          "smith",
+          "craft",
+          "cook",
+          "worth",
+          "might",
+          "wolf",
+          "bear",
+          "sheep",
+          "pig",
+          "fox",
+          "hunt",
+          "dragon"
+        ]
+      ]
+    },
+    "MALE NAME": {
+      "concatenate": true,
+      "rows": [
+        [
+          "Adam",
+          "Geoffrey",
+          "Gilbert",
+          "Henry",
+          "Hugh",
+          "John",
+          "Nicholas",
+          "Peter",
+          "Ralf",
+          "Richard",
+          "Robert",
+          "Roger",
+          "Simon",
+          "Thomas",
+          "Walter",
+          "William",
+          "Robin",
+          "Albin",
+          "Bayard",
+          "Erwin"
+        ],
+        " ",
+        "*LASTNAME*"
+      ]
+    },
+    "NAME": [
+      "*MALE NAME*",
+      "*FEMALE NAME*"
+    ],
+    "ONE TO TEN": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10"
+    ],
+    "PLANET PREFIX": [
+      "Kry",
+      "Tor",
+      "Ath",
+      "Eb",
+      "Aeb",
+      "Myst",
+      "Col",
+      "And",
+      "Kar",
+      "Chan",
+      "Gly",
+      "Kul",
+      "Raen",
+      "Ed",
+      "Gni",
+      "Con",
+      "Gin",
+      "Bor",
+      "Ter",
+      "Plu",
+      "Jup",
+      "Merc",
+      "Ven",
+      "Tar",
+      "Tur"
+    ],
+    "PLANET SUFFIX": [
+      "ril",
+      "nei",
+      "pri",
+      "ill",
+      "atha",
+      "sel",
+      "ka",
+      "en",
+      "ra",
+      "la",
+      "myth",
+      "lyn",
+      "ion",
+      "ynn",
+      "to",
+      "iter",
+      "us",
+      "ury",
+      "lea",
+      "nov",
+      "omia",
+      "tera",
+      "ilia"
+    ],
+    "SONG": [
+      {
+        "concatenate": true,
+        "rows": [
+          [
+            "Ballad of the ",
+            "Song of the ",
+            "The End of the "
+          ],
+          [
+            "*NOUN*",
+            "*NOUN 2*",
+            "*ADJECTIVE*| |*NOUN*"
+          ]
+        ]
+      },
+      {
+        "concatenate": true,
+        "rows": [
+          "The ",
+          "*NOUN*",
+          [
+            " in the ",
+            "'s ",
+            " and the ",
+            " to the ",
+            " on the "
+          ],
+          "*NOUN 2*"
+        ]
+      },
+      {
+        "concatenate": true,
+        "rows": [
+          "A ",
+          "*NOUN*",
+          [
+            " in a ",
+            "'s ",
+            " and a ",
+            " to a ",
+            " on a "
+          ],
+          "*NOUN 2*"
+        ]
+      }
+    ],
+    "TEMPLE NAMES": {
+      "concatenate": true,
+      "rows": [
+        [
+          "Temple of the",
+          "Church of the",
+          "Chapel of the",
+          "House of the",
+          "Abbey of the",
+          "Cathedral of the",
+          "Shrine of the",
+          "Sanctuary of the",
+          "Priory of the"
+        ],
+        [
+          " "
+        ],
+        [
+          "Blinding",
+          "Sacred",
+          "Holy",
+          "Unholy",
+          "Bloody",
+          "Cursed",
+          "Marvellous",
+          "Wondrous",
+          "Pious",
+          "Miraculous",
+          "Endless",
+          "Unending",
+          "Undying",
+          "Infinite",
+          "Unworldly",
+          "Worldly",
+          "Divine",
+          "Demonic",
+          "Ghostly",
+          "Monstrous",
+          "Tentacled",
+          "All-knowing",
+          "Rational",
+          "Pretty Good",
+          "Vengeful",
+          "Hallowed"
+        ],
+        [
+          " "
+        ],
+        [
+          "Light",
+          "Star",
+          "Beam",
+          "Sphere",
+          "Goddess",
+          "God",
+          "Lords",
+          "Sisterhood",
+          "Brotherhood",
+          "Skies",
+          "Pact",
+          "Sect",
+          "Harmony",
+          "Discord",
+          "Child",
+          "Entity",
+          "Ghost",
+          "Builders",
+          "Makers",
+          "Guide",
+          "Wit",
+          "Story",
+          "Tale",
+          "Unicorn",
+          "Flame",
+          "Fountain",
+          "Locust",
+          "Squid",
+          "Gembaby",
+          "Father",
+          "Mother"
+        ]
+      ]
+    },
+    "URBAN ENCOUNTER": [
+      {
+        "contains": [
+          "You are being mugged",
+          "bandit, 1-6"
+        ]
+      },
+      {
+        "contains": [
+          "Thugs are roughing up a commoner",
+          "commoner",
+          "thug, 2-6"
+        ]
+      },
+      {
+        "contains": [
+          "You see a someone trying to pickpocket a noble",
+          "bandit",
+          "noble"
+        ]
+      },
+      {
+        "contains": [
+          "Guards are trying to frame you for a crime and shake you down for the fine",
+          "guard, 1-5"
+        ]
+      },
+      {
+        "contains": [
+          "Bandit runs by with a satchel, with guards in hot pursuit",
+          "bandit",
+          "guard, 1-3"
+        ]
+      }
+    ],
+    "URBAN QUEST HOOK": [
+      {
+        "contains": [
+          "Murder victim found",
+          "corpse",
+          "guard, 1-3"
+        ]
+      },
+      {
+        "contains": [
+          "You are summoned to the head of government immediately",
+          "scout"
+        ]
+      },
+      {
+        "contains": [
+          "Guards are questioning someone about their whereabouts - a child has gone missing",
+          "guards,1-4",
+          [
+            "commoner",
+            "assassin",
+            "spy"
+          ]
+        ]
+      },
+      {
+        "contains": [
+          "a cache of secret letters"
+        ]
+      }
+    ],
+    "WORLD CREATION": [
+      {
+        "concatenate": true,
+        "rows": [
+          " as one of many experiments by a council of gods trying to discover ",
+          [
+            "The soul",
+            "True sentience and free-will",
+            "A purpose for their eternity",
+            "A new form of magic",
+            "A superior species that would some day replace them",
+            "A superior species that would some day serve them",
+            "A superior species that would be pit against another council's species in a game of war",
+            "A new non-naturally occurring material, such as plastic."
+          ]
+        ]
+      },
+      " by a single creator god",
+      " by a momentary merge of the elemental planes",
+      " as a peace offering between two warring gods",
+      " as an offering of love from one god in love with another",
+      " by a young, defiant god attempting to create something unheard of",
+      " by an ancient civilization searching for the question to the answer of life, the universe, and everything",
+      " when it was hatched from the egg of a world-bearing chicken",
+      " by an immortal governing council. One of many that they created.",
+      " as the result of a wish spell",
+      " by a child as a snow globe. The child in turn lives in a snow globe created by a child, who in turn...",
+      " by the realm of imagination and become wholly realized through a chance run-in with the astral plane.",
+      " by a council of dragons who pieced it together from favored parts of their home worlds",
+      " as an experiment run-amok by a god",
+      " by bored gods, who frequently made worlds, trying to one-up each other",
+      " by two worlds colliding together",
+      " in the belly of a god-dragon, where her god-children warred, and was later cut out of her belly when one of her children committed matricide",
+      " when a world-dragon was butchered and its parts were turned into the sky, water, land, etc."
+    ],
+    "ZERO TO NINE": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9"
+    ]
+  },
+  "things": {
+    "dust of disappearance": {
+      "data": {
+        "range": "10 ft",
+        "duration": "2d4 minutes",
+        "consumable": true
+      }
+    },
+    "feather token": {
+      "data": {
+        "consumable": true
+      }
+    },
+    "wand of magic missiles": {
+      "data": {
+        "charges": {
+          "count": 7,
+          "daily_regain": "1d6+1"
+        },
+        "extend_spell": "Magic Missile"
+      }
+    },
+    "potion of mind reading":{
+      "data":{
+        "save":{
+          "throw":"Wisdom",
+          "success": "The spell ends",
+          "dc": 13
+        },
+        "extend_spell": "Detect Thoughts"
+      }
+    },
+    "potion of healing": {
+      "data": {
+        "dice": {
+          "roll": "2d4+2",
+          "type": "Healing"
+        }
+      }
+    },
+    "Acheron": {
+      "isa": "fiendish plane"
+    },
+    "Arcadia": {
+      "isa": "celestial plane"
+    },
+    "Arvandor": {
+      "isa": "celestial plane",
+      "namegen": "Arvandor (also known as Arborea or Olympus)"
+    },
+    "Astral Plane": {
+      "background": "rainbow",
+      "contains": [
+        "silver astral pool",
+        ".astral color pool, 3-10"
+      ],
+      "icon": "gi gi-circle-claws"
+    },
+    "Astral Sea": {
+      "background": "rainbow",
+      "contains": [
+        "Acheron",
+        "Arcadia",
+        "Arvandor",
+        "Pandemonium",
+        "Seven Heavens/Mount Celestia",
+        "Tarterus/Carceri",
+        "Twin Paradises/Bytopia",
+        "The Outlands",
+        "Elysium",
+        "Gehenna",
+        "Gladsheim/Ysgard",
+        "Hades/The Gray Waste",
+        "Happy Hunting Grounds/Beastlands",
+        "The Nine Hells",
+        "Nirvana/Mechanus"
+      ],
+      "icon": "gi gi-water-bolt"
+    },
+    "Blacklake District": {
+      "contains": [
+        "tavern"
+      ],
+      "isa": "city district"
+    },
+    "Blood Rift": {
+      "isa": "fiendish plane"
+    },
+    "Border Ethereal": {
+      "contains": [
+        "Ethereal Prime Material",
+        "Ethereal Inner Planes"
+      ],
+      "isa": "ethereal plane"
+    },
+    "Brightwater": {
+      "isa": "celestial plane"
+    },
+    "Celestial Planes": {
+      "background": "gold",
+      "contains": [
+        "Arvandor",
+        "Brightwater",
+        "Dwarfhome",
+        "Dweomerheart",
+        "The Gates of the Moon",
+        "Golden Hills",
+        "Green Fields",
+        "The House of Knowledge",
+        "The House of the Triad"
+      ],
+      "icon": "gi gi-hand-of-god"
+    },
+    "City of Judgment": {
+      "background": "darkgray",
+      "contains": [
+        "Crystal Spire"
+      ],
+      "isa": "city"
+    },
+    "Clangor": {
+      "isa": "fiendish plane"
+    },
+    "Concordant Opposition/Outlands": false,
+    "Coterminous Planes": {
+      "background": "black",
+      "contains": [
+        "Ethereal Plane",
+        "Astral Plane",
+        "Plane of Shadow"
+      ],
+      "icon": "gi gi-abstract-076 spinReverse animated infinite",
+      "textColor": "white"
+    },
+    "Crystal Spire": {
+      "background": "darkgray",
+      "contains": [
+        "Kelemvor"
+      ],
+      "isa": "castle"
+    },
+    "Deep Caverns": {
+      "isa": "fiendish plane"
+    },
+    "Deep Ethereal": {
+      "background": "darkslategray",
+      "icon": "gi gi-heavy-fall"
+    },
+    "Dwarfhome": {
+      "isa": "celestial plane"
+    },
+    "Dweomerheart": {
+      "isa": "celestial plane"
+    },
+    "Elemental Chaos": {
+      "background": "colorchange",
+      "contains": [
+        "Elemental Plane of Air",
+        "Elemental Plane of Earth",
+        "Elemental Plane of Fire",
+        "Elemental Plane of Water",
+        "Positive Energy Plane",
+        "Negative Energy Plane",
+        "Limbo",
+        "The Abyss"
+      ],
+      "icon": [
+        "gi gi-abstract-038 spin animated infinite",
+        "gi gi-abstract-040 swing animated infinite",
+        "gi gi-abstract-026 spinReverse animated infinite",
+        "gi gi-abstract-006 jello animated infinite"
+      ]
+    },
+    "Elemental Plane of Air": {
+      "contains": [
+        "Borealis",
+        "Citadel of Ice and Steel",
+        "Taifun: Palace of Tempests",
+        "Elemental Foundation of Air",
+        "citadel, 0-3",
+        "gaseous bubble, 3-7",
+        "floating liquid sphere, 3-7",
+        "asteroid, 0-2"
+      ],
+      "isa": "air plane"
+    },
+    "Elemental Plane of Earth": {
+      "contains": [
+        "The Great Dismal Delve",
+        "The Sevenfold Mazework",
+        "The Pale River",
+        "The Iron Crucible",
+        "The Aviary",
+        "Elemental Foundation of Earth"
+      ],
+      "isa": "earth plane"
+    },
+    "Elemental Plane of Fire": {
+      "contains": [
+        "City of Brass",
+        "Elemental Foundation of Fire"
+      ],
+      "isa": "fire plane"
+    },
+    "Elemental Plane of Water": {
+      "contains": [
+        "Elemental Foundation of Water"
+      ],
+      "isa": "water plane"
+    },
+    "Elysium": {
+      "isa": "celestial plane"
+    },
+    "Ethereal Inner Planes": {
+      "data": {
+        "mirrors": "Inner Planes"
+      },
+      "icon": "gi gi-at-sea"
+    },
+    "Ethereal Plane": {
+      "contains": [
+        "Border Ethereal",
+        "Deep Ethereal",
+        "Ravenloft"
+      ],
+      "isa": "ethereal plane"
+    },
+    "Ethereal Prime Material": {
+      "data": {
+        "mirrorChildrenCopy": "[6, 7, 8]",
+        "mirrors": "Prime Material Plane"
+      },
+      "isa": "ethereal mirror plane"
+    },
+    "Faerûn": {
+      "contains": [
+        "Northwest Faerûn",
+        "North Faerûn",
+        "Northeast Faerûn",
+        "West Faerûn",
+        "Interior Faerûn",
+        "East Faerûn",
+        "Southwest Faerûn",
+        "South Faerûn",
+        "Southeast Faerûn"
+      ],
+      "isa": "continent"
+    },
+    "Fated Depths": {
+      "isa": "fiendish plane"
+    },
+    "Feywild": {
+      "data": {
+        "mirrorChildrenCopy": "[6, 7, 8]",
+        "mirrors": "Prime Material Plane"
+      },
+      "isa": "fey mirror plane"
+    },
+    "Fiendish Planes": {
+      "contains": [
+        "River of Blood",
+        "The Abyss",
+        "The Nine Hells",
+        "Nishrek",
+        "The Supreme Throne",
+        "The Barrens of Doom and Despair",
+        "Blood Rift",
+        "Clangor",
+        "Deep Caverns",
+        "The Demonweb Pits",
+        "Fated Depths",
+        "Fury's Heart",
+        "Hammergrim"
+      ],
+      "isa": "fiendish plane"
+    },
+    "Fugue Plane": {
+      "background": "darkgray",
+      "contains": [
+        "City of Judgment"
+      ],
+      "icon": "fa fa-square"
+    },
+    "Fury's Heart": {
+      "isa": "fiendish plane"
+    },
+    "Gehenna": {
+      "isa": "fiendish plane"
+    },
+    "Gladsheim/Ysgard": {
+      "isa": "celestial plane"
+    },
+    "Golden Hills": {
+      "isa": "celestial plane"
+    },
+    "Great Dismal Delve": {
+      "background": "sienna",
+      "icon": "gi gi-falling-rocks",
+      "textColor": "navajowhite"
+    },
+    "Great Wheel": {
+      "contains": [
+        "Prime Material Plane",
+        "Mirror Planes",
+        "Transitive Planes",
+        "Inner Planes",
+        "Outer Planes"
+      ],
+      "icon": [
+        "gi gi-ship-wheel"
+      ],
+      "isa": "cosmology"
+    },
+    "Green Fields": {
+      "isa": "celestial plane"
+    },
+    "Hades/The Gray Waste": {
+      "background": "gray",
+      "isa": "fiendish plane"
+    },
+    "Hammergrim": {
+      "isa": "fiendish plane"
+    },
+    "Happy Hunting Grounds/Beastlands": {
+      "isa": "celestial plane"
+    },
+    "Harpers": {
+      "isa": "faction"
+    },
+    "Inner Planes": {
+      "background": "wheat",
+      "contains": [
+        "Elemental Plane of Air",
+        "Elemental Plane of Earth",
+        "Elemental Plane of Fire",
+        "Elemental Plane of Water",
+        "Positive Energy Plane",
+        "Negative Energy Plane"
+      ],
+      "icon": "gi gi-at-sea"
+    },
+    "Kelemvor": {
+      "icon": "gi gi-reaper-scythe",
+      "isa": "human"
+    },
+    "Limbo": {
+      "background": "gray",
+      "contains": [
+        "*RANDOM*"
+      ],
+      "icon": "gi gi-time-trap"
+    },
+    "Mirror Planes": {
+      "background": "white",
+      "contains": [
+        "Shadowfell",
+        "Feywild"
+      ],
+      "icon": "gi gi-abstract-076 spinReverse animated infinite",
+      "textColor": "black"
+    },
+    "Negative Energy Plane": {
+      "background": "gray",
+      "icon": "fa fa-minus"
+    },
+    "Neutral Planes": {
+      "background": "gainsboro",
+      "contains": [
+        "Dragon Eyrie",
+        "Heliopolis",
+        "House of Nature",
+        "Jotunheim",
+        "Warrior's Rest"
+      ],
+      "icon": "gi gi-abstract-038"
+    },
+    "Neverwinter": {
+      "contains": [
+        "Neverwinter City Core",
+        "Beggar's Nest",
+        "Blacklake District",
+        "docks",
+        "peninsula"
+      ],
+      "isa": "city"
+    },
+    "Neverwinter City Core": {
+      "contains": [
+        "Castle of Neverwinter",
+        "Halls of Justice",
+        "The Moonstone Mask",
+        "clocktower"
+      ],
+      "isa": "city",
+      "namegen": "City Core"
+    },
+    "Neverwinter Wood": {
+      "contains": [
+        "Mount Hotenow"
+      ],
+      "isa": "forest"
+    },
+    "Nirvana/Mechanus": {
+      "isa": "fiendish plane"
+    },
+    "Nishrek": {
+      "isa": "fiendish plane"
+    },
+    "Northwest Faerûn": {
+      "contains": [
+        "Sword Coast",
+        "The High Forest",
+        "Icewind Dale",
+        "Mithral Hall",
+        "The Silver Marches"
+      ],
+      "isa": "province"
+    },
+    "Outer Planes": {
+      "background": "wheat",
+      "contains": [
+        "The Abyss",
+        "Acheron",
+        "Arcadia",
+        "Concordant Opposition/Outlands",
+        "Elysium",
+        "Gehenna",
+        "Gladsheim/Ysgard",
+        "Hades/The Gray Waste",
+        "Happy Hunting Grounds/Beastlands",
+        "Limbo",
+        "The Nine Hells",
+        "Nirvana/Mechanus",
+        "Arvandor",
+        "Pandemonium",
+        "Seven Heavens/Mount Celestia",
+        "Tarterus/Carceri",
+        "Twin Paradises/Bytopia"
+      ],
+      "icon": "gi gi-cartwheel"
+    },
+    "Outer Planes (Tree)": {
+      "background": "wheat",
+      "contains": [
+        "Celestial Planes",
+        "Fiendish Planes",
+        "Neutral Planes"
+      ],
+      "icon": "gi gi-tree-branch",
+      "namegen": "Outer Planes"
+    },
+    "Pandemonium": {
+      "isa": "fiendish plane"
+    },
+    "Plane of Shadow": {
+      "icon": "gi gi-james-bond-aperture spinReverse animated infinite",
+      "isa": "Shadowfell"
+    },
+    "Positive Energy Plane": {
+      "background": "lightgreen",
+      "icon": "fa fa-plus"
+    },
+    "Prime Material Plane": {
+      "contains": [
+        "crystal sphere, 1-5",
+        "Realmspace"
+      ],
+      "isa": "material plane",
+      "namegen": "Prime Material"
+    },
+    "Ravenloft": {
+      "background": "black",
+      "contains": [
+        "Barovia",
+        ".demiplane"
+      ],
+      "icon": "gi gi-evil-bat",
+      "namegen": "Demiplane of Dread (Ravenloft)",
+      "textColor": "indianred"
+    },
+    "Realmspace": {
+      "contains": [
+        "Toril",
+        {
+          "contains": [
+            "Harpers",
+            "Zhentarim"
+          ],
+          "icon": "fa fa-users",
+          "namegen": "factions"
+        }
+      ],
+      "isa": "crystal sphere",
+      "namegen": "Realmspace (The Forgotten Realms)"
+    },
+    "River of Blood": {
+      "isa": "fiendish plane"
+    },
+    "Seven Heavens/Mount Celestia": {
+      "isa": "celestial plane"
+    },
+    "Shadowfell": {
+      "data": {
+        "mirrors": "Prime Material Plane"
+      },
+      "isa": "undead mirror plane"
+    },
+    "Sword Coast": {
+      "contains": [
+        "Neverwinter Wood",
+        "Neverwinter",
+        "Waterdeep, the City of Splendors",
+        "Luskan, the City of Sails",
+        "town of Leilon",
+        "Sword Mountains",
+        "Ardeep Forest",
+        "Mere of Dead Men"
+      ],
+      "isa": "beach"
+    },
+    "Sword Mountains": {
+      "contains": [
+        "Icespire Peak"
+      ],
+      "isa": "mountain"
+    },
+    "Tarterus/Carceri": {
+      "isa": "fiendish plane"
+    },
+    "The Abyss": {
+      "isa": "abyssal plane"
+    },
+    "The Aviary": {
+      "contains": [
+        "avariel, 5-20"
+      ],
+      "isa": "cave"
+    },
+    "The Barrens of Doom and Despair": {
+      "isa": "fiendish plane"
+    },
+    "The Demonweb Pits": {
+      "isa": "fiendish plane"
+    },
+    "The Gates of the Moon": {
+      "isa": "celestial plane"
+    },
+    "The House of Knowledge": {
+      "isa": "celestial plane"
+    },
+    "The House of the Triad": {
+      "isa": "celestial plane"
+    },
+    "The Iron Crucible": {
+      "background": "sienna",
+      "isa": "portal",
+      "namegen": "The Iron Crucible: portal to |*ELEMENTS*| plane"
+    },
+    "The Nine Hells": {
+      "isa": "fiendish plane"
+    },
+    "The Outlands": {},
+    "The Pale River": {
+      "background": "sienna",
+      "icon": "gi gi-river",
+      "namegen": "The Pale River",
+      "textColor": "skyblue"
+    },
+    "The Supreme Throne": {
+      "isa": "fiendish plane"
+    },
+    "Toril": {
+      "contains": [
+        "Faerûn",
+        "Anadia",
+        "Karpri",
+        "Chandos",
+        "Glyth",
+        "H'Catha",
+        "Coliar",
+        "Garden",
+        "sun"
+      ],
+      "isa": "planet"
+    },
+    "Transitive Planes": {
+      "background": "wheat",
+      "contains": [
+        "Ethereal Plane",
+        "Astral Plane"
+      ],
+      "icon": "gi gi-dust-cloud"
+    },
+    "Twin Paradises/Bytopia": {
+      "isa": "celestial plane"
+    },
+    "World Axis": {
+      "contains": [
+        "Prime Material Plane",
+        "Shadowfell",
+        "Feywild",
+        "Astral Sea",
+        "Elemental Chaos"
+      ],
+      "icon": "gi gi-abstract-043 pulse animated infinite",
+      "isa": "cosmology"
+    },
+    "World Tree": {
+      "contains": [
+        "Prime Material Plane",
+        "Inner Planes",
+        "Coterminous Planes",
+        "Outer Planes (Tree)",
+        "The Outlands",
+        "Fugue Plane"
+      ],
+      "icon": "glyphicon glyphicon-tree-deciduous",
+      "isa": "cosmology"
+    },
+    "Zhentarim": {
+      "isa": "faction"
+    },
+    "aarakocra": {
+      "data": {
+        "age adult": 3,
+        "age max": 30
+      },
+      "isa": "playable race"
+    },
+    "aberration": {
+      "icon": "gi gi-mighty-boosh"
+    },
+    "abyssal plane": {
+      "background": "black",
+      "contains": [
+        "castle, 1-3",
+        "manor, 1-3",
+        "temple, 1-5"
+      ],
+      "icon": "fa flaticon-black-hole spin animated infinite"
+    },
+    "acid": {
+      "icon": "gi gi-acid"
+    },
+    "acid weapon": {
+      "background": "limegreen",
+      "icon": [
+        "gi gi-acid"
+      ]
+    },
+    "acolyte": {
+      "contains": [
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*",
+        "robes"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-prayer",
+        "gi gi-kneeling",
+        "gi gi-robe"
+      ]
+    },
+    "adventuring gear": {
+      "icon": "gi gi-backpack"
+    },
+    "air genasi": {
+      "isa": "genasi"
+    },
+    "air plane": {
+      "background": "aliceBlue",
+      "contains": [
+        "castle, 0-3",
+        "gaseous bubble, 3-7",
+        "floating liquid sphere, 3-7",
+        "asteroid, 0-2"
+      ],
+      "icon": "gi gi-fluffy-cloud"
+    },
+    "alchemist's supplies": {
+      "icon": [
+        "gi gi-magic-potion",
+        "gi gi-potion-ball",
+        "gi gi-standing-potion",
+        "gi gi-fire-bottle",
+        "gi gi-snow-bottle",
+        "gi gi-square-bottle"
+      ]
+    },
+    "ammunition": {
+      "icon": [
+        "gi gi-quiver"
+      ]
+    },
+    "amulet": {
+      "background": "indigo",
+      "icon": [
+        "gi gi-gem-necklace",
+        "gi gi-necklace"
+      ],
+      "textColor": "gold"
+    },
+    "amulet of health": {
+      "isa": "amulet"
+    },
+    "amulet of proof against detection and location": {
+      "isa": "amulet"
+    },
+    "amulet of the planes": {
+      "isa": "amulet"
+    },
+    "androsphinx": {
+      "icon": "gi gi-anubis"
+    },
+    "ape": {
+      "icon": "gi gi-monkey"
+    },
+    "archmage": {
+      "contains": [
+        ".humanoid",
+        "robes",
+        "dagger"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": "gi gi-overlord-helm"
+    },
+    "arena": {
+      "contains": [
+        "pitch",
+        "gladiator, 2-15",
+        "humanoid, 10-20"
+      ],
+      "icon": "gi gi-arena"
+    },
+    "armor": {
+      "icon": "gi gi-armor-vest"
+    },
+    "arrows": {
+      "icon": "gi gi-target-arrows"
+    },
+    "assassin": {
+      "contains": [
+        ".humanoid",
+        "studded leather armor",
+        "shortsword",
+        "light crossbow"
+      ],
+      "data": {
+        "alignment": [
+          "Lawful Neutral",
+          "Neutral",
+          "Chaotic Neutral",
+          "Lawful Evil",
+          "Neutral Evil",
+          "Chaotic Evil"
+        ],
+        "languages": [
+          "Thieves' Cant"
+        ],
+        "race": "any"
+      },
+      "icon": "gi gi-assassin-pocket",
+      "isa": "humanoid"
+    },
+    "astral color pool": {
+      "icon": "gi gi-portal",
+      "namegen": "*COLORS*| astral pool"
+    },
+    "avariel": {
+      "isa": "elf",
+      "name": "avariel"
+    },
+    "axe beak": {
+      "icon": "gi gi-bird-twitter"
+    },
+    "baboon": {
+      "icon": "gi gi-monkey"
+    },
+    "backpack": {
+      "icon": "gi gi-backpack"
+    },
+    "badger": {
+      "icon": "gi gi-panda"
+    },
+    "bag of beans": {
+      "icon": "gi gi-swap-bag"
+    },
+    "bag of holding": {
+      "icon": "gi gi-knapsack"
+    },
+    "bag of tricks": {
+      "icon": "gi gi-knapsack"
+    },
+    "bagpipes": {
+      "icon": "glyphicon glyphicon-music"
+    },
+    "bandit": {
+      "contains": [
+        ".humanoid",
+        "leather armor",
+        "scimitar",
+        "light crossbow"
+      ],
+      "data": {
+        "alignment": [
+          "Neutral Good",
+          "Chaotic Good",
+          "Neutral",
+          "Chaotic Neutral",
+          "Neutral Evil",
+          "Chaotic Evil"
+        ],
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-rogue",
+        "gi gi-sprint"
+      ]
+    },
+    "bandit captain": {
+      "contains": [
+        ".humanoid",
+        "studded leather armor",
+        "scimitar",
+        "dagger"
+      ],
+      "data": {
+        "alignment": [
+          "Neutral Good",
+          "Chaotic Good",
+          "Neutral",
+          "Chaotic Neutral",
+          "Neutral Evil",
+          "Chaotic Evil"
+        ],
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-rogue",
+        "gi gi-sprint"
+      ]
+    },
+    "bar": {
+      "contains": [
+        "barkeep",
+        "menu",
+        "keg, 2-10",
+        "safebox"
+      ],
+      "icon": [
+        "gi gi-beer-stein"
+      ]
+    },
+    "bard": {
+      "contains": [
+        "performing \"|*SONG*|\"",
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*",
+        "common clothes",
+        [
+          "flute",
+          "lute",
+          "pan flute",
+          "lyre",
+          "viol"
+        ],
+        [
+          "bagpipes",
+          "drum",
+          "dulcimer",
+          "shawm"
+        ]
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "fa fa-pied-piper-alt",
+        "gi gi-sing"
+      ],
+      "isa": "humanoid"
+    },
+    "barkeep": {
+      "contains": [
+        ".humanoid",
+        "common clothes"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "isa": "humanoid"
+    },
+    "barn": {
+      "background": "white",
+      "contains": [
+        "livestock, 10-20",
+        "hayloft"
+      ],
+      "icon": "gi gi-barn",
+      "textColor": "darkred"
+    },
+    "barrel": {
+      "icon": "gi gi-barrel"
+    },
+    "barren planet": {
+      "background": "black",
+      "icon": "fa flaticon-big-moon"
+    },
+    "basic poison": {
+      "background": "green",
+      "icon": "gi gi-poison-bottle"
+    },
+    "basket": {
+      "contains": [
+        [
+          "fruit, 2-8",
+          "vegetable, 2-8"
+        ]
+      ],
+      "icon": "fa fa-shopping-basket"
+    },
+    "bat": {
+      "icon": [
+        "gi gi-bat",
+        "gi gi-bat-wing",
+        "gi gi-evil-bat"
+      ]
+    },
+    "battleaxe": {
+      "icon": "gi gi-battered-axe"
+    },
+    "battleaxe +1": {
+      "isa": "battleaxe"
+    },
+    "battlefield": {
+      "background": "darkred",
+      "icon": "gi gi-bloody-sword"
+    },
+    "beach": {
+      "background": "navajowhite",
+      "icon": "fa flaticon-palm-trees",
+      "textColor": "darkblue"
+    },
+    "beast": {
+      "icon": "gi gi-beast-eye"
+    },
+    "bed": {
+      "background": "floralwhite",
+      "icon": "gi gi-bed",
+      "textColor": "firebrick"
+    },
+    "bedroll": {
+      "icon": [
+        "gi gi-bandage-roll"
+      ],
+      "isa": "adventuring gear"
+    },
+    "bedroom": {
+      "contains": [
+        "bed",
+        "bed, 50%",
+        "chest, 0-2"
+      ],
+      "icon": [
+        "gi gi-wooden-door"
+      ]
+    },
+    "beer": {
+      "background": "goldenrod",
+      "icon": [
+        "fa fa-beer",
+        "gi gi-beer-bottle",
+        "gi gi-beer-stein"
+      ],
+      "namegen": [
+        "Wheat Ale",
+        "Porter Mead",
+        "Mead",
+        "Buttery Ale",
+        "Amber Ale",
+        "Pear Cider",
+        "Root Beer",
+        "Ginger Beer",
+        "Fizzy ale"
+      ],
+      "textColor": "palegoldenrod"
+    },
+    "bell": {
+      "icon": [
+        "gi gi-ringing-bell",
+        "fa fa-bell",
+        "fa fa-bell-o"
+      ]
+    },
+    "berserker": {
+      "contains": [
+        ".humanoid",
+        "hide armor",
+        "greataxe"
+      ],
+      "data": {
+        "alignment": [
+          "Chaotic Good",
+          "Chaotic Neutral",
+          "Chaotic Evil"
+        ],
+        "race": "any"
+      },
+      "icon": "gi gi-barbarian"
+    },
+    "blacksmith": {
+      "contains": [
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*",
+        "common clothes",
+        {
+          "isa": "common clothes",
+          "namegen": "leather apron"
+        }
+      ],
+      "data": {
+        "race": "any"
+      },
+      "isa": "humanoid"
+    },
+    "blanket": {
+      "icon": "gi gi-bandage-roll"
+    },
+    "blink dog": {
+      "icon": "gi gi-sniffing-dog"
+    },
+    "block and tackle": {
+      "background": "khaki",
+      "icon": [
+        "gi gi-rope-coil"
+      ]
+    },
+    "blood hawk": {
+      "icon": "gi gi-bird-claw"
+    },
+    "blowgun": {
+      "icon": "gi gi-gunshot"
+    },
+    "bludgeoning weapon": {
+      "icon": [
+        "gi gi-flanged-mace",
+        "gi gi-mace-head",
+        "gi gi-wood-club",
+        "gi gi-spiked-mace",
+        "gi gi-hammer-drop"
+      ]
+    },
+    "boar": {
+      "icon": "gi gi-boar-tusks"
+    },
+    "bones": {
+      "background": "oldlace",
+      "icon": "gi gi-jawbone"
+    },
+    "book": {
+      "background": "antiquewhite",
+      "icon": [
+        "gi gi-open-book",
+        "gi gi-black-book",
+        "gi gi-white-book",
+        "fa fa-book"
+      ],
+      "namegen": "*BOOK NAME*",
+      "textColor": [
+        "black",
+        "darkblue",
+        "indigo",
+        "midnightblue",
+        "darkviolet",
+        "firebrick",
+        "mediumvioletred",
+        "darkgreen",
+        "darkslategray",
+        "saddlebrown",
+        "sienna",
+        "dimgray",
+        "forestgreen",
+        "indianred",
+        "chocolate",
+        "gray",
+        "lightslategray",
+        "peru",
+        "coral",
+        "darkorange"
+      ]
+    },
+    "bookshelf": {
+      "contains": [
+        "book, 3-10"
+      ],
+      "icon": "gi gi-bookshelf"
+    },
+    "boots": {
+      "background": "tan",
+      "icon": [
+        "gi gi-boots",
+        "gi gi-steeltoe-boots",
+        "gi gi-walking-boot"
+      ],
+      "textColor": "saddlebrown"
+    },
+    "boots of elvenkind": {
+      "isa": "boots"
+    },
+    "boots of levitation": {
+      "isa": "boots"
+    },
+    "boots of speed": {
+      "isa": "boots"
+    },
+    "boots of striding and springing": {
+      "isa": "boots"
+    },
+    "boots of the winterlands": {
+      "isa": "boots"
+    },
+    "bounty board": {
+      "icon": "fa fa-newspaper-o"
+    },
+    "bowl of commanding water elementals": {
+      "icon": [
+        "gi gi-water-splash"
+      ]
+    },
+    "breastplate": {
+      "icon": "gi gi-breastplate"
+    },
+    "breastplate of acid resistance": {
+      "isa": "breastplate"
+    },
+    "breastplate of cold resistance": {
+      "isa": "breastplate"
+    },
+    "breastplate of fire resistance": {
+      "isa": "breastplate"
+    },
+    "breastplate of force resistance": {
+      "isa": "breastplate"
+    },
+    "breastplate of lightning resistance": {
+      "isa": "breastplate"
+    },
+    "breastplate of necrotic resistance": {
+      "isa": "breastplate"
+    },
+    "breastplate of poison resistance": {
+      "isa": "breastplate"
+    },
+    "breastplate of psychic resistance": {
+      "isa": "breastplate"
+    },
+    "breastplate of radiant resistance": {
+      "isa": "breastplate"
+    },
+    "bucket": {
+      "icon": "fa fa-bitbucket"
+    },
+    "calligrapher's supplies": {
+      "icon": [
+        "gi gi-quill",
+        "gi gi-quill-ink",
+        "gi gi-folded-paper",
+        "gi gi-papers"
+      ]
+    },
+    "caltrops": {
+      "icon": [
+        "gi gi-spikes",
+        "gi gi-spikes-half",
+        "gi gi-spikes-init"
+      ]
+    },
+    "camel": {
+      "icon": "gi gi-camel-head"
+    },
+    "campfire": {
+      "icon": "gi gi-campfire"
+    },
+    "candle": {
+      "icon": [
+        "gi gi-candle-flame",
+        "gi gi-candle-holder",
+        "gi gi-candle-light"
+      ]
+    },
+    "capital city": false,
+    "carpenter's tools": {
+      "icon": "gi gi-hammer-nails"
+    },
+    "cartographer's tools": {
+      "icon": "gi gi-compass"
+    },
+    "castle": {
+      "contains": [
+        "castle keep",
+        "garden, 1-5",
+        "battlements",
+        "courtyard",
+        "gatehouse",
+        "tower, 1-6"
+      ],
+      "icon": "fa flaticon-castle",
+      "isa": "residence"
+    },
+    "castle keep": {
+      "contains": [
+        "great hall"
+      ],
+      "icon": "gi gi-castle"
+    },
+    "cat": {
+      "icon": [
+        "gi gi-black-cat",
+        "gi gi-white-cat"
+      ]
+    },
+    "cathedral": {
+      "contains": [
+        "gargoyle, 2-8",
+        "altar",
+        "temple, 2",
+        "tomb, 2",
+        "crypt"
+      ],
+      "icon": "gi gi-church"
+    },
+    "cave": {
+      "background": "saddlebrown",
+      "icon": "gi gi-mountain-cave",
+      "isa": "dungeon"
+    },
+    "celestial": {
+      "icon": [
+        "gi gi-angel-outfit",
+        "gi gi-angel-wings",
+        "gi gi-curly-wing",
+        "gi gi-fluffy-wing"
+      ]
+    },
+    "celestial plane": {
+      "background": "gold",
+      "contains": [
+        "citadel, 1-3",
+        "palace, 1-3",
+        "temple, 1-5"
+      ],
+      "icon": "fa flaticon-religion-cross"
+    },
+    "cemetery": {
+      "background": "black",
+      "contains": [
+        "grave, 4-10",
+        "priest, 0-1"
+      ],
+      "icon": "gi gi-graveyard",
+      "textColor": "silver"
+    },
+    "chain": {
+      "icon": "fa fa-chain"
+    },
+    "chest": {
+      "icon": [
+        "gi gi-chest",
+        "gi gi-locked-chest",
+        "gi gi-open-chest"
+      ]
+    },
+    "chicken": {
+      "background": "wheat",
+      "icon": "gi gi-chicken",
+      "textColor": "darkred"
+    },
+    "city": {
+      "contains": [
+        "city center",
+        "market district, 1-3",
+        "temple district",
+        "red light district",
+        "arena, 25%",
+        "noble housing district",
+        "housing district",
+        "slum",
+        "sewers"
+      ],
+      "icon": "fa flaticon-castle"
+    },
+    "city center": {
+      "contains": [
+        "city hall"
+      ],
+      "icon": "gi gi-medieval-gate",
+      "isa": "city district"
+    },
+    "city district": {
+      "icon": "fa flaticon-suburb"
+    },
+    "city hall": {
+      "icon": "gi gi-castle"
+    },
+    "climber's kit": {
+      "icon": "gi gi-stake-hammer"
+    },
+    "cloak": {
+      "icon": "gi gi-cloak"
+    },
+    "cloak of arachnida": {
+      "icon": "gi gi-cloak"
+    },
+    "cloak of displacement": {
+      "icon": "gi gi-cloak"
+    },
+    "cloak of elvenkind": {
+      "icon": "gi gi-cloak"
+    },
+    "cloak of protection": {
+      "icon": "gi gi-cloak"
+    },
+    "cloak of the bat": {
+      "icon": "gi gi-cloak"
+    },
+    "cloak of the manta ray": {
+      "icon": "gi gi-cloak"
+    },
+    "club": {
+      "icon": [
+        "gi gi-wood-club"
+      ]
+    },
+    "club +2": {
+      "isa": "club"
+    },
+    "club +3": {
+      "isa": "club"
+    },
+    "coastal kingdom": {
+      "background": "papayawhip",
+      "contains": [
+        "port city, 1-3",
+        "city, 1-3",
+        "town, 2-8",
+        "province, 3-6",
+        "mountain, 0-2",
+        "lake, 0-2",
+        "forest, 0-3"
+      ],
+      "isa": "kingdom",
+      "textColor": "darkblue"
+    },
+    "cobbler's tools": {
+      "icon": "gi gi-flat-hammer"
+    },
+    "cold drink": {
+      "icon": "gi gi-glass-shot",
+      "namegen": [
+        "Pumpkin juice",
+        "Milk",
+        "Apple juice"
+      ]
+    },
+    "common clothes": {
+      "icon": [
+        "gi gi-mail-shirt",
+        "gi gi-shirt"
+      ],
+      "namegen": {
+        "concatenate": true,
+        "rows": [
+          [
+            "faded ",
+            ""
+          ],
+          [
+            "white",
+            "blue",
+            "yellow",
+            "tan",
+            "brown",
+            "gray",
+            "green",
+            "red",
+            "orange"
+          ],
+          " ",
+          [
+            "woolen",
+            "linen",
+            "hemp"
+          ],
+          [
+            " tunic",
+            " shirt"
+          ]
+        ]
+      }
+    },
+    "commoner": {
+      "contains": [
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*",
+        "common clothes",
+        "tradeskill"
+      ],
+      "data": {
+        "race": "any"
+      }
+    },
+    "component pouch": {
+      "icon": "gi gi-swap-bag"
+    },
+    "construct": {
+      "icon": [
+        "gi gi-robot-golem",
+        "gi gi-vintage-robot",
+        "gi gi-robot-leg",
+        "fa flaticon-technology"
+      ]
+    },
+    "continent": {
+      "background": "darkgreen",
+      "contains": [
+        "coastal kingdom, 1-4",
+        "landlocked kingdom, 3-8",
+        "wasteland, 50%",
+        "sea, 0-2"
+      ],
+      "icon": [
+        "fa flaticon-africa-map",
+        "fa flaticon-australia-map",
+        "fa flaticon-south-america"
+      ],
+      "textColor": "antiquewhite"
+    },
+    "cook's utensils": {
+      "icon": [
+        "gi gi-knife-fork",
+        "gi gi-chef-toque"
+      ]
+    },
+    "corpse": {
+      "icon": "gi gi-carrion"
+    },
+    "cosmology": {
+      "background": "antiquewhite",
+      "contains": [
+        [
+          ".Great Wheel",
+          ".World Axis",
+          ".World Tree"
+        ]
+      ],
+      "icon": "gi gi-abstract-011"
+    },
+    "costume clothes": {
+      "icon": "gi gi-jester-hat"
+    },
+    "cottage": {
+      "icon": "gi gi-viking-longhouse",
+      "isa": "residence",
+      "namegen": "*LASTNAME*| house"
+    },
+    "cottage interior": {
+      "icon": "gi gi-house"
+    },
+    "cow": {
+      "icon": "gi gi-bull"
+    },
+    "crab": {
+      "icon": [
+        "gi gi-crab-claw",
+        "gi gi-crab",
+        "gi gi-sad-crab"
+      ]
+    },
+    "crate": {
+      "icon": "gi gi-wooden-crate"
+    },
+    "crossbow bolt case": {
+      "icon": "gi gi-quiver"
+    },
+    "crowbar": {
+      "icon": "gi gi-crowbar"
+    },
+    "crystal": {
+      "icon": "gi gi-floating-crystal"
+    },
+    "crystal sphere": {
+      "background": "black",
+      "contains": [
+        "star",
+        "star, 3%",
+        "planet, 2-5",
+        "ocean planet, 1-2"
+      ],
+      "icon": "gi gi-crystal-shine pulse animated infinite",
+      "namegen": "*PLANET PREFIX*|*PLANET SUFFIX*|space",
+      "textColor": "mediumpurple"
+    },
+    "cult fanatic": {
+      "contains": [
+        ".humanoid",
+        "leather armor",
+        "robes",
+        "dagger"
+      ],
+      "data": {
+        "alignment": [
+          "Lawful Neutral",
+          "Neutral",
+          "Chaotic Neutral",
+          "Lawful Evil",
+          "Neutral Evil",
+          "Chaotic Evil"
+        ],
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-cultist",
+        "gi gi-robe",
+        "gi gi-hood",
+        "gi gi-cowled"
+      ]
+    },
+    "cultist": {
+      "contains": [
+        ".humanoid",
+        "leather armor",
+        "robes",
+        "scimitar"
+      ],
+      "data": {
+        "alignment": [
+          "Lawful Neutral",
+          "Neutral",
+          "Chaotic Neutral",
+          "Lawful Evil",
+          "Neutral Evil",
+          "Chaotic Evil"
+        ],
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-cultist",
+        "gi gi-robe",
+        "gi gi-hood",
+        "gi gi-cowled"
+      ]
+    },
+    "dagger": {
+      "icon": [
+        "gi gi-broad-dagger",
+        "gi gi-plain-dagger",
+        "gi gi-sacrificial-dagger"
+      ]
+    },
+    "dagger +1": {
+      "isa": "dagger"
+    },
+    "dagger of venom": {
+      "icon": "gi gi-dripping-blade",
+      "isa": "dagger"
+    },
+    "dart": {
+      "icon": "gi gi-needle-drill"
+    },
+    "dart +1": {
+      "isa": "dart"
+    },
+    "deep gnome": {},
+    "desk": {
+      "contains": [
+        "paper",
+        "ink, 50%",
+        "ink pen, 25%",
+        "candle"
+      ],
+      "icon": "gi gi-table"
+    },
+    "diamond": {
+      "icon": "gi gi-cut-diamond"
+    },
+    "dice set": {
+      "icon": "gi gi-rolling-dices"
+    },
+    "draft horse": {
+      "icon": "gi gi-horse-head"
+    },
+    "dragon": {
+      "icon": [
+        "gi gi-dragon-head",
+        "gi gi-double-dragon",
+        "gi gi-wyvern"
+      ]
+    },
+    "dragon scale mail": {
+      "icon": "gi gi-spiked-armor"
+    },
+    "dragon slayer": {
+      "icon": "gi gi-winged-sword"
+    },
+    "dragon turtle": {
+      "icon": [
+        "gi gi-dragon-head",
+        "gi gi-double-dragon"
+      ]
+    },
+    "dragonborn": {
+      "background": [
+        "peru",
+        "olive",
+        "chocolate",
+        "goldenrod",
+        "firebrick",
+        "brown",
+        "darkred",
+        "crimson",
+        "red",
+        "green",
+        "royalblue",
+        "white",
+        "black",
+        "maroon",
+        "darkorange",
+        "orange",
+        "sandybrown"
+      ],
+      "data": {
+        "age adult": 15,
+        "age max": 80
+      },
+      "icon": "gi gi-dragon-head",
+      "isa": "playable race"
+    },
+    "drink": {
+      "icon": "gi gi-glass-shot",
+      "isa": [
+        "beer",
+        "wine",
+        "hot drink",
+        "cold drink"
+      ],
+      "namegen": [
+        "Pumpkin juice",
+        "Milk",
+        "Apple juice"
+      ]
+    },
+    "drow": {
+      "background": [
+        "black",
+        "navy",
+        "darkslateblue",
+        "slateblue",
+        "dimgray",
+        "slategray",
+        "gray",
+        "lightslategray",
+        "darkgray",
+        "darkslategray"
+      ]
+    },
+    "druid": {
+      "contains": [
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*",
+        "quarterstaff",
+        "common clothes"
+      ],
+      "data": {
+        "languages": [
+          "Druidic"
+        ],
+        "race": "any"
+      }
+    },
+    "drum": {
+      "icon": "gi gi-music-spell"
+    },
+    "dulcimer": {
+      "icon": "fa fa-music"
+    },
+    "dungeon": {
+      "icon": "gi gi-hole-ladder"
+    },
+    "dust of sneezing and choking": {
+      "icon": "gi gi-cool-spices"
+    },
+    "dwarf": {
+      "background": [
+        "brown",
+        "saddlebrown",
+        "sienna",
+        "indianred",
+        "chocolate",
+        "peru"
+      ],
+      "data": {
+        "age adult": 20,
+        "age max": 350
+      },
+      "icon": [
+        "gi gi-dwarf-face",
+        "gi gi-beard"
+      ],
+      "isa": "playable race"
+    },
+    "eagle": {
+      "icon": "gi gi-eagle-emblem"
+    },
+    "earth genasi": {
+      "isa": "genasi"
+    },
+    "earth plane": {
+      "background": "sienna",
+      "contains": [
+        "mountain, 1-6",
+        "wizard tower, 0-3",
+        "mine, 0-3",
+        "city, 2-5",
+        "town, 2-5"
+      ],
+      "icon": "gi gi-rock"
+    },
+    "eladrin": {
+      "isa": "elf"
+    },
+    "elemental": {
+      "icon": [
+        "glyphicon glyphicon-fire",
+        "gi gi-water-bolt",
+        "fa flaticon-gas",
+        "gi gi-rock"
+      ]
+    },
+    "elephant": {
+      "icon": "gi gi-elephant-head"
+    },
+    "elf": {
+      "background": [
+        "saddlebrown",
+        "sienna",
+        "indianred",
+        "chocolate",
+        "peru",
+        "goldenrod",
+        "sandybrown",
+        "tan",
+        "burlywood",
+        "peachpuff",
+        "navajowhite",
+        "moccasin",
+        "bisque",
+        "mistyrose",
+        "blanchedalmond",
+        "papayawhip",
+        "linen",
+        "whitesmoke",
+        "aliceblue",
+        "lightcyan",
+        "azure",
+        "mintcream",
+        "white",
+        "ivory"
+      ],
+      "data": {
+        "age adult": 20,
+        "age max": 750
+      },
+      "icon": [
+        "gi gi-woman-elf-face",
+        "gi gi-elf-ear"
+      ],
+      "isa": "playable race"
+    },
+    "emblem": {
+      "icon": "gi gi-condor-emblem"
+    },
+    "empty table": {
+      "contains": [
+        "candle, 50%"
+      ],
+      "icon": "gi gi-table",
+      "namegen": "table"
+    },
+    "ethereal mirror plane": {
+      "background": "whitesmoke",
+      "isa": "mirror plane",
+      "textColor": null
+    },
+    "ethereal plane": {
+      "background": "whitesmoke",
+      "icon": "gi gi-cloud-ring gi-spin"
+    },
+    "eversmoking bottle": {
+      "background": "lightslategray",
+      "icon": "gi gi-bottle-vapors wobble animated infinite",
+      "textColor": "gainsboro"
+    },
+    "faction": {
+      "icon": [
+        "gi gi-backup",
+        "fa fa-users",
+        "gi gi-minions",
+        "fa fa-group",
+        "gi gi-dark-squad",
+        "gi gi-ages"
+      ]
+    },
+    "farm": {
+      "background": "wheat",
+      "contains": [
+        "hovel",
+        "well",
+        "barn",
+        "planted field, 1-3"
+      ],
+      "icon": "fa flaticon-hay-rolls",
+      "namegen": "*LASTNAME*| farm"
+    },
+    "farming village": {
+      "background": "lightgoldenrodyellow",
+      "contains": [
+        "tavern, 1-3",
+        "smithy, rural",
+        "village hall",
+        "temple",
+        "cemetery",
+        "farm, 3-15",
+        "hovel, 1-3"
+      ],
+      "icon": "fa flaticon-hay-rolls",
+      "namegen": "village",
+      "textColor": "goldenrod"
+    },
+    "fey": {
+      "icon": "gi gi-fairy"
+    },
+    "fey mirror plane": {
+      "background": "lavenderblush",
+      "isa": "mirror plane",
+      "textColor": "purple"
+    },
+    "fey plane": {
+      "background": "lavenderblush",
+      "contains": [
+        "citadel, 1-3",
+        "palace, 1-3",
+        "temple, 1-5"
+      ],
+      "icon": "gi gi-fairy",
+      "textColor": "purple"
+    },
+    "fiend": {
+      "icon": [
+        "gi gi-daemon-skull",
+        "gi gi-gooey-daemon"
+      ]
+    },
+    "fiend (demon)": {
+      "isa": "fiend"
+    },
+    "fiend (devil)": {
+      "isa": "fiend"
+    },
+    "fiend (shapechanger)": {
+      "isa": "fiend"
+    },
+    "fiendish plane": {
+      "background": "darkred",
+      "contains": [
+        "citadel, 1-3",
+        "palace, 1-3",
+        "temple, 1-5"
+      ],
+      "icon": "gi gi-daemon-skull"
+    },
+    "fire genasi": {
+      "isa": "genasi"
+    },
+    "fire plane": {
+      "background": "darkRed",
+      "contains": [
+        "tower, 1-10",
+        "city, 1-2",
+        "volcano, 1-3",
+        "castle, 1-2",
+        "palace, 2-3"
+      ],
+      "icon": "gi gi-flamed-leaf gi-rotate-45"
+    },
+    "fire weapon": {
+      "background": "firebrick",
+      "icon": [
+        "gi gi-flaming-arrow"
+      ]
+    },
+    "fireplace": false,
+    "flail": {
+      "icon": "gi gi-mace-head"
+    },
+    "flask": {
+      "icon": [
+        "gi gi-bubbling-flask",
+        "gi gi-fizzing-flask",
+        "gi gi-round-bottom-flask",
+        "fa fa-flask"
+      ]
+    },
+    "flowers": {
+      "icon": "gi gi-flower-pot"
+    },
+    "flute": {
+      "icon": "gi gi-pan-flute"
+    },
+    "food": false,
+    "for sale: smithy, rural": {
+      "contains": [
+        "ARMOR",
+        "chain shirt",
+        "breastplate",
+        "chain mail",
+        "shield",
+        "WEAPONS",
+        "dagger",
+        "handaxe",
+        "spear",
+        "battleaxe",
+        "greatsword",
+        "longsword",
+        "shortsword",
+        "ADVENTURING GEAR",
+        "chain",
+        "grappling hook",
+        "hammer",
+        "miner's pick",
+        "piton",
+        "iron pot",
+        "whetstone",
+        "carpenter's tools",
+        "smith's tools"
+      ],
+      "icon": "gi gi-cash",
+      "textColor": "goldenrod"
+    },
+    "forest": {
+      "background": "forestgreen",
+      "icon": [
+        "fa flaticon-forest",
+        "*ICON TREES*"
+      ],
+      "textColor": "palegreen"
+    },
+    "frog": {
+      "icon": "gi gi-frog"
+    },
+    "fruit": {
+      "icon": [
+        "gi gi-cherry",
+        "gi gi-strawberry",
+        "gi gi-watermelon",
+        "glyphicon glyphicon-apple",
+        "gi gi-apple-seeds",
+        "gi gi-banana"
+      ]
+    },
+    "gaming set": {
+      "isa": [
+        "dice set",
+        "playing card set"
+      ]
+    },
+    "garden": {
+      "icon": "gi gi-carrot"
+    },
+    "gas giant": {
+      "background": "black",
+      "icon": "fa flaticon-moon",
+      "textColor": "papayawhip"
+    },
+    "gaseous bubble": {
+      "icon": [
+        "gi gi-bubbles",
+        "fa flaticon-gas"
+      ],
+      "namegen": "*COLORS*| gaseous bubble"
+    },
+    "genasi": {
+      "data": {
+        "age adult": 20,
+        "age max": 120
+      },
+      "isa": "playable race"
+    },
+    "ghost": {
+      "icon": "gi gi-ghost"
+    },
+    "giant sea horse": {
+      "icon": "gi gi-seahorse"
+    },
+    "gladiator": {
+      "contains": [
+        ".humanoid",
+        "studded leather armor",
+        "shield",
+        "spear"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-spartan",
+        "gi gi-crested-helmet",
+        "gi gi-muscle-up",
+        "gi gi-strong"
+      ]
+    },
+    "glaive": {
+      "background": "white",
+      "icon": "gi gi-blade-fall",
+      "textColor": "gray"
+    },
+    "gnoll": {
+      "icon": "gi gi-anubis"
+    },
+    "gnome": {
+      "data": {
+        "age adult": 20,
+        "age max": 500
+      },
+      "icon": "fa fa-child",
+      "isa": "playable race"
+    },
+    "goblinoid": {
+      "icon": [
+        "gi gi-gluttonous-smile",
+        "gi gi-sharp-smile",
+        "gi gi-sly"
+      ]
+    },
+    "goliath": {
+      "data": {
+        "age adult": 20,
+        "age max": 99
+      },
+      "isa": "playable race"
+    },
+    "grappling hook": {
+      "icon": "gi gi-meat-hook"
+    },
+    "grave": {
+      "icon": "gi gi-pirate-grave",
+      "namegen": [
+        "*MALE NAME*",
+        "*FEMALE NAME*"
+      ]
+    },
+    "great hall": {
+      "contains": [
+        "throne, 1-3",
+        "tavern table, 3-8",
+        "humanoid, 0-3",
+        "hearth"
+      ],
+      "icon": "gi gi-stone-throne"
+    },
+    "greataxe": {
+      "icon": "gi gi-battle-axe"
+    },
+    "grimlock": {
+      "icon": [
+        "gi gi-troll",
+        "gi gi-pig-face"
+      ]
+    },
+    "guard": {
+      "contains": [
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*",
+        "chain shirt",
+        "shield",
+        "spear"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-guards",
+        "gi gi-guarded-tower",
+        "gi gi-barbute"
+      ]
+    },
+    "guild hall": {
+      "icon": "gi gi-viking-longhouse"
+    },
+    "halberd": {
+      "icon": [
+        "gi gi-sharp-halberd",
+        "gi gi-halberd"
+      ]
+    },
+    "half-elf": {
+      "data": {
+        "age adult": 20,
+        "age max": 180
+      },
+      "icon": [
+        "gi gi-elf-ear",
+        "gi gi-woman-elf-face"
+      ],
+      "isa": "playable race"
+    },
+    "half-orc": {
+      "background": [
+        "silver",
+        "lightgray",
+        "gainsboro",
+        "darkslategray",
+        "dimgray",
+        "slategray",
+        "gray",
+        "lightslategray",
+        "darkgray"
+      ],
+      "data": {
+        "age adult": 14,
+        "age max": 75
+      },
+      "icon": "gi gi-orc-head",
+      "isa": "playable race"
+    },
+    "half-red dragon veteran": {
+      "icon": [
+        "gi gi-dragon-head",
+        "gi gi-double-dragon"
+      ]
+    },
+    "halfling": {
+      "background": [
+        "tan",
+        "burlywood",
+        "peachpuff",
+        "wheat",
+        "navajowhite",
+        "moccasin",
+        "mistyrose",
+        "antiquewhite",
+        "papayawhip",
+        "bisque",
+        "blanchedalmond",
+        "seashell",
+        "floralwhite"
+      ],
+      "data": {
+        "age adult": 20,
+        "age max": 250
+      },
+      "icon": "fa fa-child",
+      "isa": "playable race"
+    },
+    "hammer": {
+      "icon": "gi gi-stake-hammer"
+    },
+    "hand crossbow": {
+      "icon": "gi gi-crossbow"
+    },
+    "handaxe": {
+      "icon": "gi gi-fire-axe"
+    },
+    "handaxe +1": {
+      "isa": "handaxe"
+    },
+    "harpy": {
+      "icon": "gi gi-harpy"
+    },
+    "hat": {
+      "icon": "gi gi-robin-hood-hat"
+    },
+    "hayloft": {
+      "icon": "fa flaticon-hay-rolls"
+    },
+    "healer's kit": {
+      "background": "white",
+      "icon": "gi gi-hospital-cross",
+      "textColor": "darkred"
+    },
+    "hearth": {
+      "background": "darkred",
+      "contains": [
+        "cook's utensils",
+        "iron pot, 1-3",
+        "basket, 1-3",
+        "spices"
+      ],
+      "icon": "gi gi-campfire",
+      "textColor": "gold"
+    },
+    "heavy armor": {
+      "background": "silver",
+      "icon": "gi gi-breastplate",
+      "textColor": "dimgray"
+    },
+    "heavy crossbow": {
+      "icon": "gi gi-crossbow"
+    },
+    "hempen rope": {
+      "background": "wheat",
+      "icon": "gi gi-rope-coil"
+    },
+    "herbalism kit": {
+      "background": "forestgreen",
+      "icon": "gi gi-falling-leaf"
+    },
+    "high elf": {
+      "isa": "elf"
+    },
+    "hill dwarf": {
+      "isa": "dwarf"
+    },
+    "hooded lantern": {
+      "background": "maroon",
+      "icon": "gi gi-lantern-flame",
+      "textColor": "darkorange"
+    },
+    "horn": {
+      "icon": "gi gi-hunting-horn"
+    },
+    "hot drink": {
+      "icon": [
+        "fa fa-coffee",
+        "gi gi-coffee-mug",
+        "gi gi-coffee-cup"
+      ],
+      "namegen": [
+        "Hot tea",
+        "Herbal tea",
+        "Coffee",
+        "Hot cocoa"
+      ]
+    },
+    "hourglass": {
+      "icon": [
+        "gi gi-empty-hourglass",
+        "gi gi-hourglass"
+      ]
+    },
+    "house": false,
+    "housing district": {
+      "contains": [
+        "cottage, 5-15"
+      ],
+      "isa": "city district"
+    },
+    "hovel": {
+      "background": "wheat",
+      "contains": [
+        "hovel interior",
+        "humanoid, 0-1",
+        "livestock, 2-6",
+        "garden",
+        "flowers, 25%"
+      ],
+      "icon": "gi gi-house",
+      "isa": "residence",
+      "namegen": "*LASTNAME*| hovel",
+      "textColor": [
+        "saddlebrown",
+        "peru",
+        "sienna",
+        "brown",
+        "maroon"
+      ]
+    },
+    "hovel interior": {
+      "contains": [
+        "bed, 1-2",
+        "chest, 1-2",
+        "hearth",
+        "humanoid, 0-2",
+        "barrel, 0-2",
+        "crate, 0-2",
+        "shovel"
+      ],
+      "icon": "gi gi-house",
+      "namegen": "inside the hovel"
+    },
+    "human": {
+      "data": {
+        "age adult": 20,
+        "age max": 99
+      },
+      "isa": "playable race"
+    },
+    "human, shapechanger": {
+      "icon": [
+        "gi gi-shadow-follower",
+        "gi gi-invisible",
+        "gi gi-two-shadows",
+        "gi gi-duality-mask"
+      ]
+    },
+    "humanoid": {
+      "background": [
+        "tan",
+        "peru",
+        "oldlace",
+        "papayawhip",
+        "blanchedalmond",
+        "antiquewhite",
+        "moccasin",
+        "navajowhite",
+        "wheat",
+        "peachpuff",
+        "burlywood",
+        "sienna",
+        "chocolate"
+      ],
+      "contains": [
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*"
+      ],
+      "icon": [
+        "fa fa-smile-o",
+        "fa fa-child",
+        "fa fa-male",
+        "fa fa-meh-o",
+        "gi gi-sensuousness",
+        "fa fa-street-view",
+        "glyphicon glyphicon-user",
+        "fa fa-user",
+        "fa fa-user-circle",
+        "fa fa-user-circle-o",
+        "fa fa-user-o",
+        "gi gi-pikeman"
+      ]
+    },
+    "humanoid description": {},
+    "hunting trap": {
+      "icon": "gi gi-box-trap"
+    },
+    "hydra": {
+      "icon": "gi gi-hydra"
+    },
+    "imp": {
+      "icon": [
+        "gi gi-imp-laugh",
+        "gi gi-imp"
+      ]
+    },
+    "ink": {
+      "icon": [
+        "gi gi-quill-ink"
+      ]
+    },
+    "ink pen": {
+      "icon": "glyphicon glyphicon-pencil"
+    },
+    "iron pot": {
+      "icon": [
+        "gi gi-cauldron",
+        "gi gi-cooking-pot"
+      ]
+    },
+    "iron spikes": {
+      "icon": "gi gi-spikes-half"
+    },
+    "javelin": {
+      "icon": "gi gi-thrown-spear"
+    },
+    "javelin of lightning": {
+      "isa": "javelin"
+    },
+    "jeweler's tools": {
+      "icon": "gi gi-magnifying-glass"
+    },
+    "jug": {
+      "icon": "gi gi-jug"
+    },
+    "keg": {
+      "background": "blanchedalmond",
+      "icon": [
+        "gi gi-barrel"
+      ],
+      "namegen": [
+        "Wheat Ale kbackbaceg",
+        "Porter Mead keg",
+        "Mead keg",
+        "Buttery Ale keg",
+        "Pear Cider keg",
+        "Root Beer keg",
+        "Ginger Beer keg",
+        "Fizzy ale keg",
+        "Red wine cask",
+        "White wine cask",
+        "Sweet wine cask",
+        "Brandy cask"
+      ],
+      "textColor": "saddlebrown"
+    },
+    "kingdom": {
+      "background": "thistle",
+      "contains": [
+        "city, 1-3",
+        "town, 4-10",
+        "province, 3-6",
+        "mountain, 0-2",
+        "lake, 0-2",
+        "forest, 0-3"
+      ],
+      "icon": "fa flaticon-castle",
+      "namegen": "kingdom of |*PLANET PREFIX*|*PLANET SUFFIX*"
+    },
+    "knight": {
+      "contains": [
+        ".humanoid",
+        "plate armor",
+        "greatsword",
+        "heavy crossbow"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-black-knight-helm",
+        "gi gi-mounted-knight",
+        "gi gi-visored-helm"
+      ]
+    },
+    "kobold": {
+      "icon": "gi gi-dragon-head"
+    },
+    "ladder": {
+      "icon": [
+        "gi gi-ladder"
+      ]
+    },
+    "lake": {
+      "background": "ocean",
+      "icon": "gi gi-at-sea"
+    },
+    "lamp": {
+      "background": "maroon",
+      "icon": "gi gi-lantern-flame",
+      "textColor": "darkorange"
+    },
+    "lance": {
+      "icon": "gi gi-stone-spear"
+    },
+    "lance +1": {
+      "isa": "lance"
+    },
+    "landlocked kingdom": {
+      "background": "papayawhip",
+      "contains": [
+        "city, 1-3",
+        "town, 4-10",
+        "province, 3-6",
+        "mountain, 0-2",
+        "lake, 0-2",
+        "forest, 0-3"
+      ],
+      "isa": "kingdom",
+      "textColor": "forestgreen"
+    },
+    "leatherworker's tools": {
+      "icon": "gi gi-scissors"
+    },
+    "library": {
+      "contains": [
+        "bookshelf, 5-15"
+      ],
+      "icon": "gi gi-bookshelf"
+    },
+    "light armor": {
+      "background": "moccasin",
+      "icon": "gi gi-armor-vest",
+      "textColor": "saddlebrown"
+    },
+    "light crossbow": {
+      "icon": "gi gi-crossbow"
+    },
+    "light hammer": {
+      "icon": "gi gi-claw-hammer"
+    },
+    "lightfoot halfling": {
+      "isa": "halfling"
+    },
+    "lion": {
+      "icon": "gi gi-lion"
+    },
+    "livestock": {
+      "isa": "monster"
+    },
+    "lizard": {
+      "icon": "gi gi-lizard-tongue"
+    },
+    "lizardfolk": {
+      "icon": "gi gi-lizardman"
+    },
+    "lock": {
+      "icon": [
+        "fa fa-lock"
+      ]
+    },
+    "longbow": {
+      "icon": "gi gi-bowman"
+    },
+    "longsword": {
+      "icon": "gi gi-broadsword"
+    },
+    "lute": {
+      "icon": "fa fa-music"
+    },
+    "lyre": {
+      "icon": "gi gi-lyre"
+    },
+    "mace": {
+      "icon": [
+        "gi gi-flanged-mace",
+        "gi gi-spiked-mace"
+      ]
+    },
+    "mace of disruption": {
+      "isa": "mace"
+    },
+    "mace of smiting": {
+      "isa": "mace"
+    },
+    "mace of terror": {
+      "isa": "mace"
+    },
+    "mage": {
+      "contains": [
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*",
+        "dagger"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-third-eye",
+        "gi gi-cowled",
+        "gi gi-spiked-halo",
+        "gi gi-suspicious"
+      ]
+    },
+    "magnifying glass": {
+      "icon": "gi gi-magnifying-glass"
+    },
+    "main street": {
+      "contains": [
+        "town hall"
+      ]
+    },
+    "man": {
+      "icon": [
+        "fa fa-male",
+        "gi gi-pikeman",
+        "gi gi-dwarf-face",
+        "gi gi-monk-face"
+      ],
+      "namegen": "*MALE NAME* "
+    },
+    "manacles": {
+      "icon": "gi gi-manacles"
+    },
+    "manor": {
+      "icon": "gi gi-block-house",
+      "isa": "residence",
+      "namegen": "*LASTNAME*| manor"
+    },
+    "map or scroll case": {
+      "icon": "gi gi-tied-scroll"
+    },
+    "market district": {
+      "contains": [
+        "tavern, 1-3",
+        "market street, 2-5",
+        "guild hall, 2-5"
+      ],
+      "icon": "gi gi-shop",
+      "isa": "city district"
+    },
+    "market street": {
+      "contains": [
+        "smithy, rural"
+      ],
+      "icon": "gi gi-shop"
+    },
+    "mason's tools": {
+      "icon": "gi gi-gear-hammer"
+    },
+    "material plane": {
+      "background": "black",
+      "contains": [
+        "crystal sphere, 1-5"
+      ],
+      "icon": "gi gi-abstract-076 spin animated infinite",
+      "textColor": "white"
+    },
+    "maul": {
+      "icon": "gi gi-hammer-drop"
+    },
+    "meal": {
+      "icon": [
+        "gi gi-chicken-leg",
+        "gi gi-roast-chicken"
+      ],
+      "namegen": "*DINNER*"
+    },
+    "medallion of thoughts": {
+      "icon": "gi-necklace"
+    },
+    "medium armor": {
+      "background": "gainsboro",
+      "icon": [
+        "gi gi-leather-vest",
+        "gi gi-chain-mail"
+      ],
+      "textColor": "rosybrown"
+    },
+    "menu": {
+      "contains": [
+        "*DRINK SPECIAL*",
+        "food, 1-2",
+        "beer",
+        "wine",
+        "hot drink",
+        "drink"
+      ],
+      "icon": [
+        "gi gi-folded-paper"
+      ]
+    },
+    "merchant's scale": {
+      "icon": "gi gi-scales"
+    },
+    "mess kit": {
+      "icon": "gi gi-knife-fork"
+    },
+    "miner's pick": {
+      "icon": "gi gi-gold-mine"
+    },
+    "minotaur": {
+      "icon": "gi gi-minotaur"
+    },
+    "minotaur skeleton": {
+      "icon": "gi gi-skeletal-hand"
+    },
+    "mirror of life trapping": {
+      "icon": "gi gi-mirror-mirror"
+    },
+    "mirror plane": {
+      "contains": [
+        "fake"
+      ],
+      "icon": "gi gi-abstract-076 spinReverse animated infinite"
+    },
+    "monk": {
+      "contains": [
+        ".humanoid",
+        "robes"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-meditation",
+        "gi gi-monk-face"
+      ],
+      "isa": "humanoid"
+    },
+    "monster": {
+      "icon": [
+        "gi gi-monster-grasp",
+        "gi gi-gluttonous-smile",
+        "gi gi-sharp-smile",
+        "gi gi-steel-claws",
+        "gi gi-triple-claws"
+      ]
+    },
+    "monument": {
+      "icon": [
+        "gi gi-water-fountain",
+        "gi gi-ionic-column"
+      ]
+    },
+    "moon": {
+      "background": "black",
+      "icon": "fa flaticon-big-moon fa-spin"
+    },
+    "morningstar": {
+      "icon": "gi gi-mace-head"
+    },
+    "mount": {
+      "icon": "gi gi-horse-head",
+      "isa": "monster"
+    },
+    "mountain": {
+      "background": "saddlebrown",
+      "icon": [
+        "fa flaticon-hills",
+        "gi gi-mountain-cave",
+        "gi gi-mountains",
+        "gi gi-mountaintop"
+      ]
+    },
+    "mountain dwarf": {
+      "isa": "dwarf"
+    },
+    "navigator's tools": {
+      "icon": "gi gi-compass"
+    },
+    "net": {
+      "icon": "gi gi-fishing-net"
+    },
+    "noble": {
+      "contains": [
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*",
+        "breastplate",
+        "rapier"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-crown",
+        "gi gi-sharp-crown"
+      ]
+    },
+    "noble housing district": {
+      "contains": [
+        "manor, 5-15"
+      ],
+      "icon": "gi gi-gate",
+      "isa": "city district"
+    },
+    "oathbow": {
+      "isa": "longbow"
+    },
+    "ocean": {
+      "background": "ocean",
+      "icon": "gi gi-wave-crest wobble animated infinite"
+    },
+    "ocean planet": {
+      "background": "black",
+      "icon": "fa flaticon-moon-1 spin animated infinite",
+      "textColor": "royalblue"
+    },
+    "octopus": {
+      "icon": "gi gi-octopus"
+    },
+    "oil": {
+      "icon": "fa fa-tint"
+    },
+    "ooze": {
+      "icon": "gi gi-dripping-goo"
+    },
+    "orb": {
+      "icon": "gi gi-orb-wand"
+    },
+    "orb of dragonkind": {
+      "icon": [
+        "gi-orb-wand"
+      ]
+    },
+    "orc": {
+      "icon": "gi gi-orc-head"
+    },
+    "owl": {
+      "icon": "gi gi-owl"
+    },
+    "painter's supplies": {
+      "icon": "fa fa-paint-brush"
+    },
+    "pan flute": {
+      "icon": "gi gi-pan-flute"
+    },
+    "paper": {
+      "icon": "gi gi-folded-paper"
+    },
+    "parchment": {
+      "icon": "gi gi-papers"
+    },
+    "pegasus": {
+      "icon": "gi gi-pegasus"
+    },
+    "perfume": {
+      "icon": "gi gi-perfume-bottle"
+    },
+    "pet": {
+      "isa": "monster"
+    },
+    "piercing weapon": {
+      "icon": [
+        "gi gi-broad-dagger",
+        "gi gi-crossbow",
+        "gi gi-pocket-bow"
+      ]
+    },
+    "pig": {
+      "icon": "glyphicon glyphicon-piggy-bank"
+    },
+    "pike": {
+      "icon": "gi gi-pikeman"
+    },
+    "pike +1": {
+      "isa": "pike"
+    },
+    "piton": {
+      "icon": "gi gi-stake-hammer"
+    },
+    "planet": {
+      "background": "black",
+      "contains": [
+        "continent, 1-5",
+        "underdark, 90%",
+        "polar continent, 0-2",
+        "ocean, 2-5"
+      ],
+      "data": {
+        "alignment-demographics": {
+          "hasWeightedRows": true,
+          "rows": [
+            {
+              "value": "Lawful Good",
+              "weight": 80
+            },
+            {
+              "value": "Neutral Good",
+              "weight": 5
+            },
+            {
+              "value": "Chaotic Good",
+              "weight": 5
+            },
+            {
+              "value": "Lawful Neutral",
+              "weight": 5
+            },
+            {
+              "value": "Neutral",
+              "weight": 1
+            },
+            {
+              "value": "Chaotic Neutral",
+              "weight": 1
+            },
+            {
+              "value": "Lawful Evil",
+              "weight": 1
+            },
+            {
+              "value": "Neutral Evil",
+              "weight": 1
+            },
+            {
+              "value": "Chaotic Evil",
+              "weight": 1
+            }
+          ]
+        },
+        "race-demographics": {
+          "hasWeightedRows": true,
+          "rows": [
+            {
+              "value": "human",
+              "weight": 79
+            },
+            {
+              "value": "halfling",
+              "weight": 9
+            },
+            {
+              "value": "elf",
+              "weight": 5
+            },
+            {
+              "value": "dwarf",
+              "weight": 3
+            },
+            {
+              "value": "gnome",
+              "weight": 2
+            },
+            {
+              "value": "half-elf",
+              "weight": 2
+            },
+            {
+              "value": "half-orc",
+              "weight": 2
+            }
+          ]
+        }
+      },
+      "icon": [
+        "fa fa-globe spin animated infinite",
+        "gi gi-earth-asia-oceania spin animated infinite",
+        "gi gi-earth-africa-europe spin animated infinite",
+        "gi gi-earth-america spin animated infinite",
+        "fa flaticon-planet",
+        "gi gi-ringed-planet"
+      ],
+      "textColor": "forestgreen"
+    },
+    "plant": {
+      "icon": "gi gi-carnivorous-plant"
+    },
+    "planted field": {
+      "icon": [
+        "gi gi-wheat",
+        "gi gi-corn",
+        "gi gi-carrot"
+      ]
+    },
+    "playable race": {
+      "isa": "humanoid"
+    },
+    "playing card set": {
+      "icon": "gi gi-card-random"
+    },
+    "poisoner's kit": {
+      "icon": "gi gi-poison-bottle"
+    },
+    "polar continent": {
+      "background": "turquoise",
+      "icon": [
+        "fa flaticon-map-2",
+        "fa flaticon-map-1"
+      ],
+      "textColor": "white"
+    },
+    "pole": {
+      "icon": "gi gi-fishing-pole"
+    },
+    "port city": {
+      "background": "darkslategray",
+      "isa": "city",
+      "textColor": "wheat"
+    },
+    "portable ram": {
+      "icon": "gi gi-log"
+    },
+    "portal": {
+      "icon": [
+        "gi gi-magic-portal",
+        "gi gi-portal"
+      ]
+    },
+    "potion": {
+      "icon": [
+        "gi gi-magic-potion",
+        "gi gi-potion-ball",
+        "gi gi-standing-potion"
+      ]
+    },
+    "priest": {
+      "contains": [
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*",
+        "chain shirt",
+        "mace"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-prayer",
+        "gi gi-robe",
+        "gi gi-pope-crown",
+        "gi gi-monk-face"
+      ]
+    },
+    "prison cell": {
+      "contains": [
+        [
+          "prisoner, 1-2",
+          "corpse",
+          ""
+        ],
+        "bed"
+      ],
+      "icon": "gi gi-prisoner"
+    },
+    "prisoner": {
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-prisoner",
+        "gi gi-imprisoned",
+        "gi gi-convict"
+      ],
+      "isa": "humanoid"
+    },
+    "prostitute": {
+      "icon": [
+        "gi gi-smitten",
+        "gi gi-sensuousness"
+      ]
+    },
+    "province": {
+      "background": "darkslategray",
+      "contains": [
+        "town, 0-1",
+        "village, 3-7",
+        "farming village, 3-7",
+        "undead village, 25%",
+        "cave, 0-2",
+        "river, 0-2"
+      ],
+      "icon": [
+        "fa flaticon-map",
+        "fa flaticon-map-1",
+        "fa flaticon-map-2",
+        "fa flaticon-map-3"
+      ],
+      "textColor": "wheat"
+    },
+    "pseudodragon": {
+      "icon": [
+        "gi gi-dragon-head",
+        "gi gi-double-dragon"
+      ]
+    },
+    "quarterstaff": {
+      "icon": "gi gi-wizard-staff"
+    },
+    "quiver": {
+      "icon": "gi gi-quiver"
+    },
+    "rapier": {
+      "icon": "gi gi-sewing-needle"
+    },
+    "rat": {
+      "icon": "gi-mouse"
+    },
+    "raven": {
+      "icon": "gi gi-raven"
+    },
+    "red light district": {
+      "icon": "gi gi-sensuousness",
+      "isa": "city district"
+    },
+    "reliquary": {
+      "icon": "gi gi-totem"
+    },
+    "residence": {},
+    "residential street": {
+      "contains": [
+        "cottage, 5-10",
+        "hovel, 1-5",
+        "well, 50%"
+      ],
+      "icon": "gi gi-block-house"
+    },
+    "rhinoceros": {
+      "icon": "gi gi-rhinoceros-horn"
+    },
+    "riding horse": {
+      "icon": "gi gi-horse-head"
+    },
+    "ring": {
+      "icon": [
+        "gi gi-diamond-ring",
+        "gi gi-ring"
+      ]
+    },
+    "river": {
+      "background": "wheat",
+      "icon": "gi gi-river",
+      "textColor": "darkblue"
+    },
+    "robes": {
+      "icon": "gi gi-robe",
+      "namegen": {
+        "concatenate": true,
+        "rows": [
+          [
+            "faded ",
+            ""
+          ],
+          [
+            "white",
+            "blue",
+            "yellow",
+            "tan",
+            "brown",
+            "gray",
+            "green",
+            "red",
+            "orange"
+          ],
+          " ",
+          [
+            "woolen",
+            "linen"
+          ],
+          " robes"
+        ]
+      }
+    },
+    "rock gnome": {
+      "isa": "gnome"
+    },
+    "rod": {
+      "icon": "gi gi-crystal-wand"
+    },
+    "rod of absorption": {
+      "icon": "gi gi-orb-wand"
+    },
+    "rod of alertness": {
+      "icon": "gi gi-orb-wand"
+    },
+    "rod of lordly might": {
+      "icon": "gi gi-crystal-wand"
+    },
+    "rod of rulership": {
+      "icon": "gi gi-crystal-wand"
+    },
+    "rod of security": {
+      "icon": "gi gi-lunar-wand"
+    },
+    "sack": {
+      "icon": "gi gi-knapsack"
+    },
+    "safebox": {
+      "background": "lavender",
+      "icon": "gi gi-locked-chest"
+    },
+    "sahuagin": {
+      "icon": "gi gi-lizardman"
+    },
+    "salamander": {
+      "icon": "gi gi-salamander"
+    },
+    "scimitar": {
+      "icon": "gi gi-curvy-knife"
+    },
+    "scimitar of speed": {
+      "isa": "scimitar"
+    },
+    "scorpion": {
+      "icon": [
+        "gi gi-scorpion-tail",
+        "gi gi-scorpion"
+      ]
+    },
+    "scout": {
+      "contains": [
+        ".humanoid",
+        "leather armor",
+        "shortsword",
+        "longbow"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-bowman",
+        "gi gi-run"
+      ]
+    },
+    "scroll": {
+      "icon": [
+        "gi gi-scroll-unfurled",
+        "gi gi-tied-scroll"
+      ]
+    },
+    "sea": {
+      "background": "ocean",
+      "icon": "gi gi-at-sea pulse animated infinite",
+      "textColor": null
+    },
+    "sea horse": {
+      "icon": "gi gi-seahorse"
+    },
+    "sealing wax": {
+      "icon": "gi gi-wax-seal"
+    },
+    "seated table": {
+      "contains": [
+        "humanoid, 1-4",
+        "drink, 0-4",
+        "meal, 50%",
+        "gaming set, 30%",
+        "candle, 50%"
+      ],
+      "icon": [
+        "gi gi-tabletop-players"
+      ],
+      "namegen": ""
+    },
+    "servant quarters": {
+      "contains": [
+        "bed",
+        "chest",
+        "desk"
+      ]
+    },
+    "sewers": {
+      "contains": [
+        "thieves guild, 50%",
+        "pipes of the sewers, 1%"
+      ],
+      "icon": "gi gi-hole-ladder",
+      "isa": "city district"
+    },
+    "shadow": {
+      "icon": [
+        "gi gi-shadow-follower",
+        "gi gi-two-shadows"
+      ]
+    },
+    "shawm": {
+      "icon": "glyphicon glyphicon-music"
+    },
+    "sheep": {
+      "background": "wheat",
+      "icon": "gi gi-sheep",
+      "textColor": "white"
+    },
+    "shield": {
+      "icon": [
+        "gi gi-american-shield",
+        "gi gi-attached-shield",
+        "gi gi-roman-shield",
+        "gi gi-templar-shield",
+        "gi gi-viking-shield",
+        "gi gi-bordered-shield",
+        "gi gi-broken-shield",
+        "gi gi-checked-shield",
+        "gi gi-cracked-shield",
+        "gi gi-crenulated-shield",
+        "gi gi-edged-shield",
+        "gi gi-eye-shield",
+        "gi gi-fire-shield",
+        "gi gi-ice-shield",
+        "gi gi-lightning-shield",
+        "gi gi-magic-shield",
+        "gi gi-rosa-shield",
+        "gi gi-skull-shield",
+        "gi gi-slashed-shield",
+        "gi gi-winged-shield",
+        "gi gi-zebra-shield",
+        "gi gi-shield",
+        "gi gi-round-shield",
+        "fa fa-shield"
+      ]
+    },
+    "shirt": {
+      "icon": "gi gi-shirt"
+    },
+    "shop": {
+      "background": "navajowhite",
+      "contains": [
+        "shopkeeper",
+        "safebox",
+        "hearth",
+        "bedroom, 1-2"
+      ],
+      "icon": [
+        "gi gi-shop",
+        "gi gi-block-house"
+      ],
+      "textColor": "saddlebrown"
+    },
+    "shopkeeper": {
+      "data": {
+        "race": "any"
+      },
+      "isa": "humanoid"
+    },
+    "shortbow": {
+      "icon": "gi gi-pocket-bow"
+    },
+    "shortsword": {
+      "icon": "gi gi-crossed-swords"
+    },
+    "shovel": {
+      "icon": "gi gi-spade"
+    },
+    "sickle": {
+      "icon": [
+        "gi gi-sickle"
+      ]
+    },
+    "sickle +1": {
+      "isa": "sickle"
+    },
+    "signal whistle": {
+      "icon": "gi gi-whistle"
+    },
+    "signet ring": {
+      "icon": "gi gi-ring"
+    },
+    "silk rope": {
+      "background": "lavender",
+      "icon": "gi gi-rope-coil"
+    },
+    "silver astral pool": {
+      "icon": "gi gi-portal"
+    },
+    "skeleton": {
+      "icon": "gi gi-skeletal-hand"
+    },
+    "slashing weapon": {
+      "icon": [
+        "gi gi-broadsword",
+        "gi gi-shard-sword",
+        "gi gi-whip",
+        "gi gi-battle-axe",
+        "gi gi-sickle"
+      ]
+    },
+    "sledge hammer": {
+      "icon": "gi gi-hammer-drop"
+    },
+    "sling": {
+      "icon": "gi gi-slingshot"
+    },
+    "slum": {
+      "contains": [
+        "hovel, 5-10"
+      ],
+      "isa": "city district"
+    },
+    "smith's tools": {
+      "icon": "gi gi-sword-smithing"
+    },
+    "smithy": {
+      "background": "lightgray",
+      "icon": "gi gi-sword-smithing",
+      "textColor": "dimgray"
+    },
+    "smithy, rural": {
+      "contains": [
+        "blacksmith",
+        "for sale: smithy, rural",
+        "safebox"
+      ],
+      "isa": "smithy",
+      "namegen": "blacksmith"
+    },
+    "smithy, rural for sale": false,
+    "soap": {
+      "background": "azure",
+      "icon": "gi gi-bubbles"
+    },
+    "solar": {
+      "icon": "gi gi-solar-system"
+    },
+    "spear": {
+      "icon": [
+        "gi gi-spear-feather",
+        "gi gi-stone-spear"
+      ]
+    },
+    "spear +1": {
+      "isa": "spear"
+    },
+    "spellbook": {
+      "background": [
+        "aquamarine",
+        "paleturquoise",
+        "powderblue",
+        "lightgreen",
+        "turquoise",
+        "plum",
+        "lightsalmon"
+      ],
+      "icon": "gi gi-book-cover"
+    },
+    "spices": {
+      "icon": "gi gi-cool-spices",
+      "namegen": [
+        "salt",
+        "spices",
+        "herbs"
+      ]
+    },
+    "spider": {
+      "icon": [
+        "gi gi-spider-alt",
+        "gi gi-spider-face",
+        "gi gi-spider-bot",
+        "gi gi-angular-spider",
+        "gi gi-hanging-spider",
+        "gi gi-masked-spider",
+        "gi gi-spider-web"
+      ]
+    },
+    "sprig of mistletoe": {
+      "background": "firebrick",
+      "icon": "gi gi-three-leaves",
+      "textColor": "palegreen"
+    },
+    "spy": {
+      "contains": [
+        ".humanoid",
+        "common clothes",
+        "shortsword",
+        "hand crossbow"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-lock-spy",
+        "gi gi-double-face-mask",
+        "gi gi-convince",
+        "gi gi-domino-mask"
+      ]
+    },
+    "spyglass": {
+      "icon": "gi gi-spyglass"
+    },
+    "staff": {
+      "icon": "gi gi-wizard-staff"
+    },
+    "star": {
+      "background": "black",
+      "icon": "fa flaticon-sun fa-spin",
+      "textColor": "gold"
+    },
+    "steel mirror": {
+      "icon": "gi gi-mirror-mirror"
+    },
+    "stout halfling": {
+      "isa": "halfling"
+    },
+    "sun blade": {
+      "isa": "longsword"
+    },
+    "swamp": {
+      "icon": "gi gi-swamp"
+    },
+    "swarm of tiny beasts": {
+      "icon": "gi gi-beehive"
+    },
+    "sword": {
+      "icon": [
+        "gi gi-croc-sword",
+        "gi gi-energy-sword",
+        "gi gi-fragmented-sword",
+        "gi gi-rune-sword",
+        "gi gi-shard-sword",
+        "gi gi-shining-sword",
+        "gi gi-spinning-sword",
+        "gi gi-sword-array",
+        "gi gi-sword-spade",
+        "gi gi-sword-spin",
+        "gi gi-winged-sword",
+        "gi gi-zeus-sword"
+      ]
+    },
+    "table": false,
+    "tavern": {
+      "background": "brown",
+      "contains": [
+        "tavern table, 2-5",
+        "bar",
+        "hearth",
+        "bedroom, 1-5",
+        "bard, 0-1",
+        "bounty board"
+      ],
+      "icon": "gi gi-beer-stein",
+      "isa": "shop",
+      "namegen": "*TAVERN NAMES*",
+      "textColor": "#e5d092"
+    },
+    "tavern table": {
+      "isa": [
+        "seated table",
+        "empty table"
+      ]
+    },
+    "tea": false,
+    "temple": {
+      "background": "lightgray",
+      "contains": [
+        "priest, 1-3",
+        "acolyte, 2-10"
+      ],
+      "icon": "gi gi-church",
+      "namegen": "*TEMPLE NAMES*",
+      "textColor": "dimgray"
+    },
+    "temple district": {
+      "contains": [
+        "temple, 2-10"
+      ],
+      "isa": "city district"
+    },
+    "tent": {
+      "icon": "glyphicon glyphicon-tent"
+    },
+    "thieves guild": {
+      "contains": [
+        "bandit, 2-10"
+      ]
+    },
+    "thieves' tools": {
+      "icon": "gi gi-lock-picking"
+    },
+    "throne": {
+      "icon": "gi gi-stone-throne"
+    },
+    "thug": {
+      "contains": [
+        ".humanoid",
+        "leather armor",
+        "heavy crossbow",
+        "mace"
+      ],
+      "data": {
+        "alignment": [
+          "Lawful Neutral",
+          "Neutral",
+          "Chaotic Neutral",
+          "Lawful Evil",
+          "Neutral Evil",
+          "Chaotic Evil"
+        ],
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-overkill",
+        "gi gi-angry-eyes",
+        "gi gi-confrontation",
+        "gi gi-muscle-fat",
+        "gi gi-one-eyed"
+      ]
+    },
+    "tiefling": {
+      "background": [
+        "maroon",
+        "darkred",
+        "firebrick",
+        "brown",
+        "saddlebrown",
+        "sienna",
+        "indianred",
+        "chocolate",
+        "peru",
+        "salmon",
+        "darksalmon",
+        "sandybrown",
+        "lightsalmon",
+        "tan",
+        "burlywood",
+        "wheat",
+        "navajowhite",
+        "moccasin",
+        "bisque",
+        "antiquewhite",
+        "papayawhip",
+        "blanchedalmond",
+        "seashell",
+        "oldlace",
+        "floralwhite"
+      ],
+      "data": {
+        "age adult": 20,
+        "age max": 120
+      },
+      "icon": "gi gi-bull-horns",
+      "isa": "playable race"
+    },
+    "tiger": {
+      "icon": "gi gi-tiger"
+    },
+    "tinderbox": {
+      "icon": "fa fa-fire"
+    },
+    "tome of clear thought": {
+      "icon": "gi gi-book-cover"
+    },
+    "torch": {
+      "icon": "gi gi-torch"
+    },
+    "totem": {
+      "icon": [
+        "gi gi-totem",
+        "gi gi-snake-totem",
+        "gi gi-totem-head"
+      ]
+    },
+    "town": {
+      "background": "wheat",
+      "contains": [
+        "main street",
+        "town green",
+        "market street, 1-5",
+        "residential street, 1-5",
+        "temple",
+        "cemetery",
+        "river, 25%"
+      ],
+      "icon": "fa flaticon-suburb",
+      "textColor": "darkslategray"
+    },
+    "town green": {
+      "contains": [
+        "humanoid, 2-10"
+      ],
+      "icon": "gi gi-medieval-pavilion"
+    },
+    "town hall": {
+      "contains": [
+        "great hall",
+        "bedroom, 1-3",
+        "servant quarters, 1-3",
+        "dungeon"
+      ],
+      "icon": "gi gi-medieval-gate"
+    },
+    "townhall": false,
+    "tradeskill": {
+      "icon": "gi gi-hand",
+      "namegen": [
+        "farmer",
+        "fisherman",
+        "weaver",
+        "shoemaker",
+        "candlemaker",
+        "baker",
+        "barber",
+        "brewer",
+        "blacksmith",
+        "buckle maker",
+        "butcher",
+        "shipmaker",
+        "carpenter",
+        "doctor",
+        "fur trader",
+        "hatmaker",
+        "locksmith",
+        "stonemason",
+        "painter",
+        "roofer",
+        "ropemaker",
+        "saddler",
+        "leatherworker",
+        "sculptor",
+        "tanner",
+        "tailor",
+        "winemaker"
+      ]
+    },
+    "traveler's clothes": {
+      "icon": "gi gi-shirt"
+    },
+    "tribal warrior": {
+      "contains": [
+        ".humanoid",
+        "hide armor",
+        "spear"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": "gi gi-barbarian"
+    },
+    "trident": {
+      "icon": [
+        "gi gi-magic-trident",
+        "gi gi-harpoon-trident",
+        "gi gi-trident"
+      ]
+    },
+    "trident of fish command": {
+      "isa": "trident"
+    },
+    "troll": {
+      "icon": "gi gi-troll"
+    },
+    "undead": {
+      "icon": [
+        "gi gi-raise-zombie",
+        "gi gi-shambling-zombie",
+        "gi gi-frankenstein-creature"
+      ]
+    },
+    "undead mirror plane": {
+      "background": "gray",
+      "isa": "mirror plane",
+      "textColor": null
+    },
+    "undead village": {
+      "data": {
+        "livestock": [
+          "spider",
+          "giant spider",
+          "swarm of spiders"
+        ],
+        "mount": [
+          "warhorse skeleton"
+        ],
+        "pets": [
+          "dire wolf",
+          "wolf",
+          "diseased giant rat"
+        ],
+        "statblocks": [
+          "zombie",
+          "ghast",
+          "skeleton",
+          "specter",
+          "wight"
+        ]
+      },
+      "isa": "village"
+    },
+    "underdark": {
+      "background": "black",
+      "icon": "gi gi-dripping-stone"
+    },
+    "unicorn": {
+      "icon": "gi gi-unicorn"
+    },
+    "vegetable": {
+      "icon": [
+        "gi gi-corn",
+        "gi gi-wheat"
+      ]
+    },
+    "veteran": {
+      "contains": [
+        "humanoid description",
+        "*APPEARANCE*",
+        "*ROLEPLAY*",
+        "splint armor",
+        "longsword",
+        "shortsword",
+        "heavy crossbow"
+      ],
+      "data": {
+        "race": "any"
+      },
+      "icon": [
+        "gi gi-brutal-helm",
+        "gi gi-cracked-helm",
+        "gi gi-heavy-helm",
+        "gi gi-horned-helm"
+      ]
+    },
+    "vial": {
+      "icon": "gi gi-vial"
+    },
+    "village": {
+      "background": "wheat",
+      "contains": [
+        "tavern, 1-3",
+        "smithy, rural",
+        "village hall",
+        "temple",
+        "cemetery",
+        "farm, 1-3",
+        "hovel, 3-15"
+      ],
+      "data": {
+        "races": {
+          "hasWeightedRows": true,
+          "rows": [
+            {
+              "value": "commoner",
+              "weight": 30
+            },
+            {
+              "value": "druid",
+              "weight": 2
+            },
+            {
+              "value": "mage",
+              "weight": 2
+            },
+            {
+              "value": "veteran",
+              "weight": 2
+            },
+            {
+              "value": "acolyte",
+              "weight": 1
+            },
+            {
+              "value": "priest",
+              "weight": 1
+            },
+            {
+              "value": "spy",
+              "weight": 1
+            },
+            {
+              "value": "monk",
+              "weight": 1
+            },
+            {
+              "value": "assassin",
+              "weight": 1
+            },
+            {
+              "value": "bandit",
+              "weight": 1
+            },
+            {
+              "value": "cultist",
+              "weight": 1
+            }
+          ]
+        }
+      },
+      "icon": "gi gi-village",
+      "textColor": "saddlebrown"
+    },
+    "village factions": {},
+    "village hall": {
+      "contains": [
+        "great hall",
+        "prison cell, 2",
+        "bedroom, 2"
+      ],
+      "icon": "gi gi-viking-longhouse",
+      "namegen": "town hall"
+    },
+    "viol": {
+      "icon": "glyphicon glyphicon-music"
+    },
+    "vorpal longsword": {
+      "icon": "gi gi-energy-sword"
+    },
+    "vulture": {
+      "icon": "gi gi-vulture"
+    },
+    "wand": {
+      "icon": [
+        "gi gi-lunar-wand",
+        "gi gi-crystal-wand",
+        "gi gi-fairy-wand",
+        "gi gi-orb-wand"
+      ]
+    },
+    "war pick": {
+      "icon": "gi gi-claw-hammer"
+    },
+    "war pick +1": {
+      "isa": "war pick"
+    },
+    "warhammer": {
+      "icon": "gi gi-hammer-drop"
+    },
+    "warhorse": {
+      "icon": "gi gi-horse-head"
+    },
+    "wasteland": {
+      "background": "papayawhip",
+      "icon": [
+        "fa flaticon-desert",
+        "fa flaticon-nature-4"
+      ],
+      "textColor": null
+    },
+    "water genasi": {
+      "isa": "genasi"
+    },
+    "water plane": {
+      "background": "darkblue",
+      "contains": [
+        "ocean",
+        "tower, 1-10",
+        "city, 1-2",
+        "castle, 1-2",
+        "palace, 2-3"
+      ],
+      "icon": "gi gi-at-sea"
+    },
+    "waterskin": {
+      "background": "azure",
+      "icon": "gi gi-round-bottom-flask",
+      "textColor": "dodgerblue"
+    },
+    "wave": {
+      "icon": [
+        "gi gi-wave-strike"
+      ]
+    },
+    "weaver's tools": {
+      "icon": "gi gi-sewing-needle"
+    },
+    "well": {
+      "icon": "gi gi-well"
+    },
+    "well of many worlds": {
+      "icon": "gi gi-well"
+    },
+    "whelm": {
+      "isa": "warhammer"
+    },
+    "whetstone": {
+      "icon": "gi gi-stone-block"
+    },
+    "whip": {
+      "icon": "gi gi-whip"
+    },
+    "wine": {
+      "background": "rosybrown",
+      "icon": [
+        "fa fa-glass",
+        "gi gi-wine-glass"
+      ],
+      "namegen": [
+        "Red wine",
+        "White wine",
+        "Sweet wine",
+        "Brandy"
+      ],
+      "textColor": "brown"
+    },
+    "wolf": {
+      "icon": [
+        "gi gi-wolf-head",
+        "gi gi-wolf-howl"
+      ]
+    },
+    "woman": {
+      "icon": [
+        "fa fa-female",
+        "gi gi-woman-elf-face"
+      ],
+      "namegen": "*FEMALE NAME* "
+    },
+    "wondrous": {
+      "background": "purple",
+      "icon": "fa flaticon-stars",
+      "textColor": "gold"
+    },
+    "wood elf": {
+      "isa": "elf"
+    },
+    "woodcarver's tools": {
+      "icon": "gi gi-screwdriver"
+    },
+    "wooden staff": {
+      "icon": "gi gi-wizard-staff"
+    },
+    "wyvern": {
+      "icon": "gi gi-wyvern"
+    },
+    "yew wand": {
+      "background": "cornsilk",
+      "icon": "gi gi-crystal-wand",
+      "textColor": "peru"
+    },
+    "zombie": {
+      "icon": [
+        "gi gi-shambling-zombie",
+        "gi gi-raise-zombie"
+      ]
+    }
+  },
+  "version": "0.0.0"
+}

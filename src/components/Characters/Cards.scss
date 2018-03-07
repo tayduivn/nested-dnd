@@ -1,0 +1,325 @@
+@media print{
+	*, :after, :before{
+		color: inherit !important;
+	}
+
+	.tab-content{
+		margin:0;
+		padding:0;
+	}
+}
+
+.landscape .card-wrap{
+	display:inline-block;
+}
+
+#cardSheets{
+	.card-wrap{
+		text-align:center;
+	}
+	.card{
+		// 96 dpi
+		// width: 33.33333333%;
+		// height: 33.33333333%;
+
+		width: 240px;
+		height: 335px; // 1 px less to fit
+		padding:15px;
+		background: #ccc !important;
+		color: #000;
+		page-break-inside: avoid;
+		display:inline-block;
+		vertical-align:top;
+		text-align:left;
+	}
+
+	/* business card size 
+	 * 3.5 x 2
+	*/
+	.card.red{
+		width: 192px; // 2 in
+	}
+
+	.card.blank{
+		background:none !important;
+	}
+	.fa-skull:after{
+		content:"☠";
+	}
+
+	.fa-radioactive:after{
+		content:"☢";
+	}
+	.fa-swords:after{
+		content:"⚔";
+	}
+
+	.card-inner{
+		height:100%;
+		background: white !important;
+		padding:10px;
+		position: relative;
+	}
+
+	.cardsName{
+		// position:absolute;
+		font-size: 10px;
+		font-family: sans-serif;
+		//max-width:100px;
+		overflow:hidden;
+	}
+
+	.info-panel{
+		margin: 0 -10px 5px -10px;
+		background-color: #f0f0f0 !important;
+		padding: 2px 10px;
+		font-weight: bold;
+		font-size:12px;
+	}
+
+	.purple{
+		background: mediumpurple !important;
+		border-color: mediumpurple;
+	}
+	.green{
+		background: #003E00 !important;
+	}
+	.red{
+		background: red !important;
+		border-color: red;
+	}
+	.card.bonus{
+		padding:0;
+		border: 15px dashed #ccc;
+		background: white !important;
+	}
+	.card.bonus{
+		background: white !important;
+	}
+	.card.purple.bonus{
+		border-color: mediumpurple;
+	}
+	.card.red.bonus {
+		border-color: red;
+	}
+	.card.bonus.modifier{
+		border-style: double;
+	}
+
+	.card h2{
+		margin:0;
+		font-size: 15px;
+		font-family: "Lumos";
+	}
+
+	.card p{
+		line-height:1em;
+	}
+
+	.card .pin-bottom{
+		padding: 0 10px;
+	}
+
+	.card .pin-bottom span{
+		float:right;
+	}
+
+	.card .front{
+		text-align: center;
+	}
+
+	.card .front h1{
+		font-family: "HocusPocus";
+		font-size:48px;
+		height: 90px;
+		text-align:center;
+		margin: 0.24em 0 0 0;
+		line-height:0.7em;
+	}
+	.card .front h1 .shortDesc{
+		font-size: 18px;
+		font-family: 'EB Garamond';
+		margin-bottom:0px;
+		padding: 0 10px;
+	}
+
+	.card .front img{
+		width: 75%;
+
+	}
+
+	.card .front .lvl, .card .front .img{
+		font-size:80px;
+		margin-top:-20px;
+		color:#ccc  !important;
+	}
+	.card .front .img{
+		margin-top:0px;
+		color:#ccc  !important;
+	}
+
+
+
+	.card .roll-values{
+		text-align: left;
+		margin-bottom: 10px;
+		
+
+		&.pin-bottom {
+			padding: 0 10px;
+
+			> div{
+				clear:both;
+				padding-top: 4px;
+
+				&.save-success{
+					font-size: 0.9em;
+					padding-left: 28px;
+					padding-top: 0;
+					line-height:1em;
+					clear:both;
+				}
+			}
+
+			&:after {
+			    content: "";
+			    clear: both;
+			    display: table;
+			}
+		}
+
+		.higherLevelDmg {
+			p{
+				font-size:1.1em;
+			}
+			label{
+				margin-top: 0;
+			}
+			> *{
+				margin-top: 2px;	
+			}
+		}
+
+		label {
+			white-space: pre;
+		}
+
+	}
+	.card .roll-values label{
+		float: left;
+		font-size:0.85em;
+		clear:both;
+		margin-top: 5px;
+		padding-top: 1px;
+		margin-right: 4px;
+		margin-left:0;
+		margin-bottom: 0;
+		font-weight: normal;
+	}
+	.card .roll-values p{
+		float:left;
+		margin-top: 5px;
+		margin-right: 5px;
+		font-size: 1.3em;
+	}
+
+	.card .front .secondary label{
+		text-transform: none;
+	}
+
+	.card .roll-values .write-in{
+		width: 38px;
+		height: 26px;
+		margin: 0px 3px 0 0;
+		background-color: #f0f0f0 !important;
+		border:1px solid gray;
+		float:left;
+	}
+
+	.card p.damageType{
+		font-size: 11px;
+		margin: 7.5px 0 0 0;
+	}
+	.card .damageType i{
+		vertical-align: baseline;
+	}
+
+	.card .shortDesc{
+		font-size: 18px;
+		margin-bottom: .5em;
+		padding: 0 10px;
+		text-align: center;
+		width:100%;
+	}
+
+	.card .castTime{
+		margin-top:-8px;
+	}
+
+	.spell .desc{
+		font-size:13px;
+		margin-left:-5px;
+		margin-right:-5px;
+
+		p{
+			margin: 0 0 0.3em 0;
+		}
+	}
+	.spell .back .pin-bottom{
+		font-size: 10px;
+		padding: 0 5px 5px;
+	}
+	.spell span.material{
+		float:none;
+	}
+
+	.spell .school{
+		font-size:8px;
+		margin-top:2px;
+		text-transform: uppercase;
+	}
+
+	.spell .back .lvl{
+		color: #333  !important;
+		float:right;
+		font-size:31px;
+		height:25px;
+		margin-top:0px;
+		margin-right:-5px;
+	}
+	.card ul{
+		margin:0;
+		padding-left:15px;
+		list-style: circle;
+	}
+
+	.i-ritual{
+		background-image: url('img/ritual.svg');
+		background-repeat: no-repeat;
+		width:1em;
+		display: inline-block;
+		height: 1em;
+		font-size: 0.7em;
+		background-size: 100% 100%;
+		margin: 0 .2em;
+
+		@media print {
+			background-image: url('img/ritual.svg') !important;
+		}
+	}
+
+	.card .front .i-ritual{
+		font-size: 0.4em;
+		margin: 0;
+	}
+
+	@media print {
+		.card .front .img{
+			color:#ccc  !important;
+		}
+		.card .front *{
+			color: inherit  !important;
+		}
+
+	}
+}

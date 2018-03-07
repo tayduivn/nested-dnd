@@ -65,6 +65,39 @@ Styler.renderColorOption = function(option){
 	);
 }
 
+function shift(c, amount){
+	var lightness = c.getLightness();
+	if(c.getLightness() > 0.49){
+		if(lightness > .6) amount+=.15;
+		if(lightness > .9) amount+=.3;
+		return c.darkenByAmount(amount);
+	}
+	return c.lightenByAmount(amount);
+}
+
+Styler.getShadow = function(color){
+	if(!color) return "";
+
+	color = shift(Color(color), .35);
+	var shadow = color.toCSS();
+
+	/*
+
+			"-1px 1px 1px "+shadow
+			+", 1px -1px 1px "+shadow
+			+", -1px 1px 1px "+shadow
+			+", 2px 1px 1px "+shadow
+	*/
+	return {
+		stroke: "1px "+shadow,
+		h1BG: shadow,
+		shadow: "-2px -2px 5px "+shadow
+			+", 2px -2px 5px "+shadow
+			+", -2px 2px 5px "+shadow
+			+", 2px 2px 5px "+shadow
+	}
+};
+
 Styler.cleanColor = function(color, name){
 
 	if(typeof color !== "string"){
@@ -97,8 +130,8 @@ Styler.getClass = function(instanceName, icon, thing, isa, parent){
 		cssClass = addThing(instanceName, background, textColor);
 	}
 	else if(parent){
-		cssClass = parent.cssClass;
-		if(parent.textColor)
+		cssClass = parent.cssClass.replace(" empty","");
+		if(!textColor && parent.textColor && parent.thing.background)
 			textColor = Color(parent.textColor).darkenByAmount((Math.random()/10)-0.05).toCSS();
 	}
 
@@ -110,7 +143,7 @@ Styler.getClass = function(instanceName, icon, thing, isa, parent){
 }
 
 function strToColor(str){
-	var colors = "multicolored|opaline|rainbow|red|magenta|orange|yellow|teal|green|blue|turquoise|purple|gold|golden|glowing|shimmering|luminous|faint|white|black|brown|pale|silver|silvery|grey|pink|shady|sharkverse|baconverse|doughnutverse|lasagnaverse";
+	var colors = "multicolored|opaline|rainbow|red|magenta|orange|yellow|teal|green|blue|turquoise|purple|gold|golden|glowing|shimmering|luminous|faint|white|black|brown|pale|silver|silvery|gray|tan|grey|pink|shady|sharkverse|baconverse|doughnutverse|lasagnaverse";
 
 	str = " "+str.replace(/-/g," ")+" ";
 	var matches = str.match("^.*\\s("+colors+")\\s.*$");
@@ -120,6 +153,7 @@ function strToColor(str){
 	else
 		return "";
 
+	if(str === "tan") return 'khaki';
 	if(str === "silvery") return "silver";
 	if(str === "red") return "darkred";
 	if(str === "shady") return "grey";
@@ -136,13 +170,7 @@ function strToColor(str){
 var addThing = (function(){
 	var rules = [];
 
-	function shift(c, amount){
-		if(c.getLightness() > 0.49){
-			if(amount > .3) amount-=.2;
-			return c.darkenByAmount(amount);
-		}
-		return c.lightenByAmount(amount);
-	}
+	
 
 	function makeSafeForCSS(name) {
 		var str = ""+name;

@@ -1,1 +1,607 @@
-{"name":"harry-potter-founders","dependencies":["dnd"],"defaultSeed":"Great Wheel > Prime Material Plane > Solar System > Earth > Europe > Alba > Argyllshire > Hogsmeade > Hog's Head","things":{"Abandoned Barn":{"contains":["shovel","barrel,5",{"background":"purple","icon":"gi gi-swap-bag","name":"burlap sacks at back of room (secret exit)"},{"isa":"ladder","name":"ladder up to hayloft at back of room"},{"contains":["urban encounter"],"isa":"hayloft"}],"isa":"barn"},"Agatha's Lair":{"isa":"cave"},"Alba":{"contains":["Argyllshire"],"isa":"kingdom","namegen":"Kingdom of Alba"},"Alderleaf Farm":{"isa":"farm"},"Alleena Moss":{"isa":"human","namegen":"Alleena Moss (daughter)","data":{"gender":"female"}},"Allyria Liadon":{"isa":"veela","namegen":"Allyria Liadon (blackmarket seller)","data":{"gender":"female"}},"Argyllshire":{"contains":["Hogsmeade","Hogwarts","Forbidden Forest","Dallywick","Thundertree","Conyberry","Old Owl Well"],"isa":"province"},"Barthen's Provisions":{"isa":"shop"},"Barthen's home":{},"Bog Cave":{"contains":[{"isa":"skeleton","name":"skeleton of a dragon. ribcage is 16ft x 8 ft."}],"data":{"faction":"Cragmaw Groblins"},"isa":"cave"},"Brother Vincent":{"isa":"priest"},"Chaab":{"data":{"faction":"Zhentarim"},"isa":"humanoid","namegen":"Chaab (Zhentarim)"},"Conyberry":{},"Cragmaw Castle":{"isa":"castle"},"Cragmaw Groblins":{"isa":"faction"},"Cult of the Dragon":{"isa":"faction"},"Dallywick":{"contains":["Edermath Orchard","Shine of Luck","smithy, rural","Barthen's Provisions","Sleeping Giant","Tresendar Manor","Alderleaf Farm","leatherworker","Dallywick Miner's Exchange","Lionshed Coster","Stonehill Inn","Barthen's home","Harbin Wester's home","Halia's home","Sister Garaele's home","town green"],"isa":"village","namegen":"Dallywick village"},"Dervish and Banges":{"isa":["smithy, rural"]},"Doomguide Yovir Glandon":{"data":{"gender":"male","faction":"Most Solemn Order of the Silent Shroud"},"isa":"priest"},"Earth":{"contains":["Europe"],"isa":"planet"},"Edermath Orchard":{"isa":"farm"},"Europe":{"contains":["Alba"],"isa":"continent"},"Forbidden Forest":{"contains":["Agatha's Lair","Cragmaw Castle"],"isa":"forest"},"Gladrags Wizardwear":{"isa":"shop"},"Hagar Grayhunt":{"namegen":"Hagar Grayhunt (harper)"},"Haldred Moss":{"isa":"human","namegen":"Haldred Moss (farmer)","data":{"gender":"male"}},"Hankerton Humble":{"isa":"barkeep","namegen":"Hankerton Humble (bartender)","data":{"gender":"male","age":18}},"Harbin Wester":{"data":{"gender":"male"},"isa":"human"},"Harpers":{"isa":"faction"},"Henry Humble":{"data":{"gender":"male"},"isa":"human"},"Hog's Head":{"contains":["dim, dingy tavern with stone walls and a hog's head mounted to the wall",{"isa":"bar","contains":["Hankerton Humble","keg,3","safebox"]},"*TAVERN TABLE*, 5","menu","bard, 50%","bedroom, 4","hearth"],"isa":"tavern","namegen":"The Hog's Head"},"Hogsmeade":{"contains":["Hog's Head","Dervish and Banges","Gladrags Wizardwear","Three Broomsticks","hovel, 2-8","Hogsmeade Cemetery","temple","Hogsmeade Swamp","Abandoned Barn"],"isa":"village","namegen":"Hogsmeade Village"},"Hogsmeade Cemetery":{"contains":["quite well maintained, if somber","Doomguide Yovir Glandon","Brother Vincent","Welltran Crypt","grave,10"],"isa":"cemetery"},"Hogsmeade Swamp":{"isa":"swamp","contains":["Moss Moss Farm","Bog Cave"]},"Hogwarts":{"isa":"castle","name":"Hogwarts"},"Kithian Moss":{"isa":"human","namegen":"Kithian Moss (daughter)","data":{"gender":"male"}},"Lionshed Coster":{"isa":"shop"},"Millivent Moss":{"data":{"gender":"female"},"isa":"human","namegen":"Millivent Moss (farmer)"},"Moss Moss Farm":{"isa":"farm"},"Most Solemn Order of the Silent Shroud":{"isa":"faction"},"Old Owl Well":{},"Prime Material Plane":{"contains":["crystal sphere, 1-5","Realmspace","Solar System"]},"Quayle Moss":{"isa":"human","namegen":"Quayle Moss (son)"},"Ralf Darkson":{"data":{"faction":"Cult of the Dragon"},"isa":"cultist"},"Shine of Luck":{"isa":"temple"},"Sleeping Giant":{"isa":"tavern"},"Solar System":{"contains":["Earth"],"isa":"crystal sphere","namegen":"The Solar System"},"Stonehill Inn":{"isa":"tavern"},"Three Broomsticks":{"contains":["*TAVERN TABLE*, 2-5","bar","hearth","bedroom, 1-5","menu","bard, 0-1","owl, 1-2"],"isa":"tavern","namegen":"The Three Broomsticks"},"Thundertree":{},"Tresendar Manor":{"isa":"castle"},"Volland Moss":{"isa":"human","namegen":" Volland Moss (son)","data":{"gender":"male"}},"Welcomers":{"isa":"faction"},"Xandria Welltran":{"data":{"gender":"female"},"isa":"humanoid"},"Zhentarim":{"isa":"faction"},"essence of dittany":{"isa":"potion","name":"essence of dittany"},"half-giant":{"isa":"orc","name":"half-giant"},"veela":{"isa":"elf","name":"veela"}},"tables":{}}
+{
+  "defaultSeed": "Great Wheel > Prime Material Plane > Solar System > Earth > Europe > Alba > Argyllshire > Hogsmeade > Hog's Head",
+  "characters": [
+    {
+      "name": "DUMMY",
+      "classes": [
+        {
+          "knownSpells": {
+            "spells": [ "Bubble-Head Charm", "Detect Thoughts" ]
+          },
+          "name": "Rogue",
+          "level": 1
+        }
+      ],
+      "equipment": {
+        "items": [
+          "glass bubble",
+           "potion of mind reading",
+           "Mirror of Daggers"
+        ]
+      }
+    }
+  ],
+  "dependencies": [
+    "dnd"
+  ],
+  "name": "harry-potter-founders",
+  "spells": {
+    "Bubble-Head Charm": {
+      "range": "Touch",
+      "cast_time": "1 action",
+      "components":{
+        "types": "VS"
+      },
+      "level":2,
+      "shortDesc": "A bubble over the mouth and nose. Acts as a gas mask and scuba mask",
+      "description":[
+        "The target has the following effects:",
+        "• Advantage on saves against poison gas",
+        "• Resistance to poison gas damage",
+        "• Underwater breathing"
+      ],
+      "duration":"1 hour",
+      "school":"Transmutation"
+    },
+    "Detect Magic":{
+      "namegen": "Priori Incantatem",
+      "shortDesc": "Detect magic. See an aura around nearby magical objects and creatures."
+    },
+    "Primeval Awareness": {
+      "uses": 1
+    },
+    "Blade Ward": {
+      "namegen": "Protego Minima"
+    },
+    "Blindness Deafness": {
+      "namegen": "Obscuro / Muffilato"
+    },
+    "Confusion": {
+      "namegen": "Confundo"
+    },
+    "Create or Destroy Water": {
+      "namegen": "Aguamenti"
+    },
+    "Daylight": {
+      "namegen": "Lumos Maxima"
+    },
+    "Detect Thoughts": {
+      "namegen": "Legilimency"
+    },
+    "Dispel Evil and Good": {
+      "namegen": "Expecto Patronum"
+    },
+    "Dispel Magic": {
+      "namegen": "Finite Incantatum"
+    },
+    "Divine Favor": {
+      "namegen": "Power of Belief"
+    },
+    "Divine Word": {
+      "namegen": "Mantra"
+    },
+    "Dominate Beast": {
+      "namegen": "Imperio (Beast)"
+    },
+    "Dominate Monster": {
+      "namegen": "Imperio (Monster)"
+    },
+    "Dominate Person": {
+      "namegen": "Imperio Homenum"
+    },
+    "Druidcraft": {
+      "namegen": "Animagic"
+    },
+    "Enlarge Reduce": {
+      "namegen": "Engorio / Reducio"
+    },
+    "Feather Fall": {
+      "namegen": "Arresto Momentum"
+    },
+    "Finger of Death": {
+      "namegen": "Crucio"
+    },
+    "Fire Bolt": {
+      "namegen": "Incendio"
+    },
+    "Fire Storm": {
+      "namegen": "Fiendfyre"
+    },
+    "Geas": {
+      "namegen": "Unbreakable Vow"
+    },
+    "Globe of Invulnerability": {
+      "namegen": "Protego Maxima"
+    },
+    "Healing Word": {
+      "namegen": "Episkey"
+    },
+    "Hold Monster": {
+      "namegen": "Petrificus Totalus"
+    },
+    "Hold Person": {
+      "namegen": "Petrificus Homenum"
+    },
+    "Holy Aura": {
+      "namegen": "Righteous Aura"
+    },
+    "Incendiary Cloud": {
+      "namegen": "Incendio Maxima"
+    },
+    "Knock": {
+      "namegen": "Alomohora"
+    },
+    "Levitate": {
+      "namegen": "Wingardium Leviosa"
+    },
+    "Light": {
+      "namegen": "Lumos / Nox"
+    },
+    "Locate Animals or Plants": {
+      "namegen": "Accio Animals or Plants"
+    },
+    "Locate Creature": {
+      "namegen": "Accio Creature"
+    },
+    "Locate Object": {
+      "namegen": "Accio Object"
+    },
+    "Mass Healing Word": {
+      "namegen": "Episkey Totalum"
+    },
+    "Mending": {
+      "namegen": "Reparo"
+    },
+    "Mind Blank": {
+      "namegen": "Occlumency"
+    },
+    "Modify Memory": {
+      "namegen": "Obliviate"
+    },
+    "Power Word Kill": {
+      "namegen": "Avada Kedavra"
+    },
+    "Power Word Stun": {
+      "namegen": "Stupefy"
+    },
+    "Prayer of Healing": {
+      "namegen": "Healing Belief"
+    },
+    "Produce Flame": {
+      "namegen": "Incendio Minima"
+    },
+    "Revivify": {
+      "namegen": "Rennervate"
+    },
+    "Scorching Ray": {
+      "namegen": "Incendio Tria"
+    },
+    "Shield of Faith": {
+      "namegen": "Protego"
+    },
+    "Silence": {
+      "namegen": "Silencio"
+    },
+    "Slow": {
+      "namegen": "Impedimenta"
+    },
+    "Sunbeam": {
+      "namegen": "Lumos Solem"
+    },
+    "Tasha's Hideous Laughter": {
+      "namegen": "Rictumsempra"
+    },
+    "Teleport": {
+      "namegen": "Apparate"
+    },
+    "Teleportation Circle": {
+      "namegen": "Apparition Circle"
+    },
+    "Transport via Plants": {
+      "namegen": "Apparate via Plants"
+    },
+    "True Polymorph": {
+      "namegen": "Transfiguration"
+    },
+    "True Seeing": {
+      "namegen": "Revelio"
+    },
+    "Word of Recall": {
+      "namegen": "Portkey"
+    },
+    "Zone of Truth": {
+      "namegen": "Veritas Maxima"
+    }
+  },
+  "tables": {},
+  "things": {
+    "potion of healing": {
+      "namegen": "Essence of Dittany"
+    },
+    "glass bubble": {
+      "icon": "blackball",
+      "namegen": "Glass Bubble",
+      "contains": [
+        "To activate, put the glass bubble to your mouth.",
+        "This object acts as a Scroll of Bubble-Head Charm and can be copied into a spellbook."
+      ],
+      "data":{
+        "extend_spell": "Bubble-Head Charm",
+        "consumable": true
+      }
+    },
+    "Mirror of Daggers": {
+      "icon": "mirror-mirror",
+      "contains": [
+        "To activate, smash the mirror."
+      ],
+      "data": {
+        "extend_spell": "Cloud of Daggers",
+        "consumable": true
+      }
+    },
+    "Longbow of Wolves": {
+      "isa": "longbow",
+      "namegen": ""
+    },
+    "Jar of Special Bees": {
+      "data": {
+        "extend_spell": "Cure Wounds",
+        "dice": {
+          "roll": "1d8+2"
+        },
+        "consumable": true
+      },
+      "icon": "bee"
+    },
+    "Talon": {
+      "isa": "shortsword +1",
+      "namegen": "Talon",
+      "name": "Talon"
+    },
+    "Abandoned Barn": {
+      "contains": [
+        "shovel",
+        "barrel,5",
+        {
+          "background": "purple",
+          "icon": "gi gi-swap-bag",
+          "name": "burlap sacks at back of room (secret exit)"
+        },
+        {
+          "isa": "ladder",
+          "name": "ladder up to hayloft at back of room"
+        },
+        {
+          "contains": [
+            "urban encounter"
+          ],
+          "isa": "hayloft"
+        }
+      ],
+      "isa": "barn"
+    },
+    "Agatha's Lair": {
+      "isa": "cave"
+    },
+    "Alba": {
+      "contains": [
+        "Argyllshire"
+      ],
+      "isa": "kingdom",
+      "namegen": "Kingdom of Alba"
+    },
+    "Alderleaf Farm": {
+      "isa": "farm"
+    },
+    "Alleena Moss": {
+      "data": {
+        "gender": "female"
+      },
+      "isa": "human",
+      "namegen": "Alleena Moss (daughter)"
+    },
+    "Allyria Liadon": {
+      "data": {
+        "gender": "female"
+      },
+      "isa": "veela",
+      "namegen": "Allyria Liadon (blackmarket seller)"
+    },
+    "Argyllshire": {
+      "contains": [
+        "Hogsmeade",
+        "Hogwarts",
+        "Forbidden Forest",
+        "Dallywick",
+        "Thundertree",
+        "Conyberry",
+        "Old Owl Well"
+      ],
+      "isa": "province"
+    },
+    "Barthen's Provisions": {
+      "isa": "shop"
+    },
+    "Barthen's home": {},
+    "Bog Cave": {
+      "contains": [
+        {
+          "isa": "skeleton",
+          "name": "skeleton of a dragon. ribcage is 16ft x 8 ft."
+        }
+      ],
+      "data": {
+        "faction": "Cragmaw Groblins"
+      },
+      "isa": "cave"
+    },
+    "Brother Vincent": {
+      "isa": "priest"
+    },
+    "Chaab": {
+      "data": {
+        "faction": "Zhentarim"
+      },
+      "isa": "humanoid",
+      "namegen": "Chaab (Zhentarim)"
+    },
+    "Conyberry": {},
+    "Cragmaw Castle": {
+      "isa": "castle"
+    },
+    "Cragmaw Groblins": {
+      "isa": "faction"
+    },
+    "Cult of the Dragon": {
+      "isa": "faction"
+    },
+    "Dallywick": {
+      "contains": [
+        "Edermath Orchard",
+        "Shine of Luck",
+        "smithy, rural",
+        "Barthen's Provisions",
+        "Sleeping Giant",
+        "Tresendar Manor",
+        "Alderleaf Farm",
+        "leatherworker",
+        "Dallywick Miner's Exchange",
+        "Lionshed Coster",
+        "Stonehill Inn",
+        "Barthen's home",
+        "Harbin Wester's home",
+        "Halia's home",
+        "Sister Garaele's home",
+        "town green"
+      ],
+      "isa": "village",
+      "namegen": "Dallywick village"
+    },
+    "Dervish and Banges": {
+      "isa": [
+        "smithy, rural"
+      ]
+    },
+    "Doomguide Yovir Glandon": {
+      "data": {
+        "faction": "Most Solemn Order of the Silent Shroud",
+        "gender": "male"
+      },
+      "isa": "priest"
+    },
+    "Earth": {
+      "contains": [
+        "Europe"
+      ],
+      "isa": "planet"
+    },
+    "Edermath Orchard": {
+      "isa": "farm"
+    },
+    "Europe": {
+      "contains": [
+        "Alba"
+      ],
+      "isa": "continent"
+    },
+    "Forbidden Forest": {
+      "contains": [
+        "Agatha's Lair",
+        "Cragmaw Castle"
+      ],
+      "isa": "forest"
+    },
+    "Gladrags Wizardwear": {
+      "isa": "shop"
+    },
+    "Hagar Grayhunt": {
+      "namegen": "Hagar Grayhunt (harper)"
+    },
+    "Haldred Moss": {
+      "data": {
+        "gender": "male"
+      },
+      "isa": "human",
+      "namegen": "Haldred Moss (farmer)"
+    },
+    "Hankerton Humble": {
+      "data": {
+        "age": 18,
+        "gender": "male"
+      },
+      "isa": "barkeep",
+      "namegen": "Hankerton Humble (bartender)"
+    },
+    "Harbin Wester": {
+      "data": {
+        "gender": "male"
+      },
+      "isa": "human"
+    },
+    "Henry Humble": {
+      "data": {
+        "gender": "male"
+      },
+      "isa": "human"
+    },
+    "Hog's Head": {
+      "contains": [
+        "dim, dingy tavern with stone walls and a hog's head mounted to the wall",
+        {
+          "contains": [
+            "Hankerton Humble",
+            "keg, 3",
+            "safebox"
+          ],
+          "isa": "bar"
+        },
+        "*TAVERN TABLE*, 5",
+        "menu",
+        "bard, 50%",
+        "bedroom, 4",
+        "hearth"
+      ],
+      "isa": "tavern",
+      "namegen": "The Hog's Head"
+    },
+    "Hogsmeade": {
+      "contains": [
+        "Hog's Head",
+        "Dervish and Banges",
+        "Gladrags Wizardwear",
+        "Three Broomsticks",
+        "hovel, 2-8",
+        "Hogsmeade Cemetery",
+        "temple",
+        "Hogsmeade Swamp",
+        "Abandoned Barn"
+      ],
+      "isa": "village",
+      "namegen": "Hogsmeade Village"
+    },
+    "Hogsmeade Cemetery": {
+      "contains": [
+        "quite well maintained, if somber",
+        "Doomguide Yovir Glandon",
+        "Brother Vincent",
+        "Welltran Crypt",
+        "grave, 10"
+      ],
+      "isa": "cemetery"
+    },
+    "Hogsmeade Swamp": {
+      "contains": [
+        "Moss Moss Farm",
+        "Bog Cave"
+      ],
+      "isa": "swamp"
+    },
+    "Hogwarts": {
+      "isa": "castle",
+      "name": "Hogwarts"
+    },
+    "Kithian Moss": {
+      "data": {
+        "gender": "male"
+      },
+      "isa": "human",
+      "namegen": "Kithian Moss (daughter)"
+    },
+    "Lionshed Coster": {
+      "isa": "shop"
+    },
+    "Millivent Moss": {
+      "data": {
+        "gender": "female"
+      },
+      "isa": "human",
+      "namegen": "Millivent Moss (farmer)"
+    },
+    "Moss Moss Farm": {
+      "isa": "farm"
+    },
+    "Most Solemn Order of the Silent Shroud": {
+      "isa": "faction"
+    },
+    "Old Owl Well": {},
+    "Prime Material Plane": {
+      "contains": [
+        "crystal sphere, 1-5",
+        "Realmspace",
+        "Solar System"
+      ]
+    },
+    "Quayle Moss": {
+      "isa": "human",
+      "namegen": "Quayle Moss (son)"
+    },
+    "Ralf Darkson": {
+      "data": {
+        "faction": "Cult of the Dragon"
+      },
+      "isa": "cultist"
+    },
+    "Shine of Luck": {
+      "isa": "temple"
+    },
+    "Sleeping Giant": {
+      "isa": "tavern"
+    },
+    "Solar System": {
+      "contains": [
+        "Earth"
+      ],
+      "isa": "crystal sphere",
+      "namegen": "The Solar System"
+    },
+    "Stonehill Inn": {
+      "isa": "tavern"
+    },
+    "Three Broomsticks": {
+      "contains": [
+        "*TAVERN TABLE*, 2-5",
+        "bar",
+        "hearth",
+        "bedroom, 1-5",
+        "menu",
+        "bard, 0-1",
+        "owl, 1-2"
+      ],
+      "isa": "tavern",
+      "namegen": "The Three Broomsticks"
+    },
+    "Thundertree": {},
+    "Tresendar Manor": {
+      "isa": "castle"
+    },
+    "Volland Moss": {
+      "data": {
+        "gender": "male"
+      },
+      "isa": "human",
+      "namegen": " Volland Moss (son)"
+    },
+    "Welcomers": {
+      "isa": "faction"
+    },
+    "Xandria Welltran": {
+      "data": {
+        "gender": "female"
+      },
+      "isa": "humanoid"
+    },
+    "essence of dittany": {
+      "isa": "potion",
+      "name": "essence of dittany"
+    },
+    "half-giant": {
+      "isa": "orc",
+      "name": "half-giant"
+    },
+    "veela": {
+      "isa": "elf",
+      "name": "veela"
+    }
+  }
+}

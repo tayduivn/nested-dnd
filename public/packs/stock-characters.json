@@ -1,0 +1,932 @@
+{
+  "dependencies": [
+    "harry-potter-founders"
+  ],
+  "characters": [
+    {
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "Fire Bolt",
+              "Mage Hand",
+              "Blade Ward",
+              "Comprehend Languages",
+              "Detect Magic",
+              "Tasha's Hideous Laughter",
+              "Expeditious Retreat",
+              "Silent Image",
+              "Disguise Self",
+              "Magic Missile",
+              "Mage Armor",
+              "Detect Thoughts",
+              "Invisibility"
+            ]
+          },
+          "level": 3,
+          "name": "Wizard",
+          "subclasses": {
+            "Arcane Tradition": "Defense Against the Dark Arts"
+          }
+        }
+      ],
+      "abilities": {
+        "Charisma": {
+          "base": 10
+        },
+        "Constitution": {
+          "base": 13
+        },
+        "Dexterity": {
+          "base": 14
+        },
+        "Intelligence": {
+          "base": 15
+        },
+        "Strength": {
+          "base": 8
+        },
+        "Wisdom": {
+          "base": 12
+        }
+      },
+      "advantages": [],
+      "background": {
+        "bond": "I sold my soul for knowledge. I hope to do great deeds and win it back.",
+        "flaw": "I speak without thinking, invariably insulting others.",
+        "ideal": "The goal of a life of study is the betterment of oneself.",
+        "name": "Sage",
+        "personality": "I... speak... slowly... when talking... to iditots... which... almost... everyone... is... compared... to me.",
+        "specialty": "Researcher",
+        "startingCoin": "50g"
+      },
+      "body": {
+        "age": null,
+        "eyes": "",
+        "hair": "",
+        "height": "",
+        "skin": "",
+        "weight": ""
+      },
+      "equipment": {
+        "containers": [
+          {
+            "content": [
+              "spellbook",
+              "letter from a dead professor posing a question you have not yet been able to answer",
+              "book of lore, bottle of ink, quill, 10 sheets parchment, bag of sand, small knife"
+            ],
+            "name": "Backpack",
+            "notes": "Scholar's pack"
+          }
+        ],
+        "items": [
+          "dagger"
+        ],
+        "weapons": "Dagger, wand"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "House elvish",
+            "Gobbledegook",
+            "Veelan"
+          ],
+          "notes": [
+            "Sage: +2"
+          ]
+        },
+        "skills": {
+          "list": [
+            "Arcana",
+            "History",
+            "Investigation",
+            "Insight",
+            "Medicine"
+          ],
+          "notes": [
+            "Arcana/History from Sage"
+          ]
+        },
+        "tools": {
+          "list": [],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Human"
+      },
+      "shield": false
+    },
+    {
+      "classes": [
+        {
+          "name": "Fighter",
+          "level": 3,
+          "subclasses": {
+            "Fighting Style":"Protection"
+          }
+        }
+      ],
+      "race": {
+        "name": "Human"
+      },
+      "abilities": {
+        "Strength": {
+          "base": 15
+        },
+        "Dexterity": {
+          "base": 8
+        },
+        "Constitution": {
+          "base": 14
+        },
+        "Intelligence": {
+          "base": 12
+        },
+        "Wisdom": {
+          "base": 10
+        },
+        "Charisma": {
+          "base": 13
+        }
+      },
+      "background": {
+        "name": "Soldier",
+        "personality": "You can stare down a hell hound without flinching.",
+        "ideal": "When people follow orders blindly, they embrace a kind of tyranny.",
+        "bond": "You fight for those who cannot fight for themselves.",
+        "flaw": "You’d rather eat your armor than admit when you’re wrong.",
+        "startingCoin": "30g, 5s"
+      },
+      "equipment": {
+        "armor": "chain mail",
+        "hasShield": true,
+        "containers": [
+          {
+            "name": "Dungeoneer's pack",
+            "content": [
+              ", 1 essence of dittany"
+            ]
+          }
+        ],
+        "weapons": "Longsword, Pike, 5 Javelins",
+        "items": [
+          "longsword",
+          "pike",
+          "javelin",
+          "potion of healing"
+        ]
+      },
+      "proficiencies": {
+        "skills": {
+          "list": [
+            "Athletics",
+            "History",
+            "Intimidation",
+            "Perception"
+          ]
+        },
+        "tools": {
+          "double_proficiency": [
+            "thieves' tools"
+          ]
+        },
+        "languages": {
+          "list":["Giant"]
+        }
+      }
+    },
+    {
+      "classes": [
+        {
+          "name": "Rogue",
+          "level": 3,
+          "subclasses": {
+            "Roguish Archetype": "Thief"
+          }
+        }
+      ],
+      "race": {
+        "name": "Halfling (Lightfoot)"
+      },
+      "abilities": {
+        "Strength": {
+          "base": 10
+        },
+        "Dexterity": {
+          "base": 15
+        },
+        "Constitution": {
+          "base": 13
+        },
+        "Intelligence": {
+          "base": 14
+        },
+        "Wisdom": {
+          "base": 12
+        },
+        "Charisma": {
+          "base": 8
+        }
+      },
+      "background": {
+        "name": "Criminal",
+        "personality": "You are always calm, no matter what the situation.",
+        "ideal": "Everyone should be free to pursue his or her own livelihood.",
+        "bond": "You are loyal to your friends, not to any ideals.",
+        "flaw": "If you need something, you take it. If someone else has it, they don’t anymore.",
+        "startingCoin": "40g"
+      },
+      "equipment": {
+        "armor": "studded leather armor",
+        "containers": [
+          {
+            "name": false,
+            "content": [
+              "dark common clothes with a hood"
+            ]
+          },
+          {
+            "name": "Burglar's pack",
+            "content": [
+              "silk rope, thieves’ tools, caltrops, dice set, chalk (5), soap (2), steel mirror, 1 essence of dittany"
+            ]
+          }
+        ],
+        "weapons": "Shortsword, 2 Daggers, Shortbow",
+        "items": [
+          "shortsword",
+          "dagger",
+          "shortbow",
+          "potion of healing"
+        ]
+      },
+      "proficiencies": {
+        "skills": {
+          "list": [
+            "Acrobatics",
+            "Deception",
+            "Investigation",
+            "Perception",
+            "Sleight of Hand",
+            "Stealth"
+          ],
+          "double_proficiency": [
+            "Perception"
+          ]
+        },
+        "tools": {
+          "double_proficiency": [
+            "thieves' tools"
+          ]
+        }
+      }
+    },
+    {
+      "classes": [
+        {
+          "name": "Monk",
+          "level": 3,
+          "subclasses": {
+            "Monastic Tradition": "Way of the Open Hand"
+          }
+        }
+      ],
+      "abilities": {
+        "Charisma": {
+          "base": 11
+        },
+        "Constitution": {
+          "base": 13
+        },
+        "Dexterity": {
+          "base": 16
+        },
+        "Intelligence": {
+          "base": 7
+        },
+        "Strength": {
+          "base": 9
+        },
+        "Wisdom": {
+          "base": 13
+        }
+      },
+      "advantages": [],
+      "background": {
+        "bond": "I'm still seeking the enlightenment I pursued in my seclusion, and it still eludes me.",
+        "feature": {
+          "desc": "the quiet seclusion of your extended hermitage gave you access to a unique and powerful discovery",
+          "name": "Discovery"
+        },
+        "flaw": "I like keeping secrets and will not share them with anyone.",
+        "ideal": "Live and Let Live. Meddling in the affairs of others causes nothing but trouble.",
+        "name": "Hermit",
+        "personality": "I've been isolated so long that I rarely speak. I am utterly serene, even in the face of disaster.",
+        "startingCoin": "50g"
+      },
+      "body": {
+        "eyes": "",
+        "hair": "",
+        "height": "",
+        "skin": "",
+        "weight": ""
+      },
+      "equipment": {
+        "armor": null,
+        "containers": [
+          {
+            "content": [
+              "Bedroll",
+              "Mess Kit",
+              "Tinder Box",
+              "10 x Torches",
+              "10 x Rations",
+              "Waterskin",
+              "50 Feet Hemp Rope",
+              "Herbalism Kit",
+              "Scroll Case w/ notes",
+              "Winter Blanket",
+              "Common Clothes",
+              "1 Essence of Dittany"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "Quarterstaff",
+          "Dart",
+          "potion of healing"
+        ],
+        "weapons": "Quarterstaff, 10x Darts"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Veelan"
+          ],
+          "notes": [
+            "Human: Common, +1"
+          ]
+        },
+        "skills": {
+          "list": [
+            "Acrobatics",
+            "Medicine",
+            "Perception",
+            "Religion",
+            "Stealth"
+          ],
+          "notes": [
+            ""
+          ]
+        },
+        "tools": {
+          "list": [
+            "flute",
+            "herbalism kit"
+          ],
+          "notes": []
+        },
+        "weapons": {}
+      },
+      "race": {
+        "name": "Human"
+      }
+    },
+    {
+      "name": "Luna Lovegood",
+      "abilities": {
+        "Charisma": {
+          "base": 8
+        },
+        "Constitution": {
+          "base": 13
+        },
+        "Dexterity": {
+          "base": 15
+        },
+        "Intelligence": {
+          "base": 10
+        },
+        "Strength": {
+          "base": 12
+        },
+        "Wisdom": {
+          "base": 14
+        }
+      },
+      "advantages": [
+        {
+          "desc": "initiative, your first turn attacking creatures that have not yet attacked.",
+          "name": "Advantage on"
+        },
+        {
+          "desc": "Ignore difficult terrain"
+        }
+      ],
+      "background": {
+        "alignment": "Chaotic Good",
+        "bond": "My isolation gave me great insight into a great evil that only I can destroy: nargles.",
+        "feature": {
+          "desc": "nargles",
+          "name": "Discovery",
+          "notes": [
+            "Hermit"
+          ]
+        },
+        "flaw": "I'd risk too much to uncover a lost bit of knowledge",
+        "ideal": " Inquiry and curiosity are the pillars of progress.",
+        "name": "Hermit",
+        "personality": "I often get lost in my own thoughts and contemplation, becoming oblivious to my surroundings.",
+        "specialty": "",
+        "startingCoin": "5g"
+      },
+      "body": {
+        "age": 16,
+        "born": 1981,
+        "eyes": "Pale Silver",
+        "hair": "Blonde",
+        "height": "5'2\"",
+        "skin": "Light",
+        "weight": "115 lb."
+      },
+      "class": "Ranger (Revised)",
+      "classLabel": "Magizoologist",
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": []
+          },
+          "label": "Magizoologist",
+          "level": 1,
+          "name": "Ranger (Revised)",
+          "subclasses": {
+            "Favored Enemy": "Fey"
+          }
+        }
+      ],
+      "equipment": {
+        "armor": "Leather Armor",
+        "containers": [
+          {
+            "content": [
+              "Hogwarts robes",
+              "3 editions of the Quibbler",
+              "winter blanket",
+              "Herbalism kit"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "Shortsword",
+          "Longbow"
+        ],
+        "weapons": "2 Shortswords, Longbow & Quiver, wand"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Veelan",
+            "Sylvan",
+            "Pukwudgie"
+          ],
+          "notes": [
+            "Favored enemy:fey",
+            "Hermit+1"
+          ]
+        },
+        "skills": {
+          "list": [
+            "Animal Handling",
+            "Insight",
+            "Medicine",
+            "Nature",
+            "Survival"
+          ],
+          "notes": []
+        },
+        "tools": {
+          "list": [
+            "herbalism kit"
+          ],
+          "notes": [
+            "Hermit - herbs"
+          ]
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Human"
+      },
+      "shield": false
+    },
+    {
+      "name": "Dobby, a Free Elf",
+      "abilities": {
+        "Charisma": {
+          "base": 15
+        },
+        "Constitution": {
+          "base": 14
+        },
+        "Dexterity": {
+          "base": 13
+        },
+        "Intelligence": {
+          "base": 10
+        },
+        "Strength": {
+          "base": 8
+        },
+        "Wisdom": {
+          "base": 12
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Chaotic Good",
+        "bond": "Dobby is a free house-elf and he can obey anyone he likes and Dobby will do whatever Harry Potter wants him to do!",
+        "flaw": "Dobby is always having to punish himself for something.",
+        "ideal": "Dobby has sworn a pact to bring light to the darkest places of the world.",
+        "name": "Slave",
+        "personality": "Dobby talks about himself in third person and calls everyone by their full names with formal titles. No matter how bad things get, Dobby never complains – Dobby has seen worse.",
+        "specialty": "",
+        "startingCoin": "1g"
+      },
+      "body": {
+        "age": "",
+        "eyes": "Green",
+        "hair": "",
+        "height": "3'",
+        "skin": "",
+        "weight": ""
+      },
+      "class": "Warlock",
+      "classLabel": "House Elf",
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {},
+            "spells": [
+              "Mage Hand",
+              "Eldritch Blast",
+              "Spare the Dying",
+              "Sacred Flame",
+              "Light",
+              "Hex",
+              "Protection from Evil and Good"
+            ]
+          },
+          "label": "House Elf",
+          "level": 1,
+          "name": "Warlock",
+          "subclasses": {
+            "Otherworldly Patron": "The Celestial"
+          }
+        }
+      ],
+      "equipment": {
+        "armor": "Leather Armor",
+        "containers": [
+          {
+            "name": "Backpack",
+            "notes": [
+              "Dungeoneer"
+            ]
+          }
+        ],
+        "items": [
+          "Light Crossbow",
+          "dagger",
+          "Sickle"
+        ],
+        "weapons": "Light Crossbow, Dagger (2), Sickle"
+      },
+      "features": [
+        {
+          "desc": "Servants you meet will gossip with you about their master. Also, you can easily pose as the help.",
+          "name": "Upstairs Downstars"
+        }
+      ],
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Deception",
+            "Investigation",
+            "Survival",
+            "Perception"
+          ],
+          "notes": [
+            "Warlock: Arcana, Deception, History, Intimidation, Investigation, Nature, and Religion",
+            "Slave: Survival, Perception"
+          ]
+        },
+        "tools": {
+          "list": [
+            "Cook’s utensils"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "label": "House Elf",
+        "name": "Halfling (Stout)"
+      },
+      "shield": false
+    },
+    {
+      "name": "Madam Poppy Pomfrey",
+      "abilities": {
+        "Charisma": {
+          "base": 12
+        },
+        "Constitution": {
+          "base": 14
+        },
+        "Dexterity": {
+          "base": 13
+        },
+        "Intelligence": {
+          "base": 10
+        },
+        "Strength": {
+          "base": 8
+        },
+        "Wisdom": {
+          "base": 15
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Lawful Neutral",
+        "bond": "I owe a debt I can never repay to the person who took pity on me.",
+        "flaw": "I will never fully trust anyone other than myself.",
+        "ideal": "We have to take care of each other, because no one else is going to do it.",
+        "name": "Urchin",
+        "personality": "I hide scraps of food and trinkets away in my pockets.",
+        "specialty": "",
+        "startingCoin": "10g"
+      },
+      "body": {
+        "age": 73,
+        "eyes": "Blue",
+        "hair": "Grey",
+        "height": "5'7\"",
+        "skin": "Light",
+        "weight": "140 lb."
+      },
+      "class": "Cleric",
+      "classLabel": "Nurse",
+      "classes": [
+        {
+          "knownSpells": {
+            "notes": {
+              "Bless": "prepared",
+              "Cure Wounds": "prepared"
+            },
+            "spells": [
+              "Light",
+              "Guidance",
+              "Sacred Flame",
+              "Bless",
+              "Cure Wounds",
+              "Bane",
+              "Command",
+              "Create or Destroy Water",
+              "Detect Evil and Good",
+              "Detect Magic",
+              "Detect Poison and Disease",
+              "Guiding Bolt",
+              "Healing Word",
+              "Inflict Wounds",
+              "Protection from Evil and Good",
+              "Purify Food and Drink",
+              "Sanctuary",
+              "Shield of Faith"
+            ]
+          },
+          "label": "Nurse",
+          "level": 1,
+          "name": "Cleric",
+          "subclasses": {
+            "Philosophical Domain": "Life Domain"
+          }
+        }
+      ],
+      "equipment": {
+        "armor": "Leather Armor",
+        "containers": [
+          {
+            "content": [
+              "Uniform",
+              "A small knife, a map of the city you grew up in, a pet mouse",
+              "a token to remember your parents by"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "Mace",
+          "Light Crossbow"
+        ],
+        "weapons": "Light Crossbow, Mace, wand"
+      },
+      "features": [],
+      "proficiencies": {
+        "armor": {
+          "list": [
+            "heavy armor"
+          ],
+          "notes": [
+            "heavy - life domain"
+          ]
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Gobbledegook"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Insight",
+            "Medicine",
+            "Sleight of Hand",
+            "Stealth"
+          ],
+          "notes": [
+            "Urchin is Sleight of Hand, Stealth"
+          ]
+        },
+        "tools": {
+          "list": [
+            "Disguise kit",
+            "Thieves’ tools"
+          ],
+          "notes": []
+        },
+        "weapons": {
+          "list": []
+        }
+      },
+      "race": {
+        "name": "Human"
+      }
+    },
+    {
+      "name": "Gregory Goyle",
+      "abilities": {
+        "Charisma": {
+          "base": 10
+        },
+        "Constitution": {
+          "base": 14
+        },
+        "Dexterity": {
+          "base": 13
+        },
+        "Intelligence": {
+          "base": 8
+        },
+        "Strength": {
+          "base": 15
+        },
+        "Wisdom": {
+          "base": 12
+        }
+      },
+      "advantages": [],
+      "background": {
+        "alignment": "Lawful Neutral",
+        "bond": "I’m trying to pay off an old debt I owe to a generous benefactor.",
+        "flaw": "If there’s a plan, I’ll forget it. If I don’t forget it, I’ll ignore it.",
+        "ideal": "I’m loyal to my friends, not to any ideals, and everyone else can take a trip down the Styx for all I care.",
+        "name": "Criminal",
+        "personality": "The best way to get me to do something is to tell me I can’t do it.",
+        "specialty": "Enforcer",
+        "startingCoin": "15g"
+      },
+      "body": {
+        "age": 17,
+        "eyes": "Brown",
+        "hair": "Brown",
+        "height": "6'1\"",
+        "skin": "Light",
+        "weight": "210 lb."
+      },
+      "class": "Barbarian",
+      "classLabel": "Thug",
+      "classes": [
+        {
+          "label": "Thug",
+          "level": 1,
+          "name": "Barbarian"
+        }
+      ],
+      "equipment": {
+        "containers": [
+          {
+            "content": [
+              "Hooded Hogwarts robes",
+              "crowbar"
+            ],
+            "name": "Backpack"
+          }
+        ],
+        "items": [
+          "Greataxe",
+          "Handaxe",
+          "Javelin"
+        ],
+        "weapons": "Greataxe, Handaxe (2), Javelin (4)"
+      },
+      "proficiencies": {
+        "armor": {
+          "list": [],
+          "notes": []
+        },
+        "languages": {
+          "list": [
+            "Common",
+            "Undercommon"
+          ],
+          "notes": []
+        },
+        "skills": {
+          "list": [
+            "Athletics",
+            "Deception",
+            "Intimidation",
+            "Stealth"
+          ],
+          "notes": [
+            "Decep, Stealth from criminal"
+          ]
+        },
+        "tools": {
+          "list": [
+            "dice gaming",
+            "thieves’ tools"
+          ],
+          "notes": [
+            "Criminal"
+          ]
+        },
+        "weapons": {
+          "list": [],
+          "notes": []
+        }
+      },
+      "race": {
+        "name": "Human"
+      },
+      "shield": false
+    }
+  ],
+  "name": "stock-characters"
+}

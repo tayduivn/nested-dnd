@@ -92,6 +92,10 @@ tableStore.isTableID = function(str){
 		&& typeof tables[str.substring(1, str.length-1)] !== "undefined";
 }
 
+tableStore.exists = function(str){
+	return typeof tables[str] !== "undefined";
+}
+
 tableStore.get = function(str){
 	str = str.trim();
 	if(str.charAt(0) === "*" && str.charAt(str.length-1))

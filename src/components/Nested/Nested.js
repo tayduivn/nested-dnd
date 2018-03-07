@@ -5,6 +5,7 @@ import thingStore from '../../stores/thingStore.js';
 import instanceStore from '../../stores/instanceStore.js'
 import PackLoader from '../../util/PackLoader.js';
 import Ancestors from './Ancestors.js';
+import Styler from '../../util/Styler';
 
 import './Nested.css';
 
@@ -147,22 +148,39 @@ class Nested extends React.Component {
 							transitionLeave={false}>
 							{(!inst.children.length) ? <div className="col-xs-12">Contains nothing.</div> : 
 							inst.children.map( (child,index) => {
-								if(typeof child === "string"){
+
+								var instance = (typeof child === "string") ? false : instanceStore.get(child);
+								var style = {color:instance.textColor};
+								var h1Style = {};
+								
+								var cssClass = instance.cssClass;
+								if(instance.thing && instance.thing.isItA("humanoid")){
+									var humanoidStyle = Styler.getShadow(instance.cssClass)
+									style.textStroke = humanoidStyle.stroke;
+									style.WebkitTextStroke = humanoidStyle.stroke;
+									style.textShadow = humanoidStyle.shadow;
+									style.color = instance.cssClass;
+									cssClass = inst.cssClass.replace(" empty","");
+									h1Style = {color: humanoidStyle.h1BG, background: instance.cssClass, textShadow: "none", marginBottom:0, WebkitTextStroke: "0px"} 
+								}
+
+								if(!instance || (instance.thing.name && instance.thing.name.includes("description") ) ){
 									return (
 										<div key={index} className="col-xs-12">
-											<div className="description alert alert-default">{child}</div>
+											<div className="description alert alert-default">{ (instance) ? instance.name : child}</div>
 										</div>
 									)
 								}
-								var instance = instanceStore.get(child);
+								
 								var childContains = instance.thing.getContains();
 								var hasChildren = childContains && childContains.length !== 0;
-								var cssClass = instance.cssClass + (hasChildren ? " link":"");
+								if(hasChildren) cssClass+=" link";
+								
 								var inner = <div className={"child-inner "+cssClass}
 									data-thing={instance.thing.name}
-									style={{color:instance.textColor}}>
+									style={style}>
 											<i className={instance.icon}></i>
-											<h1>{instance.name}</h1>
+											<h1 style={h1Style}>{instance.name}</h1>
 										</div>;
 
 								if(!hasChildren){

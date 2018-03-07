@@ -9,7 +9,7 @@
 # build
 /build
 src/**/*.css
-!src/icons/font/*.css
+!src/assets/font/*.css
 
 # misc
 .DS_Store

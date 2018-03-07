@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Nested from './Nested/Nested.js';
 import ThingExplorer from './ThingExplorer/ThingExplorer.js';
 import { IconDebug } from './ThingExplorer/IconDebug.js'
+import Characters from './Characters/Characters.js';
 import Settings from './Settings.js';
 
 import './App.css';
@@ -29,6 +30,7 @@ class Nav extends Component {
 						<ul className="nav navbar-nav">
 							<li><Link to={process.env.PUBLIC_URL + '/nested'}>Nested</Link></li>
 							<li><Link to={process.env.PUBLIC_URL + '/things'}>Pack Editor</Link></li>
+							<li><Link to={process.env.PUBLIC_URL + '/characters'}>Characters</Link></li>
 						</ul>
 						<ul className="nav navbar-nav navbar-right">
 							<li><Settings /><IconDebug show={false}></IconDebug></li>
@@ -51,6 +53,7 @@ class App extends Component {
 						<Route exact path={process.env.PUBLIC_URL + '/'} component={Nested} />
 						<Route path={process.env.PUBLIC_URL + '/nested'} component={Nested} />
 						<Route path={process.env.PUBLIC_URL + '/things'} component={ThingExplorer} />
+						<Route path={process.env.PUBLIC_URL + '/characters'} component={Characters} />
 					</Switch>
 				</div>
 			</Router>

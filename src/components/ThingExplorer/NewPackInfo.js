@@ -90,7 +90,7 @@ export default class NewPackInfo extends React.Component{
 		)
 
 		return (
-		<Row id="newPackInfo" className={"alert "+(hasData ? "alert-success" : "alert-info")}>
+		<Row className={"status-bar alert "+(hasData ? "alert-success" : "alert-info")}>
 			<Col sm={5} xs={12} className={hasData ? "animated pulse": "col-lg-12 col-md-12 col-sm-12 col-xs-12"}>{message}</Col>
 			<Col sm={7} xs={12} className={hasData ? "" : "hidden"}>
 				<Form inline className="pull-right">

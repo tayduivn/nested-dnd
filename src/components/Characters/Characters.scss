@@ -1,0 +1,16 @@
+.characterList{
+	font-size: 0.9em;
+
+	.list-group-item{
+		padding: 0.6em 1em;
+	}
+
+	.charName{
+		margin:0;
+	}
+	.playerName{ 
+		margin: -0.3em 0 0 0;
+		font-variant: all-small-caps;
+		font-size:0.9em;
+	}
+}

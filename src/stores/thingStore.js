@@ -14,16 +14,20 @@ const BLANK_NAME = " ";
 
 let updateCallbacks = {};
 var DEBUG = true;
-var DEBUG_THING = "The Aviary";
+var DEBUG_THING = "Talon";
 
 class Thing{
 	constructor(options){
 		if(DEBUG && options.name === DEBUG_THING) {
 			console.log("Thing constructor: "+DEBUG_THING);
 		}
-		
+
 		//extend the existing thing
 		if(things[options.name]){
+			//extend the existing data
+			if(things[options.name].data && options.data)
+				options.data = {...things[options.name].data, ...options.data};
+			
 			options = { ...things[options.name].originalOptions, ...options };
 		}
 		
@@ -154,6 +158,9 @@ class Thing{
 		if(this.namegen) 
 			return tableStore.roll(this.namegen);
 
+		if(this.isUnique && this.name)
+			return this.name;
+
 		var isa = this.getIsa();
 		if(isa.namegen || !this.name) 
 			return isa.getName();
@@ -175,11 +182,14 @@ class Thing{
 	}
 
 	getData(){
-		if(this.data !== undefined)
-			return {...this.data};
-		
 		var isa = this.getIsa();
-		if(isa) return isa.getData()
+		var data = (this.data) ? this.data : {};
+
+		if(!isa)
+			return {...data};
+		
+		if(isa)
+			return {...isa.getData(), ...data};
 
 		return {};
 	}
@@ -229,7 +239,16 @@ class Thing{
 			if(DEBUG) console.error(this.name+" isa is not a string");
 			return false;
 		}
+	}
 
+	isItA(name){
+		if(this.isa === name)
+			return true;
+
+		if(!this.isa)
+			return false;
+
+		return thingStore.get(this.isa).isItA(name);
 	}
 }
 

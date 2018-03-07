@@ -1,4 +1,3 @@
-
 var pack = {
 	"author": "Cattegy",
 	"defaultSeed": "",
@@ -6,9 +5,7 @@ var pack = {
 	"description": "",
 	"name": "dnd-js",
 	"version": "0.0.0",
-	"things": {
-		
-	},
+	"things": {},
 	"tables": {}
 };
 
@@ -16,7 +13,7 @@ pack.things["mirror plane"] ={ beforeRender: function(instance){
 	if(typeof instance.data.mirrors === "undefined") return;
 
 	var instanceStore = instance.instanceStore;
-	var thingStore = instance.thing.thingStore;
+	var thingStore = this.thingStore;
 
 	if(typeof instance.data.mirrorsID === undefined){
 		var index = thingStore.get(instance.data.mirrors).uniqueInstance;
@@ -40,7 +37,6 @@ pack.things["mirror plane"] ={ beforeRender: function(instance){
 			mirrorChild = instanceStore.get(mirrorChild);
 
 			//create a new mirror plane thing
-			var mirrorThing = mirrorChild.thing;
 			var childThing = styleAThing(mirrorChild.thing,"mirror plane");
 
 			//create new child and copy mirror
@@ -60,7 +56,7 @@ pack.things["mirror plane"] ={ beforeRender: function(instance){
 		instance.children.push(mirrorChild);
 		return;
 	});
-	if(instance.children.length != mirrorInstance.children.length){
+	if(instance.children.length !== mirrorInstance.children.length){
 		console.error("Error while mirroring an instance: ended up with "+instance.children.length+" children when there need to be "+mirrorInstance.children.length);
 	}
 
@@ -75,91 +71,209 @@ pack.things["fey mirror plane"] ={ beforeRender: function(instance){
 pack.things["ethereal mirror plane"] ={ beforeRender: function(instance){
 	createMirrorPlane(instance, "ethereal mirror plane");
 }}
+
+pack.things["monster"] = {
+	beforeMake: function(instance, tableStore){
+		var statblocks = false;
+
+		//generic group, needs to set statblock from data settings
+		if(this.name === "humanoid" || this.name === "monster"){
+			statblocks = findAncestorData(instance, "statblocks");
+			if(!statblocks) statblocks = tableStore.get("DEFAULT STATBLOCKS");
+		}else if(this.name === "livestock"){
+			statblocks = findAncestorData(instance, "livestock");
+			if(!statblocks) statblocks = tableStore.get("DEFAULT LIVESTOCK");
+		}else if(this.name === "mount"){
+			statblocks = findAncestorData(instance, "mounts");
+			if(!statblocks) statblocks = tableStore.get("DEFAULT MOUNTS");
+		}else if(this.name === "pet"){
+			statblocks = findAncestorData(instance, "pets");
+			if(!statblocks) statblocks = tableStore.get("DEFAULT PETS");
+		}
+
+		if(statblocks){
+			var statblock = tableStore.roll(statblocks);
+			return {
+				thing: (this.thingStore.exists(statblock)) ? this.thingStore.get(statblock) : this
+			}
+		}else{
+			return { thing: this };
+		}
+		
+	}
+};
+
 pack.things["humanoid"] = {
 	afterMake: function(instance, tableStore){
+		var gender = instance.data.gender;
+		var race = instance.data.race;
+		var age = instance.data.age;
+		var ageGroup = instance.data.ageGroup;
+		var name = instance.name;
 
 		// get gender
-		var gender = instance.data.gender;
 		var transgender = false;
 		if(!gender){
-			gender = instance.data.gender = (Math.rand(1,250) === 1) ? "genderqueer" : (Math.rand(0,1)) ? "male" : "female";
-			transgender = (Math.rand(1,100) === 1);
+			gender = (Math.rand(1,250) === 1) ? "genderqueer" : (Math.rand(0,1)) ? "male" : "female";
+			transgender = (Math.rand(1,250) === 1);
 		}
 
 		// get race
-		if(instance.data.race === undefined){
-			instance.data.race = (checkIsa(instance.thing,"playable race")) ? instance.thing.name : false;
-			if(!instance.data.race){
+		if(race === undefined || race === "any"){
+			race = (checkIsa(this,"playable race")) ? this.name : false;
+			if(!race){
 				var demographics = findAncestorData(instance,"race-demographics");
 				if(demographics){
-					instance.data.race = tableStore.roll(demographics);
+					race = tableStore.roll(demographics);
 				}
 			}
 		}
-		if(!instance.data.race) instance.data.race = "human";
-		var raceData = instance.thing.thingStore.get(instance.data.race).getData();
+		if(!race) race = "human";
 
-		//get age
-		if(instance.data.age === undefined){
-			var maxAge = raceData["age max"];
-			var adultAge = raceData["age adult"];
+		//get race data
+		var raceThing = this.thingStore.get(race);
+		var raceData = this.thingStore.get(race).getData();
+		var maxAge = raceData["age max"];
+		var adultAge = raceData["age adult"];
+		if(!raceThing._data || !raceThing._data.threshold1){
 			var diff = maxAge-adultAge;
-			var threshold1 = Math.floor(0.0625*diff+adultAge);
-			var threshold2 = Math.floor(0.3125*diff+adultAge);
-			var threshold3 = Math.floor(0.5625*diff+adultAge);
-
-			var ageGroup = tableStore.get("AGE GROUPS").roll();
-			if(ageGroup === "young adult"){
-				instance.data.age = Math.rand(adultAge,threshold1);
-			}
-			else if(ageGroup === "adult"){
-				instance.data.age = Math.rand(threshold1+1,threshold2);
-			}
-			else if(ageGroup === "middleAged"){
-				instance.data.age = Math.rand(threshold2+1,threshold3);
-			}
-			else{
-				instance.data.age = Math.rand(threshold3+1,adultAge);
+			raceThing._data = {
+				threshold1: Math.floor(0.0625*diff+adultAge),
+				threshold2: Math.floor(0.3125*diff+adultAge),
+				threshold3: Math.floor(0.5625*diff+adultAge)
 			}
 		}
-		
+		var threshold1 = raceThing._data.threshold1;
+		var threshold2 = raceThing._data.threshold2;
+		var threshold3 = raceThing._data.threshold3;
+
+
+		//get age
+		if(age === undefined){
+			if(ageGroup === undefined)
+				ageGroup = tableStore.get("AGE GROUPS").roll();
+
+			if(ageGroup === "young adult")
+				age = Math.rand(adultAge,threshold1);
+			else if(ageGroup === "adult")
+				age = Math.rand(threshold1+1,threshold2);
+			else if(ageGroup === "middle aged")
+				age = Math.rand(threshold2+1,threshold3);
+			else
+				age = Math.rand(threshold3+1,adultAge);
+		}
+		else{
+			if(age <= adultAge)
+				ageGroup = "child";
+			if(age <= threshold1)
+				ageGroup = "young adult";
+			else if(age <= threshold2)
+				ageGroup = "adult";
+			else if(age <= threshold3)
+				ageGroup = "middle aged"
+			else
+				ageGroup = "elderly";
+		}
+
 		//if name is capitalized, return
-		if(instance.thing.isUnique()){
-			if(!instance.thing.namegen && instance.thing.isa && instance.thing.isa !== "humanoid")
-				instance.name = instance.name+" ("+instance.thing.isa+")";
+		var label = "";
+		if(this.isUnique()){
+			if(!this.namegen && this.isa && this.isa !== "humanoid"){
+				
+				if(race !== "human")
+					label+= race+" ";
+				if(this.isa !== "commoner")
+					label+= this.isa;
+
+				// append label
+				if(label.length){
+					name = name+" ("+label.trim()+")";
+				}
+			}
 		}
 		else{
 			//get name
-			var name = instance.name;
-			if(instance.name === this.name){
-				if(gender === "male"){
-					name = tableStore.get("MALE NAME").roll();
-				}
-				else if(gender === "male"){
-					name = tableStore.get("FEMALE NAME").roll();
+			if(race !== "human")
+				label+= race+" ";
+			if(this.name !== "commoner" && this.name !== "humanoid" && race !== this.name)
+				label+= this.name;
+
+			if(name === this.name){
+				var tablename = "";
+				if(tableStore.exists(this.name.toUpperCase()+" NAME")){
+					tablename = this.name.toUpperCase()+" NAME";
 				}
 				else{
-					name = tableStore.get(["FEMALE","MALE"].roll()+" NAME").roll();
+					if(race === "human"){
+						tablename+= "HUMAN ";
+					}
+					if(gender === "male" || gender === "female"){
+						tablename+= gender.toUpperCase()+" ";
+					}
+					else{
+						tablename+= ["FEMALE","MALE"].roll()+" "
+					}
+					tablename+="NAME";
 				}
-				instance.name = name+" ("+this.name+")";
+				
+
+				name = tableStore.get(tablename).roll();
+
+				// TEMPORARY - store names
+				var generatedNames = localStorage["generatedNames"];
+				if(!generatedNames){
+					generatedNames = [];
+				}else{
+					generatedNames = JSON.parse(generatedNames);
+				}
+				generatedNames.push(name);
+				localStorage.generatedNames = JSON.stringify(generatedNames);
+
+				if(label.length) name = name+" ("+label.trim()+")";
 			}
 		}
 
-		if(instance.data.gender !== "genderqueer" && transgender){
-			instance.data.gender = "transgender "+instance.data.gender;
+		// append trans
+		if(gender !== "genderqueer" && transgender){
+			gender = "transgender "+gender;
 		}
 
-		// put person description in
-		var msg = instance.data.gender+" "+instance.data.race+", "+instance.data.age+" years old";
-		instance.children.push(msg);
+		var data = {
+			race: race, 
+			gender: gender, 
+			age: age,
+			ageGroup: ageGroup
+		};
+		instance.name = name;
+		instance.data = Object.assign({}, instance.data, data);
 	}
 }
 
+pack.things["humanoid description"] = {
+	afterMake: function(instance){
+		var gender = findAncestorData(instance, "gender");
+		var race = findAncestorData(instance, "race");
+		var age = findAncestorData(instance, "age");
+
+		instance.name = "";
+
+		if(gender !== "male" && gender !== "female")
+			instance.name+= gender+" ";
+		if(race !== "human")
+			instance.name+= race+" ";
+
+		instance.name+= age+" years old ";
+
+		if(race !== "human")
+			instance.name+= "("+findAncestorData(instance, "ageGroup")+")"
+		
+	}
+}
 function findAncestorData(instance, property){
 	if(!instance.parent)
 		return undefined;
 
-	if(instance.data[property] !== undefined)
+	if(instance.data && instance.data[property] !== undefined)
 		return instance.data[property];
 	
 	return findAncestorData(instance.instanceStore.get(instance.parent), property);
@@ -232,7 +346,7 @@ pack.things["person"]={
 
 function createMirrorPlane(instance, name){
 	var instanceStore = instance.instanceStore;
-	var thingStore = instance.thing.thingStore;
+	var thingStore = this.thingStore;
 	var thing = thingStore.get(name);
 
 	instance.children.forEach(function(child){
