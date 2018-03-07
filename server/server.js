@@ -3,7 +3,7 @@
 const express = require("express");
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 if (process.env.NODE_ENV === 'production') {
 	app.use('/', express.static(`${__dirname}/../client/build`));

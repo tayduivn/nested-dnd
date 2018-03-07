@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-  	"postinstall": "cd server && yarn install",
+  	"postinstall": "cd client && yarn install",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "client": "cd client && yarn start",
-    "server": "cd server && nodemon server.js",
-    "build": "cd client && yarn build",
-    "start": "build && cd server && nodemon server.js"
+    "server": "nodemon server/server.js",
+    "start": "build && npm run server",
+    "build": "cd client && npm run build"
   },
   "dependencies": {
-    "nodemon": "^1.17.1"
+    "nodemon": "^1.17.1",
+    "express": "^4.16.2"
   },
   "devDependencies": {
     "concurrently": "^3.5.1",
