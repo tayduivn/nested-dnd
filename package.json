@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-  	"postinstall": "cd client && yarn install",
+  	"postinstall": "cd client && yarn install && yarn build",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "client": "cd client && yarn start",
     "server": "nodemon server/server.js",
-    "start": "build && npm run server",
-    "build": "cd client && npm run build"
+    "start": "yarn server"
   },
   "dependencies": {
     "nodemon": "^1.17.1",
