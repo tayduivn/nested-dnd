@@ -2,14 +2,16 @@
 
 # dependencies
 /node_modules
+/client/node_modules
+/server/node_modules
 
 # testing
 /coverage
 
 # build
-/build
-src/**/*.css
-!src/assets/font/*.css
+/client/build
+/client/src/**/*.css
+!/client/src/assets/font/*.css
 
 # misc
 .DS_Store

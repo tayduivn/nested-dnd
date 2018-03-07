@@ -1,0 +1,44 @@
+{
+	"extends": [
+		"eslint:recommended"
+	],
+	"rules": {
+		"indent": [
+			"error",
+			"tab",
+			{
+				"SwitchCase": 1
+			}
+		],
+		"linebreak-style": [
+			"error",
+			"unix"
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"react/prop-types": "off",
+		"eqeqeq": [
+			"warn",
+			"always"
+		],
+		"radix": [
+			"warn",
+			"always"
+		],
+		"array-callback-return": [
+			"warn"
+		],
+		"no-console": "off",
+		"no-process-env": "off",
+		"no-extend-native": [
+			2,
+			{
+				"exceptions": [
+					"Array"
+				]
+			}
+		]
+	}
+}

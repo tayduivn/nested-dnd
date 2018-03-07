@@ -1,0 +1,27 @@
+{
+	"env": {
+		"browser": true,
+		"es6": true
+	},
+	"js": {
+		"extends": "react-app"
+	},
+	"extends": [
+		"plugin:react/recommended"
+	],
+	"globals": {
+		"process": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 6,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true,
+			"modules": true,
+			"experimentalObjectRestSpread": true
+		}
+	},
+	"rules": {
+		"no-process-env": 0
+	}
+}
