@@ -8,7 +8,7 @@
     "client": "cd client && yarn start",
     "server": "cd server && nodemon server.js",
     "build": "cd client && yarn build",
-    "start": "cd server && nodemon server.js"
+    "start": "build && cd server && nodemon server.js"
   },
   "dependencies": {
     "nodemon": "^1.17.1"
