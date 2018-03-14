@@ -25,7 +25,7 @@ var userSchema = mongoose.Schema({
 	twitter: {
 		id: String,
 		token: String,
-		displayName: String,
+		name: String,
 		username: String
 	},
 	google: {
@@ -69,7 +69,7 @@ userSchema.methods.deleteMe = async function(done) {
 				Pack.remove({ _id: { $in: packIdArr } }).exec(cb);
 			},
 			deletedGenerators: function(cb) {
-				Generator.remove({ _pack: { $in: packIdArr } }).exec(cb);
+				Generator.remove({ pack_id: { $in: packIdArr } }).exec(cb);
 			},
 			deletedBuilds: function(cb) {
 				BuiltPack.remove({ _id: { $in: packIdArr } }).exec(cb);

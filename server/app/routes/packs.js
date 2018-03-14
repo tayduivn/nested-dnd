@@ -42,7 +42,7 @@ module.exports = function(app) {
 
 	app.get("/api/explore/:url", MW.canViewPack, (req, res, next) =>{
 		var universe = req.session.universe;
-		if(universe && universe._pack.toString() === req.pack.id){
+		if(universe && universe.pack_id.toString() === req.pack.id){
 			var tree = Explore.arrayToTree(universe.array);
 			return res.json(tree)  //array to tree
 		}
@@ -53,10 +53,10 @@ module.exports = function(app) {
 
 
 			// save to universe
-			//todo get from DB if logged in
+			// TODO get from DB if logged in
 			var { tree, array } = Explore.treeToArray(generated);
 			req.session.universe = {
-				_pack: req.pack._id,
+				pack_id: req.pack._id,
 				array: array
 			};
 
@@ -67,7 +67,7 @@ module.exports = function(app) {
 
 	app.get("/api/explore/:url/:index", MW.canViewPack, (req, res,next) =>{
 		var universe = req.session.universe;
-		if(!universe || universe._pack.toString() !== req.pack.id) 
+		if(!universe || universe.pack_id.toString() !== req.pack.id) 
 			return res.status(404).send();
 
 		if(!universe.array[req.params.index]) 
@@ -115,7 +115,7 @@ module.exports = function(app) {
 	app.post("/api/pack", MW.isLoggedIn, (req, res) => {
 		var newPack = req.body;
 		newPack._user = req.user._id;
-		delete newPack.defaultSeed; //can't set, don't have any generators yet
+		delete newPack.seed; //can't set, don't have any generators yet
 
 		Pack.create(newPack, function(err, newPack) {
 			if (err) return res.status(412).json(err);
@@ -136,18 +136,18 @@ module.exports = function(app) {
 		// fields that cannot be changed
 		delete newVals._id; //can't modify id
 		delete newVals._user; // can't change user for now
-		delete newVals.createdOn;
+		delete newVals.created;
 
-		newVals.updatedOn = Date.now();
+		newVals.updated = Date.now();
 
 		
 
 		// validate exists
-		if(newVals.defaultSeed){
+		if(newVals.seed){
 			BuiltPack.findOrBuild(req.pack).then(builtpack=>{
 
-				if(!req.pack.seedIsValid(newVals.defaultSeed, builtpack.generators)){
-					res.status(412).json({ error: "Seed is not valid: "+newVals.defaultSeed});
+				if(!req.pack.seedIsValid(newVals.seed, builtpack.generators)){
+					res.status(412).json({ error: "Seed is not valid: "+newVals.seed});
 					return;
 				}
 				else
@@ -206,7 +206,7 @@ module.exports = function(app) {
 			var old = legacyThings[name];
 
 			var newGen = {
-				_pack: req.params.pack,
+				pack_id: req.params.pack,
 				isa: old.name,
 				extends: old.isa
 			};

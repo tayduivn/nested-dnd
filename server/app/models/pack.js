@@ -17,10 +17,11 @@ var packSchema = Schema({
 	},
 
 	// for universe custom changes dummy packs. Packs with a _universe id were auto-generated, and are for backend use. Shouldn't be shown to the user!
-	_universe: {
+	universe_id: {
 		type: Schema.Types.ObjectId,
 		ref: 'Universe'
 	},
+
 	name: {
 		type: String,
 		required: true
@@ -28,8 +29,8 @@ var packSchema = Schema({
 	url: {
 		type: String
 	},
-	description: String,
-	defaultSeed: {
+	desc: String,
+	seed: {
 		type: String,
 		isAsync: true,
 		set: function(val){
@@ -38,8 +39,8 @@ var packSchema = Schema({
 			return val;
 		}
 	},
-	createdOn: { type: Date, default: Date.now },
-	updatedOn: { type: Date, default: Date.now },
+	created: { type: Date, default: Date.now },
+	updated: { type: Date, default: Date.now },
 	public: {
 		type: Boolean,
 		default: false
@@ -54,16 +55,16 @@ var packSchema = Schema({
  * @return Array of Generator isa's representing the seed
  */
 packSchema.virtual('seedArray').get(function() {
-	return seedArray(this.defaultSeed);
+	return seedArray(this.seed);
 });
 
-function seedArray(defaultSeed){
-	if(!defaultSeed) return [];
+function seedArray(seed){
+	if(!seed) return [];
 
-	if(defaultSeed.charAt(defaultSeed.length-1) !== SEED_DELIM)
-		defaultSeed = defaultSeed+SEED_DELIM;
+	if(seed.charAt(seed.length-1) !== SEED_DELIM)
+		seed = seed+SEED_DELIM;
 
-	var arr = defaultSeed.split(">")
+	var arr = seed.split(">")
 	arr.splice(arr.length-1,1);
 
 	return arr;
@@ -83,11 +84,11 @@ packSchema.methods.seedIsValid = function(seed, generators){
 	return true;
 }
 
-packSchema.methods.renameDefaultSeed = async function(oldname, newname){
-	if(this.defaultSeed){
-		var newSeed = this.defaultSeed.replace(new RegExp(oldname+SEED_DELIM, "g"), newname+SEED_DELIM);
-		if(newSeed !== this.defaultSeed){
-			this.defaultSeed = newSeed;
+packSchema.methods.renameseed = async function(oldname, newname){
+	if(this.seed){
+		var newSeed = this.seed.replace(new RegExp(oldname+SEED_DELIM, "g"), newname+SEED_DELIM);
+		if(newSeed !== this.seed){
+			this.seed = newSeed;
 			return await this.save();
 		}
 	}
@@ -103,7 +104,7 @@ packSchema.methods.checkDependencies = function(){
 
 // delete all of the generators in this pack when you delete pack;
 packSchema.statics.deleteMe = function(callback){
-	Generator.remove({ _pack: this._id }, (err,docs) => {
+	Generator.remove({ pack_id: this._id }, (err,docs) => {
 		if(err) callback(err)
 		this.remove((err)=>{
 			callback(err);

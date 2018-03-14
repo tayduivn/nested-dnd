@@ -22,7 +22,7 @@ schema.path('generators').get(function(value){
 });
 
 
-// TODO: Validate defaultSeed during build
+// TODO: Validate seed during build
 
 schema.statics.findOrBuild = async function(pack){
 	var builtpack = await this.findById(pack._id).exec();
@@ -35,13 +35,13 @@ schema.statics.findOrBuild = async function(pack){
 
 	var allPacks = pack.dependencies.concat([pack.id]);
 
-	var gens = await this.model('Generator').find({ _pack: { $in: allPacks} }).exec();
+	var gens = await this.model('Generator').find({ pack_id: { $in: allPacks} }).exec();
 
 	var map = {};
 
 	// map array of generators to their unique names and sort by dependency order
 	gens.sort(function(a, b){
-		return allPacks.indexOf(a._pack) - allPacks.indexOf(b._pack);
+		return allPacks.indexOf(a.pack_id) - allPacks.indexOf(b.pack_id);
 	});
 	gens.forEach((gen) => {
 		if(!map[gen.isa]){
@@ -84,7 +84,7 @@ function makeGenerator(dependencies){
 	// use array of generators, not id and pack
 	generator.gen_ids = gen_ids;
 	delete generator._id;
-	delete generator._pack; 
+	delete generator.pack_id; 
 
 	return generator;
 }
@@ -101,14 +101,14 @@ schema.methods.rebuildGenerator = async function(isa, pack, done){
 
 	var allPacks = pack.dependencies.concat([pack.id]);
 	var query = {
-		_pack: { $in: allPacks}, 
+		pack_id: { $in: allPacks}, 
 		isa: isa
 	};
 	var gens = await this.model('Generator').find(query).exec();
 
 	// sort gens by dependency order
 	gens.sort(function(a, b){
-		return allPacks.indexOf(a._pack) - allPacks.indexOf(b._pack);
+		return allPacks.indexOf(a.pack_id) - allPacks.indexOf(b.pack_id);
 	});
 
 	if(!this.generators)

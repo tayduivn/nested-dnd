@@ -9,7 +9,7 @@ const Maker = require('./generator/make');
 const SEED_DELIM = ">";
 
 var generatorSchema = Schema({
-	_pack: {
+	pack_id: {
 		type: Schema.Types.ObjectId,
 		ref: 'Pack',
 		required: true
@@ -22,14 +22,14 @@ var generatorSchema = Schema({
 	extends: { // needs to exist in this pack or it's dependencies. todo: check
 		type: String
 	},
-	displayName: {
+	name: {
 		type: String // todo: handle tables and such
 	},
-	description: {
+	desc: {
 	 type: [String],
 	 default: void 0
 	},
-	children: {
+	in: {
 	 type: [childSchema],
 	 default: void 0	
 	},
@@ -44,11 +44,9 @@ generatorSchema.post('remove', Maintainer.cleanAfterRemove);
 generatorSchema.virtual('makeTextColor').get(function(){
 	return (this.style) ? this.style.makeTextColor : null;
 });
+
 generatorSchema.virtual('makeCssClass').get(function(){
-	var cssClass = (this.style) ? this.style.makeBackgroundColor : "";
-	if(!this.children || !this.children.length)
-		cssClass += "empty";
-	return cssClass; // TODO
+	return (this.style) ? this.style.makeBackgroundColor : null; //TODO
 });
 generatorSchema.virtual('makeIcon').get(function(){
 	return (this.style) ? this.style.makeIcon : null;
@@ -77,33 +75,33 @@ generatorSchema.statics.generateAsSeed = function(seedArray, pack){
 	else{
 		var node = Maker.make(seed, 1, pack);
 
-		//generate the next seed in the array and push to children
+		//generate the next seed in the array and push to in
 		//TODO: replace child
 		var generatedChild = seedArray.shift().generateAsSeed(seedArray, pack);
-		if(!node.children) node.children = [];
-		node.children.push(generatedChild);
+		if(!node.in) node.in = [];
+		node.in.push(generatedChild);
 
 		return node;
 	}
 };
 
 generatorSchema.statics.generateFromNode = function(node, universe, builtpack){
-	if(node.children === false || !node.children)
+	if(!node.in)
 		return node;
 
-	if(node.children === true && builtpack.generators[node.isa]){
+	if(node.in === true && builtpack.generators[node.isa]){
 		var madeNode = Maker.make(builtpack.generators[node.isa], 2, builtpack)
-		return Object.assign({}, node, { children: madeNode.children });
+		return Object.assign({}, node, { in: madeNode.in });
 	}
 
-	if(node.children.forEach){
+	if(node.in.forEach){
 
-		node.children = node.children.map((c)=>{
-			if(c.children !== true || !c.isa || !builtpack.generators[c.isa]) 
+		node.in = node.in.map((c)=>{
+			if(c.in !== true || !c.isa || !builtpack.generators[c.isa]) 
 				return c;
 
 			var madeNode = Maker.make(builtpack.generators[c.isa], 1, builtpack)
-			return Object.assign({}, c, { children: madeNode.children });
+			return Object.assign({}, c, { in: madeNode.in });
 		})
 		return node;
 	}

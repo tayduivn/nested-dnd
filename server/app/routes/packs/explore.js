@@ -4,46 +4,70 @@ function treeToArray(node, startIndex){
 	node.index = (startIndex) ? startIndex : 0;
 	currentIndex = node.index+1;
 
-	// no children, termination condition
-	if(!node.children || !(node.children instanceof Array)){
+	// no in, termination condition
+	if(!node.in || !(node.in instanceof Array)){
+		cleanUp(node);
 		return {
 			tree: node,
 			array: array
 		};
 	}
 
-	// make obejct to store ancestors
-	var ancestors = [].concat(node.ancestors);
-	ancestors.unshift({ // put a new ancestor at the front of the array
+	// make obejct to store up
+	var up = [].concat(node.up);
+	var parent = { 
 		index: node.index,
-		name: node.name,
-		textColor: node.textColor,
-		cssClass: node.cssClass
-	});
-	if(ancestors[1]){ // remove render data from the grandparent
-		ancestors[1] = Object.assign({}, ancestors[1]);
-		delete ancestors[1].textColor;
-		delete ancestors[1].cssClass
+		name: node.name
+	}
+	//optional fields
+	if(node.txt) parent.txt = node.txt;
+	if(node.cssClass) parent.cssClass = node.cssClass;
+	// put a new ancestor at the front of the array
+	up.unshift(parent);
+
+	if(up[1]){ // remove render data from the grandparent
+		up[1] = Object.assign({}, up[1]);
+		delete up[1].txt;
+		delete up[1].cssClass
 	}
 
-	var flatNode = Object.assign({}, node, {children: []});
+	var flatNode = Object.assign({}, node, {in: []});
 
-	node.children.forEach((n,i)=>{
-		n.ancestors = ancestors;
+	node.in.forEach((n,i)=>{
+		n.up = up;
 
 		// recurse.
 		var toArray = this.treeToArray(n, currentIndex);
-		flatNode.children[i] = toArray.tree.index;
-		node.children[i] = toArray.tree;
+		flatNode.in[i] = toArray.tree.index;
+		node.in[i] = toArray.tree;
 		array = array.concat(toArray.array);
 	});
 
-	array[0] = flatNode;
+	cleanUp(flatNode);
 
 	return {
 		tree: node,
 		array: array
 	};
+
+	// for storage in the flat array 
+	function cleanUp(cleanMe){
+		var copy = Object.assign({}, cleanMe);
+
+		// don't need to store index or ancestry in array, just parent index. Will rebuild on get
+		delete copy.index;
+		if(copy.up){
+			if(!copy.up.length){
+				delete copy.up;
+			}
+			else{
+				copy.up = copy.up[0].index;
+			}
+		}
+		
+		array[0] = copy;
+	}
+
 }
 
 
@@ -52,25 +76,25 @@ function arrayToTree(arr, startIndex){
 
 	var node = arr[rootIndex];
 
-	if(!node || !node.children || !node.children.forEach) 
+	if(!node || !node.in || !node.in.forEach) 
 		return node;
 
-	var treeNode = Object.assign({}, node, {children: []});
+	var treeNode = Object.assign({}, node, {in: []});
 
-	node.children.forEach((c,i)=>{
+	node.in.forEach((c,i)=>{
 
 		var child = arr[parseInt(c)];
-		if(!child || !child.children || !child.children.forEach) {
+		if(!child || !child.in || !child.in.forEach) {
 			return;
 		}
 
-		if(child.children && child.children.forEach){
+		if(child.in && child.in.forEach){
 
-			var cTree = Object.assign({}, child, {children: []});
-			child.children.forEach((g,j)=>{
-				cTree.children[j] = arr[parseInt(g)]
+			var cTree = Object.assign({}, child, {in: []});
+			child.in.forEach((g,j)=>{
+				cTree.in[j] = arr[parseInt(g)]
 			})
-			treeNode.children[i] = cTree;
+			treeNode.in[i] = cTree;
 		}
 		
 	})

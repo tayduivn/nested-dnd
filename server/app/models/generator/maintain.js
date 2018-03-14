@@ -11,8 +11,8 @@ var Maintainer = {
 				isas.push(arr[i].value);
 			}
 			// recurse
-			if(arr[i].children){
-				isas = isas.concat(this.getGeneratorChildren(arr[i].children));
+			if(arr[i].in){
+				isas = isas.concat(this.getGeneratorChildren(arr[i].in));
 			}
 		}
 
@@ -20,21 +20,21 @@ var Maintainer = {
 	},
 
 	renameChildren: function(node, oldname, newname){
-		if(!node || !node.children) return false;
+		if(!node || !node.in) return false;
 		var changed = false;
 
-		node.children.forEach((child, i)=>{
+		node.in.forEach((child, i)=>{
 			//termination condition
 			if(child.type === "generator" && child.value === oldname){
 				child.value = newname;
 				changed = true;
 			}
 			// recurse
-			else if(child.type === "embed" && child.value.children){
+			else if(child.type === "embed" && child.value.in){
 				var newChild = this.renameChildren(child.value, oldname, newname);
 				if(newChild) {
 					changed = true;
-					node.children[i].value = newChild;
+					node.in[i].value = newChild;
 				}
 			}
 		});
@@ -42,7 +42,7 @@ var Maintainer = {
 		// ------- return
 		if(node._id){ // is the parent generator
 			if(changed){
-				node.markModified('children');
+				node.markModified('in');
 				return node;
 			}
 			return false;
@@ -53,9 +53,9 @@ var Maintainer = {
 
 	insertNew: function(data, pack, builtpack, Generator, callback){
 
-		//validate children
-		if(data.children){
-			var isas = this.getGeneratorChildren(data.children);
+		//validate in
+		if(data.in){
+			var isas = this.getGeneratorChildren(data.in);
 			for(var i = 0; i < isas.length; i++){
 				if(!builtpack.generators[isas[i]]){
 					return callback({ error: "Could not find child generator that is a "+isas[i]})
@@ -75,7 +75,7 @@ var Maintainer = {
 	},
 
 	cleanAfterRemove: function(gen){
-		gen.model('BuiltPack').findById(gen._pack, (err, builtpack)=>{
+		gen.model('BuiltPack').findById(gen.pack_id, (err, builtpack)=>{
 			if(err) return console.error(err);
 
 			// clean up form build pack
@@ -96,13 +96,13 @@ var Maintainer = {
 		var BuiltPack = generator.model('BuiltPack');
 		
 		var result = await Promise.all([
-			// find generators in this pack that contain children or extend with oldname
-			Generator.find({ _pack: pack._id }).exec(),
+			// find generators in this pack that contain in or extend with oldname
+			Generator.find({ pack_id: pack._id }).exec(),
 
 			BuiltPack.findOrBuild(pack),
 
-			// set defaultSeed ----------------------------
-			pack.renameDefaultSeed(oldname, newname) 
+			// set seed ----------------------------
+			pack.renameseed(oldname, newname) 
 		]);
 		var gens = result[0];
 		var builtpack = result[1];
@@ -124,14 +124,14 @@ var Maintainer = {
 			var builtGen = builtpack.generators[gen.isa];
 
 			if(!builtGen){
-				throw new Error("Could not find build for "+gen.isa+" in pack "+gen._pack);
+				throw new Error("Could not find build for "+gen.isa+" in pack "+gen.pack_id);
 			}
 
 			if(newGen){
 				changed = true;
 				gen = newGen;
-				builtGen.children = newGen.children;
-				builtpack.markModified('generators.'+newGen.isa+".children");
+				builtGen.in = newGen.in;
+				builtpack.markModified('generators.'+newGen.isa+".in");
 			}
 
 			// just rename extends -- the build should get it out of the buildpack, not precompile
@@ -147,7 +147,7 @@ var Maintainer = {
 			if(changed) gen.save();
 		});
 
-		// push children and extends changes to buildpack. no need to rebuild
+		// push in and extends changes to buildpack. no need to rebuild
 		builtpack.save();
 		return generator;
 	}

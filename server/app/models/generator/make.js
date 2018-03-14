@@ -32,20 +32,23 @@ var Maker = {
 			gen = new Generator(gen);
 		}
 
-		var name = gen.displayName || gen.isa;
-
 		var result = {
-			name: name,
-			isa: gen.isa,
-			cssClass: gen.makeCssClass,
-			textColor: gen.makeTextColor,
-			icon: gen.makeIcon,
-			children: !!(gen.children && gen.children.length), // Boolean
-			ancestors: [] // placeholder for later
+			up: [] // placeholder for later
 		};
+		//optional fields --------------------------------------
+		var txt = gen.makeTextColor;
+		var cssClass =  gen.makeCssClass;
+		var icon = gen.makeIcon;
+		if(txt) result.txt = txt;
+		if(cssClass) result.cssClass = cssClass;
+		if(icon) result.icon = icon;
+		if(gen.name) result.name = gen.name;
+		if(gen.isa) result.isa = gen.isa;
+		if(gen.in && gen.in.length) result.in = true; // placeholder for later;
 
-		if(generations && gen.children && gen.children.length){
-			var madeChildren = gen.children.map((c)=>{
+		// in ---------------------------------------------
+		if(generations && gen.in && gen.in.length){
+			var madeChildren = gen.in.map((c)=>{
 				return this.makeChild(c, pack, generations-1);
 			})
 
@@ -60,7 +63,7 @@ var Maker = {
 				}
 			});
 
-			result.children = flatArray;
+			result.in = flatArray;
 
 			if(!madeChildren || madeChildren.length === 0){
 				result.isEmpty = true;
@@ -80,6 +83,9 @@ var Maker = {
 		if(child.type === "generator"){
 			gen = pack.generators[child.value]
 		}
+		if(child.type === "embed"){
+			gen = child.value;
+		}
 
 		var arr = [];
 		for(var i = 0; i < amount; i++){
@@ -88,8 +94,8 @@ var Maker = {
 			}
 			else arr.push({ 
 				name: child.value,
-				ancestors: [],
-				children: false
+				up: [],
+				in: false
 			});
 		}
 

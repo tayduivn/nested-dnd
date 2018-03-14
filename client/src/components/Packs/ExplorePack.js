@@ -195,8 +195,10 @@ class CurrentNode extends Component {
 		const inst = this.props.current;
 		if(!inst) return <p>LOADING</p>;
 
+		const cssClass = inst.cssClass+(!inst.in ? " empty":"");
+
 		return (
-			<div id="content" className={"container-fluid "+inst.cssClass} style={{color:inst.textColor}}>
+			<div id="content" className={"container-fluid "+cssClass} style={{color:inst.textColor}}>
 				<h1 id="title">
 					<Ancestors 
 						ancestors={inst.ancestors}

@@ -7,9 +7,9 @@ module.exports = function(app) {
 	// ---------------------------------
 	app.post("/api/pack/:pack/generator", utils.canEditPack, (req, res) => {
 		var newGenerator = req.body;
-		newGenerator._pack = req.pack._id;
+		newGenerator.pack_id = req.pack._id;
 
-		// TODO: Check that children with generator type provide a valid ID
+		// TODO: Check that in with generator type provide a valid ID
 
 		Generator.insertNew(newGenerator, req.pack, function(err, newGenerator) {
 			if (err) return res.status(412).json(err);
@@ -41,15 +41,15 @@ module.exports = function(app) {
 	// Update Generator
 	// ---------------------------------
 
-	// TODO: When renaming, fix references in all generator children, as well as defaultSeed
+	// TODO: When renaming, fix references in all generator in, as well as seed
 	app.put("/api/pack/:pack/generator/:id", utils.canEditPack, (req, res, next) => {
 		var newVals = req.body;
 
 		// fields that cannot be changed
 		delete newVals._id; //can't modify id
-		delete newVals._pack; // can't change _pack for now
+		delete newVals.pack_id; // can't change pack_id for now
 
-		newVals.updatedOn = Date.now();
+		newVals.updated = Date.now();
 
 		Generator.findById(req.params.id).exec().then(async (generator)=> {
 			if(!generator) return res.status(404).json(err);

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
 var tableSchema = Schema({
-	_pack: {
+	pack_id: {
 		type: Schema.Types.ObjectId,
 		ref: 'Pack',
 		required: true
