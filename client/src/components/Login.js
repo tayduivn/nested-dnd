@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FormGroup, FormControl, ControlLabel, Button, HelpBlock } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import AuthService from '../util/AuthService';
 
 export default class Login extends Component {
 	static get propTypes() {
@@ -36,11 +37,13 @@ export default class Login extends Component {
 		var data = new FormData();
 		data.append( "json", JSON.stringify( payload ) );
 		
-		fetch('/'+this.props.url,
+		fetch('/api/'+this.props.url,
 			{
+				credentials: 'include',
 				method: "POST",
 				headers: {
-		      'Content-Type': 'application/json'
+		      'Content-Type': 'application/json',
+		      "Accept": "application/json"
 		    },
 				body: JSON.stringify(payload)
 			})
@@ -51,6 +54,7 @@ export default class Login extends Component {
 				}
 				// on success, return to wherever you were before
 				else{
+					AuthService.setLoggedOn(true);
 					return window.location = "/";
 				}
 			})
@@ -95,44 +99,23 @@ export default class Login extends Component {
 export class Account extends Component {
 	constructor(){
 		super()
-		this.state = {isLoggedIn: false};
+		this.state = { isLoggedOn: AuthService.isLoggedOn() };
 		this.logout = this.logout.bind(this);
 	}
 	logout(){
-		let _this = this;
-		fetch('/logout', { credentials: 'include', method: 'post' }).then((response)=>{
-			if(response.status == 200){
-				_this.setState({ isLoggedIn: false });
-			}
-			else{
-				console.error("Could not log out");
-			}
-		});
+		AuthService.logOff((bool) => this.setState({ isLoggedOn: bool }));
 	}
 	componentWillMount(){
-		fetch("/user", { credentials: 'include' }).then((response)=>{
-			if(response.status !== 200){
-				this.setState({ isLoggedIn: false });
-			}
-			else{
-				return response.text();
-			}
-		}).then((json)=>{
-			this.setState({ isLoggedIn: json });
-		});
+		AuthService.checkLoggedOn((bool) => this.setState({ isLoggedOn: bool }));
 	}
 	render(){
-		return (
-			<div>
-				{this.state.isLoggedIn ? "Logged in": "Logged out"}
-				<Link to={process.env.PUBLIC_URL + "/login"}>Login</Link>
-				<a href="#" onClick={this.logout}>Logout</a>
-			</div>
-		)
-		if(!this.state.isLoggedIn){
+		if(this.state.isLoggedOn === null){
+			return null;
+		}
+		else if(!this.state.isLoggedOn){
 			return (<Link to={process.env.PUBLIC_URL + "/login"}>Login</Link>);
 		}
 		else
-			return (<a href="#" onClick={this.logout}>Logout</a>);
+			return (<Link to="#" onClick={this.logout}>Logout</Link>);
 	}
 }

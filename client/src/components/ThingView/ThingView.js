@@ -9,6 +9,9 @@ import NameInput from './NameInput'
 import IsASelect from './IsASelect'
 import CategoryTabs from './CategoryTabs'
 
+import Import from '../../actions/LegacyImportAction'
+
+
 const DEBUG = false;
 
 export default class ThingView extends React.Component{
@@ -26,6 +29,7 @@ export default class ThingView extends React.Component{
 		this.validate = this.validate.bind(this);
 		this.getStatus = this.getStatus.bind(this);
 		this.setPreview = this.setPreview.bind(this);
+		this.handleImport = this.handleImport.bind(this);
 	}
 
 	shouldComponentUpdate(nextProps, nextState){
@@ -175,6 +179,10 @@ export default class ThingView extends React.Component{
 		if(DEBUG) console.log("ThingView.handleDelete");
 		this.props.saveThing(this.props.thingID, true);
 	}
+
+	handleImport(){
+		Import.oneThing(this.props.thing);
+	}
 	
 	getStatus(property){
 		var value = this.props.thing[property];
@@ -252,6 +260,9 @@ export default class ThingView extends React.Component{
 					<Preview {...this.state.instance} />
 					<Button bsStyle={this.props.thing.name && this.props.thing.name.length ? "default" : "danger"} onClick={this.handleDelete} className="delete-btn">
 						<i className="fa fa-trash"></i> Delete
+					</Button>
+					<Button bsStyle={"default"} onClick={this.handleImport}>
+						<i className="fa fa-save">2.0 Import</i> 
 					</Button>
 				</Col>
 			</Row>

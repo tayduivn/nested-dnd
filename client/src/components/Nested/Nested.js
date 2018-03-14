@@ -18,8 +18,10 @@ class Nested extends React.Component {
 			instance: null
 		};
 	}
+	
 	//if user updates the hash or clicks the navbar this will fire
 	componentWillUpdate(){
+		console.log("test");
 		var id = parseInt(window.location.hash.replace('#',''),10);
 		if(id && this.state.instance && this.state.instance.id !== id){
 			this.setInstance(id);

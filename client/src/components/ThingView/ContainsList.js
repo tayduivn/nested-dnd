@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; 
 import { FormGroup, FormControl, InputGroup, Button, ButtonToolbar, HelpBlock } from 'react-bootstrap';
 import Contain from '../../util/Contain.js';
 

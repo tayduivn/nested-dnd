@@ -86,7 +86,12 @@ tableStore.isRollable = function(obj){
 	return obj !== result;
 }
 
+tableStore.cleanTableID = function(str){
+	return str.trim().substring(1, str.length-1);
+} 
+
 tableStore.isTableID = function(str){
+	if(!str || typeof str !== "string") return false;
 	str = str.trim();
 	return str.charAt(0) === "*" && str.charAt(str.length-1) === "*"
 		&& typeof tables[str.substring(1, str.length-1)] !== "undefined";
@@ -118,6 +123,10 @@ tableStore.get = function(str){
 	return table;
 }
 
+tableStore.getAll = function(){
+	return tables;
+}
+
 tableStore.add = function(options){
 	if(!(options.rows instanceof Array)){
 		throw new Error("rows must be Array");
@@ -129,4 +138,36 @@ tableStore.addAll = function(newTables){
 	Object.assign(tables, newTables);
 }
 
+Array.prototype.roll = function(){ // eslint-disable-line
+	var result = choose(this);
+
+	//termination condition: no roll function;
+	return tableStore.roll(result);
+}
+
+Array.prototype.equals = function (array) { // eslint-disable-line
+		// if the other array is a falsy value, return
+		if (!array)
+				return false;
+
+		// compare lengths - can save a lot of time 
+		if (this.length !== array.length)
+				return false;
+
+		for (var i = 0, l=this.length; i < l; i++) {
+				// Check if we have nested arrays
+				if (this[i] instanceof Array && array[i] instanceof Array) {
+						// recurse into the nested arrays
+						if (!this[i].equals(array[i]))
+								return false;       
+				}           
+				else if (this[i] !== array[i]) { 
+						// Warning - two different object instances will never be equal: {x:20} != {x:20}
+						return false;   
+				}           
+		}       
+		return true;
+}
+
 export default tableStore;
+export { Table };

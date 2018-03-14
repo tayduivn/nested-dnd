@@ -3,12 +3,7 @@
 		"browser": true,
 		"es6": true
 	},
-	"js": {
-		"extends": "react-app"
-	},
-	"extends": [
-		"plugin:react/recommended"
-	],
+	"extends": "react-app",
 	"globals": {
 		"process": true
 	},

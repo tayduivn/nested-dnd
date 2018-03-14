@@ -2,7 +2,7 @@
   "name": "nested-dnd-client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000/api",
+  "proxy": "http://localhost:5000",
   "homepage": "https://nested-dnd.herokuapp.com",
   "dependencies": {
     "animate.css": "^3.5.2",
@@ -26,7 +26,7 @@
     "react-dom": "^15.6.1",
     "react-router": "^4.1.2",
     "react-router-dom": "^4.1.2",
-    "react-scripts": "1.0.10",
+    "react-scripts": "1.1.1",
     "react-select": "^1.0.0-rc.5",
     "react-transition-group": "1.x",
     "react-virtualized-select": "^3.1.0"
@@ -39,7 +39,7 @@
   },
   "scripts": {
     "start-js": "react-scripts start --prefix ../node_modules",
-    "start": "npm-run-all -p watch-css start-js", 
+    "start": "npm-run-all -p watch-css start-js",
     "server": "nodemon server/server.js",
     "build": "npm run build-css && react-scripts build",
     "build-css": "node-sass-chokidar src/ -o src/",
@@ -52,6 +52,13 @@
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
-    "@storybook/react": "^3.2.3"
+    "@storybook/react": "^3.2.3",
+    "babel-eslint": "7.2.3",
+    "eslint": "4.1.1",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-flowtype": "2.34.1",
+    "eslint-plugin-import": "2.6.0",
+    "eslint-plugin-jsx-a11y": "5.1.1",
+    "eslint-plugin-react": "7.1.0"
   }
 }

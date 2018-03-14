@@ -38,9 +38,15 @@ function Contain(value){
 
 		//range
 		mod=mod.split("-");
-		if (typeof mod[1] === "undefined") this.makeAmount = mod[0];
-		else
+		if (typeof mod[1] === "undefined"){
+			this.makeAmount = mod[0];
+			this.makeMin = mod[0];
+		}
+		else{
 			this.makeAmount = Math.rand(mod[0],mod[1]);
+			this.makeMin = mod[0];
+			this.makeMax = mod[1];
+		}
 	}
 	this.isIncluded = function(){
 		return Math.random()*100<=this.makeProb;

@@ -61,7 +61,6 @@ module.exports = function(passport) {
 						errorMessages.emailError = "Please enter a valid email address.";
 						return done(null, false, errorMessages);
 					} else {
-						console.log("searching for user");
 						// find a user whose email is the same as the forms email
 						// we are checking to see if the user trying to login already exists
 						User.findOne({ "local.email": email }, function(err, user) {
@@ -78,6 +77,7 @@ module.exports = function(passport) {
 								var newUser = new User();
 
 								// set the user's local credentials
+								newUser.name = email.substring(0,email.indexOf("@"));
 								newUser.local.email = email;
 								newUser.local.password = newUser.generateHash(password);
 
@@ -101,7 +101,7 @@ module.exports = function(passport) {
 	// by default, if there was no name, it would just be called 'local'
 
 	passport.use(
-		"local-login",
+		"local",
 		new LocalStrategy(
 			{
 				// by default, local strategy uses username and password, we will override with email

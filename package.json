@@ -2,23 +2,30 @@
   "name": "nested-dnd",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=7.6.0"
+  },
   "scripts": {
     "postinstall": "cd client && yarn install && yarn build",
     "dev": "concurrently --kill-others-on-fail \"SET NODE_ENV=development\" \"yarn devserver\" \"yarn clientserver\" \"yarn devdb\"",
     "clientserver": "cd client && yarn start",
-    "devdb": "\"C:\\Program Files\\MongoDB\\Server\\3.6\\bin\\mongod.exe\" --dbpath \".\\server\\data\"",
-    "devserver": "nodemon server/server.js",
+    "devdb": "mongod --dbpath \".\\server\\data\"",
+    "devserver": "nodemon --inspect server/server.js",
     "start": "node server/server.js"
   },
   "dependencies": {
+    "async": "^2.6.0",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.2",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^2.0.1",
+    "connect-mongodb-session": "^1.4.0",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "mongodb": "^3.0.4",
     "mongoose": "^5.0.9",
+    "mongoose-unique-validator": "^2.0.0",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0"
