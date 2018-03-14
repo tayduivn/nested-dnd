@@ -1,21 +1,22 @@
 const Generator = require("../models/generator");
+const BuiltPack = require('../models/builtpack');
+
+const Maintainer = require("../models/generator/maintain.js");
 const utils = require("./middleware.js");
 
 module.exports = function(app) {
 
 	// Create Generator
 	// ---------------------------------
-	app.post("/api/pack/:pack/generator", utils.canEditPack, (req, res) => {
+	app.post("/api/pack/:pack/generator", utils.canEditPack, (req, res, next) => {
 		var newGenerator = req.body;
 		newGenerator.pack_id = req.pack._id;
 
 		// TODO: Check that in with generator type provide a valid ID
 
-		Generator.insertNew(newGenerator, req.pack, function(err, newGenerator) {
-			if (err) return res.status(412).json(err);
-
+		Generator.insertNew(newGenerator, req.pack).then((newGenerator)=>{
 			return res.json(newGenerator);
-		});
+		}).catch(next);
 	});
 
 	// Read Generator
@@ -29,12 +30,15 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get("/api/pack/:pack/generate/:id", utils.canViewPack, (req, res, next) => {
+	app.get("/api/pack/:pack/generate/:isa", utils.canViewPack, (req, res, next) => {
 
 		BuiltPack.findOrBuild(req.pack).then((builtpack)=> {
-			Generator.findById(req.params.id, (err, generator)=>{
-				return generator.generate(builtpack);
-			})
+			var gen = builtpack.generators[req.params.isa];
+			if(!gen) 
+				return res.status(404).json("Can't find a generator that is a "+req.params.isa);
+
+			var result = Generator.make(gen, builtpack);
+			res.json(result);
 		}).catch(next)
 	});
 
@@ -61,13 +65,11 @@ module.exports = function(app) {
 			await generator.save();
 
 			if(oldVals.isa !== newVals.isa){
-				var gen = await generator.rename(oldVals.isa, req.pack)
-				if(gen)
-					return res.json(gen);
-				else return res.json(generator);
+				// wait for it to rename so we can catch errors 
+				await generator.rename(oldVals.isa, req.pack)
 			}
-			else return res.json(generator);
 
+			res.json(generator);
 		}).catch(next);// dfind by id
 	});
 
@@ -76,8 +78,13 @@ module.exports = function(app) {
 
 	app.delete("/api/pack/:pack/generator/:id", utils.canEditPack, (req, res,next) => {
 
-		Generator.deleteOne({ _id: req.params.id}).exec()
-			.then((gen)=>res.json(gen))
+		Generator.findOneAndRemove({ _id: req.params.id}).exec()
+			.then(function(gen){
+				return Maintainer.cleanAfterRemove.call(gen);
+			})
+			.then((gen)=>{
+				res.json(gen);
+			})
 			.catch(next);
 	});
 

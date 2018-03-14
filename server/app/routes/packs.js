@@ -48,9 +48,7 @@ module.exports = function(app) {
 		}
 
 		BuiltPack.findOrBuild(req.pack).then((builtpack)=>{
-			var generated;
-			generated = builtpack.generateFromSeed(req.pack.seedArray)
-
+			var generated = builtpack.growFromSeed(req.pack)
 
 			// save to universe
 			// TODO get from DB if logged in
@@ -73,12 +71,12 @@ module.exports = function(app) {
 		if(!universe.array[req.params.index]) 
 			return res.status(404).send();
 
-		var node = Explore.arrayToTree(universe.array, req.params.index);
+		var tree = Explore.arrayToTree(universe.array, req.params.index);
 
 		BuiltPack.findOrBuild(req.pack).then((builtpack)=>{
 			if(err) throw err;
 
-			var generated = Generator.generateFromNode(node, universe, builtpack);
+			var generated = Generator.makeAsNode(tree, universe, builtpack);
 
 			// TODO get an array of only the newly generated ones
 
@@ -129,10 +127,6 @@ module.exports = function(app) {
 	app.put("/api/pack/:pack", MW.canEditPack, (req, res, next) => {
 		var newVals = req.body;
 
-		//----------------------------------
-		// Validation
-		//----------------------------------
-
 		// fields that cannot be changed
 		delete newVals._id; //can't modify id
 		delete newVals._user; // can't change user for now
@@ -140,29 +134,24 @@ module.exports = function(app) {
 
 		newVals.updated = Date.now();
 
-		
-
 		// validate exists
 		if(newVals.seed){
-			BuiltPack.findOrBuild(req.pack).then(builtpack=>{
-
-				if(!req.pack.seedIsValid(newVals.seed, builtpack.generators)){
-					res.status(412).json({ error: "Seed is not valid: "+newVals.seed});
-					return;
-				}
-				else
-					save();
-			}).catch(next);
+			BuiltPack.findOrBuild(req.pack)
+				.then(builtpack=>{
+					if(!req.pack.seedIsValid(newVals.seed, builtpack.generators)){
+						return res.status(412).json({ error: "Seed is not valid: "+newVals.seed});
+					}
+					else save();
+				})
+				.catch(next);
 		}
 		else save();
 
 		function save(){
 			req.pack.set(newVals);
-			req.pack.save((err,updatedPack)=>{
-				if(err) return res.status(412).json(err);
-
-				return res.json(updatedPack);
-			});
+			req.pack.save().then((updatedPack)=>{
+				res.json(updatedPack);
+			}).catch(next);
 		}
 	});
 

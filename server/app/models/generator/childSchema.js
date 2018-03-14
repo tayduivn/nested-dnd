@@ -1,6 +1,6 @@
 const Schema = require("mongoose").Schema;
-const async = require("async");
-const Maker = require('./make');
+
+const Util = require('../utils');
 
 var childSchema = Schema({
 	type: {
@@ -28,31 +28,24 @@ var childSchema = Schema({
 	}
 }, { typeKey: '$type', _id: false });
 
+/**
+ * @return {boolean} if the child will be included in the generated object based on % chance
+ */
 childSchema.virtual('isIncluded').get(function(){
 	if(!this.chance || this.change >= 100) 
 		return true;
 	return Math.random()*100<=this.chance;
 });
 
+/**
+ * @return {Integer} how many copies of the child will be generated
+ */
 childSchema.virtual('makeAmount').get(function(){
 	if(!this.amount || !this.amount.min)
 		return 1;
 	if(this.amount.max)
-		return Math.rand(this.amount.min, this.amount.max);
+		return Util.rand(this.amount.min, this.amount.max);
 	return this.amount.min;
 });
-
-
-/**
- * Generate a child
- */
-childSchema.methods.make = function(pack, generations){
-	Maker.make(child, pack, generations);
-}
-
-Math.rand = function(min,max){// eslint-disable-line
-	//Return a number between min and max, included.
-	return parseFloat(Math.floor(Math.random()*(max-min+1)))+parseFloat(min);
-}
 
 module.exports = childSchema;

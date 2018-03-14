@@ -36,6 +36,12 @@ var userSchema = mongoose.Schema({
 	}
 });
 
+userSchema.pre('remove', async function(next){
+	var packs = await this.model('Pack').find({ _user: this.id }).exec();
+	await Promise.all(packs.map(p=>p.remove()));
+	next();
+});
+
 // methods ======================
 // generating a hash
 userSchema.methods.generateHash = function(password) {
@@ -46,53 +52,6 @@ userSchema.methods.generateHash = function(password) {
 userSchema.methods.validPassword = function(password) {
 	return bcrypt.compareSync(password, this.local.password);
 };
-
-userSchema.methods.deleteMe = async function(done) {
-	var packs = await Pack.find({ _user: this.id }).exec();
-
-	if(!packs || !packs.length){
-		deleteUser(this, (err, user) => {
-			if (err) done(err);
-			done(null, {
-				deletedUser: user
-			});
-		});
-		return;
-	}
-
-	var user = this;
-	var packIdArr = packs.map(p=>p._id);
-
-	async.parallel(
-		{
-			deletedPacks: function(cb){
-				Pack.remove({ _id: { $in: packIdArr } }).exec(cb);
-			},
-			deletedGenerators: function(cb) {
-				Generator.remove({ pack_id: { $in: packIdArr } }).exec(cb);
-			},
-			deletedBuilds: function(cb) {
-				BuiltPack.remove({ _id: { $in: packIdArr } }).exec(cb);
-			},
-			deletedUser: function(cb) {
-				deleteUser(user, cb);
-			}
-		},
-		function(err, result){
-			result.deletedPackIds = packIdArr;
-			done(err, result)
-		}
-	);
-
-	return;
-};
-
-function deleteUser(user, callback) {
-	user.remove((err, deletedUser) => {
-		if (err) callback(err);
-		return callback(null, deletedUser);
-	});
-}
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model("User", userSchema);

@@ -3,7 +3,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const generatorSchema = require("./generator")
-const Generator = require("./generator");
 
 const BUILD_FREQUENCY = 1000 * 3600; // 1 hour
 const SEED_DELIM = ">";
@@ -21,7 +20,6 @@ var packSchema = Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Universe'
 	},
-
 	name: {
 		type: String,
 		required: true
@@ -51,6 +49,14 @@ var packSchema = Schema({
 	}], // packs
 });
 
+// remove related data on delete
+packSchema.post('remove', function(pack){
+	return Promise.all([ 
+		pack.model('Generator').remove({ pack_id: pack._id }),
+		pack.model('BuiltPack').remove({ _id: pack._id })
+	]);
+})
+
 /** 
  * @return Array of Generator isa's representing the seed
  */
@@ -58,6 +64,43 @@ packSchema.virtual('seedArray').get(function() {
 	return seedArray(this.seed);
 });
 
+/**
+ * Check if seed is valid and get array of generators
+ * @param  {string} seed       to check
+ * @param  {Object} generators map of built generators
+ * @return {Object[]|boolean}            array of generators or false
+ */
+packSchema.methods.seedIsValid = function(seed, generators){
+	var arr = seedArray(seed);
+	var gens = []
+	for(var i = 0; i < arr.length; i++){
+		if(!generators[arr[i]]){
+			return false;
+		}
+		gens.push(generators[arr[i]]);
+	}
+	return (gens.length) ? gens : false;
+}
+
+/**
+ * When a isa name changes, this adjusts the seed to the new isa
+ * @param  {string} isaOld old isa name
+ * @param  {string} isaNew new isa name
+ */
+packSchema.methods.renameSeed = async function(isaOld, isaNew){
+	if(this.seed){
+		var newSeed = this.seed.replace(new RegExp(isaOld+SEED_DELIM, "g"), isaNew+SEED_DELIM);
+		if(newSeed !== this.seed){
+			this.seed = newSeed;
+			await this.save();
+		}
+	}
+}
+
+/**
+ * @param  {string} seed 
+ * @return {string[]}      
+ */
 function seedArray(seed){
 	if(!seed) return [];
 
@@ -68,48 +111,6 @@ function seedArray(seed){
 	arr.splice(arr.length-1,1);
 
 	return arr;
-}
-
-packSchema.methods.getGenByIsa = function(isa,callback){
-	return this.model('Generator').findById(this.combinedGenerators.id(isa)._generator,callback);
-}
-
-packSchema.methods.seedIsValid = function(seed, generators){
-	var arr = seedArray(seed);
-	for(var i = 0; i < arr.length; i++){
-		if(!generators[arr[i]]){
-			return false;
-		}
-	}
-	return true;
-}
-
-packSchema.methods.renameseed = async function(oldname, newname){
-	if(this.seed){
-		var newSeed = this.seed.replace(new RegExp(oldname+SEED_DELIM, "g"), newname+SEED_DELIM);
-		if(newSeed !== this.seed){
-			this.seed = newSeed;
-			return await this.save();
-		}
-	}
-	return true;
-}
-
-packSchema.methods.checkDependencies = function(){
-	// array stack
-	// this.dependencies and populate it, only grabbing dependencies
-
-	//each in order, add the dependecies if not already added, 
-}
-
-// delete all of the generators in this pack when you delete pack;
-packSchema.statics.deleteMe = function(callback){
-	Generator.remove({ pack_id: this._id }, (err,docs) => {
-		if(err) callback(err)
-		this.remove((err)=>{
-			callback(err);
-		})
-	});
 }
 
 module.exports = mongoose.model('Pack', packSchema);

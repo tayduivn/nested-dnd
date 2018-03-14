@@ -47,24 +47,20 @@ module.exports = function(app, passport) {
 		})(req, res, next);
 	});
 
-	app.delete("/api/account", md.isLoggedIn, function(req, res) {
+	app.delete("/api/account", md.isLoggedIn, function(req, res, next) {
 		// TODO: Delete all their stuff
 
-		User.findById(req.user._id,(err,user)=>{
-			if(err) 
-				return res.status(500).json(err);
+		User.findById(req.user._id).then(async (user)=>{
 			if(!user) 
 				return res.status(404).json({"errorMessage": "Could not find logged in user", "error": err});
 
-			user.deleteMe((err, deletedObjects)=>{
-				if(err) return res.status(500).json(err);
+			var deletedObjects = await user.remove();
+			logout(req, res, function(){
+				res.json(deletedObjects);
+			});
+			
 
-				logout(req,res,(err)=>{
-					if(err) return res.status(500).json(err);
-					return res.json(deletedObjects);
-				})
-			})
-		});
+		}).catch(next);
 	});
 
 	// =====================================

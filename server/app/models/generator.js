@@ -54,30 +54,37 @@ generatorSchema.virtual('makeIcon').get(function(){
 
 // ----------------------- STATICS
 
-generatorSchema.statics.insertNew = function(data, pack, callback){
-	var Generator = this.model('Generator');
-	this.model('BuiltPack').findOrBuild(pack).then(builtpack=>{
-		Maintainer.insertNew(data, pack, builtpack, Generator, callback);
-	})
+/**
+ * Validates and inserts a new generator, and updates the build pack
+ * @param  {Object} data the data of the new generator
+ * @param  {Pack} pack the pack to add it to
+ * @return {Promise<Generator>}      the added generator
+ * @async
+ */
+generatorSchema.statics.insertNew = async function(data, pack){
+	var builtpack = await this.model('BuiltPack').findOrBuild(pack)
+
+	return Maintainer.insertNew(data, pack, builtpack);
 }
 
-generatorSchema.post()
-
 /**
- * @param seedArray Array of Generator _ids representing the seed
+ * Generates a random version as the root node of a tree, with 3 levels.
+ * @param  {Object[]} seedArray An array of built version of generators that are the seeds. 
+ * @param  {BuiltPack} builtpack 
+ * @return {Object}           the root node of the tree
  */
-generatorSchema.statics.generateAsSeed = function(seedArray, pack){
+generatorSchema.statics.makeAsRoot = function(seedArray, builtpack){
 	var seed = seedArray.shift();
 
 	if(seedArray.length === 0){
-		return Maker.make(seed, 2, pack);
+		return Maker.make(seed, 2, builtpack);
 	}
 	else{
-		var node = Maker.make(seed, 1, pack);
+		var node = Maker.make(seed, 1, builtpack);
 
 		//generate the next seed in the array and push to in
 		//TODO: replace child
-		var generatedChild = seedArray.shift().generateAsSeed(seedArray, pack);
+		var generatedChild = seedArray.shift().makeAsRoot(seedArray, builtpack);
 		if(!node.in) node.in = [];
 		node.in.push(generatedChild);
 
@@ -85,41 +92,58 @@ generatorSchema.statics.generateAsSeed = function(seedArray, pack){
 	}
 };
 
-generatorSchema.statics.generateFromNode = function(node, universe, builtpack){
-	if(!node.in)
-		return node;
+/**
+ * Generates random children of a node that already exists in the universe
+ * @param  {Object} tree      the node you want to generate descendents for, as a nested tree
+ * @param  {Object[]} universe  a flattened version of the tree
+ * @param  {BuiltPack} builtpack 
+ * @return {Object}           the root node of the tree
+ */
+generatorSchema.statics.makeAsNode = function(tree, universe, builtpack){
+	// has no children to generate, return
+	if(!node.in) return node;
 
-	if(node.in === true && builtpack.generators[node.isa]){
-		var madeNode = Maker.make(builtpack.generators[node.isa], 2, builtpack)
-		return Object.assign({}, node, { in: madeNode.in });
+	// has children, but they are not generated yet.
+	// TODO: check if deeply nested embeds are being generated correctly
+	var generator = builtpack.generators[node.isa];
+	if(node.in === true && generator){
+		node = Maker.make(generator, 1, builtpack, node);
 	}
 
-	if(node.in.forEach){
-
-		node.in = node.in.map((c)=>{
+	// has children and they are generated, so loop through
+	else if(node.in && node.in.length){
+		node.in = node.in.map((index)=>{
 			if(c.in !== true || !c.isa || !builtpack.generators[c.isa]) 
 				return c;
 
-			var madeNode = Maker.make(builtpack.generators[c.isa], 1, builtpack)
-			return Object.assign({}, c, { in: madeNode.in });
+			return Maker.make(builtpack.generators[c.isa], 0, builtpack)
 		})
-		return node;
 	}
-
 	return node;
 }
 
-generatorSchema.statics.generate = function(pack){
-	return Maker.make(seed, 1, pack);
+/**
+ * Generates a random thing from an isa name
+ * @param  {Object} generator a built generator
+ * @param  {BuiltPack} builtpack
+ * @return {Promise<Object>}           the random thing
+ */
+generatorSchema.statics.make = function(generator, builtpack){
+	return Maker.make(generator, 1, builtpack);
 };
 
 // ----------------------- METHODS
+
 /**
- * This runs ansychronously. There is no callback, it just runs.
-*/
-generatorSchema.methods.rename = function(oldname, pack){
-	return Maintainer.rename(this, pack, oldname, this.model('Generator'))
+ * Handles the renaming cleanup after a generator changes isa
+ * @param  {string} isaOld the old isa
+ * @param  {Pack} pack    the pack that this is in
+ * @return {Promise}        
+ */
+generatorSchema.methods.rename = function(isaOld, pack){
+	return Maintainer.rename(this, pack, isaOld, this.model('Generator'))
 }
+
 
 module.exports = mongoose.model('Generator', generatorSchema);
 

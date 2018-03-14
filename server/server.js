@@ -88,10 +88,18 @@ app.use("/api", function(req, res, next){
 
 // generic error handler
 app.use(function (err, req, res, next) {
-	console.error(err);
+
+	// headers already sent, continue
 	if (res.headersSent) {
 		return next(err);
 	}
+
+	// user error
+	if(err.name === "Precondition Failed")
+		return res.status(412).json({error: err.message});
+
+	// internal error
+	console.error(err);
 	res.status(500).json({ error: err.stack })
 })
 

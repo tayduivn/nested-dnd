@@ -1,5 +1,6 @@
 const Schema = require("mongoose").Schema;
-const Maker = require('./make')
+
+const Maker = require('./make');
 
 var styleSchema = Schema({
 	icon: {
@@ -29,9 +30,11 @@ var styleSchema = Schema({
 styleSchema.virtual('makeTextColor').get(function(){
 	return Maker.makeMixedThing(this.txt, this.parent().model('Table'))
 });
+
 styleSchema.virtual('makeBackgroundColor').get(function(){
 	return Maker.makeMixedThing(this.bg, this.parent().model('Table'))
 });
+
 styleSchema.virtual('makeIcon').get(function(){
 	return Maker.makeMixedThing(this.icon, this.parent().model('Table'))
 });
