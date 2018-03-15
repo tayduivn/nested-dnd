@@ -72,6 +72,13 @@ var Maintainer = {
 	 */
 	insertNew: async function(data, pack, builtpack){
 
+		//validate isa
+		if(builtpack.generators[data.isa]){
+			var e = new Error(data.isa+" generator already exists in pack "+pack._id);
+			e.name = "Precondition Failed"
+			throw e;
+		}
+
 		//validate in
 		if(data.in){
 			var isas = this.getGeneratorChildren(data.in);

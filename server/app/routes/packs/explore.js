@@ -1,8 +1,10 @@
 
-function treeToArray(node, startIndex){
+function treeToArray(node, startIndex, arrayLength){
+	if(!node) return {};
+
 	var array = [node];
 	node.index = (startIndex) ? startIndex : 0;
-	currentIndex = node.index+1;
+	currentIndex = (arrayLength) ? arrayLength : node.index+1;
 
 	// no in, termination condition
 	if(!node.in || !(node.in instanceof Array)){
@@ -17,7 +19,7 @@ function treeToArray(node, startIndex){
 	var up = [].concat(node.up);
 	var parent = { 
 		index: node.index,
-		name: node.name
+		name: node.name ? node.name : node.isa
 	}
 	//optional fields
 	if(node.txt) parent.txt = node.txt;
@@ -54,9 +56,8 @@ function treeToArray(node, startIndex){
 	function cleanUp(cleanMe){
 		var copy = Object.assign({}, cleanMe);
 
-		// don't need to store index or ancestry in array, just parent index. Will rebuild on get
-		delete copy.index;
 		if(copy.up){
+			copy.up = cleanMe.up.slice(0);
 			if(!copy.up.length){
 				delete copy.up;
 			}
@@ -67,32 +68,45 @@ function treeToArray(node, startIndex){
 		
 		array[0] = copy;
 	}
-
 }
 
 
 function arrayToTree(arr, startIndex){
-	var rootIndex = (startIndex) ? parseInt(startIndex) : 0;
+	var rootIndex = (startIndex && arr[startIndex]) ? parseInt(startIndex,10) : 0;
 
 	var node = arr[rootIndex];
+	var treeNode = Object.assign({}, node);
+	treeNode.index = rootIndex;
 
-	if(!node || !node.in || !node.in.forEach) 
-		return node;
+	if(!node || !node.in || !node.in.forEach) {
+		return treeNode;
+	}
 
-	var treeNode = Object.assign({}, node, {in: []});
+	treeNode.in = [];
 
 	node.in.forEach((c,i)=>{
+		c = parseInt(c,10);
 
-		var child = arr[parseInt(c)];
+		var child = arr[c];
+		var cTree = Object.assign({}, child);
+		cTree.index = c;
+		cTree.up = populateUp(cTree, arr);
+
+		// child has no children, just put child
 		if(!child || !child.in || !child.in.forEach) {
+			treeNode.in[i] = cTree;
 			return;
 		}
 
+		// loop children
+		cTree.in = [];
 		if(child.in && child.in.forEach){
-
-			var cTree = Object.assign({}, child, {in: []});
 			child.in.forEach((g,j)=>{
-				cTree.in[j] = arr[parseInt(g)]
+				g = parseInt(g,10);
+				gChild = cTree.in[j] = Object.assign({}, arr[g])
+				gChild.up = populateUp(cTree.in[j], arr)
+				gChild.index = g;
+				if(gChild.in) gChild.in = true; // stop at third level
 			})
 			treeNode.in[i] = cTree;
 		}
@@ -102,4 +116,46 @@ function arrayToTree(arr, startIndex){
 	return treeNode;
 }
 
-module.exports = { treeToArray, arrayToTree };
+/**
+ * Populate up with ancestor array from just a parent index
+ * @param {Object} node the node to add up to
+ */
+function populateUp(node, arr){
+	//don't have ancestors
+	if(typeof node.up === undefined || node.up === null) 
+		return [];
+	if(node.up instanceof Array)
+		return node;
+	if(!arr)
+		throw new Error("paramater arr is required");
+
+	var upArr = [];
+	var upIndex = node.up;
+	var isParent = true
+	while(typeof upIndex !== "undefined"){
+		if(isNaN(upIndex)){
+			throw new Error()
+		}
+
+		var ref = arr[upIndex];
+		if(!ref){
+			throw new Error()
+		}
+
+		var ancestor = {
+			index: upIndex,
+			name: ref.name ? ref.name : ref.isa
+		}
+		if(isParent){ // parent
+			if(ref.txt) ancestor.txt = ref.txt;
+			if(ref.cssClass)  ancestor.cssClass = ref.cssClass;
+			isParent = false;
+		}
+		upArr.push(ancestor);
+		upIndex = ref.up;
+	}
+
+	return upArr;
+}
+
+module.exports = { treeToArray, arrayToTree, populateUp };

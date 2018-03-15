@@ -3,7 +3,7 @@ import { CSSTransitionGroup } from 'react-transition-group'
 import { Button,MenuItem,SplitButton } from 'react-bootstrap';
 import PropTypes from "prop-types";
 
-import DB, { HEADERS } from "../../actions/CRUDAction";
+import { HEADERS } from "../../actions/CRUDAction";
 
 const EMPTY_MESSAGE = <p>Contains nothing</p>; 
 
@@ -68,12 +68,13 @@ export default class TreeManager extends Component {
 		this.setState(data);
 
 		var curr = data.current;
+		if(curr === null) return;
 
 		//detect if need to start the ajax call
-		var getChildren = (curr.children === true)
-		if(!getChildren && curr.children){
-			for(var i = 0; i < curr.children.length; i++){
-				if(curr.children[i] === true){
+		var getChildren = (curr.in === true)
+		if(!getChildren && curr.in){
+			for(var i = 0; i < curr.in.length; i++){
+				if(curr.in[i] === true){
 					getChildren = true;
 					break;
 				}
@@ -107,23 +108,19 @@ export default class TreeManager extends Component {
 	}
 
 	handleRestart(){
+		this.setCurrent({current: null, lookup: {}});
+		this.setIndex(0);
 
-		// do this first, just for display
-		var noChildren = this.state.current;
-		delete noChildren.children;
-		this.setCurrent({current: noChildren});
-
-		// reset storage
-		DataManager.getCurrentNode(0, this.props.location.pathname, (current)=>{
-			this.setCurrent({current: current});
+		// reset universe
+		DataManager.reset(this.props.location.pathname, (current)=>{
+			this.setState({ current: current });
 		});
-
 	}
 
 	handleClick(child){
 		var lookup = this.state.lookup;
 
-		if(child.children === true){
+		if(child.in === true){
 			if(lookup[child.index])
 				child = lookup[child.index];
 		}else{
@@ -167,18 +164,28 @@ const DataManager = {
 			.then((json)=>{
 				if(callback) callback(json);
 			})
+			.catch(e=>console.error(e));
 	},
 	makeNode(index, url, callback){
 		fetch("/api"+url+"/"+index, HEADERS)
 			.then((response)=>{
 				if(response.status !== 200) {
-					// TODO
+					throw Error(response);
 				}
 				return response.json();
 			})
 			.then((json)=>{
 				if(callback) callback(json);
 			})
+			.catch(e=>console.error(e));
+	},
+	// resets the entire explore universe
+	reset(url, callback){
+		var h = Object.assign({},HEADERS,{ method: "DELETE"});
+		fetch('/api/explore', h)
+			.then(()=>{
+				this.makeSeed(url, callback);
+			});
 	}
 }
 
@@ -198,16 +205,15 @@ class CurrentNode extends Component {
 		const cssClass = inst.cssClass+(!inst.in ? " empty":"");
 
 		return (
-			<div id="content" className={"container-fluid "+cssClass} style={{color:inst.textColor}}>
+			<div id="content" className={"container-fluid "+cssClass} style={{color:inst.txt}}>
 				<h1 id="title">
-					<Ancestors 
-						ancestors={inst.ancestors}
+					<Ancestors ancestors={inst.up ? inst.up : []}
 						handleClick={this.props.handleClick}  /> 
-					<i className={inst.icon}></i> {inst.name}
+					<i className={inst.icon}></i> {inst.name ? inst.name : inst.isa}
 					<Button className="pull-right" bsStyle="default" onClick={this.props.handleRestart}>Restart</Button>
 				</h1>
 				{
-					inst.children === true ? <p>LOADING</p> : <Children arr={inst.children} handleClick={this.props.handleClick} />
+					inst.in === true ? <p>LOADING</p> : <Children arr={inst.in} handleClick={this.props.handleClick} />
 				}
 			</div>
 		);
@@ -231,11 +237,11 @@ class Children extends Component {
 			var transitionStyle = {transitionDelay: 30*i + 'ms'};
 			var innerChild = <ChildInner child={c} />
 
-			if(!c.children)
-				return <div key={c.index} data-key={c.index} className={className} style={transitionStyle}>{innerChild}</div>
+			if(!c.in)
+				return <div key={c.index+i} data-key={c.index} className={className} style={transitionStyle}>{innerChild}</div>
 			else
 				return (
-					<a key={c.index} data-key={c.index} className={className} style={transitionStyle} onClick={()=>this.onClick(c)}>{innerChild}</a>
+					<a key={c.index+i} data-key={c.index} className={className} style={transitionStyle} onClick={()=>this.onClick(c)}>{innerChild}</a>
 				)
 		});
 
@@ -251,13 +257,13 @@ class Children extends Component {
 class ChildInner extends Component {
 	render(){
 		const child = this.props.child;
-		const className = "child-inner "+child.cssClass + (!child.isEmpty ? " link" : "");
-		const style = {color: child.textColor};
+		const className = "child-inner "+child.cssClass + (child.in ? " link" : " empty");
+		const style = {color: child.txt};
 
 		return (
 			<div className={className} style={style}>
 				<i className={child.icon}></i>
-				<h1>{child.name}</h1>
+				<h1>{child.name ? child.name : child.isa}</h1>
 			</div>
 		)
 	}
@@ -275,7 +281,7 @@ class Ancestors extends React.Component {
 		this.onClick = this.onClick.bind(this);
 	}
 	onClick(ancestor){
-		ancestor.children = true;
+		ancestor.in = true;
 		this.props.handleClick(ancestor);
 	}
 	render(){
@@ -286,14 +292,15 @@ class Ancestors extends React.Component {
 		var parentInst = ancestors[0];
 		var title = <span><i className="fa fa-angle-left"></i> {parentInst.name}</span>;
 		var renderParent;
+		var style = {color:parentInst.txt};
 
-		if(this.props.ancestors && this.props.ancestors.length > 1){
+		if(ancestors.length > 1){
 
-			var renderAncestors = this.props.ancestors.map((a,i)=>{
+			var renderAncestors = ancestors.map((a,i)=>{
 				if(i === 0) return null;
 
 				return <MenuItem key={i} eventKey={i}
-					onSelect={(key) => ( this.onClick(this.props.ancestors[key])) } href={"#"+a.index}> 
+					onSelect={(key) => ( this.onClick(ancestors[key])) } href={"#"+a.index}> 
 					{a.name}
 				</MenuItem>
 			});
@@ -303,19 +310,19 @@ class Ancestors extends React.Component {
 				onClick={() => ( this.onClick(parentInst)) }
 				id="ancestorDropdown" 
 				className={parentInst.cssClass}
-				style={{color:parentInst.textColor}}>
+				style={style}>
 					{renderAncestors}
 			</SplitButton>
 
 		}else{
 			renderParent = (<a onClick={() => ( this.onClick(parentInst)) }
 				className={"btn btn-default "+parentInst.cssClass}
-				style={{color:parentInst.textColor}}>
+				style={style}>
 				{title}
 			</a>)
 		}
 
-		return (<span className={"parent "+parentInst.cssClass} style={{color:parentInst.textColor}}>
+		return (<span className={"parent "+parentInst.cssClass} style={style}>
 				{renderParent}
 		</span>)
 	}

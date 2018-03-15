@@ -37,7 +37,7 @@ schema.statics.findOrBuild = async function(pack){
 
 	// no generators, create pack
 	if(!gens || !gens.length){
-		this.create(newBuiltPack);
+		return await this.create(newBuiltPack);
 	}
 
 	// map array of generators to their unique names and sort by dependency order
@@ -54,7 +54,7 @@ schema.statics.findOrBuild = async function(pack){
 	}
 
 	newBuiltPack.generators = map;
-	return await this.create(newBuiltPack);
+	await this.create(newBuiltPack);
 }
 
 /**

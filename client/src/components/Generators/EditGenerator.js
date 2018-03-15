@@ -3,7 +3,6 @@ import {
 	FormGroup, 
 	ControlLabel, 
 	FormControl,
-	Checkbox, 
 	Button
 } from "react-bootstrap";
 import PropTypes from "prop-types";

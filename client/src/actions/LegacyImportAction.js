@@ -9,7 +9,6 @@ var storedGenerators = [];
 
 export default {
 	allTables: function(){
-		
 
 		DB.getIn("tables", "pack", PACKID, function(result){
 			storedTables = result;
@@ -33,15 +32,19 @@ export default {
 				data.title = title;
 
 				if(!alreadyStored){
-					DB.create("pack/"+PACKID+"/table",data,(stored)=>{
-						storedTables.push(stored);
-					})
+					DB.create("pack/"+PACKID+"/table",data).then(storeTable)
 				}
+
+			}// loop tableStore
+
+			function storeTable(stored){
+				storedTables.push(stored);
 			}
 		});
+
 	},
 	oneThing: function(legacy){
-		this.allTables();
+		// this.allTables(); //temp
 	
 		var importing = { ...legacy, 
 			isa: legacy.name,
@@ -155,6 +158,7 @@ function isTableInPack(title){
 	return storedTables.find((table)=>{ return (table.title === title)})
 }
 
+/*
 function isInPack(isa, generators){
 	return generators.find((entry)=>{ return (entry._id === isa)})
-}
+}*/

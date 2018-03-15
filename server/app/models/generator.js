@@ -5,6 +5,7 @@ const childSchema = require('./generator/childSchema');
 const styleSchema = require('./generator/styleSchema');
 const Maintainer = require('./generator/maintain')
 const Maker = require('./generator/make');
+const Explore = require('../routes/packs/explore');
 
 const SEED_DELIM = ">";
 
@@ -77,10 +78,10 @@ generatorSchema.statics.makeAsRoot = function(seedArray, builtpack){
 	var seed = seedArray.shift();
 
 	if(seedArray.length === 0){
-		return Maker.make(seed, 2, builtpack);
+		return Maker.make(seed, 1, builtpack);
 	}
 	else{
-		var node = Maker.make(seed, 1, builtpack);
+		var node = Maker.make(seed, 0, builtpack);
 
 		//generate the next seed in the array and push to in
 		//TODO: replace child
@@ -101,25 +102,24 @@ generatorSchema.statics.makeAsRoot = function(seedArray, builtpack){
  */
 generatorSchema.statics.makeAsNode = function(tree, universe, builtpack){
 	// has no children to generate, return
-	if(!node.in) return node;
+	if(!tree || !tree.in) 
+		return tree;
 
 	// has children, but they are not generated yet.
 	// TODO: check if deeply nested embeds are being generated correctly
-	var generator = builtpack.generators[node.isa];
-	if(node.in === true && generator){
-		node = Maker.make(generator, 1, builtpack, node);
+	if(builtpack && tree.in === true){
+		var generator = builtpack.generators[tree.isa];
+		if(generator){
+			tree = Maker.make(generator, 1, builtpack, tree);
+		}
 	}
 
-	// has children and they are generated, so loop through
-	else if(node.in && node.in.length){
-		node.in = node.in.map((index)=>{
-			if(c.in !== true || !c.isa || !builtpack.generators[c.isa]) 
-				return c;
-
-			return Maker.make(builtpack.generators[c.isa], 0, builtpack)
-		})
+	// up is index, not obj
+	if(tree.up !== undefined && !isNaN(tree.up)){
+		tree.up = Explore.populateUp(tree,universe.array)
 	}
-	return node;
+
+	return tree;
 }
 
 /**

@@ -99,8 +99,9 @@ app.use(function (err, req, res, next) {
 		return res.status(412).json({error: err.message});
 
 	// internal error
-	console.error(err);
-	res.status(500).json({ error: err.stack })
+	console.error(err.name+" on request "+req.url+": "+err.toString());
+	console.log(err.stack);
+	return res.status(500).json({ error: err.stack });
 })
 
 

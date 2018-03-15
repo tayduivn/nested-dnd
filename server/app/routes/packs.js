@@ -40,55 +40,103 @@ module.exports = function(app) {
 	// Explore Pack
 	// ---------------------------------
 
-	app.get("/api/explore/:url", MW.canViewPack, (req, res, next) =>{
+	app.get("/api/explore/:url/:index?", MW.canViewPack, (req, res, next) =>{
+
+		//get universe
 		var universe = req.session.universe;
+		var index = (req.params.index) ? parseInt(req.params.index,10) : 0;
+
+		// pack exists
 		if(universe && universe.pack_id.toString() === req.pack.id){
-			var tree = Explore.arrayToTree(universe.array);
-			return res.json(tree)  //array to tree
+
+			var origTree = Explore.arrayToTree(universe.array, index);
+
+			if(origTree.in === true){
+
+				BuiltPack.findOrBuild(req.pack).then((builtpack)=>{
+					if(!builtpack){
+						throw Error("Could not get buildpack");
+					}
+					// TODO get an array of only the newly generated ones
+					// todo save to universe
+					// todo get from DB if logged in
+					// TODO: figure out how to store the newly generated stuff in array
+					var generated = Generator.makeAsNode(origTree, universe, builtpack);
+					var { tree, array } = Explore.treeToArray(generated, index, universe.array.length);
+
+					// store in session
+					array.forEach((n)=>{
+						var index = n.index+0;
+						delete n.index;
+						universe.array[index] = n;
+					})
+					return res.json(tree);
+				}).catch(next);
+			}
+			else {
+				return res.json(Generator.makeAsNode(origTree, universe))
+			}
 		}
 
-		BuiltPack.findOrBuild(req.pack).then((builtpack)=>{
-			var generated = builtpack.growFromSeed(req.pack)
+		// pack doesn't exist, build it and return the root
+		else{
+			BuiltPack.findOrBuild(req.pack).then((builtpack)=>{
+				var generated = builtpack.growFromSeed(req.pack)
 
-			// save to universe
-			// TODO get from DB if logged in
-			var { tree, array } = Explore.treeToArray(generated);
-			req.session.universe = {
-				pack_id: req.pack._id,
-				array: array
-			};
+				// save to universe
+				// TODO get from DB if logged in
+				var { tree, array } = Explore.treeToArray(generated);
+				array = array.map((n)=>{ // don't need indexes if starting fresh
+					delete n.index;
+					return n;
+				})
+				req.session.universe = {
+					pack_id: req.pack._id,
+					array: array
+				};
 
-			return res.json(tree);
-		}).catch(next)
+				return res.json(tree);
+			}).catch(next)
+		}
 
+		
 	})
 
 	app.get("/api/explore/:url/:index", MW.canViewPack, (req, res,next) =>{
-		var universe = req.session.universe;
-		if(!universe || universe.pack_id.toString() !== req.pack.id) 
-			return res.status(404).send();
+		//var universe = req.session.universe;
+		//if(!universe || universe.pack_id.toString() !== req.pack.id) 
+		//	return res.status(404).send();
 
-		if(!universe.array[req.params.index]) 
-			return res.status(404).send();
+		//if(!universe.array[req.params.index]) 
+		//	return res.status(404).send();
 
 		var tree = Explore.arrayToTree(universe.array, req.params.index);
 
 		BuiltPack.findOrBuild(req.pack).then((builtpack)=>{
-			if(err) throw err;
 
 			var generated = Generator.makeAsNode(tree, universe, builtpack);
 
 			// TODO get an array of only the newly generated ones
-
 			// save to universe
-			//todo get from DB if logged in
+			// todo get from DB if logged in
+			// TODO: figure out how to store the newly generated stuff in array
+		
 			var { tree, array } = Explore.treeToArray(generated);
 
-			//TODO: figure out how to store the newly generated stuff in array
+			
 			
 			return res.json(tree);
 		}).catch(next);
 	});
+
+	app.delete("/api/explore", (req,res,next) =>{
+		if(req.session.universe){
+			delete req.session.universe;
+			res.json({"success":true});
+		}
+		else
+			res.json({"success": "no saved universe"});
+	})
 
 
 	// Read Pack

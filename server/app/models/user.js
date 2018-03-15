@@ -38,7 +38,8 @@ var userSchema = mongoose.Schema({
 
 userSchema.pre('remove', async function(next){
 	var packs = await this.model('Pack').find({ _user: this.id }).exec();
-	await Promise.all(packs.map(p=>p.remove()));
+	var results = await Promise.all(packs.map(p=>p.remove()));
+	
 	next();
 });
 

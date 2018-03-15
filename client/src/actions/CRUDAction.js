@@ -19,14 +19,15 @@ export default {
 			body: JSON.stringify(payload)
 		})
 
-		fetch(URL_PREFIX+url, headers)
+		return fetch(URL_PREFIX+url, headers)
 			.then(getJSONResponse)
 			.then(json => {
 				if(json.errors || json.error){
 					return printError("",JSON.stringify(json, 2));
 				}
-				callback(json);
+				if(callback) callback(json);
 			})
+			.catch(e=>console.error(e));
 	},
 	getAll: function(url, callback){
 		this.get(url, "", callback);

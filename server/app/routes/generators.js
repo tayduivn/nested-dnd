@@ -57,7 +57,6 @@ module.exports = function(app) {
 
 		Generator.findById(req.params.id).exec().then(async (generator)=> {
 			if(!generator) return res.status(404).json(err);
-
 			
 			var oldVals = Object.assign({},generator._doc);
 			generator.set(newVals);
