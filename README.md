@@ -12,3 +12,6 @@ react-scripts .. webpack.config.dev.js
 ``
 
 open static/js/bundle
+
+yalc publish 
+yalc add react-scripts
