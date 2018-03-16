@@ -5,209 +5,255 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
 
 
 @mixin button-variant($color, $background, $border) {
-  background-color: $background;
-  border-color: $border;
-  color: $color;
+	background-color: $background;
+	border-color: $border;
+	color: $color;
 
-  &:focus,
-  &.focus {
-    background-color: darken($background, 10%);
-    border-color: darken($border, 15%);
-    color: $color;
-  }
-  &:hover {
-    background-color: darken($background, 10%);
-    border-color: darken($border, 12%);
-    color: $color;
-  }
-  &:active,
-  &.active, .open > .dropdown-toggle {
-    background-color: darken($background, 10%);
-    border-color: darken($border, 12%);
-    background-image: none;
-    color: $color;
+	&:focus,
+	&.focus {
+		background-color: darken($background, 10%);
+		border-color: darken($border, 15%);
+		color: $color;
+	}
+	&:hover {
+		background-color: darken($background, 10%);
+		border-color: darken($border, 12%);
+		color: $color;
+	}
+	&:active,
+	&.active, .open > .dropdown-toggle {
+		background-color: darken($background, 10%);
+		border-color: darken($border, 12%);
+		background-image: none;
+		color: $color;
 
-    &:hover,
-    &:focus,
-    &.focus {
-      background-color: darken($background, 17%);
-      border-color: darken($border, 15%);
-      color: $color;
-    }
-  }
-  &.disabled,
-  &[disabled],
-  fieldset[disabled] & {
-    &:hover,
-    &:focus,
-    &.focus {
-      background-color: $background;
-      border-color: $border;
-      color: $color;
-    }
-  }
+		&:hover,
+		&:focus,
+		&.focus {
+			background-color: darken($background, 17%);
+			border-color: darken($border, 15%);
+			color: $color;
+		}
+	}
+	&.disabled,
+	&[disabled],
+	fieldset[disabled] & {
+		&:hover,
+		&:focus,
+		&.focus {
+			background-color: $background;
+			border-color: $border;
+			color: $color;
+		}
+	}
 
-  .badge {
-    color: $background;
-    background-color: $color;
-  }
+	.badge {
+		color: $background;
+		background-color: $color;
+	}
 }
 
-@mixin darkBG($color) {
-  lightness: lightness($color);
-  background-color: $color;
-  color: adjust-color($color, $lightness: 55%);
+@mixin darkBG($color, $background: null) {
 
-  &.child-inner.link{
-    &:hover,&:focus,&:active,&:active:focus{
-      opacity: 1;
-      color: adjust-color($color, $lightness: 65% );
-      background-color: adjust-color($color, $lightness: 5% );
-    }
-  }
+	$contrast: adjust-color($color, $lightness: 55%);
+	$slightly: adjust-color($color, $lightness: 5% );
+	$btnBG: adjust-color($color, $lightness: 15%);
 
-  &.parent .btn.btn-default{
-  	@include button-variant(
-  		adjust-color($color, $lightness: 55%), 
-		adjust-color($color, $lightness: 10%), 
-		adjust-color($color, $lightness: 5%))
-  }
+	lightness: lightness($color);
+	background: $color $background;
+	color: $contrast;
+
+	&.child-inner{
+		lightness: lightness($color);
+		background: $color $background;
+		color: $contrast;
+	}
+
+	.child-inner.link{
+		box-shadow: 0px 0px 5px $btnBG;
+	}
+
+	&.child-inner.link{
+		&:hover,&:focus,&:active,&:active:focus{
+			opacity: 1;
+			color: adjust-color($color, $lightness: 65% );
+			background: $slightly $background;
+		}
+	}
+
+	
+	$btnBorder: adjust-color($color, $lightness: 13%);
+	@include ancestors($btnBG, $contrast, $btnBorder, $background);
 }
 
-@mixin lightBG($color) {
-  lightness: lightness($color);
-  background-color: $color;
+@mixin lightBG($color, $background: null) {
+	lightness: lightness($color);
+	background-color: $color;
 
-  $color-adjust: -25%;
-  @if (lightness($color) > 60) {
-    $color-adjust: -45%;
-  }
-  @if (lightness($color) > 90) {
-    $color-adjust: -55%;
-  }
-  color: adjust-color($color, $lightness: $color-adjust);
+	$color-adjust: -25%;
+	@if (lightness($color) > 60) {
+		$color-adjust: -45%;
+	}
+	@if (lightness($color) > 90) {
+		$color-adjust: -55%;
+	}
 
-  &.child-inner.link{
-    &:hover,&:focus,&:active,&:active:focus{
-      opacity: 1;
-      color: adjust-color($color, $lightness: ( $color-adjust - 10% ) );
-      background-color: adjust-color($color, $lightness: -5% );
-    }
-  }
+	$contrast: adjust-color($color, $lightness: $color-adjust);
+	$btnBG: adjust-color($color, $lightness: -10%);
+	$btnBorder: adjust-color($color, $lightness: -15%);
 
-  &.parent .btn.btn-default{
-  	@include button-variant(
-  		adjust-color($color, $lightness: $color-adjust), 
-		adjust-color($color, $lightness: -10%), 
-		adjust-color($color, $lightness: -15%))
-  }
+	color: $contrast;
+
+	&.child-inner{
+		lightness: lightness($color);
+		background: $color $background;
+		color: $contrast;
+	}
+
+	.child-inner.link{
+		box-shadow: 0px 0px 5px $btnBG;
+	}
+
+	&.child-inner.link{
+		&:hover,&:focus,&:active,&:active:focus{
+			opacity: 1;
+			color: adjust-color($color, $lightness: ( $color-adjust - 10% ) );
+			background-color: adjust-color($color, $lightness: -5% );
+		}
+	}
+
+	
+	@include ancestors($btnBG, $contrast, $btnBorder, $background);
 }
+
+
+@mixin ancestors($bgColor, $text, $slightly, $bg: null){
+	&.parent .dropdown.open{
+		.dropdown-menu {
+			background-color: $slightly;
+
+			> li > a{
+				&:hover{ 
+					background: $bgColor $bg; 
+				}
+			}
+		}
+	}
+
+	&.parent .btn.btn-default, &.btn.btn-default, #title > .btn.btn-default{
+		@include button-variant($text, $bgColor, $slightly);
+		background: $bgColor $bg;
+		&:hover{ background-color: $slightly };
+		&:focus{ outline:0; border-color: $bgColor; };
+	}
+}
+
 
 @for $i from 1 through length($html5colors) {
-  $color: nth($html5colors, $i);
-  $name: nth($html5colorNames, $i);
+	$color: nth($html5colors, $i);
+	$name: nth($html5colorNames, $i);
 
-  .#{$name}, .child .#{$name}{
-    @if (lightness($color) > 49) {
-      @include lightBG($color)
-    }
-    @else{
-      @include darkBG($color)
-    }
+	.#{$name}, .child .#{$name}{
+		@if (lightness($color) > 49) {
+			@include lightBG($color)
+		}
+		@else{
+			@include darkBG($color)
+		}
 
-    &.fa, &.gi, &.glyphicon{
-      background:none;
-      color:$color;
-    }
-  }
+		&.fa, &.gi, &.glyphicon{
+			background:none;
+			color:$color;
+		}
+	}
 }
 
 @keyframes colorchange
 {
-  0%   {background: red;}
-  25%  {background: yellow;}
-  50%  {background: blue;}
-  75%  {background: green;}
-  100% {background: red;}
+	0%   {background: red;}
+	25%  {background: yellow;}
+	50%  {background: blue;}
+	75%  {background: green;}
+	100% {background: red;}
 }
 
 @-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
 {
-  0%   {background: red;}
-  25%  {background: yellow;}
-  50%  {background: blue;}
-  75%  {background: green;}
-  100% {background: red;}
+	0%   {background: red;}
+	25%  {background: yellow;}
+	50%  {background: blue;}
+	75%  {background: green;}
+	100% {background: red;}
 }
 
 .colorchange {
-  animation: colorchange 10s infinite;
-  -webkit-animation: colorchange 10s infinite;
-  color:black;
+	animation: colorchange 10s infinite;
+	-webkit-animation: colorchange 10s infinite;
+	color:black;
 
-  &.fa, &.gi, &.glyphicon{
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+	&.fa, &.gi, &.glyphicon{
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
 }
 
 .rainbow, .child-inner.rainbow{
 	color:black;
 	background: red; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(top left, magenta, orange, yellow, SpringGreen, cyan); /* For Safari 5.1 to 6.0 */
-  background: -moz-linear-gradient(right bottom, magenta, orange, yellow, SpringGreen, cyan); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to right bottom, magenta, orange, yellow, SpringGreen, cyan); /* Standard syntax (must be last) */
+	background: -webkit-linear-gradient(top left, magenta, orange, yellow, SpringGreen, cyan); /* For Safari 5.1 to 6.0 */
+	background: -moz-linear-gradient(right bottom, magenta, orange, yellow, SpringGreen, cyan); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(to right bottom, magenta, orange, yellow, SpringGreen, cyan); /* Standard syntax (must be last) */
 
-  &.fa, &.gi, &.glyphicon{
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  &.parent .btn.btn-default{
-    background-color: SpringGreen;
-  }
+	&.fa, &.gi, &.glyphicon{
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	$btnBG: #00ff7f;
+	@include ancestors($btnBG, white, lighten($btnBG, 5%));
 }
 
 .glow{
-  -webkit-box-shadow: 0px 0px 15px 2px rgba(255,255,255,0.86);
-  -moz-box-shadow: 0px 0px 15px 2px rgba(255,255,255,0.86);
-  box-shadow: 0px 0px 15px 2px rgba(255,255,255,0.86);
-  @include lightBG(#FFFACD);
+	-webkit-box-shadow: 0px 0px 15px 2px rgba(255,255,255,0.86);
+	-moz-box-shadow: 0px 0px 15px 2px rgba(255,255,255,0.86);
+	box-shadow: 0px 0px 15px 2px rgba(255,255,255,0.86);
+	@include lightBG(#FFFACD);
 
-  &.fa, &.gi, &.glyphicon{
-    box-shadow:none;
-    color: #FFFACD;
-    text-shadow: 0px 0px 15px 2px rgba(255,255,255,0.86);
-  }
+	&.fa, &.gi, &.glyphicon{
+		box-shadow:none;
+		color: #FFFACD;
+		text-shadow: 0px 0px 15px 2px rgba(255,255,255,0.86);
+	}
 }
 
 .ocean {
-  background: #00BEA6 linear-gradient(#00BEA6,#0057BE);
-  @include darkBG(#00BEA6);
+	$bg-color: #00BEA6;
+	$background: linear-gradient($bg-color,#0057BE);
 
-  &.fa, &.gi, &.glyphicon{
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+	@include darkBG($bg-color, $background);
 
-  &.parent .btn.btn-default{
-    background: #00BEA6 linear-gradient(#00BEA6,#0057BE);
-  }
+	&.fa, &.gi, &.glyphicon{
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	//@include ancestors($btnBG, white, adjust-color(SpringGreen, lighten: 5%))
 }
 
 .sharkverse, .sharkverse.child-inner:hover{
-  background-image:url('http://orteil.dashnet.org/nestedSharkverse.png');
+	background-image:url('http://orteil.dashnet.org/nestedSharkverse.png');
 }
 .baconverse, .baconverse.child-inner:hover{
-  background-color: maroon;
-  color:white;
-  background-image:url('http://orteil.dashnet.org/nestedBaconverse.png');
+	background-color: maroon;
+	color:white;
+	background-image:url('http://orteil.dashnet.org/nestedBaconverse.png');
 }
 .doughnutverse, .doughnutverse.child-inner:hover{
-  background-color: pink;
-  background-image:url('http://orteil.dashnet.org/nestedDoughnutverse.png');
-  color:#000;
-  text-shadow: 1px 1px MOCCASIN;
+	background-color: pink;
+	background-image:url('http://orteil.dashnet.org/nestedDoughnutverse.png');
+	color:#000;
+	text-shadow: 1px 1px MOCCASIN;
 }
 .lasagnaverse, .lasagnaverse.child-inner:hover{
-  background-image:url('http://orteil.dashnet.org/nestedLasagnaverse.png');
+	background-image:url('http://orteil.dashnet.org/nestedLasagnaverse.png');
 }

@@ -306,3 +306,15 @@ i.pulse{
 .loginForm{
 	max-width: 400px;
 }
+
+.loader {
+	text-align:center;
+	margin-top:1em;
+	animation-duration: 2s;
+	animation-timing-function: ease-in;
+	font-size: 4.6em;
+
+	.child > .child-inner > i.fa-spin{
+		display: block;
+	}
+}
