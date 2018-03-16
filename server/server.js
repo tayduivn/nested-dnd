@@ -14,7 +14,7 @@ const morgan = require("morgan");
 const config = require("./config.js");
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3001;
 
 let db;
 

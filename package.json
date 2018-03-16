@@ -4,6 +4,7 @@
   "engines": {
     "node": ">=7.6.0"
   },
+  "proxy": "http://localhost:3001/",
   "scripts": {
     "dev": "concurrently --kill-others-on-fail \"SET NODE_ENV=development\" \"yarn devserver\" \"yarn clientserver\" \"yarn devdb\"",
     "devdb": "mongod --dbpath \".\\server\\data\"",
