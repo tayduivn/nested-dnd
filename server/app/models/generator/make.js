@@ -12,7 +12,7 @@ var Maker = {
 			return value;
 
 		switch(type){
-			case "tableid":
+			case "table_id":
 				return null; // TODO
 				break;
 			case "table":

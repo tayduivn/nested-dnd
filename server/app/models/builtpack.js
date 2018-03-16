@@ -54,7 +54,7 @@ schema.statics.findOrBuild = async function(pack){
 	}
 
 	newBuiltPack.generators = map;
-	await this.create(newBuiltPack);
+	return await this.create(newBuiltPack);
 }
 
 /**

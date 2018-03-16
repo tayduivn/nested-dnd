@@ -24,7 +24,7 @@ var generatorSchema = Schema({
 		type: String
 	},
 	name: {
-		type: String // todo: handle tables and such
+		type: Schema.Types.Mixed // todo: handle tables and such
 	},
 	desc: {
 	 type: [String],

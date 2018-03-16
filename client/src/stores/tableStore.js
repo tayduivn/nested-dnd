@@ -5,7 +5,9 @@ let tableStore = {};
 
 class Table {
 	constructor(options){
-		this.rows = options.rows;
+
+		this.rows = options.rows.map(tableStore.makeTable);
+
 		this.concatenate = options.concatenate; // boolean
 		this.hasWeightedRows = options.hasWeightedRows; // boolean
 		this.tableWeight = options.tableWeight; // numeric or false -- weightedChoose()
@@ -50,6 +52,30 @@ class Table {
 	}
 };
 
+tableStore.makeTable = function(r){
+	if(r instanceof Table || !tableStore.isRollable(r)) 
+		return r;
+
+	if(r.constructor === ({}).constructor && r.rows)
+		return new Table(r);
+	if(r instanceof Array)
+		return new Table({rows: r})
+
+	if(typeof r !== "string"){
+		console.error("WHAT IS THIS");
+		return r;
+	}
+
+	var parts = r.split("|")
+	if(parts.length !== 1)
+		return new Table({rows: parts, concatenate: true});
+
+	//if(tableStore.isTableID(r))
+	//	return tableStore.get(r);
+
+	//plain string
+	return r;
+}
 
 tableStore.roll = function(obj){
 	if(obj === undefined) return obj;
@@ -79,6 +105,7 @@ tableStore.roll = function(obj){
 	if(obj.roll) obj = obj.roll();
 
 	return obj;
+
 }
 
 tableStore.isRollable = function(obj){
@@ -114,6 +141,9 @@ tableStore.get = function(str){
 
 	if(table.constructor === ({}).constructor){
 		table = tables[str] = new Table(tables[str]);
+	}
+	if(table instanceof Array){
+		table = tables[str] = new Table({ rows: tables[str] })
 	}
 	else if(typeof table === "string" && this.isTableID(table)){
 		// is an alias for another table

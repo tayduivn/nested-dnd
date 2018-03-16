@@ -79,12 +79,19 @@ var Maintainer = {
 			throw e;
 		}
 
+		//validate extends
+		if(data.extends && !builtpack.generators[data.extends]){
+			var e = new Error(data.extends+" extends generator doesn't exist in pack "+pack._id);
+			e.name = "Precondition Failed"
+			throw e;
+		}
+
 		//validate in
 		if(data.in){
 			var isas = this.getGeneratorChildren(data.in);
 
 			for(var i = 0; i < isas.length; i++){
-				if(!builtpack.generators[isas[i]]){
+				if(!builtpack.generators[isas[i]] && isas[i] !== data.isa){
 					var e = new ReferenceError("Could not find child generator that is a "+isas[i])
 					e.name = "Precondition Failed"
 					throw e;

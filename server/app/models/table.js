@@ -1,6 +1,12 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
+var rowSchema = Schema({
+	type: String,
+	value: Schema.Types.Mixed,
+	weight: Number
+}, { typeKey: '$type'})
+
 var tableSchema = Schema({
 	pack_id: {
 		type: Schema.Types.ObjectId,
@@ -8,27 +14,18 @@ var tableSchema = Schema({
 		required: true
 	},
 	title: String,
-	rows: {
-		type:[Schema.Types.Mixed],
-		validate: function(v){
-			return v.length > 0;
-		}
-	},
-	doConcat: {
-		type: Boolean,
-		default: false
-	},
-	hasWeightedRows: {
-		type: Boolean,
-		default: false
-	},
+	rows: [rowSchema],
+	concat: Boolean,
+	rowWeights: Boolean,
 	tableWeight: Number
 });
 
+
 //returns a String
 tableSchema.methods.roll = function(){
-	if(this.concatenate)
-		return this.concat();
+	if(this.concat){
+		return this.concatenate();
+	}
 
 	var result;
 	var rows = this.rows.slice(); //copy array so can use again and get different result
@@ -45,7 +42,7 @@ tableSchema.methods.roll = function(){
 	return roll(result);
 }
 
-tableSchema.methods.concat = function(){
+tableSchema.methods.concatenate = function(){
 	var result = "";
 	var part;
 
@@ -67,7 +64,7 @@ function choose(arr){
 	//Returns an element from an array at random.
 	var result = arr[Math.floor(Math.random()*arr.length)];
 
-	if(result.value)
+	if(result && result.value)
 		result = result.value;
 	return result;
 }
@@ -142,11 +139,11 @@ function roll(obj){
 
 	var parts = obj.split("|")
 	if(parts.length !== 1){
-		obj = new Table({rows: parts, concatenate: true}).roll();
+		obj = new Table({rows: parts, concat: true}).roll();
 	}else
 		obj = parts[0];
 
-	if(obj.type === "tableid"){
+	if(obj.type === "table_id"){
 		// TODO get from db
 	}
 

@@ -14,7 +14,7 @@ var childSchema = Schema({
 	amount: {
 		min: {
 			$type: Number,
-			min: 1
+			min: 0
 		},
 		max: { 
 			$type: Number,
@@ -23,9 +23,10 @@ var childSchema = Schema({
 	},
 	chance: {
 		$type: Number,
-		min: 1,
+		min: 0,
 		max: 100
-	}
+	},
+	isEmbedded: Boolean
 }, { typeKey: '$type', _id: false });
 
 /**

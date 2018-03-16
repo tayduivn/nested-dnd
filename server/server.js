@@ -95,7 +95,7 @@ app.use(function (err, req, res, next) {
 	}
 
 	// user error
-	if(err.name === "Precondition Failed")
+	if(err.name === "Precondition Failed" || err.name === "ValidationError")
 		return res.status(412).json({error: err.message});
 
 	// internal error

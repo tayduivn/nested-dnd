@@ -181,7 +181,9 @@ export default class ThingView extends React.Component{
 	}
 
 	handleImport(){
-		Import.oneThing(this.props.thing);
+		Import.wholePack(this.props.thing).catch(err=>{
+			console.error(err)
+		});
 	}
 	
 	getStatus(property){
