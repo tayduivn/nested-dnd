@@ -11,7 +11,6 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const flash = require("connect-flash");
 const morgan = require("morgan");
-const config = require("./config.js");
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -47,7 +46,7 @@ app.use(cookieParser()); // read cookies (needed for auth)
 //auth
 app.use(
 	session({
-		secret: 'mysecret',
+		secret: process.env.SESSION_SECRET || 'mysecret',
 		proxy: undefined, // Uses the "trust proxy" setting from express
 		unset: "destroy",
 		resave: false,

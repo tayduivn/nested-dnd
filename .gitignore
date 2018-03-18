@@ -15,7 +15,6 @@
 
 # server
 /server/data
-/server/config.js
 
 # misc
 .DS_Store
