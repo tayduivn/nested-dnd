@@ -92,5 +92,8 @@
       "Firefox ESR",
       "not ie < 11"
     ]
+  },
+  "nodemonConfig": {
+  	"ignore": ["client/*", "server/data/*"]
   }
 }
