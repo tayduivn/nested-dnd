@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { FormGroup, FormControl, ControlLabel, Button, HelpBlock } from 'react-bootstrap';
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Redirect } from "react-router-dom";
 
 export default class Login extends Component {
 	state = {

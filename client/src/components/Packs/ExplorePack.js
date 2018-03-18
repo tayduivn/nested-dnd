@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CSSTransitionGroup } from 'react-transition-group'
+import {TransitionGroup,  CSSTransition} from 'react-transition-group'
 import { Button,MenuItem,SplitButton } from 'react-bootstrap';
 import PropTypes from "prop-types";
 
@@ -64,7 +64,8 @@ export default class TreeManager extends Component {
 
 	setCurrent(data){
 
-		this.setState(data);
+		if(data)
+			this.setState(data);
 
 		var curr = data.current;
 		if(curr === null) return;
@@ -188,6 +189,23 @@ class CurrentNode extends Component {
 	}
 }
 
+
+
+class ChildInner extends Component {
+	render(){
+		const child = this.props.child;
+		const className = "child-inner "+(child.in ? child.cssClass+" link" : " empty") + (child.icon ? "": " no-icon");
+		var style = {color: child.txt};
+		if(this.props.transparentBG) style.background = 'transparent';
+
+		return (
+			<div className={className} style={style}>
+				<div className="wrap"><i className={child.icon}></i><h1>{child.name ? child.name : child.isa}</h1></div>
+			</div>
+		)
+	}
+}
+
 class Children extends Component {
 	constructor(props){
 		super(props);
@@ -202,41 +220,27 @@ class Children extends Component {
 		const className =  "child col-lg-2 col-md-3 col-sm-4 col-xs-6 "
 
 		var list = this.props.arr.map((c,i) =>{
-			var transitionStyle = {transitionDelay: 30*i + 'ms'};
+			var transitionStyle = {transitionDelay: 30*i + 'ms',animationDelay: 30*i + 'ms'};
 			var transparentBG = c.cssClass === this.props.parent.cssClass;
 			var innerChild = <ChildInner child={c} transparentBG={transparentBG} />
+		
 
+			var child;
 
-			if(!c.in)
-				return <div key={c.index+i} data-key={c.index} className={className+c.wrapperClass} style={transitionStyle}>{innerChild}</div>
-			else
-				return (
-					<a key={c.index+i} data-key={c.index} className={className+c.wrapperClass} style={transitionStyle} onClick={()=>this.onClick(c)}>{innerChild}</a>
+			if(!c.in){
+				child = <div key={c.index} style={transitionStyle} data-key={c.index} className={className+c.wrapperClass}>{innerChild}</div>
+			}
+			else{
+				child = (
+					<a style={transitionStyle} key={c.index} data-key={c.index} className={className+c.wrapperClass} onClick={()=>this.onClick(c)}>{innerChild}</a>
 				)
+			}
+
+			return <CSSTransition key={c.index} classNames="slide-up" appear={true} timeout={{enter:(30*i)+500}} exit={false} style={transitionStyle}>{child}</CSSTransition>;
+				
 		});
 
-		return (<CSSTransitionGroup id="contains" 
-				className={"row "+this.props.wrapperClass}
-				transitionName="slide-up"
-				transitionAppear={true}
-				transitionAppearTimeout={50}
-				transitionEnterTimeout={50}
-				transitionLeave={false}>{list}</CSSTransitionGroup>);
-	}
-}
-
-class ChildInner extends Component {
-	render(){
-		const child = this.props.child;
-		const className = "child-inner "+(child.in ? child.cssClass+" link" : " empty") + (child.icon ? "": " no-icon");
-		var style = {color: child.txt};
-		if(this.props.transparentBG) style.background = 'transparent';
-
-		return (
-			<div className={className} style={style}>
-				<div className="wrap"><i className={child.icon}></i><h1>{child.name ? child.name : child.isa}</h1></div>
-			</div>
-		)
+		return <TransitionGroup>{list}</TransitionGroup>;
 	}
 }
 
@@ -307,3 +311,11 @@ const LOADING =  (
 		</div>
 	</div>);
 
+/*
+ <CSSTransitionGroup id="contains" 
+				className={"row "+this.props.wrapperClass}
+				transitionName="slide-up"
+				transitionAppear={true}
+				transitionAppearTimeout={50}
+				transitionEnterTimeout={50}
+				transitionLeave={false}>{list}</CSSTransitionGroup>*/

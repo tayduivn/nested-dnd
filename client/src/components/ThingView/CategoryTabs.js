@@ -49,7 +49,7 @@ export default class CategoryTabs extends React.Component{
 		const contains = (this.props.thing.contains) ? [...this.props.thing.contains] : [];
 
 		return (
-			<Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example"
+			<Tabs activekey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example"
 				mountOnEnter={true}>
 				<Tab eventKey={1} title="Style">
 					<StyleTab {...this.props} />

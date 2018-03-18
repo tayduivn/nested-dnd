@@ -1,3 +1,11 @@
+
+
+![David](https://david-dm.org/cattegy/nested-dnd.svg)
+![Code Climate](https://img.shields.io/codeclimate/github/cattegy/nested-dnd.svg)
+
+
+# Nested D&D
+
 https://nested-dnd.herokuapp.com
 
 react-scripts .. webpack.config.dev.js

@@ -23,10 +23,16 @@ if (process.env.NODE_ENV === "production") {
 	const staticPath = path.join(__dirname, "/../client/build");
 	app.use(express.static(staticPath));
 	console.log("Serving static files at / from " + staticPath);
-} else {
-	//connect to dev database
-	mongoose.connect("mongodb://localhost:27017/nested-dnd");
-}
+} 
+
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/nested-dnd", 
+	function (err, client) {
+		if (err) {
+			console.log(err);
+			process.exit(1);
+		}
+	});
+
 
 require("./config/passport")(passport); // pass passport for configuration
 

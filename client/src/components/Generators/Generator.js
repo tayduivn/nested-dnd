@@ -3,8 +3,7 @@ import { Button } from "react-bootstrap";
 import DB from "../../actions/CRUDAction";
 import PropType from "prop-types";
 import { Link } from "react-router-dom";
-import { Route } from "react-router-dom";
-import { PrivateRoute, PropsRoute, NotFound } from '../App';
+import { PrivateRoute, PropsRoute } from '../App';
 
 import EditGenerator from "./EditGenerator";
 

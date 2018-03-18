@@ -1,4 +1,6 @@
 
+
+
 .fullscreen{
 	height: 100vh;
 	font-size: 5em;
@@ -6,21 +8,22 @@
 	.nested{ 
 		background-color: black;
 		color: white;
-		&:hover > div{
-			background-color: rgba(34,34,34,0.5);
-			color: #eee;
+		font-family: 'Press Start 2P', cursive;
+
+		&:hover{
+			color: antiquewhite;
+			background-color: #111;
 		}
 	}
 	.dnd{
-		color: goldenrod;
+		color: saddlebrown;
+		background-color: burlywood;
+		background-blend-mode: color-burn;
+		font-family: 'IM Fell English SC', serif;
 
-		>div{
-			background-color:rgba(248,241,212,0.5);
-		}
-
-		&:hover > div{
-			background-color:rgba(255, 239, 213,0.5);
-			color: #E40712;
+		&:hover{
+			color: darkred;
+			background-color: tan;
 		}
 	}
 	.nested, .dnd{
@@ -45,7 +48,20 @@
 		    transform: translateY(-50%);
 			}
 		}
+
+
 	}
 	
-	
+}
+
+
+
+@media (max-width: 576px) { 
+	.fullscreen{
+		font-size: 4em;
+
+		.nested, .dnd{
+			height: 50%;
+		}
+	} 
 }

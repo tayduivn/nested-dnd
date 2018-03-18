@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Navbar, Nav as NavList, Button } from "react-bootstrap";
-
-import { IconDebug } from "./ThingExplorer/IconDebug.js";
+import { Navbar, Nav as NavList, Button,NavItem } from "react-bootstrap";
 
 export default class Nav extends Component {
 	static get propTypes() {
@@ -24,9 +22,7 @@ export default class Nav extends Component {
 				</Navbar.Header>
 				<Navbar.Collapse>
 					<NavList>
-						<li>
-							<Link to={process.env.PUBLIC_URL + "/packs"}>Packs</Link>
-						</li>
+						<NavItem componentClass={Link} to="/packs">Packs</NavItem>
 					</NavList>
 					{!this.context.loggedIn ? (
 						<Navbar.Form pullRight>
@@ -36,16 +32,14 @@ export default class Nav extends Component {
 						</Navbar.Form>
 					) : null}
 					<NavList pullRight>
-						<IconDebug show={false} />
+						
 
 						{!this.context.loggedIn ? (
-							<li>
-								<Link to={"/login"}>Login</Link>
-							</li>
+							<NavItem componentClass={Link} to={"/login"}>Login</NavItem>
 						) : (
-							<li>
-								<a onClick={this.props.handleLogout}>Logout</a>
-							</li>
+							<NavItem componentClass={Link} onClick={this.props.handleLogout}>
+								Logout
+							</NavItem>
 						)}
 					</NavList>
 					
@@ -54,3 +48,5 @@ export default class Nav extends Component {
 		);
 	}
 }
+
+//<IconDebug show={false} />

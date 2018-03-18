@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
 import DB from "../../actions/CRUDAction";
-import { Route } from "react-router-dom";
 import Generator from '../Generators/Generator';
 import EditGenerator from '../Generators/EditGenerator';
 import { PrivateRoute, PropsRoute } from '../App';

@@ -186,11 +186,11 @@ i.gi{
 	transition: opacity 500ms ease-in;
 }
 
-.example-leave {
+.example-exit {
 	opacity: 1;
 }
 
-.example-leave.example-leave-active {
+.example-exit.example-exit-active {
 	opacity: 0;
 	transition: opacity 500ms ease-in;
 }
@@ -202,7 +202,7 @@ i.gi{
 		opacity: 1.0;
 		transition: opacity 0.5s ease-in
 }
-.switch-leave {
+.switch-exit {
 		/* Completely hide the button while it's being animated and before it's removed from the DOM. */
 		visibility: hidden;
 		height: 0px;
@@ -212,7 +212,7 @@ i.gi{
 		/* Starting opacity */
 		opacity: 1.0;
 }
-.switch-leave.switch-leave-active {
+.switch-exit.switch-exit-active {
 		/* Ending opacity: 
 		Trigger opacity change so the "transitionend" event will fire, causing React to remove from the DOM. */
 		opacity: 0;
@@ -229,6 +229,11 @@ i.gi{
 .slide-up-appear.slide-up-appear-active,.slide-up-enter.slide-up-enter-active {
 		opacity: 1;
 		transform: translateY(0px);
+}
+
+.slide-up-exit.slide-up-exit-active {
+		opacity: 0;
+		transform: translateY(-15px);
 }
 
 
