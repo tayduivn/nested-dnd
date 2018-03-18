@@ -75,14 +75,14 @@ async function getResponse(response){
 	if(contentType && contentType.includes("json"))
 		data = await response.json()
 	else{
-		data = await response.text();
+		error = await response.text();
 	}
 
 	if(response.status === 404){
 		error = "Not found";
 	}
 	if(response.status !== 200) {
-		if(data.error){
+		if(data && data.error){
 			if(response.status === 500)
 				console.error(data.error);
 			console.log(data.error); 
@@ -93,6 +93,8 @@ async function getResponse(response){
 			error = true;
 		}
 	}
+
+	if(!data) data = {};
 
 	return { error, data }
 }

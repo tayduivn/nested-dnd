@@ -3,97 +3,71 @@ import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
-	Link,
 	Redirect
 } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import Nested from "./Nested/Nested.js";
 import ThingExplorer from "./ThingExplorer/ThingExplorer.js";
-import { IconDebug } from "./ThingExplorer/IconDebug.js";
 import Characters from "./Characters/Characters.js";
-import Settings from "./Settings.js";
-import Login, { Account } from "./Login.js";
-
+import Login from "./Login.js";
 import Packs from "./Packs/Packs";
-import Pack from "./Packs/Pack";
 import ExplorePack from "./Packs/ExplorePack";
-import AuthService from "../util/AuthService";
-
-import Generator from './Generators/Generator';
+import DB from "../actions/CRUDAction";
+import Nav from './Nav';
+import Home from './Packs/Home'
 
 import "./App.css";
 import "./colors.css";
+import "./Nested/textures.css";
 
-class Nav extends Component {
-	render() {
-		return (
-			<nav className="navbar navbar-default navbar-fixed-top">
-				<div className="container-fluid">
-					<div className="navbar-header">
-						<button
-							type="button"
-							className="navbar-toggle collapsed"
-							data-toggle="collapse"
-							data-target="#bs-example-navbar-collapse-1"
-							aria-expanded="false"
-						>
-							<span className="sr-only">Toggle navigation</span>
-							<span className="icon-bar" />
-							<span className="icon-bar" />
-							<span className="icon-bar" />
-						</button>
-						<Link className="navbar-brand" to={process.env.PUBLIC_URL + "/"}>
-							Nested D&D
-						</Link>
-					</div>
-
-					<div
-						className="collapse navbar-collapse"
-						id="bs-example-navbar-collapse-1"
-					>
-						<ul className="nav navbar-nav">
-							<li>
-								<Link to={process.env.PUBLIC_URL + "/nested"}>Nested</Link>
-							</li>
-							<li>
-								<Link to={process.env.PUBLIC_URL + "/things"}>Pack Editor</Link>
-							</li>
-							<li>
-								<Link to={process.env.PUBLIC_URL + "/characters"}>
-									Characters
-								</Link>
-							</li>
-							<li>
-								<Link to={process.env.PUBLIC_URL + "/packs"}>Packs</Link>
-							</li>
-						</ul>
-						<ul className="nav navbar-nav navbar-right">
-							<li>
-								<Settings />
-								<IconDebug show={false} />
-							</li>
-							<li>
-								<Account />
-							</li>
-						</ul>
-					</div>
-				</div>
-			</nav>
-		);
-	}
-}
 
 class App extends Component {
+	constructor(){
+		super();
+		this.state = {
+			loggedIn: null
+		}
+		this.handleLogin = this.handleLogin.bind(this);
+		this.handleLogout = this.handleLogout.bind(this);
+	}
+	static get childContextTypes(){
+		return {
+			loggedIn: PropTypes.bool
+		}
+	}
+	getChildContext(){
+		return { loggedIn: this.state.loggedIn };
+	}
+	componentDidMount(){
+		DB.fetch("loggedIn").then((result) => {
+			this.setState({ loggedIn: result.data.loggedIn })
+			return result;
+		});
+	}
+	handleLogin(url, payload){
+		return DB.create(url, payload).then((result) => {
+			var loggedIn = !result.error && result.data;
+			this.setState({ loggedIn: loggedIn });
+			return result;
+		});
+	}
+	handleLogout(){
+		return DB.fetch('logout', "POST").then((result) => {
+			this.setState({ loggedIn: result.data.loggedIn })
+			return result;
+		});
+	}
 	render() {
 		return (
 			<Router>
 				<div className="App">
-					<Nav />
+					<Nav handleLogout={this.handleLogout} />
 					<Switch>
 						<Route
 							exact
 							path="/"
-							component={Nested}
+							component={Home}
 						/>
 						<Route
 							path="/nested"
@@ -111,26 +85,19 @@ class App extends Component {
 							path="/login"
 							component={Login}
 							title="Login"
-							url="login"
+							handleLogin={this.handleLogin}
 						/>} />
 						<PropsRoute
 							path="/signup"
 							component={Login}
 							title="Signup"
-							url="signup"
+							handleLogin={this.handleLogin}
 						/>}
 
-						<PrivateRoute path="/pack/:pack/generator/create" component={Generator} mode="create" />
-						<PrivateRoute path="/pack/:pack/generator/:id/edit" component={Generator} mode="edit" />
-						<PropsRoute path="/pack/:pack/generator/:id" component={Generator} mode="view" />
-
-						<PrivateRoute path="/pack/create" component={Pack} mode="create" />
-						<PrivateRoute path="/pack/:id/edit" component={Pack} mode="edit" />
-						<PropsRoute path="/pack/:id" component={Pack} mode="view" />
-						<Route path="/packs" component={Packs} />
-						<Route path="/explore/:packurl" component={ExplorePack} />
-
+						<PropsRoute path="/packs" component={Packs} />
 						
+						<Route path="/explore/:packurl" component={ExplorePack} />
+						<Route component={NotFound} />
 
 					</Switch>
 				</div>
@@ -144,7 +111,7 @@ const PrivateRoute = ({ component, redirectTo, ...rest }) => {
 		<Route
 			{...rest}
 			render={routeProps => {
-				return AuthService.isLoggedOn() ? (
+				return this.props.loggedIn ? (
 					renderMergedProps(component, routeProps, rest)
 				) : (
 					<Redirect
@@ -175,4 +142,11 @@ const renderMergedProps = (component, ...rest) => {
 	return React.createElement(component, finalProps);
 };
 
+const NotFound = () => (
+	<div className="container">
+		<h1>404 Not Found</h1>
+	</div>
+)
+
 export default App;
+export { PropsRoute, PrivateRoute, NotFound };

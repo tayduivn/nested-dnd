@@ -2,25 +2,27 @@ import React, { Component } from "react";
 import { FormGroup, FormControl, ControlLabel, Button, HelpBlock } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import AuthService from '../util/AuthService';
+import { Redirect } from "react-router-dom";
 
 export default class Login extends Component {
+	state = {
+		email: "",
+		emailVaidation: null,
+		emailError: null,
+		password: "",
+		passwordValidation: null,
+		passwordError: null,
+		submitted: false
+	};
+
 	static get propTypes() {
 		return {
-			url: PropTypes.string,
-			title: PropTypes.string
+			title: PropTypes.string,
+			handleLogin: PropTypes.func
 		};
 	}
 	constructor(props){
 		super(props);
-		this.state = {
-			email: "",
-			emailVaidation: null,
-			emailError: null,
-			password: "",
-			passwordValidation: null,
-			passwordError: null
-		};
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
@@ -34,21 +36,29 @@ export default class Login extends Component {
 			password: this.state.password
 		};
 		
-		AuthService.login(this.props.url, payload)
+		this.props.handleLogin(this.props.location.pathname, payload)
 			.then(({ error, data: json })=>{
 				//only here if errors
 				let newState = {
 					emailVaidation: (json.emailError) ? "error" : null,
 					emailError: json.emailError,
 					passwordValidation: (json.passwordError) ? "error" : null,
-					passwordError: json.passwordError
+					passwordError: json.passwordError,
+					submitted: true
 				};
 				this.setState(newState);
 			});
 	}
 	render(){
+
+		if(!this.state.emailError && !this.state.passwordError && this.state.submitted){
+			this.props.history.goBack();
+			return null;
+		}
+
+
 		return (
-			<div className="container-fluid loginForm">
+			<div id="content" className="container-fluid loginForm">
 				<h1>{this.props.title}</h1>
 				<form onSubmit={this.handleSubmit}>
 					<FormGroup controlId="email" validationState={this.state.emailVaidation}>
@@ -70,29 +80,5 @@ export default class Login extends Component {
 				</form>
 			</div>
 		);
-	}
-}
-
-export class Account extends Component {
-	constructor(){
-		super()
-		this.state = { isLoggedOn: AuthService.isLoggedOn() };
-		this.logout = this.logout.bind(this);
-	}
-	logout(){
-		AuthService.logOff((bool) => this.setState({ isLoggedOn: bool }));
-	}
-	componentWillMount(){
-		AuthService.checkLoggedOn((bool) => this.setState({ isLoggedOn: bool }));
-	}
-	render(){
-		if(this.state.isLoggedOn === null){
-			return null;
-		}
-		else if(!this.state.isLoggedOn){
-			return (<Link to={process.env.PUBLIC_URL + "/login"}>Login</Link>);
-		}
-		else
-			return (<Link to="#" onClick={this.logout}>Logout</Link>);
 	}
 }

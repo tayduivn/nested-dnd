@@ -1,0 +1,51 @@
+
+.fullscreen{
+	height: 100vh;
+	font-size: 5em;
+
+	.nested{ 
+		background-color: black;
+		color: white;
+		&:hover > div{
+			background-color: rgba(34,34,34,0.5);
+			color: #eee;
+		}
+	}
+	.dnd{
+		color: goldenrod;
+
+		>div{
+			background-color:rgba(248,241,212,0.5);
+		}
+
+		&:hover > div{
+			background-color:rgba(255, 239, 213,0.5);
+			color: #E40712;
+		}
+	}
+	.nested, .dnd{
+		height: 100%;
+		vertical-align: middle;
+		text-align: center;
+		position: relative;
+		
+
+		> div{
+			padding-top:  50px;
+			z-index:1;
+			position:absolute;
+	    top:0;
+	    bottom:0;
+	    left:0;
+	    right:0;
+
+			p{
+				position: relative;
+		    top: 50%;
+		    transform: translateY(-50%);
+			}
+		}
+	}
+	
+	
+}

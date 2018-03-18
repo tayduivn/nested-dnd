@@ -121,7 +121,8 @@ export default class TreeManager extends Component {
 		DB.fetch('explore', "DELETE")
 			.then(()=>{ return DB.fetch(this.props.location.pathname)})
 			.then(({err , data})=>{
-				this.setState({ current: data, lookup:{ "0": data }})
+				this.setState({ current: data, lookup:{ [data.index] : data }})
+				this.setIndex(data.index);
 			});
 	}
 
@@ -166,7 +167,7 @@ class CurrentNode extends Component {
 	render(){
 		const inst = this.props.current;
 
-		if(!inst) return <div id="content"><h1 id="title"></h1>{LOADING}</div>;
+		if(!inst) return <div id="content"><div id="title"></div>{LOADING}</div>;
 
 		const cssClass = inst.cssClass+(!inst.in ? " empty":"");
 
@@ -180,7 +181,7 @@ class CurrentNode extends Component {
 					<Button className={"pull-right "+cssClass} bsStyle="default" onClick={this.props.handleRestart}>Restart</Button>
 				</h1>
 				{ 
-					inst.in === true ? LOADING : <Children arr={inst.in} handleClick={this.props.handleClick} />
+					inst.in === true ? LOADING : <Children arr={inst.in} handleClick={this.props.handleClick} parent={inst} />
 				}
 			</div>
 		);
@@ -202,7 +203,9 @@ class Children extends Component {
 
 		var list = this.props.arr.map((c,i) =>{
 			var transitionStyle = {transitionDelay: 30*i + 'ms'};
-			var innerChild = <ChildInner child={c} />
+			var transparentBG = c.cssClass === this.props.parent.cssClass;
+			var innerChild = <ChildInner child={c} transparentBG={transparentBG} />
+
 
 			if(!c.in)
 				return <div key={c.index+i} data-key={c.index} className={className+c.wrapperClass} style={transitionStyle}>{innerChild}</div>
@@ -226,7 +229,8 @@ class ChildInner extends Component {
 	render(){
 		const child = this.props.child;
 		const className = "child-inner "+(child.in ? child.cssClass+" link" : " empty") + (child.icon ? "": " no-icon");
-		const style = {color: child.txt};
+		var style = {color: child.txt};
+		if(this.props.transparentBG) style.background = 'transparent';
 
 		return (
 			<div className={className} style={style}>
@@ -295,9 +299,11 @@ class Ancestors extends React.Component {
 	}
 }
 
+const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
 const LOADING =  (
 	<div className="child col-lg-2 col-md-3 col-sm-4 col-xs-6">
 		<div className="child-inner loader fadeIn animated">
-			<i className=" fa fa-spinner fa-spin"></i>
+			{LOADING_GIF}
 		</div>
 	</div>);
+

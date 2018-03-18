@@ -20,7 +20,7 @@ module.exports = function(app, passport) {
 				res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
     		res.header('Access-Control-Allow-Credentials','true')
 
-				return res.json(user);
+				return res.json({ "loggedIn" : true, "user": user });
 			});
 		})(req, res, next);
 	});
@@ -42,7 +42,7 @@ module.exports = function(app, passport) {
 				res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
     		res.header('Access-Control-Allow-Credentials','true')
 
-				return res.json(user);
+				return res.json({ "loggedIn" : true, "user": user });
 			});
 		})(req, res, next);
 	});
@@ -69,7 +69,10 @@ module.exports = function(app, passport) {
 	app.post("/api/logout", function(req, res) {
 		logout(req,res,(err)=>{
 			if(err) return res.status(500).json(err);
-			res.json({"success":"Successfully logged in as "+req.user});
+			
+			res.json({
+				"loggedIn": false
+			});
 		});
 	});
 
@@ -98,8 +101,8 @@ module.exports = function(app, passport) {
 	});
 
 
-	app.get("/api/loggedOn", function(req, res) {
-		return res.json({ loggedOn: !!req.user });
+	app.get("/api/loggedIn", function(req, res) {
+		return res.json({ loggedIn: !!req.user });
 	});
 
 	

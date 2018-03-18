@@ -42,16 +42,32 @@ generatorSchema.post('remove', Maintainer.cleanAfterRemove);
 
 // ----------------------- VIRTUALS
 
-generatorSchema.virtual('makeTextColor').get(function(){
-	return (this.style) ? this.style.makeTextColor : null;
-});
+generatorSchema.virtual('makeStyle').get(async function(){
+	var style = {
+		cssClass: []
+	};
 
-generatorSchema.virtual('makeCssClass').get(function(){
-	return (this.style) ? this.style.makeBackgroundColor : null; //TODO
-});
-generatorSchema.virtual('makeIcon').get(function(){
-	return (this.style) ? this.style.makeIcon : null;
-});
+
+	if(!this.style) return style;
+
+	var arr = await Promise.all([
+		this.style.makeTextColor(),
+		this.style.makeBackgroundColor(),
+		this.style.makeImage(),
+		this.style.makeIcon(),
+		this.style.makePattern()
+	]);
+
+	if(arr[0]) style.txt = arr[0];
+	if(arr[1]) style.cssClass.push(arr[1]);
+	if(arr[2]) style.img = arr[2];
+	if(arr[3]) style.icon = arr[3];
+	if(arr[4]) style.cssClass.push(arr[4]);
+
+	style.cssClass = style.cssClass.join(" ");
+
+	return style;
+})
 
 generatorSchema.virtual('makeName').get(function(){
 	return (this.name) ? Maker.makeMixedThing(this.name, this.model('Table')) : null;
@@ -85,13 +101,30 @@ generatorSchema.statics.makeAsRoot = async function(seedArray, builtpack){
 		return await Maker.make(seed, 1, builtpack);
 	}
 	else{
-		var node = await Maker.make(seed, 0, builtpack);
+		var node = await Maker.make(seed, 1, builtpack);
 
 		//generate the next seed in the array and push to in
 		//TODO: replace child
-		var generatedChild = await seedArray.shift().makeAsRoot(seedArray, builtpack);
-		if(!node.in) node.in = [];
-		node.in.push(generatedChild);
+		var generatedChild = await this.makeAsRoot(seedArray, builtpack);
+
+		// no children, append and continue
+		if(!node.in) {
+			node.in = [generatedChild];
+			return node;
+		}
+
+		// if node has a similar child, replace it
+		var found = false;
+		for(var i = 0; i < node.in.length; i++){
+			if(node.in[i].isa === generatedChild.isa){
+				node.in[i] = generatedChild;
+				found = true;
+				break;
+			}
+		}
+		if(!found){ // push to end if not found.
+			node.in.push(generatedChild);
+		}
 
 		return node;
 	}

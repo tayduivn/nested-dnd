@@ -8,13 +8,13 @@ html, body {
 	height:100%;
 }
 #content{
-	padding-top:10px;
+	padding-top: 50px;
 	min-height: 100%;
 }
 
 
 #title{
-	padding: 15px;
+	padding: 30px 15px 15px 15px;
 	margin: 0;
 }
 
@@ -145,7 +145,7 @@ i.gi{
 			
 			border-top:5px solid transparent;
 
-			h1, i{
+			.wrap h1, .wrap i{
 				display: inline;
 				font-size: 1.7em;
 				margin: 0 0.25em;
@@ -156,6 +156,11 @@ i.gi{
 			i{
 				display:none;
 			}
+		}
+
+		&.empty{ // so they don't look clickable
+			background: transparent !important;
+			color: inherit !important;
 		}
 
 		

@@ -95,7 +95,7 @@ module.exports = function(app) {
 					array: array
 				};
 
-				return res.json(tree);
+				return res.json(req.pack.getSeedFromTree(tree));
 			}).catch(next)
 		}
 	})

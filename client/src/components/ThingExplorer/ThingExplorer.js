@@ -198,7 +198,7 @@ class ThingExplorer extends React.Component{
 		)
 
 		return (
-			<div className="container-fluid">
+			<div id="content" className="container-fluid">
 				<NewPackInfo newPack={this.state.newPack} export={this.exportPack} />
 				{ (!thingStore.sortedThingNames.length) ? <p>No things are defined</p> : page }
 			</div>

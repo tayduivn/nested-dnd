@@ -1,56 +1,50 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
-import AuthService from "../../util/AuthService";
 import DB from "../../actions/CRUDAction";
-import PropType from "prop-types";
+import { Route } from "react-router-dom";
+import Generator from '../Generators/Generator';
+import EditGenerator from '../Generators/EditGenerator';
+import { PrivateRoute, PropsRoute } from '../App';
 import { Link } from "react-router-dom";
 
 import EditPack from "./EditPack";
+
+const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
 
 /**
  * Wrapper Component for Pack pages
  */
 export default class Pack extends Component {
-	static get propTypes() {
-		return {
-			mode: PropType.oneOf(["view", "edit", "create"])
-		};
-	}
-	constructor(props) {
-		super(props);
-		this.state = {
-			pack: null
-		};
-	}
+
+	state = {
+		pack: null,
+		error: null
+	};
+
 	componentDidMount() {
-		if (this.props.match.params.id) {
-			DB.get("pack", this.props.match.params.id).then(({error, data}) =>{
-					if(!error)
-						this.setState({ pack: data })
+		if (this.props.match.params.pack && !this.props.match.params.gen) {
+			DB.get("pack", this.props.match.params.pack).then(({error, data}) =>{
+					this.setState({ pack: data, error: error })
 				}
 			);
 		}
 	}
 	render() {
-		var body;
+		var match = this.props.match.url;
+		var showGen = this.props.match.params.gen;
 
-		if (this.props.mode === "create") {
-			body = <EditPack isNew={true} history={this.props.history} />;
-		} else if (!this.state.pack) {
-			body = <p>Loading</p>;
-		} else {
-			if (this.props.mode === "view")
-				body = <ViewPack pack={this.state.pack} />;
-			else if (this.props.mode === "edit")
-				body = (
-					<EditPack
-						pack={this.state.pack}
-						isNew={false}
-						history={this.props.history}
-					/>
-				);
-		}
-		return <div className="container">{body}</div>;
+		if(this.state.error) return <div className="alert alert-danger">{this.state.error}</div>
+		if (!this.state.pack && !showGen) return LOADING_GIF;
+
+		return (
+			<div>
+				<PropsRoute exact path={`${match}`} component={ViewPack} pack={this.state.pack} />
+				<PrivateRoute path={`${match}/edit`} component={EditPack} pack={this.state.pack}  />
+				<PropsRoute path={`${match}/generator/create`} component={EditGenerator} pack_id={this.props.match.params.pack} />
+				<PropsRoute path={`${match}/generator/:gen`} component={Generator} pack_id={this.props.match.params.pack} />
+			</div>
+		)
+		
 	}
 }
 
@@ -69,8 +63,8 @@ class ViewPack extends Component {
 				<h1>{pack.name}</h1>
 				
 				{/* --------- Edit Button ------------ */}
-				{AuthService.isLoggedOn() ? (
-					<Link to={"/pack/" + pack._id + "/edit"}>
+				{this.props.loggedIn ? (
+					<Link to={"/packs/" + pack._id + "/edit"}>
 						<Button bsStyle="primary">
 							Edit Pack
 						</Button>
@@ -106,11 +100,11 @@ class ViewPack extends Component {
 					<h2>Generators</h2>
 					<ul>
 						{pack.generators.map((gen, i) =>{
-							return <li key={i}><Link to={'/pack/'+pack._id+"/generator/"+gen._id}>{gen.isa} {gen.extends ? '  ('+gen.extends+')' : ""}</Link></li>
+							return <li key={i}><Link to={'/packs/'+pack._id+"/generator/"+gen._id}>{gen.isa} {gen.extends ? '  ('+gen.extends+')' : ""}</Link></li>
 						})}
 					</ul>
 
-					<Link to={"/pack/" + pack._id + "/generator/create"}>
+					<Link to={"/packs/" + pack._id + "/generator/create"}>
 						<Button bsStyle="primary">
 							Add Generator
 						</Button>

@@ -43,7 +43,7 @@ export default class EditGenerator extends Component {
 	}
 	handleDelete(){
 		DB.delete("generator", this.props.generator._id, () => {
-			this.props.history.push('/pack/'+this.props.packid);
+			this.props.history.push('/packs/'+this.props.packid);
 		});
 	}
 	render() {

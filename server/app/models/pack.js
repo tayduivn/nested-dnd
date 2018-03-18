@@ -65,6 +65,39 @@ packSchema.virtual('seedArray').get(function() {
 });
 
 /**
+ * Searches through a nested universe to find the seed node
+ * @param  {Object} tree The universe
+ * @return {Object}      the node
+ */
+packSchema.methods.getSeedFromTree = function(tree){
+	var seed = this.seedArray;
+
+	// if the seed doesn't match, just return the tree
+	if(tree.isa !== seed[0]) return tree;
+
+	var currentNode = tree;
+	for (var i = 1; i < seed.length; i++) {
+		
+		// node had no children, can't finish finding
+		if(!currentNode.in) return currentNode;
+
+		// search in children for next seed
+		var found = false;
+		for (var j = 0; j < currentNode.in.length; j++) {
+			if(currentNode.in[j].isa === seed[i]){
+				currentNode = currentNode.in[j];
+				found = true;
+				break;
+			}
+		}
+		// can't find it, return what we have so far without going to next seed.
+		if(!found) return currentNode;
+	}// loop seed;
+
+	return currentNode;
+}
+
+/**
  * Check if seed is valid and get array of generators
  * @param  {string} seed       to check
  * @param  {Object} generators map of built generators

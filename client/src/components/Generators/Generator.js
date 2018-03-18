@@ -1,54 +1,44 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
-import AuthService from "../../util/AuthService";
 import DB from "../../actions/CRUDAction";
 import PropType from "prop-types";
 import { Link } from "react-router-dom";
+import { Route } from "react-router-dom";
+import { PrivateRoute, PropsRoute, NotFound } from '../App';
 
 import EditGenerator from "./EditGenerator";
 
+const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
+
 export default class Generator extends Component {
-	static get propTypes() {
-		return {
-			mode: PropType.oneOf(["view", "edit", "create"])
-		};
+	static propTypes = {
+		mode: PropType.oneOf(["view", "edit", "create"])
 	}
-	constructor(props) {
-		super(props);
-		this.state = {
-			generator: null
-		};
+	state = {
+		generator: null,
+		error: null
 	}
 	componentDidMount() {
-		if (this.props.match.params.id) {
-			DB.get("/pack/"+this.props.match.params.pack+"/generator", this.props.match.params.id)
+		if (this.props.match.params.gen) {
+			DB.get("/pack/"+this.props.pack_id+"/generator", this.props.match.params.gen)
 				.then(({ error, data })=>{
-					this.setState({ generator: data })
+					this.setState({ generator: data, error: error })
 				});
 		}
 	}
 	render() {
-		var body;
-		var packid = this.props.match.params.pack;
+		var match = this.props.match.url;
 
-		if (this.props.mode === "create") {
-			body = <EditGenerator isNew={true} history={this.props.history} packid={packid} />;
-		} else if (!this.state.generator) {
-			body = <p>Loading</p>;
-		} else {
-			if (this.props.mode === "view")
-				body = <ViewGenerator generator={this.state.generator} packid={packid} />;
-			else if (this.props.mode === "edit")
-				body = (
-					<EditGenerator
-						generator={this.state.generator}
-						isNew={false}
-						history={this.props.history}
-						packid={packid}
-					/>
-				);
-		}
-		return <div className="container">{body}</div>;
+		if(this.state.error) return <div className="alert alert-danger">{this.state.error}</div>
+
+		if (!this.state.generator) return LOADING_GIF;
+
+		return (
+			<div>
+				<PropsRoute exact path={`${match}`} component={ViewGenerator} generator={this.state.generator} />
+				<PrivateRoute path={`${match}/edit`} component={EditGenerator} generator={this.state.generator}  />
+			</div>
+		)
 	}
 }
 
@@ -61,7 +51,7 @@ class ViewGenerator extends Component {
 		return (
 			<div className="container">
 			
-				<Link to={"/pack/"+gen.pack_id}>⬑ Pack</Link>
+				<Link to={"/packs/"+gen.pack_id}>⬑ Pack</Link>
 				<h1>{gen.isa}</h1>
 				<ul>
 					{Object.keys(gen).map((k,i)=>{
@@ -74,8 +64,8 @@ class ViewGenerator extends Component {
 				</ul>
 
 				{/* --------- Edit Button ------------ */}
-				{AuthService.isLoggedOn() ? (
-					<Link to={"/pack/" + gen.pack_id + "/generator/"+ gen._id +"/edit"}>
+				{this.context.loggedIn ? (
+					<Link to={"/packs/" + gen.pack_id + "/generator/"+ gen._id +"/edit"}>
 						<Button bsStyle="primary">
 							Edit Generator
 						</Button>

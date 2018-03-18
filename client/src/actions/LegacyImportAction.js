@@ -114,7 +114,7 @@ var Importer = {
 		pack.things = thingStore.getThings(); //all things loaded
 		pack.defaultSeed = "item";
 		allThingNames = Object.keys(pack.things);
-		allThingNames = thingStore.getGenerators(allThingNames);
+		//allThingNames = thingStore.getGenerators(allThingNames);
 	
 		await getStoredTables();
 		var { error, data } = await DB.get("builtpack",PACKID);
@@ -167,7 +167,7 @@ var Importer = {
 
 		var thingsToUpload = {};
 		allThingNames = Object.keys(pack.things);
-		allThingNames = thingStore.getGenerators(allThingNames);
+		// allThingNames = thingStore.getGenerators(allThingNames);
 
 
 		await getStoredTables();
@@ -383,12 +383,14 @@ var Importer = {
 							contain = {};
 						}
 					}
+					// it is a string
 					else{
 						var cToChild = convertTable(c);
 						value = cToChild.value;
 						type = cToChild.type;
 						weight = cToChild.weight;
 						contain = new Contain(value);
+						value = contain.value;
 					}
 				}
 
@@ -619,7 +621,7 @@ async function arrayUpload(names, thingsToUpload, builtpack){
 		// update
 		else{
 			// console.log("Already uploaded: "+isa);
-			/*
+			
 			var { error, data: updated } = await DB.set("pack/"+PACKID+"/generator", builtpack.generators[isa].gen_ids[0], t)
 			if(error){
 				couldntUpdate.push(isa);
@@ -627,7 +629,6 @@ async function arrayUpload(names, thingsToUpload, builtpack){
 			}
 			if(updated)
 				console.log("Updated "+isa);
-			*/
 		}
 	};
 

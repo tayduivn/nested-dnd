@@ -1,50 +1,75 @@
 import React, { Component } from "react";
-import DB from '../../actions/CRUDAction';
-import AuthService from '../../util/AuthService';
 import { Button } from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
+import PropTypes from "prop-types";
+import DB from '../../actions/CRUDAction';
+import { PrivateRoute } from '../App';
+import Pack from './Pack';
 
-export default class Packs extends Component{
-	constructor(props){
-		super(props);
-		this.state = {
-			myPacks: null,
-			publicPacks: null
-		}
+
+import EditPack from "./EditPack";
+
+const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
+
+const Packs = ({ match }) => (
+	<div id="content">
+		<Route exact path={match.url} component={PackList} />
+		<PrivateRoute path={`${match.url}/create`} component={EditPack}  />
+		<Route path={`${match.url}/:pack`} component={Pack}  />
+	</div>
+)
+
+export default Packs;
+
+class PackList extends Component{
+	state = {
+			data: null,
+			error: null
+	}
+
+	static contextTypes = {
+		loggedIn: PropTypes.bool
 	}
 
 	//fetch data
 	componentDidMount(){
-		var _t = this;
-		DB.fetch("packs").then(({data})=>{
-			_t.setState(data)
+		const _t = this;
+		DB.fetch("packs").then(result=>{
+			_t.setState(result);
 		});
 	}
 
 	render(){
-		const myPacks = (
+		const data = this.state.data;
+		const myPacks = data ? data.myPacks : null;
+		const publicPacks = data ? data.publicPacks : null;
+
+		const myPacksList = (
 			<div>
 				<h2>My Packs</h2>
-				{this.state.myPacks === null ? <p>Loading</p>: ""}
-				{this.state.myPacks && this.state.myPacks.length === 0 ? <p>You have not created any packs yet</p>: ""}
+				{data === null ? <p>Loading</p>: ""}
+				{myPacks && myPacks.length === 0 ? <p>You have not created any packs yet</p>: ""}
 				<ul>
-					{(this.state.myPacks)  ? this.state.myPacks.map((p)=>(<li key={p._id} ><Link to={"/pack/"+p._id}>{p.name}</Link></li>)) : null}
+					{(myPacks)  ? myPacks.map((p)=>(<li key={p._id} ><Link to={"/packs/"+p._id}>{p.name}</Link></li>)) : null}
 				</ul>
-				<Button bsStyle="primary" href="/pack/create">Create a New Pack</Button>
+				<Button bsStyle="primary" href="/packs/create">Create a New Pack</Button>
 			</div>
 		);
 
 		return (
 			<div className="container">
-				<h1>Packs {AuthService.isLoggedOn()}</h1>
+				<h1>Packs {this.context.loggedIn}</h1>
 
-				{AuthService.isLoggedOn() ? myPacks : null }
+				{this.context.loggedIn ? myPacksList : null }
 
 				<h2>Public Packs</h2>
-				{this.state.publicPacks === null ? <p>Loading</p>: ""}
-				{this.state.publicPacks && this.state.publicPacks.length === 0 ? <p>There are no public packs to display</p> : null}
+
+				{data === null ? LOADING_GIF: ""}
+				<div className={this.state.error ? "alert alert-danger" : ""}>{this.state.error}</div>
+
+				{publicPacks && publicPacks.length === 0 ? <p>There are no public packs to display</p> : null}
 				<ul>
-					{(this.state.publicPacks)  ? this.state.publicPacks.map((p)=>(<li key={p._id} ><Link to={"/pack/"+p._id}>{p.name}</Link></li>)) : null}
+					{(publicPacks)  ? publicPacks.map((p)=>(<li key={p._id} ><Link to={"/packs/"+p._id}>{p.name}</Link></li>)) : null}
 				</ul>
 			</div>
 		);

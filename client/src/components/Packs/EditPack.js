@@ -36,12 +36,12 @@ export default class EditPack extends Component {
 
 		if(isCreate){
 			DB.create("pack", formData, function(updatedPack){
-				history.push('/pack/'+updatedPack._id);
+				history.push('/packs/'+updatedPack._id);
 			});
 		}
 		else{
 			DB.set("pack", this.props.pack._id, formData, (updatedPack) => {
-				history.push('/pack/'+updatedPack._id);
+				history.push('/packs/'+updatedPack._id);
 			})
 		}
 	}

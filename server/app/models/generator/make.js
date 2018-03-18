@@ -63,14 +63,10 @@ var Maker = {
 				up: [] // placeholder for later
 			};
 			//optional fields, if new -----------------------------
-		
-			var txt = await gen.makeTextColor;
-			var cssClass =  await gen.makeCssClass;
-			var icon = await gen.makeIcon;
-			var name = await gen.makeName
-			if(txt) node.txt = txt;
-			if(cssClass) node.cssClass = cssClass;
-			if(icon) node.icon = icon;
+
+			var name = await gen.makeName;
+			var style = await gen.makeStyle;
+			node = Object.assign({}, node, style);
 			if(name) node.name = name;
 			if(gen.isa) node.isa = gen.isa;
 			if(gen.in && gen.in.length) node.in = true; // placeholder for later;
@@ -136,6 +132,9 @@ var Maker = {
 				}
 				else if(table){
 					var result = await table.roll();
+					if(typeof result === undefined){
+						continue;
+					}
 					var { gen: newGen, table: newTable } = await checkTypes(result, Table, builtpack);
 					arr = arr.concat(await makeAmount(newGen, newTable, result, 1));
 				}

@@ -8,7 +8,10 @@ var styleSchema = Schema({
 		value: Schema.Types.Mixed
 	},
 
-	imgURL: String, 
+	img: {
+		type: String,
+		value: Schema.Types.Mixed
+	}, 
 
 	// todo: check hex or valid color name
 	txt: {
@@ -22,21 +25,34 @@ var styleSchema = Schema({
 		value: Schema.Types.Mixed
 	},
 
+	pattern: {
+		type: String,
+		value: Schema.Types.Mixed
+	},
+
 	// if the generated name will affect the color
 	// TODO: use to generate background color
 	noAutoColor: Boolean
 }, { typeKey: "$type", _id: false });
 
-styleSchema.virtual('makeTextColor').get(function(){
+styleSchema.methods.makeTextColor = async function(){
 	return Maker.makeMixedThing(this.txt, this.parent().model('Table'))
-});
+};
 
-styleSchema.virtual('makeBackgroundColor').get(function(){
+styleSchema.methods.makeBackgroundColor = async function(){
 	return Maker.makeMixedThing(this.bg, this.parent().model('Table'))
-});
+};
 
-styleSchema.virtual('makeIcon').get(function(){
+styleSchema.methods.makeIcon = async function(){
 	return Maker.makeMixedThing(this.icon, this.parent().model('Table'))
-});
+};
+
+styleSchema.methods.makeImage = async function(){
+	return Maker.makeMixedThing(this.img, this.parent().model('Table'))
+};
+
+styleSchema.methods.makePattern = async function(){
+	return Maker.makeMixedThing(this.pattern, this.parent().model('Table'))
+};
 
 module.exports = styleSchema;

@@ -24,6 +24,7 @@ function treeToArray(node, startIndex, arrayLength){
 	//optional fields
 	if(node.txt) parent.txt = node.txt;
 	if(node.cssClass) parent.cssClass = node.cssClass;
+
 	// put a new ancestor at the front of the array
 	up.unshift(parent);
 
@@ -37,6 +38,13 @@ function treeToArray(node, startIndex, arrayLength){
 
 	node.in.forEach((n,i)=>{
 		n.up = up;
+
+		//if node has no style, use parent's.
+		if(!n.cssClass){
+			n.cssClass = parent.cssClass;
+			if(!n.txt) n.txt = parent.txt; // need to copy the text too because of patterns
+		}
+
 
 		// recurse.
 		var toArray = this.treeToArray(n, currentIndex);
