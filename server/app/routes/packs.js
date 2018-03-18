@@ -53,7 +53,7 @@ module.exports = function(app) {
 
 			if(origTree.in === true){
 
-				BuiltPack.findOrBuild(req.pack).then((builtpack)=>{
+				BuiltPack.findOrBuild(req.pack).then(async (builtpack)=>{
 					if(!builtpack){
 						throw Error("Could not get buildpack");
 					}
@@ -61,7 +61,7 @@ module.exports = function(app) {
 					// todo save to universe
 					// todo get from DB if logged in
 					// TODO: figure out how to store the newly generated stuff in array
-					var generated = Generator.makeAsNode(origTree, universe, builtpack);
+					var generated = await Generator.makeAsNode(origTree, universe, builtpack);
 					var { tree, array } = Explore.treeToArray(generated, index, universe.array.length);
 
 					// store in session
@@ -74,14 +74,14 @@ module.exports = function(app) {
 				}).catch(next);
 			}
 			else {
-				return res.json(Generator.makeAsNode(origTree, universe))
+				return Generator.makeAsNode(origTree, universe).then(r=>res.json(r));
 			}
 		}
 
 		// pack doesn't exist, build it and return the root
 		else{
-			BuiltPack.findOrBuild(req.pack).then((builtpack)=>{
-				var generated = builtpack.growFromSeed(req.pack)
+			BuiltPack.findOrBuild(req.pack).then(async (builtpack)=>{
+				var generated = await builtpack.growFromSeed(req.pack)
 
 				// save to universe
 				// TODO get from DB if logged in
@@ -98,40 +98,11 @@ module.exports = function(app) {
 				return res.json(tree);
 			}).catch(next)
 		}
-
-		
 	})
-
-	app.get("/api/explore/:url/:index", MW.canViewPack, (req, res,next) =>{
-		//var universe = req.session.universe;
-		//if(!universe || universe.pack_id.toString() !== req.pack.id) 
-		//	return res.status(404).send();
-
-		//if(!universe.array[req.params.index]) 
-		//	return res.status(404).send();
-
-		var tree = Explore.arrayToTree(universe.array, req.params.index);
-
-		BuiltPack.findOrBuild(req.pack).then((builtpack)=>{
-
-			var generated = Generator.makeAsNode(tree, universe, builtpack);
-
-			// TODO get an array of only the newly generated ones
-			// save to universe
-			// todo get from DB if logged in
-			// TODO: figure out how to store the newly generated stuff in array
-		
-			var { tree, array } = Explore.treeToArray(generated);
-
-			
-			
-			return res.json(tree);
-		}).catch(next);
-	});
 
 	app.delete("/api/explore", (req,res,next) =>{
 		if(req.session.universe){
-			delete req.session.universe;
+			req.session.universe = false;
 			res.json({"success":true});
 		}
 		else
@@ -141,8 +112,11 @@ module.exports = function(app) {
 
 	// Read Pack
 	// ---------------------------------
-	app.get("/api/pack/:pack", MW.canViewPack, (req, res) => {
-		return res.json(req.pack);
+	app.get("/api/pack/:pack", MW.canViewPack, (req, res, next) => {
+		Generator.find({pack_id: req.pack.id}).then((gens)=>{
+			req.pack.generators = gens;
+			return res.json(Object.assign({},req.pack._doc,{ generators: gens }));
+		}).catch(next);
 	});
 
 	app.get("/api/builtpack/:pack", MW.canViewPack, (req, res, next) => {

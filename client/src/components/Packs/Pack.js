@@ -24,8 +24,10 @@ export default class Pack extends Component {
 	}
 	componentDidMount() {
 		if (this.props.match.params.id) {
-			DB.get("pack", this.props.match.params.id, json =>
-				this.setState({ pack: json })
+			DB.get("pack", this.props.match.params.id).then(({error, data}) =>{
+					if(!error)
+						this.setState({ pack: data })
+				}
 			);
 		}
 	}
@@ -103,8 +105,8 @@ class ViewPack extends Component {
 				<div>
 					<h2>Generators</h2>
 					<ul>
-						{pack.combinedGenerators.map((gen, i) =>{
-							return <li key={i}><Link to={'/pack/'+pack._id+"/generator/"+gen._generator}>{gen._id}</Link></li>
+						{pack.generators.map((gen, i) =>{
+							return <li key={i}><Link to={'/pack/'+pack._id+"/generator/"+gen._id}>{gen.isa} {gen.extends ? '  ('+gen.extends+')' : ""}</Link></li>
 						})}
 					</ul>
 

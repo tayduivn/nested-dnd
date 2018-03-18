@@ -3,10 +3,9 @@ import { CSSTransitionGroup } from 'react-transition-group'
 import { Button,MenuItem,SplitButton } from 'react-bootstrap';
 import PropTypes from "prop-types";
 
-import { HEADERS } from "../../actions/CRUDAction";
+import DB from "../../actions/CRUDAction";
 
 const EMPTY_MESSAGE = <p>Contains nothing</p>; 
-
 
 /**
  * This manages the tree data
@@ -32,13 +31,14 @@ export default class TreeManager extends Component {
 	// first ajax data pull
 	componentDidMount(){
 		var index = this.getIndexFromHash(this.props);
-		DataManager.getCurrentNode(index, this.props.location.pathname, (current)=>{
 
-			var lookup = this.state.lookup;
-			lookup[current.index] = current;
-			this.setCurrent({ current , lookup });
-			if(current.index !== index) this.setIndex(index);
-		});
+		DB.get(this.props.location.pathname, index)
+			.then(({ error, data: current })=>{
+				var lookup = this.state.lookup;
+				lookup[current.index] = current;
+				this.setCurrent({ current , lookup });
+				if(current.index !== index) this.setIndex(index);
+			});
 	}
 
 	// location has changed
@@ -63,8 +63,7 @@ export default class TreeManager extends Component {
 	}
 
 	setCurrent(data){
-		if(document.getElementById("title"))
-			document.getElementById("title").className="animated fadeIn";
+
 		this.setState(data);
 
 		var curr = data.current;
@@ -72,25 +71,29 @@ export default class TreeManager extends Component {
 
 		//detect if need to start the ajax call
 		var getChildren = (curr.in === true)
-		if(!getChildren && curr.in){
+		/*if(!getChildren && curr.in){
 			for(var i = 0; i < curr.in.length; i++){
 				if(curr.in[i] === true){
 					getChildren = true;
 					break;
 				}
 			}
-		}
+		}*/
 
 		if(getChildren){
-			DataManager.getCurrentNode(curr.index, this.props.location.pathname, (current)=>{
-				if(this.state.current.index ===  current.index){
-					this.setState({ current });
-				}else{
+			DB.get(this.props.location.pathname, curr.index)
+				.then(({ error, data: current })=>{
+
 					var lookup = this.state.lookup;
 					lookup[current.index] = current;
-					this.setState({lookup});
-				}
-			});
+
+					if(this.state.current.index === current.index){
+						this.setState({ current, lookup });
+					}else{
+						this.setState({lookup});
+					}
+
+				});
 		}
 	}
 
@@ -108,13 +111,18 @@ export default class TreeManager extends Component {
 	}
 
 	handleRestart(){
-		this.setCurrent({current: null, lookup: {}});
+		this.setCurrent({current: {
+			in: true,
+			cssClass: this.state.current.cssClass //keep the same background color
+		}, lookup: {}});
 		this.setIndex(0);
 
 		// reset universe
-		DataManager.reset(this.props.location.pathname, (current)=>{
-			this.setState({ current: current });
-		});
+		DB.fetch('explore', "DELETE")
+			.then(()=>{ return DB.fetch(this.props.location.pathname)})
+			.then(({err , data})=>{
+				this.setState({ current: data, lookup:{ "0": data }})
+			});
 	}
 
 	handleClick(child){
@@ -146,49 +154,6 @@ export default class TreeManager extends Component {
 	}
 }
 
-const DataManager = {
-	getCurrentNode: function(index, url, callback){
-		if(index === 0)
-			this.makeSeed(url, callback);
-		else
-			this.makeNode(index, url, callback)
-	},
-	makeSeed(url, callback){
-		fetch("/api"+url, HEADERS)
-			.then((response)=>{
-				if(response.status !== 200) {
-					// TODO
-				}
-				return response.json();
-			})
-			.then((json)=>{
-				if(callback) callback(json);
-			})
-			.catch(e=>console.error(e));
-	},
-	makeNode(index, url, callback){
-		fetch("/api"+url+"/"+index, HEADERS)
-			.then((response)=>{
-				if(response.status !== 200) {
-					throw Error(response);
-				}
-				return response.json();
-			})
-			.then((json)=>{
-				if(callback) callback(json);
-			})
-			.catch(e=>console.error(e));
-	},
-	// resets the entire explore universe
-	reset(url, callback){
-		var h = Object.assign({},HEADERS,{ method: "DELETE"});
-		fetch('/api/explore', h)
-			.then(()=>{
-				this.makeSeed(url, callback);
-			});
-	}
-}
-
 class CurrentNode extends Component {
 	static get propTypes(){
 		return {
@@ -200,7 +165,8 @@ class CurrentNode extends Component {
 	}
 	render(){
 		const inst = this.props.current;
-		if(!inst) return <p>LOADING</p>;
+
+		if(!inst) return <div id="content"><h1 id="title"></h1>{LOADING}</div>;
 
 		const cssClass = inst.cssClass+(!inst.in ? " empty":"");
 
@@ -208,12 +174,13 @@ class CurrentNode extends Component {
 			<div id="content" className={"container-fluid "+cssClass} style={{color:inst.txt}}>
 				<h1 id="title">
 					<Ancestors ancestors={inst.up ? inst.up : []}
-						handleClick={this.props.handleClick}  /> 
+						handleClick={this.props.handleClick}  />
+					&nbsp;&nbsp;
 					<i className={inst.icon}></i> {inst.name ? inst.name : inst.isa}
-					<Button className="pull-right" bsStyle="default" onClick={this.props.handleRestart}>Restart</Button>
+					<Button className={"pull-right "+cssClass} bsStyle="default" onClick={this.props.handleRestart}>Restart</Button>
 				</h1>
-				{
-					inst.in === true ? <p>LOADING</p> : <Children arr={inst.in} handleClick={this.props.handleClick} />
+				{ 
+					inst.in === true ? LOADING : <Children arr={inst.in} handleClick={this.props.handleClick} />
 				}
 			</div>
 		);
@@ -231,21 +198,22 @@ class Children extends Component {
 	render(){
 		if(!this.props.arr || !this.props.arr.length) return EMPTY_MESSAGE;
 
-		const className =  "child col-lg-2 col-md-3 col-sm-4 col-xs-6"
+		const className =  "child col-lg-2 col-md-3 col-sm-4 col-xs-6 "
 
 		var list = this.props.arr.map((c,i) =>{
 			var transitionStyle = {transitionDelay: 30*i + 'ms'};
 			var innerChild = <ChildInner child={c} />
 
 			if(!c.in)
-				return <div key={c.index+i} data-key={c.index} className={className} style={transitionStyle}>{innerChild}</div>
+				return <div key={c.index+i} data-key={c.index} className={className+c.wrapperClass} style={transitionStyle}>{innerChild}</div>
 			else
 				return (
-					<a key={c.index+i} data-key={c.index} className={className} style={transitionStyle} onClick={()=>this.onClick(c)}>{innerChild}</a>
+					<a key={c.index+i} data-key={c.index} className={className+c.wrapperClass} style={transitionStyle} onClick={()=>this.onClick(c)}>{innerChild}</a>
 				)
 		});
 
-		return (<CSSTransitionGroup id="contains" className="row"
+		return (<CSSTransitionGroup id="contains" 
+				className={"row "+this.props.wrapperClass}
 				transitionName="slide-up"
 				transitionAppear={true}
 				transitionAppearTimeout={50}
@@ -257,13 +225,12 @@ class Children extends Component {
 class ChildInner extends Component {
 	render(){
 		const child = this.props.child;
-		const className = "child-inner "+child.cssClass + (child.in ? " link" : " empty");
+		const className = "child-inner "+(child.in ? child.cssClass+" link" : " empty") + (child.icon ? "": " no-icon");
 		const style = {color: child.txt};
 
 		return (
 			<div className={className} style={style}>
-				<i className={child.icon}></i>
-				<h1>{child.name ? child.name : child.isa}</h1>
+				<div className="wrap"><i className={child.icon}></i><h1>{child.name ? child.name : child.isa}</h1></div>
 			</div>
 		)
 	}
@@ -306,7 +273,7 @@ class Ancestors extends React.Component {
 			});
 
 			renderParent = <SplitButton 
-				title={title}
+				title={title} href=""
 				onClick={() => ( this.onClick(parentInst)) }
 				id="ancestorDropdown" 
 				className={parentInst.cssClass}
@@ -327,3 +294,10 @@ class Ancestors extends React.Component {
 		</span>)
 	}
 }
+
+const LOADING =  (
+	<div className="child col-lg-2 col-md-3 col-sm-4 col-xs-6">
+		<div className="child-inner loader fadeIn animated">
+			<i className=" fa fa-spinner fa-spin"></i>
+		</div>
+	</div>);

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
+const Maker = require('./generator/make');
 
 var rowSchema = Schema({
 	type: String,
@@ -20,52 +21,40 @@ var tableSchema = Schema({
 	tableWeight: Number
 });
 
-
-//returns a String
+//returns a Promise<String>
 tableSchema.methods.roll = function(){
 	if(this.concat){
 		return this.concatenate();
 	}
 
-	var result;
-	var rows = this.rows.slice(); //copy array so can use again and get different result
+	var row;
+	if(this.hasWeightedRows)
+		row = weightedDiceChoose(this.rows);
+	else if(this.tableWeight)
+		row = weightedChoose(this.rows, this.tableWeight);
+	else
+		row = choose(this.rows);
 
-	if(this.hasWeightedRows){
-		result = weightedDiceChoose(rows);
-	}
-	else if(this.tableWeight){
-		result = weightedChoose(rows, this.tableWeight);
-	}else{
-		result = choose(rows);
-	}
-
-	return roll(result);
+	return Maker.makeMixedThing(row, this.model('Table'));
 }
 
-tableSchema.methods.concatenate = function(){
+tableSchema.methods.concatenate = async function(){
 	var result = "";
-	var part;
+	var Table = this.model('Table');
 
 	//for loop always results in a string
-	for(var i in this.rows){ // arguments is not an Array, so this works
-		part = this.rows[i];
-		if(part === Array.prototype.roll) continue;
-		
-		if(part.type === "table")
-			part = new Table(result);
+	for(var i = 0; i < this.rows.length; i++){
+		var rowResult = await Maker.makeMixedThing(this.rows[i], Table);
+		result += rowResult;
+	};
 
-		result+= roll(part);
-	}
-
-	return roll(result);
+	return result;
 }
 
 function choose(arr){
 	//Returns an element from an array at random.
 	var result = arr[Math.floor(Math.random()*arr.length)];
 
-	if(result && result.value)
-		result = result.value;
 	return result;
 }
 
@@ -74,9 +63,7 @@ function weightedChoose(arr,weightChoose){
 	//A weight of 2 means the first element will be picked roughly twice as often as the second; a weight of 0.5 means half as often. A weight of 1 gives a flat, even distribution.
 	if (weightChoose<=0 || weightChoose===undefined) weightChoose=1;
 	var result = arr[Math.floor(Math.pow(Math.random(),weightChoose)*arr.length)];
-	
-	if(result.value)
-		result = result.value;
+
 	return result;
 }
 
@@ -120,36 +107,6 @@ function weightedDiceChoose(arr){
 			return arr[i];
 		}
 	}
-}
-
-function roll(obj){
-	if(obj === undefined) return obj;
-	
-	if(obj.constructor === ({}).constructor && obj.rows){
-		obj = new Table(obj);
-	}
-
-	if(obj.roll){
-		obj = obj.roll();
-	}
-
-	if(typeof obj !== "string"){
-		return obj;
-	}
-
-	var parts = obj.split("|")
-	if(parts.length !== 1){
-		obj = new Table({rows: parts, concat: true}).roll();
-	}else
-		obj = parts[0];
-
-	if(obj.type === "table_id"){
-		// TODO get from db
-	}
-
-	if(obj.roll) obj = obj.roll();
-
-	return obj;
 }
 
 module.exports = mongoose.model('Table', tableSchema);

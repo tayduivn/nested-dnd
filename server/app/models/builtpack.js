@@ -104,7 +104,7 @@ schema.methods.rebuildGenerator = async function(isa, pack){
 schema.methods.growFromSeed = function(pack){
 	if(!pack.seed){
 		var error = new Error("Seed is not defined");
-		error.name = "Precondition Failed"
+		error.status = 412;
 		throw error;
 	}
 

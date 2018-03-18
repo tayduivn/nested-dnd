@@ -50,7 +50,10 @@ app.use(
 			stringify: false
 		}),
 		name: "sessionid",
-		saveUninitialized: true
+		saveUninitialized: true,
+		cookie:{
+			maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days in ms
+		}
 	})
 ); // session secret
 
@@ -82,7 +85,7 @@ require("./app/routes/tables.js")(app, mongoose);
 
 // 404 error handler returns json
 app.use("/api", function(req, res, next){
-	res.status(404).json({error: "URL "+req.url+" not found"});
+	res.status(404).send("");
 	return;
 });
 
@@ -93,18 +96,35 @@ app.use(function (err, req, res, next) {
 	if (res.headersSent) {
 		return next(err);
 	}
-
-	// user error
-	if(err.name === "Precondition Failed" || err.name === "ValidationError")
-		return res.status(412).json({error: err.message});
-
-	// internal error
-	console.error(err.name+" on request "+req.url+": "+err.toString());
-	console.log(err.stack);
-	return res.status(500).json({ error: err.stack });
+	
+	if(err.status) // user error
+		res.status(err.status);
+	else{
+		res.status(500);
+		console.error(err); // internal error
+		console.error(err.stack); // internal error
+	}
+	
+	return res.json({ error: err.toJSON() });
 })
 
 
 // launch ======================================================================
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
+
+if (!("toJSON" in Error.prototype)){
+	Object.defineProperty(Error.prototype, "toJSON", {
+		value: function() {
+			var alt = {};
+
+			Object.getOwnPropertyNames(this).forEach(function(key) {
+				alt[key] = this[key];
+			}, this);
+
+			return alt;
+		},
+		configurable: true,
+		writable: true
+	});
+}

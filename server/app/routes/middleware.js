@@ -30,7 +30,7 @@ module.exports = {
 		getPack(req, res, ()=>{
 			if(!req.pack)  return;
 
-			if(req.pack.public || req.pack._user.toString() === req.user.id) {
+			if(req.pack.public || req.pack._user.id === req.user.id) {
 				return next();
 			}
 			else {
@@ -46,7 +46,7 @@ module.exports = {
 		getPack(req, res, ()=>{
 			if(!req.pack)  return;
 
-			if(req.pack._user.toString() === req.user.id) {
+			if(req.pack._user.id === req.user.id) {
 				return next();
 			}
 			else {
@@ -63,9 +63,9 @@ function getPack(req, res, next){
 	var packGetter;
 
 	if(req.params.pack)
-		packGetter = Pack.findOne({ _id: req.params.pack })
+		packGetter = Pack.findOne({ _id: req.params.pack }).populate('_user')
 	else if(req.params.url)
-		packGetter = Pack.findOne({ url: req.params.url })
+		packGetter = Pack.findOne({ url: req.params.url }).populate('_user')
 	else return res.status(412).json({"error": "Missing pack id"});
 
 	packGetter.exec((err, pack)=>{

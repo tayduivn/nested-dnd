@@ -1,3 +1,4 @@
+
 const HEADERS = {
 	credentials: 'include',
 	headers: {
@@ -8,90 +9,50 @@ const HEADERS = {
 
 const URL_PREFIX = "/api/";
 
-export default {
-	create: async function(url, payload, callback){
-		if(payload instanceof FormData){
-			payload = formDataTOJson(payload);
-		}
-
-		const headers = Object.assign({}, HEADERS,{
-			method: "POST",
-			body: JSON.stringify(payload)
-		})
-
-		var response = await fetch(URL_PREFIX+url, headers)
-		var json = await response.json();
-		handleErrors(response, json);
-
-		if(callback) return callback(json);
-		return json;
+/**
+ * Always returns a promise, which returns { err, data }
+ */
+var DB = {
+	fetch: (url, method, headers)=>{
+		headers = setHeader(method, headers);
+		url = url.replace(/^\//, ''); // get rid of extra slash
+		return fetch(URL_PREFIX+url, headers).then(getResponse);
 	},
-	getAll: function(url, callback){
-		this.get(url, "", callback);
+	create: function(url, payload){
+		return this.fetch(url, "POST", {body: payload});
 	},
-	get: async function(url, id, callback){
-		const headers = Object.assign({}, HEADERS,{
-			method: "GET"
-		})
-
-		var response = await fetch(URL_PREFIX+url+"/"+id, headers)
-		var json = await response.json();
-		handleErrors(response, json);
-
-		if(callback) return callback(json);
-		return json;
+	get: function(url, id){
+		return this.fetch(url+"/"+id)
 	},
-	getIn: function(child, parent, id, callback){
-		return this.get(parent+"/"+id+"/"+child, "", callback);
+	set: function(url, id, payload){
+		return this.fetch(url+"/"+id, "PUT",{body: payload});
 	},
-	set: async function(url, id, payload, callback){
-		if(payload instanceof FormData){
-			payload = formDataTOJson(payload);
-		}
-
-		const headers = Object.assign({}, HEADERS,{
-			method: "PUT",
-			body: JSON.stringify(payload)
-		})
-
-		var response = await fetch(URL_PREFIX+url+"/"+id, headers)
-		var json = await response.json();
-		handleErrors(response, json);
-
-		//.then(json => {
-		if(callback) return callback(json);
-		return json;
-		// }).catch(ajaxError);8/
-	},
-	delete: async function(url, id, callback){
-		const headers = Object.assign({}, HEADERS,{
-			method: "DELETE"
-		});
-
-		var response = await fetch(URL_PREFIX+url+"/"+id, headers);
-		var json = response.json();
-		handleErrors(response,json);
-
-		if(callback) callback(json);
-		return json;
+	delete: function(url, id){
+		return this.fetch(url+"/"+id, "DELETE");
 	}
 }
 
-function handleErrors(response, json){
-
-	if(response.status !== 200 || json.errors || json.error) {
-		console.error(response.statusText+": "+response.status+" ERROR from "+response.url)
-		console.error(json);
-		var err = new Error(response.statusText+": "+response.status+" ERROR ", response.url);
-		throw err;
-	}
-}
-
+/*
 function printError(status, error){
 	console.error(error);
 	var elemDiv = document.createElement('div');
 	elemDiv.innerHTML = status+": "+error; 
 	window.document.body.insertBefore(elemDiv, window.document.body.firstChild);
+}*/
+
+function setHeader(method, headers){
+	if(!headers && !method) return HEADERS;
+
+	if(headers){
+		if(headers.body instanceof FormData){
+			headers.body = formDataTOJson(headers.body);
+		}
+		if(headers.body instanceof Object){ // no else!
+			headers.body = JSON.stringify(headers.body);
+		}
+	}
+
+	return Object.assign({}, HEADERS, {method: method || "GET"}, headers);
 }
 
 function formDataTOJson(formData){
@@ -103,4 +64,37 @@ function formDataTOJson(formData){
 	return jsonObject;
 }
 
-export {HEADERS};
+async function getResponse(response){
+
+	if(!response){
+		return { error: "No response from server" }
+	}
+
+	var data, error, contentType = response.headers.get("content-type");
+
+	if(contentType && contentType.includes("json"))
+		data = await response.json()
+	else{
+		data = await response.text();
+	}
+
+	if(response.status === 404){
+		error = "Not found";
+	}
+	if(response.status !== 200) {
+		if(data.error){
+			if(response.status === 500)
+				console.error(data.error);
+			console.log(data.error); 
+			error = data.error;
+			delete data.error; // remove error from the return object
+		}
+		else if(!error){
+			error = true;
+		}
+	}
+
+	return { error, data }
+}
+
+export default DB;

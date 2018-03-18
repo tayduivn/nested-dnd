@@ -21,9 +21,10 @@ export default class Generator extends Component {
 	}
 	componentDidMount() {
 		if (this.props.match.params.id) {
-			DB.get("generator", this.props.match.params.id, json =>{
-				this.setState({ generator: json })
-			});
+			DB.get("/pack/"+this.props.match.params.pack+"/generator", this.props.match.params.id)
+				.then(({ error, data })=>{
+					this.setState({ generator: data })
+				});
 		}
 	}
 	render() {
@@ -60,12 +61,21 @@ class ViewGenerator extends Component {
 		return (
 			<div className="container">
 			
-				<Link to={"/pack/"+gen._pack._id}>⬑ Pack</Link>
+				<Link to={"/pack/"+gen.pack_id}>⬑ Pack</Link>
 				<h1>{gen.isa}</h1>
+				<ul>
+					{Object.keys(gen).map((k,i)=>{
+							return (
+								<li key={i}><strong>{k}</strong>: { (gen[k] instanceof Object) ? 
+									<pre>{JSON.stringify(gen[k],null,2)}</pre> : gen[k] }</li>
+							)
+						})
+					}
+				</ul>
 
 				{/* --------- Edit Button ------------ */}
 				{AuthService.isLoggedOn() ? (
-					<Link to={"/pack/" + gen._pack._id + "/generator/"+ gen._id +"/edit"}>
+					<Link to={"/pack/" + gen.pack_id + "/generator/"+ gen._id +"/edit"}>
 						<Button bsStyle="primary">
 							Edit Generator
 						</Button>

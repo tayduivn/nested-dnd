@@ -37,8 +37,8 @@ module.exports = function(app) {
 			if(!gen) 
 				return res.status(404).json("Can't find a generator that is a "+req.params.isa);
 
-			var result = Generator.make(gen, builtpack);
-			res.json(result);
+			Generator.make(gen, builtpack).then(result=>res.json(result));
+
 		}).catch(next)
 	});
 

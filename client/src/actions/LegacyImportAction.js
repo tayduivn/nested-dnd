@@ -1,14 +1,14 @@
-import tableStore, { Table } from '../stores/tableStore';
+import tableStore from '../stores/tableStore';
 import thingStore from '../stores/thingStore';
 import Contain from '../util/Contain';
 import DB from './CRUDAction'
 import PackLoader from '../util/PackLoader'
 
-const PACKID = "5aa2f8c11e0a791ed4d0a547";
-const UPLOADPACK = 'nested-orteil-extended';
+const PACKID = "5aac89021d9de21d4c482c35";
+const UPLOADPACK = 'dnd';
 
 var storedTables = null;
-var storedGenerators = [];
+var allThingNames = [];
 
 var builtpack;
 
@@ -32,18 +32,19 @@ var replaceThese = {
 	}
 
 
-async function getStoredTables(){
+function getStoredTables(){
 	if(!storedTables){
-		var tables = await DB.getIn("tables", "pack", PACKID);
-		storedTables = {};
-		tables.forEach(t=>{
-			storedTables[t.title] = t;
-		})
-		return storedTables;
+		return DB.get("pack/"+PACKID, "tables").then( ({ data })=>{
+			storedTables = {};
+			data.forEach(t=>{
+				storedTables[t.title] = t;
+			})
+			return storedTables;
+		});
 	}
 }
 
-function toNewTableFormat(legacy, title){
+function toNewTableFormat(legacy, title, cleanThingFunc){
 	var importing = {
 		rows: legacy.rows
 	}
@@ -53,19 +54,23 @@ function toNewTableFormat(legacy, title){
 	if(legacy.hasWeightedRows) importing.rowWeights = true;
 	if(legacy.tableWeight) importing.tableWeight = legacy.tableWeight;
 
-	if(title === 'ANCIENT PERSON'){
+	if(title === 'URBAN QUEST HOOK'){
 		console.log("STOP HERE");
 	}
 
-	importing.rows = legacy.rows.map((r)=>convertTable(r));
+	// convertTable is for plain table rows
+	// clean Thing if is an embedded if it is an embedded table
+	importing.rows = legacy.rows.map((r)=>{
+		return convertTable(r, false, cleanThingFunc);
+	});
 
 	return importing;
 }
 
-export default {
+var Importer = {
 	allTables: async function(){
 
-		await getStoredTables();
+		storedTables = await getStoredTables();
 
 		var tablesToStore = tableStore.getAll();
 
@@ -79,31 +84,44 @@ export default {
 				continue;
 			}
 
-			var importing = toNewTableFormat(((data instanceof Array) ? { rows: data } : data), title);
-
 			console.log(title+" ------------------------------")
 			console.log(data);
+
+			var importing = toNewTableFormat(
+				((data instanceof Array) ? { rows: data } : data), 
+				title,
+				this.cleanThing
+			);
+
 			console.log(importing);
 			console.log(" ")
 
 			if(!alreadyStored){
-				await DB.create("pack/"+PACKID+"/table",importing).then(storeTable)
+				await DB.create("pack/"+PACKID+"/table", importing).then(storeTable)
 			}else
 				await DB.set("pack/"+PACKID+"/table", storedTables[title]._id, importing)					
 		}// loop tableStore
 
 		function storeTable(stored){
-			if(stored)
-				storedTables[stored.title] = (stored);
+			storedTables[title] = (stored.data);
 		}
 
 	},
 	oneThing: async function(legacy){
 		// this.allTables(); //temp
+		// const pack = {};
+		const pack = {};
+		pack.things = thingStore.getThings(); //all things loaded
+		pack.defaultSeed = "item";
+		allThingNames = Object.keys(pack.things);
+		allThingNames = thingStore.getGenerators(allThingNames);
 	
-		
-		builtpack = await DB.get("builtpack",PACKID);
-		var importing = this.cleanThing(legacy, legacy.name, builtpack);
+		await getStoredTables();
+		var { error, data } = await DB.get("builtpack",PACKID);
+		if(!error) builtpack = data;
+		else console.error("Could not get builtpack");
+
+		var importing = this.cleanThing(legacy, legacy.name);
 
 		console.log("IMPORTING--------")
 		console.log(importing);
@@ -111,160 +129,175 @@ export default {
 		const existing = builtpack.generators[importing.isa];
 
 		if(existing){
-			var generatorID = existing._generators.pop()._id
-			DB.set("pack/"+PACKID+"/generator", generatorID, importing, function(updatedGen){
-				console.log("DONE--------")
-				console.log(updatedGen);
-			})
+			var generatorID = existing.gen_ids.pop();
+
+			var {error, data: updated} = await DB.set("pack/"+PACKID+"/generator", generatorID, importing);
+			if(!error){
+				console.log("Updated");
+				console.log(updated);
+			}
 		}
 		else{
-			DB.create("pack/"+PACKID+"/generator", importing, function(updatedGen){
-				console.log("DONE--------")
-				console.log(updatedGen);
-			})
+			var { error, data: created } = await DB.create("pack/"+PACKID+"/generator", importing);
+			if(!error){
+				console.log("Created");
+				console.log(created);
+			}
+			else{ // errored, store a dummy thing
+				var { data: newCreated } = await DB.create("pack/"+PACKID+"/generator", { isa: importing.isa })
+
+				if(newCreated){
+					builtpack.generators[importing.isa] = newCreated;
+				}
+			}
 		}
 	
 	},
-	wholePack: async function(){
+	wholePack: async function(allPacks, updateOnly){
+
+		var pack;
+		if(allPacks){
+			pack = {};
+			pack.things = thingStore.getThings(); //all things loaded
+			pack.defaultSeed = "universe";
+		}else{
+			pack = PackLoader.packs[UPLOADPACK];
+			pack.defaultSeed = "item";
+		}
+
+		var thingsToUpload = {};
+		allThingNames = Object.keys(pack.things);
+		allThingNames = thingStore.getGenerators(allThingNames);
+
 
 		await getStoredTables();
 		//await this.allTables();
 		
-		// one pack
-		const pack = PackLoader.packs[UPLOADPACK];
-		
-		//const pack = {};
-		//pack.things = thingStore.getThings(); //all things loaded
-		//pack.defaultSeed = "universe";
-
-		var thingsToUpload = {};
-		var allThingNames = Object.keys(pack.things);
-
 		
 		// transform contains
 		for( var name in pack.things ){
-			var thing = this.cleanThing(pack.things[name], name, allThingNames, storedTables);
+			if(!allThingNames.includes(name)){
+				console.log(name+" is unique");
+				continue;
+			}
+			var thing = this.cleanThing(pack.things[name], name);
 			thingsToUpload[thing.isa] = thing;
 		}
 
-		builtpack = await DB.get("builtpack",PACKID);
-		const alreadyStored = Object.keys(builtpack.generators);
+		console.log("DONE CLEAN ------------------------------------")
 
 		
-		for(var isa in thingsToUpload){
-			var t = thingsToUpload[isa];
 
-			if(isa === "supercluster"){
-				console.log("test");
-			}
-			if(!builtpack.generators[isa]){
-				await DB.create("pack/"+PACKID+"/generator", t, function(updated){
-					console.log("Created: "+updated.isa);
-				}).catch(err=>{
-					console.log("Not Added: "+err);
-				});
-			}
-			else{
-				var updated = await DB.set("pack/"+PACKID+"/generator", builtpack.generators[isa].gen_ids[0], t)
-					.catch(err=>{
-						console.log("Not Updated: "+isa);
-					});
-				if(updated)
-					console.log("Updated "+updated.isa)
-			}
-		}
+		var {error, data} = await DB.get("builtpack",PACKID);
+		if(error)
+			console.error(error);
+		else
+			builtpack = data;
+
+		if(!builtpack.generators) 
+			builtpack.generators = {};
+
+		//const alreadyStored = Object.keys(builtpack.generators);
 
 
-/*
- 		var success = {};
-		var queue = [pack.defaultSeed];
-
-		while(queue.length){
-			var isa = queue.shift();
-
-			if(success[isa] && success[isa].isa) return;
-
-			if(name === 'supercluster'){
-				console.log('stop');
-			}
-
-			var data = thingsToUpload[isa];
-			if(!data){
-				console.error('wut');
-			}
-
-			var ready = true;
-			if(data.extends !== undefined && !success[data.extends]){
-				
-				if(!queue.includes(data.extends)){
-					queue.unshift(data.extends);
-					console.log("queued: "+data.extends);
-				}
-				if(!builtpack.generators[data.extends]) // not ready is not in builtpack yet
-					ready = false;
-			}
-			if(data.in && data.in.length){
-				data.in.forEach((child)=>{
-					if(child.type === "generator" && !success[child.value] && child.value !== isa){
-						
-						if(!queue.includes(child.value)){
-							queue.unshift(child.value) //add to queue to save
-							console.log("queued: "+child.value);
-						}
-							
-						if(!builtpack.generators[child.value]) // not ready is not in builtpack yet
-							ready = false;
-					}
-				})
-			}
-
-			success[isa] = true;
-
-			// push 
-			if( ready ){
-
-				if(builtpack.generators[isa] && success[isa] === true){ // && !alreadyStored.includes(isa)
-					var updated = await DB.set("pack/"+PACKID+"/generator", builtpack.generators[isa].gen_ids[0], data)
-						.catch(err=>{
-							success[isa] = {};
-							console.log("Not Updated: "+isa);
-						});
-					if(updated){
-						success[isa] = updated;
-						console.log("Updated: "+updated.isa);
-					}
-				}
-				else if(!builtpack.generators[isa] && !success[isa]) {
-					var updated = await DB.create("pack/"+PACKID+"/generator", data)
-						.catch(err=>{
-							success[isa] = {};
-							console.log("Not Added: "+isa);
-						});
-					if(updated){
-						success[isa] = updated;
-						console.log("Added: "+updated.isa);
-					}
-				}
-			}
-			else{
-				if(!builtpack.generators[isa]){
-					var updated = await DB.create("pack/"+PACKID+"/generator", { isa: isa })
-						.catch(err=>{});
-
-					builtpack.generators[isa] = updated;
-				}
-				queue.push(isa); // push to the end
-			}
+		if(updateOnly){
+			var thingsByExtends = sortTheStuff(thingsToUpload);
+			var namesByExtends = objectToArray(thingsByExtends);
+			arrayUpload(namesByExtends, thingsToUpload, builtpack);
+			
 			
 		}
-*/
+		else{
+	
+	 		var success = {};
+			var queue = [pack.defaultSeed];
+
+			while(queue.length){
+				var isa = queue.shift();
+
+				if(success[isa] && success[isa].isa) return;
+
+				if(name === 'supercluster'){
+					console.log('stop');
+				}
+
+				var data = thingsToUpload[isa];
+				if(!data){
+					console.error('wut');
+				}
+
+				var ready = true;
+				if(data.extends !== undefined && !success[data.extends]){
+					
+					if(!queue.includes(data.extends)){
+						queue.unshift(data.extends);
+						console.log("queued: "+data.extends);
+					}
+					if(!builtpack.generators[data.extends]) // not ready is not in builtpack yet
+						ready = false;
+				}
+				if(data.in && data.in.length){
+					data.in.forEach((child)=>{
+						if(child.type === "generator" && !success[child.value] && child.value !== isa){
+							
+							if(!queue.includes(child.value)){
+								queue.unshift(child.value) //add to queue to save
+								console.log("queued: "+child.value);
+							}
+								
+							if(!builtpack.generators[child.value]) // not ready is not in builtpack yet
+								ready = false;
+						}
+					})
+				}
+
+				success[isa] = true;
+
+				// push 
+				if( ready ){
+
+					if(builtpack.generators[isa] && success[isa] === true){ // && !alreadyStored.includes(isa)
+						var updated = await DB.set("pack/"+PACKID+"/generator", builtpack.generators[isa].gen_ids[0], data)
+							.catch(err=>{
+								success[isa] = {};
+								console.log("Not Updated: "+isa);
+							});
+						if(updated){
+							success[isa] = updated;
+							console.log("Updated: "+updated.isa);
+						}
+					}
+					else if(!builtpack.generators[isa]) {
+						var updated = await DB.create("pack/"+PACKID+"/generator", data)
+							.catch(err=>{
+								success[isa] = {};
+								console.log("Not Added: "+isa);
+							});
+						if(updated){
+							success[isa] = updated;
+							console.log("Added: "+updated.isa);
+						}
+					}
+				}
+				else{
+					if(!builtpack.generators[isa]){
+						var updated = await DB.create("pack/"+PACKID+"/generator", { isa: isa })
+							.catch(err=>{});
+
+						builtpack.generators[isa] = updated;
+					}
+					queue.push(isa); // push to the end
+				}
+				
+			}
+		}
+
 		
 	},
-	cleanThing: function(leg, name, allThingNames, storedTables){
+	cleanThing: function(leg, name){
 
-		if(name === 'supercluster'){
-			console.log('stop');
-		}
+		console.log(name+" ------------------------------")
+		console.log(leg);
 
 		var legacy = leg;
 		if(legacy instanceof Array){
@@ -275,7 +308,9 @@ export default {
 		var importing = {
 			isa: name
 		}
-		if(legacy.isa) importing.extends = legacy.isa;
+		if(legacy.isa &&  legacy.isa !== name) {
+			importing.extends = legacy.isa;
+		}
 		if(legacy.namegen) importing.name = convertTable(legacy.namegen, true);
 		if(legacy.data) importing.data = legacy.data;
 		var style = {};
@@ -291,9 +326,71 @@ export default {
 		//----------------------------------
 		if(legacy.contains && legacy.contains.length){
 
-			importing.in = legacy.contains.map((c)=>{
-				var contain = new Contain(c);
-				var { value, type, weight } = convertTable(contain.value);
+			importing.in = processContains.call(this, legacy.contains);
+		}
+
+		function processContains(arr){
+			if(!allThingNames){
+				console.error("Couldn't find global variable allThingNames");
+			}
+
+			return arr.map((c)=>{
+				if(c === undefined || typeof c === "undefined"){
+					console.error("contains undefined");
+					return c;
+				}
+
+				var contain, value, type, weight;
+				if(c instanceof Array){
+					var toChild = convertTable(c);
+					value = toChild.value;
+					type = toChild.type;
+					weight = toChild.weight;
+
+					if(value && value.rows && value.rows.length && type === "table")
+						
+						var newArr = processContains.call(this, value.rows);
+						if(newArr && newArr.length){
+							newArr.forEach((r,i)=>{
+								value.rows[i].value = r;
+							})
+						}
+	
+					contain = {};
+				}
+				else if(c.isa ||  c.namegen || c.name || c.contains){
+					value = this.cleanThing(c);
+					type = "embed";
+					contain = {};
+				}
+				else{
+					if(typeof c !== "string"){
+						// is nested
+						if(typeof c.value === "string"){
+							value = c.value;
+							type = c.type;
+							weight = c.weight;
+							contain = new Contain(value);
+						}
+						else if(c.namegen || c.contains){
+							contain = {};
+							value = this.cleanThing(c);
+							type = "embed";
+						}
+						else{
+							console.error("Contained item is not a string but doesn't have recognizable format!")
+							value = c;
+							contain = {};
+						}
+					}
+					else{
+						var cToChild = convertTable(c);
+						value = cToChild.value;
+						type = cToChild.type;
+						weight = cToChild.weight;
+						contain = new Contain(value);
+					}
+				}
 
 				//value = (type === "string") ? contain.value : value;
 				if(allThingNames.includes(value))
@@ -303,6 +400,7 @@ export default {
 					value: value
 				}
 				if(type !== "string") child.type = type;
+
 				if(contain.makeMax || (contain.makeMin !== undefined && contain.makeMin !== 1)){
 					child.amount = {}
 					if(contain.makeMin !== 1) child.amount.min = contain.makeMin
@@ -310,6 +408,8 @@ export default {
 				}
 				if(contain.makeProb < 100) child.chance = contain.makeProb;
 				if(contain.isEmbedded) child.isEmbedded = true;
+
+				if(weight) child.weight = weight;
 
 				return child;
 			});
@@ -321,19 +421,48 @@ export default {
 		}
 		//---------------------------------
 		
-		console.log(name+" ------------------------------")
-		console.log(leg);
 		console.log(importing);
 		return importing;
 	}
 }
 
-function convertTable(inputValue, unNestForSimple){
+/**
+ * For converting table rows
+ * @param  {[type]} inputValue      the row
+ * @param  {[type]} unNestForSimple [description]
+ * @param  {[type]} cleanThingFunc IF the table can have an embedded generator
+ * @return {[type]}                 [description]
+ */
+function convertTable(inputValue, unNestForSimple, cleanThingFunc){
 	var type;
 	var value = inputValue;
 	var weight;
 
-	if(!value) return { value };
+	if(!value) return inputValue;
+
+
+	//clean up random empty values in table
+	if(value instanceof Array){
+		var newArray = []
+		var totalEmpty = 0;
+		value.forEach((r,i)=>{
+			if(r === ""){
+				totalEmpty++;
+			}
+			else
+				newArray.push({
+					value: r,
+					weight: 1
+				})
+		});
+		if(totalEmpty){
+			newArray.push({
+				value: "",
+				weight: totalEmpty
+			})
+			value = newArray;
+		}
+	}
 
 	if(value instanceof Array && value.length === 1){
 		value = value[0];
@@ -342,8 +471,20 @@ function convertTable(inputValue, unNestForSimple){
 	// un-nest value field
 	while(value.weight !== undefined || value.value !== undefined){
 		if(value.type !== undefined) type = value.type;
-		if(value.value !== undefined) value = value.value;
 		if(value.weight !== undefined) weight = value.weight;
+		if(value.value !== undefined) value = value.value; // must be last
+	}
+
+	// this row is an embedded thing
+	if(value.isa || value.name || value.contains){ 
+		value = cleanThingFunc(value)
+		type = "embed";
+	}
+
+	if(typeof value === "string"){ //replace table names
+		for(var str in replaceThese){
+			value = value.replace("*"+str+"*", replaceThese[str])
+		}
 	}
 
 	if(tableStore.isRollable(value)){
@@ -369,14 +510,9 @@ function convertTable(inputValue, unNestForSimple){
 			}
 
 			if(type === "table"){
-				value = toNewTableFormat(value);
+				value = toNewTableFormat(value, null, cleanThingFunc);
 			}
 
-		}
-	}
-	else if(typeof value === "string"){ //replace table names
-		for(var str in replaceThese){
-			value = value.replace("*"+str+"*", replaceThese[str])
 		}
 	}
 
@@ -385,7 +521,7 @@ function convertTable(inputValue, unNestForSimple){
 	if(weight) result.weight = weight;
 	if(type) result.type = type;
 
-	replaceTableIds(result);
+	replaceTableIds.call(this,result);
 
 	// it's only a string, unfold if setting on
 	if(unNestForSimple 
@@ -407,9 +543,12 @@ function convertTable(inputValue, unNestForSimple){
 
 		//recurse
 		else if(row.value && row.value.rows){
-			row.value.rows = row.value.rows.map(r=>{return convertTable(r)})
+			//can clean thing if parent could clean thing
+			row.value.rows = row.value.rows.map(r=>{
+				return convertTable(r, false, cleanThingFunc)
+			})
 		}
-		else if(typeof row.value !== "string"){
+		else if(typeof row.value !== "string" && type !== "embed"){
 			console.error("WHAT IS THIS");
 		}
 
@@ -417,7 +556,99 @@ function convertTable(inputValue, unNestForSimple){
 	}
 }
 
+
+function sortTheStuff(thingsToUpload){
+	var thingsByExtends = {};
+
+	console.log("SORT ------------------------------------")
+	for(var isa in thingsToUpload){
+		var gen = thingsToUpload[isa]
+		//console.log(gen);
+		//things By Extends
+		var currExtends = gen.extends;
+		var extendArr = [gen.isa];
+		while(currExtends){
+			extendArr.unshift(currExtends);
+			if(!thingsToUpload[currExtends]){
+				console.error(extendArr[0]+" extends nonexistent "+currExtends);
+				currExtends = null;
+			}
+			else{
+				currExtends = thingsToUpload[currExtends].extends;
+			}
+		}
+
+		console.log(extendArr.join(", "));
+
+		var currParent = thingsByExtends;
+		for(var i = 0; i < extendArr.length; i++){
+			var ex = extendArr[i];
+			if(!currParent[ex]){
+				currParent[ex] = {};
+			}
+			currParent = currParent[ex];
+		}
+	}
+	console.log("SORT DONE ------------------------------------")
+	console.log(thingsByExtends);
+	return thingsByExtends;
+
+}
+
+async function arrayUpload(names, thingsToUpload, builtpack){
+	var couldntUpdate = [];
+
+	for(var i = 0; i < names.length; i++){
+		var isa = names[i];
+		var t = thingsToUpload[names[i]];
+
+		if(isa === "supercluster"){
+			console.log("test");
+		}
+
+		//create
+		if(!builtpack.generators[isa]){
+			var {error, data: created } = await DB.create("pack/"+PACKID+"/generator", t);
+			if(error){
+				couldntUpdate.push(isa);
+				console.log("Couldn't create "+isa);
+			}
+			// if(created)
+			// 	console.log("Created "+isa);
+		}
+		// update
+		else{
+			// console.log("Already uploaded: "+isa);
+			/*
+			var { error, data: updated } = await DB.set("pack/"+PACKID+"/generator", builtpack.generators[isa].gen_ids[0], t)
+			if(error){
+				couldntUpdate.push(isa);
+				console.log("Couldn't update "+isa);
+			}
+			if(updated)
+				console.log("Updated "+isa);
+			*/
+		}
+	};
+
+	console.log("DONE UPDATE ------------------------------------------");
+	console.log("COULDNT UPLOAD:" + couldntUpdate);
+
+	return couldntUpdate;
+}
+
+function objectToArray(obj){
+	var array = [];
+	array = array.concat(Object.keys(obj));
+	for(var name in obj){
+		array = array.concat(objectToArray(obj[name]))
+	}
+	return array;
+}
+
 /*
 function isInPack(isa, generators){
 	return generators.find((entry)=>{ return (entry._id === isa)})
 }*/
+
+export default Importer;

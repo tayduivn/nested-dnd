@@ -15,7 +15,10 @@ export default class Packs extends Component{
 
 	//fetch data
 	componentDidMount(){
-		DB.getAll("packs", (json) => this.setState(json) );
+		var _t = this;
+		DB.fetch("packs").then(({data})=>{
+			_t.setState(data)
+		});
 	}
 
 	render(){
@@ -29,11 +32,11 @@ export default class Packs extends Component{
 				</ul>
 				<Button bsStyle="primary" href="/pack/create">Create a New Pack</Button>
 			</div>
-		)
+		);
 
 		return (
 			<div className="container">
-				<h1>Packs</h1>
+				<h1>Packs {AuthService.isLoggedOn()}</h1>
 
 				{AuthService.isLoggedOn() ? myPacks : null }
 

@@ -199,10 +199,13 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
 
 .rainbow, .child-inner.rainbow{
 	color:black;
+
+	$rainbow: linear-gradient(to right bottom, magenta, orange, yellow, SpringGreen, cyan);
+
 	background: red; /* For browsers that do not support gradients */
 	background: -webkit-linear-gradient(top left, magenta, orange, yellow, SpringGreen, cyan); /* For Safari 5.1 to 6.0 */
 	background: -moz-linear-gradient(right bottom, magenta, orange, yellow, SpringGreen, cyan); /* For Firefox 3.6 to 15 */
-	background: linear-gradient(to right bottom, magenta, orange, yellow, SpringGreen, cyan); /* Standard syntax (must be last) */
+	background: $rainbow; /* Standard syntax (must be last) */
 
 	&.fa, &.gi, &.glyphicon{
 		-webkit-background-clip: text;
@@ -210,7 +213,7 @@ $html5colors: #F0F8FF,#FAEBD7,#00FFFF,#7FFFD4,#F0FFFF,#F5F5DC,#FFE4C4,#000000,#F
 	}
 
 	$btnBG: #00ff7f;
-	@include ancestors($btnBG, white, lighten($btnBG, 5%));
+	@include ancestors($btnBG, white, lighten($btnBG, 5%), $rainbow);
 }
 
 .glow{

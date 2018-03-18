@@ -75,14 +75,14 @@ var Maintainer = {
 		//validate isa
 		if(builtpack.generators[data.isa]){
 			var e = new Error(data.isa+" generator already exists in pack "+pack._id);
-			e.name = "Precondition Failed"
+			e.status = 412;
 			throw e;
 		}
 
 		//validate extends
 		if(data.extends && !builtpack.generators[data.extends]){
 			var e = new Error(data.extends+" extends generator doesn't exist in pack "+pack._id);
-			e.name = "Precondition Failed"
+			e.status = 412;
 			throw e;
 		}
 
@@ -93,7 +93,7 @@ var Maintainer = {
 			for(var i = 0; i < isas.length; i++){
 				if(!builtpack.generators[isas[i]] && isas[i] !== data.isa){
 					var e = new ReferenceError("Could not find child generator that is a "+isas[i])
-					e.name = "Precondition Failed"
+					e.status = 412;
 					throw e;
 				}
 			}

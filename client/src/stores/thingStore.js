@@ -437,6 +437,11 @@ thingStore.delete = function(name, dontCallback){
 	}
 }
 
+thingStore.getGenerators = function(arr){
+	if(!arr) arr = Object.keys(things);
+	return getGenericThingNames(Object.keys(things));
+}
+
 thingStore.resetProperty = function(thing, property, stillUpdated){
 
 	if(typeof thing === "string") thing = thingStore.get(thing);

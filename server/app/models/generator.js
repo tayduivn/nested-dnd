@@ -53,6 +53,10 @@ generatorSchema.virtual('makeIcon').get(function(){
 	return (this.style) ? this.style.makeIcon : null;
 });
 
+generatorSchema.virtual('makeName').get(function(){
+	return (this.name) ? Maker.makeMixedThing(this.name, this.model('Table')) : null;
+})
+
 // ----------------------- STATICS
 
 /**
@@ -74,18 +78,18 @@ generatorSchema.statics.insertNew = async function(data, pack){
  * @param  {BuiltPack} builtpack 
  * @return {Object}           the root node of the tree
  */
-generatorSchema.statics.makeAsRoot = function(seedArray, builtpack){
+generatorSchema.statics.makeAsRoot = async function(seedArray, builtpack){
 	var seed = seedArray.shift();
 
 	if(seedArray.length === 0){
-		return Maker.make(seed, 1, builtpack);
+		return await Maker.make(seed, 1, builtpack);
 	}
 	else{
-		var node = Maker.make(seed, 0, builtpack);
+		var node = await Maker.make(seed, 0, builtpack);
 
 		//generate the next seed in the array and push to in
 		//TODO: replace child
-		var generatedChild = seedArray.shift().makeAsRoot(seedArray, builtpack);
+		var generatedChild = await seedArray.shift().makeAsRoot(seedArray, builtpack);
 		if(!node.in) node.in = [];
 		node.in.push(generatedChild);
 
@@ -100,7 +104,7 @@ generatorSchema.statics.makeAsRoot = function(seedArray, builtpack){
  * @param  {BuiltPack} builtpack 
  * @return {Object}           the root node of the tree
  */
-generatorSchema.statics.makeAsNode = function(tree, universe, builtpack){
+generatorSchema.statics.makeAsNode = async function(tree, universe, builtpack){
 	// has no children to generate, return
 	if(!tree || !tree.in) 
 		return tree;
@@ -110,7 +114,7 @@ generatorSchema.statics.makeAsNode = function(tree, universe, builtpack){
 	if(builtpack && tree.in === true){
 		var generator = builtpack.generators[tree.isa];
 		if(generator){
-			tree = Maker.make(generator, 1, builtpack, tree);
+			tree = await Maker.make(generator, 1, builtpack, tree);
 		}
 	}
 

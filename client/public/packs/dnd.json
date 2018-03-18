@@ -3870,12 +3870,6 @@
     },
     "drink": {
       "icon": "gi gi-glass-shot",
-      "isa": [
-        "beer",
-        "wine",
-        "hot drink",
-        "cold drink"
-      ],
       "namegen": [
         "Pumpkin juice",
         "Milk",
@@ -4202,10 +4196,6 @@
       ]
     },
     "gaming set": {
-      "isa": [
-        "dice set",
-        "playing card set"
-      ]
     },
     "garden": {
       "icon": "gi gi-carrot"
@@ -5714,12 +5704,6 @@
       "isa": "shop",
       "namegen": "*TAVERN NAMES*",
       "textColor": "#e5d092"
-    },
-    "tavern table": {
-      "isa": [
-        "seated table",
-        "empty table"
-      ]
     },
     "tea": false,
     "temple": {

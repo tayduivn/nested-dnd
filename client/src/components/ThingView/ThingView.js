@@ -181,7 +181,12 @@ export default class ThingView extends React.Component{
 	}
 
 	handleImport(){
-		Import.wholePack(this.props.thing).catch(err=>{
+		Import.oneThing(this.props.thing).catch(err=>{
+			console.error(err)
+		});
+	}
+	handleImportAll(allPacks, updateOnly){
+		Import.wholePack(allPacks, updateOnly).catch(err=>{
 			console.error(err)
 		});
 	}
@@ -260,11 +265,25 @@ export default class ThingView extends React.Component{
 				</Col>
 				<Col lg={2} md={3} sm={4} xs={6}>
 					<Preview {...this.state.instance} />
+
 					<Button bsStyle={this.props.thing.name && this.props.thing.name.length ? "default" : "danger"} onClick={this.handleDelete} className="delete-btn">
 						<i className="fa fa-trash"></i> Delete
 					</Button>
+					<br/>
 					<Button bsStyle={"default"} onClick={this.handleImport}>
-						<i className="fa fa-save">2.0 Import</i> 
+						<i className="fa fa-save">Import {this.props.thing.name}</i> 
+					</Button>
+					<Button bsStyle={"default"} onClick={()=>{this.handleImportAll()}}>
+						<i className="fa fa-save">Import One Pack New</i> 
+					</Button>
+					<Button bsStyle={"default"} onClick={()=>{this.handleImportAll(true)}}>
+						<i className="fa fa-save">Import All Packs New</i> 
+					</Button>
+					<Button bsStyle={"default"} onClick={()=>{this.handleImportAll(false, true)}}>
+						<i className="fa fa-save">Import One Packs Update</i> 
+					</Button>
+					<Button bsStyle={"default"} onClick={()=>{this.handleImportAll(true, true)}}>
+						<i className="fa fa-save">Import All Packs Update</i> 
 					</Button>
 				</Col>
 			</Row>

@@ -28,37 +28,14 @@ export default class Login extends Component {
 		this.setState({ [e.target.id]: e.target.value });
 	}
 	handleSubmit(e){
-		var _this = this;
 		e.preventDefault();
 		const payload = {
 			email: this.state.email,
 			password: this.state.password
 		};
-		var data = new FormData();
-		data.append( "json", JSON.stringify( payload ) );
 		
-		fetch('/api/'+this.props.url,
-			{
-				credentials: 'include',
-				method: "POST",
-				headers: {
-		      'Content-Type': 'application/json',
-		      "Accept": "application/json"
-		    },
-				body: JSON.stringify(payload)
-			})
-			.then((response)=>{
-				// not successful, parse the error message
-				if(response.status !== 200){
-					return response.json();
-				}
-				// on success, return to wherever you were before
-				else{
-					AuthService.setLoggedOn(true);
-					return window.location = "/";
-				}
-			})
-			.then((json)=>{
+		AuthService.login(this.props.url, payload)
+			.then(({ error, data: json })=>{
 				//only here if errors
 				let newState = {
 					emailVaidation: (json.emailError) ? "error" : null,
@@ -66,7 +43,7 @@ export default class Login extends Component {
 					passwordValidation: (json.passwordError) ? "error" : null,
 					passwordError: json.passwordError
 				};
-				_this.setState(newState);
+				this.setState(newState);
 			});
 	}
 	render(){
