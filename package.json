@@ -17,6 +17,7 @@
     "build": "npm run build-css && react-scripts build --dir client",
     "build-css": "node-sass-chokidar client/src/ -o client/src/",
     "watch-css": "npm run build-css && node-sass-chokidar client/src/ -o client/src/ --watch --recursive",
+    "postinstall": "npm run build",
     "test": "react-scripts test --env=jsdom --dir client",
     "eject": "react-scripts eject --dir client",
     "predeploy": "npm run build",
