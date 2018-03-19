@@ -28,7 +28,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/nested-dn
 	function (err, client) {
 		if (err) {
 			console.log(err);
-			process.exit(1);
+			throw new Error("Couldn't connect to mongo database")
 		}
 	});
 

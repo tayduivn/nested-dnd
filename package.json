@@ -21,7 +21,7 @@
     "test": "cross-env NODE_ENV=test nyc mocha server/test --timeout=3000",
     "eject": "react-scripts eject --dir client",
     "predeploy": "npm run build",
-    "report-coverage": "nyc report --reporter=json && codecov"
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "dependencies": {
     "animate.css": "^3.5.2",
