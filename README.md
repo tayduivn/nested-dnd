@@ -1,7 +1,7 @@
 
 
-![David](https://david-dm.org/cattegy/nested-dnd.svg)
-![Code Climate](https://img.shields.io/codeclimate/github/cattegy/nested-dnd.svg)
+[![David](https://david-dm.org/cattegy/nested-dnd.svg)](https://david-dm.org/cattegy/nested-dnd)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 
 
 # Nested D&D
