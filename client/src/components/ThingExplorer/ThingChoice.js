@@ -1,6 +1,4 @@
 import React from "react";
-import thingStore from "../../stores/thingStore.js";
-import { ListGroup, ListGroupItem, Button } from "react-bootstrap";
 
 const DEBUG = false;
 
@@ -25,15 +23,12 @@ class NewThingForm extends React.Component {
 	render() {
 		return (
 			<div id="newThingButton" className="col-sm-3 col-md-2">
-				<Button
-					bsStyle="primary"
-					bsSize="lg"
-					className="btn-circle"
+				<button className="btn btn-circle btn-primary btn-lg"
 					onClick={this.createNewThing}
 					disabled={this.state.validationState === "error"}
 				>
 					<i className="fa fa-plus" />
-				</Button>
+				</button>
 			</div>
 		);
 	}
@@ -62,9 +57,9 @@ function ThingChoices(props) {
 
 	return (
 		<div>
-			<ListGroup>
+			<ul class="list-group">
 				{things}
-			</ListGroup>
+			</ul>
 			<NewThingForm addThing={props.saveThing} />
 		</div>
 	);
@@ -82,9 +77,9 @@ class ThingChoice extends React.Component {
 		this.props.selectFunc(this.props.name);
 	}
 	render() {
-		if (!thingStore.exists(this.props.name)) return <div />;
+		// if (!thingStore.exists(this.props.name)) return <div />;
 
-		const t = thingStore.get(this.props.name);
+		const t =  {} //thingStore.get(this.props.name);
 		const icon = t.getIcon();
 		const name = this.props.name.trim().length
 			? this.props.name
@@ -92,16 +87,16 @@ class ThingChoice extends React.Component {
 		const isa = t.isa && t.isa.join ? t.isa.join(", ") : t.isa;
 
 		return (
-			<ListGroupItem
+			<li class="list-group-item"
 				id={encodeURIComponent(this.props.name)}
 				active={this.props.selected}
 				onClick={this.handleClick}
 			>
-				<h4 className="no-margin">
+				<h4 className="m-0">
 					<i className={icon} /> {name}
 				</h4>
 				{isa}
-			</ListGroupItem>
+			</li>
 		);
 	}
 }

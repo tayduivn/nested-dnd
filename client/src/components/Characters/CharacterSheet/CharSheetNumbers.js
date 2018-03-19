@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 export class Skills extends Component {
@@ -41,18 +40,18 @@ export class Abilities extends Component {
 	render() {
 		var a = this.props.abilities;
 		return (
-			<Row id="stats">
-				<Col xs={6} className="no-padding">
+			<div className="row" id="stats">
+				<div className="col no-padding">
 					<Ability ability={a.Strength} label="Strength" />
 					<Ability ability={a.Dexterity} label="Dexterity" />
 					<Ability className="constitution" ability={a.Constitution} label="Constitution" />
-				</Col>
-				<Col xs={6} className="no-padding">
+				</div>
+				<div className="col no-padding">
 					<Ability ability={a.Intelligence} label="Intelligence" />
 					<Ability ability={a.Wisdom} label="Wisdom" />
 					<Ability ability={a.Charisma} label="Charisma" />
-				</Col>
-			</Row>
+				</div>
+			</div>
 		);
 	}
 }
@@ -61,7 +60,7 @@ class Ability extends Component {
 	render() {
 		const a = this.props.ability;
 		return (
-			<Col xs={4} className={"stat-wrap "+this.props.className}>
+			<div className={"col-4 stat-wrap "+this.props.className}>
 				<div className="stat">
 					<label>
 						{this.props.label}
@@ -73,7 +72,7 @@ class Ability extends Component {
 						{a.save.proficient ? "save " + a.printSave() : <br />}
 					</p>
 				</div>
-			</Col>
+			</div>
 		);
 	}
 }
@@ -106,28 +105,28 @@ export class Health extends Component {
 	}
 	render() {
 		return (
-			<Row id="health">
-				<Col xs={8}>
-					<Row id="hp">
-						<Col xs={8} className="no-padding">
+			<div className="row" id="health">
+				<div className="col-8">
+					<div className="row" id="hp">
+						<div className="col-8 no-padding">
 							<label>
 								<i className="fa fa-heart" /> Current HP
 							</label>
-						</Col>
-						<Col xs={4}>
+						</div>
+						<div className="col-4">
 							<label>Max</label>
 							<h1>
 								{this.props.hp}
 							</h1>
-						</Col>
-					</Row>
+						</div>
+					</div>
 					<div id="hit-dice">
 						{this.props.hitDice.map(({ dice, level }, i) =>
 							<HitDice key={i} dice={dice} level={level} />
 						)}
 					</div>
-				</Col>
-				<Col xs={4} id="death-saves">
+				</div>
+				<div className="col-4" id="death-saves">
 					<label>Death Saves</label>
 					<p>
 						success<br />
@@ -137,8 +136,8 @@ export class Health extends Component {
 						fail<br />
 						<span className="circles">❍❍❍</span>
 					</p>
-				</Col>
-			</Row>
+				</div>
+			</div>
 		);
 	}
 }

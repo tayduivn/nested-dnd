@@ -1,11 +1,4 @@
 import React from "react";
-import {
-	FormGroup,
-	InputGroup,
-	Glyphicon,
-	FormControl,
-	HelpBlock
-} from "react-bootstrap";
 
 const DEBUG = false;
 
@@ -80,17 +73,17 @@ class EditableInput extends React.Component {
 
 		var okArrayText = (
 			<span>
-				<Glyphicon glyph="ok" /> valid array format
+				<i className="fa fa-check" /> valid array format
 			</span>
 		);
 		var okJSONText = (
 			<span>
-				<Glyphicon glyph="ok" /> valid JSON format
+				<i className="fa fa-check" /> valid JSON format
 			</span>
 		);
 		var badJSONText = (
 			<span>
-				<Glyphicon glyph="exclamation-sign" /> invalid JSON format
+				<i className="fa fa-exclamation" /> invalid JSON format
 			</span>
 		);
 
@@ -126,24 +119,24 @@ class EditableInput extends React.Component {
 		const rows = value.split(/\r\n|\r|\n/).length;
 
 		return (
-			<FormGroup
+			<div
 				validationState={this.validationState}
-				className={
-					this.props.status.isClearable
-						? "clearable"
-						: "not-clearable"
-				}
+				className={`form-group ${
+													this.props.status.isClearable
+														? "clearable"
+														: "not-clearable"
+												}`}
 			>
 				<label>
 					{this.props.label}
 				</label>
-				<InputGroup
+				<div
 					className={
-						"no-input-addons " +
+						"input-group no-input-addons " +
 						(this.props.status.isEnabled ? "" : "fake-disabled")
 					}
 				>
-					<FormControl
+					<div
 						componentClass="textarea"
 						value={value}
 						rows={rows}
@@ -152,14 +145,14 @@ class EditableInput extends React.Component {
 						onFocus={this.onFocus}
 						onBlur={this.onBlur}
 					/>
-					<FormControl.Feedback onClick={this.handleClear}>
-						<Glyphicon glyph="remove" />
-					</FormControl.Feedback>
-				</InputGroup>
-				<HelpBlock className={this.state.showHelp ? "" : "hidden"}>
+					<div className="feedback" onClick={this.handleClear}>
+						<i className="fa fa-" />
+					</div>
+				</div>
+				<small className={this.state.showHelp ? "" : "hidden"}>
 					{this.helpText}
-				</HelpBlock>
-			</FormGroup>
+				</small>
+			</div>
 		);
 	}
 }

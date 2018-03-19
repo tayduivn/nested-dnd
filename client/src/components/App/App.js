@@ -2,25 +2,21 @@ import React, { Component } from "react";
 import {
 	BrowserRouter as Router,
 	Switch,
-	Route,
-	Redirect
+	Route
 } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import Nested from "./Nested/Nested.js";
-import ThingExplorer from "./ThingExplorer/ThingExplorer.js";
-import Characters from "./Characters/Characters.js";
+import { PrivateRoute, PropsRoute } from '../Routes';
+import ThingExplorer from "../ThingExplorer/ThingExplorer.js";
+import Characters from "../Characters/Characters.js";
 import Login from "./Login.js";
-import Packs from "./Packs/Packs";
-import ExplorePack from "./Packs/ExplorePack";
-import DB from "../actions/CRUDAction";
+import Packs from "../Packs/Packs";
+import ExplorePack from "../Explore/Explore";
+import DB from "../../actions/CRUDAction";
 import Nav from './Nav';
-import Home from './Packs/Home'
+import Splash from '../Explore/Splash'
 
 import "./App.css";
-import "./colors.css";
-import "./Nested/textures.css";
-
 
 class App extends Component {
 	constructor(){
@@ -67,11 +63,7 @@ class App extends Component {
 						<Route
 							exact
 							path="/"
-							component={Home}
-						/>
-						<Route
-							path="/nested"
-							component={Nested}
+							component={Splash}
 						/>
 						<Route
 							path="/things"
@@ -106,41 +98,6 @@ class App extends Component {
 	}
 }
 
-const PrivateRoute = ({ component, redirectTo, ...rest }) => {
-	return (
-		<Route
-			{...rest}
-			render={routeProps => {
-				return this.props.loggedIn ? (
-					renderMergedProps(component, routeProps, rest)
-				) : (
-					<Redirect
-						to={{
-							pathname: redirectTo,
-							state: { from: routeProps.location }
-						}}
-					/>
-				);
-			}}
-		/>
-	);
-};
-
-const PropsRoute = ({ component, ...rest }) => {
-	return (
-		<Route
-			{...rest}
-			render={routeProps => {
-				return renderMergedProps(component, routeProps, rest);
-			}}
-		/>
-	);
-};
-
-const renderMergedProps = (component, ...rest) => {
-	const finalProps = Object.assign({}, ...rest);
-	return React.createElement(component, finalProps);
-};
 
 const NotFound = () => (
 	<div className="container">

@@ -1,15 +1,8 @@
 import React from 'react';
-import { Button, Row, Col, ButtonToolbar } from 'react-bootstrap';
-
-import instanceStore from '../../stores/instanceStore';
-import thingStore from '../../stores/thingStore';
-import tableStore from '../../stores/tableStore';
 
 import NameInput from './NameInput'
 import IsASelect from './IsASelect'
 import CategoryTabs from './CategoryTabs'
-
-import Import from '../../actions/LegacyImportAction'
 
 
 const DEBUG = false;
@@ -40,9 +33,6 @@ export default class ThingView extends React.Component{
 	}
 
 	componentWillReceiveProps(nextProps){
-		if(DEBUG){
-			console.log("* Acheron background: "+thingStore.get("Acheron").background);
-		}
 		if(DEBUG) console.log("\t ThingView.componentWillReceiveProps")
 
 		var instance;
@@ -84,22 +74,22 @@ export default class ThingView extends React.Component{
 			this._revertToValid();
 		}
 		if(this.state.instance){
-			instanceStore.delete(this.state.instance);
+			//instanceStore.delete(this.state.instance);
 		}
 	}
 
 	_createPreview(thingID){
 		if(this.state && this.state.instance){
-			instanceStore.delete(this.state.instance);
+			//instanceStore.delete(this.state.instance);
 		}
 		
 		if(!thingID) return null;
 
 		var instance;
 		try{
-			instance = instanceStore.add(thingID);	
+			//instance = instanceStore.add(thingID);	
 			try{
-				instance.name = tableStore.roll(JSON.parse(instance.thing.namegen));
+				//instance.name = tableStore.roll(JSON.parse(instance.thing.namegen));
 			}catch(e){}
 		}catch(e){
 			console.error(e); // handle render error
@@ -179,17 +169,6 @@ export default class ThingView extends React.Component{
 		if(DEBUG) console.log("ThingView.handleDelete");
 		this.props.saveThing(this.props.thingID, true);
 	}
-
-	handleImport(){
-		Import.oneThing(this.props.thing).catch(err=>{
-			console.error(err)
-		});
-	}
-	handleImportAll(allPacks, updateOnly){
-		Import.wholePack(allPacks, updateOnly).catch(err=>{
-			console.error(err)
-		});
-	}
 	
 	getStatus(property){
 		var value = this.props.thing[property];
@@ -247,8 +226,8 @@ export default class ThingView extends React.Component{
 		}
 
 		return (
-			<Row className="thingView row">
-				<Col lg={10} md={9} sm={8} xs={6} className="properties">
+			<div className="thingView row">
+				<div className="col-lg-10 col-xs col-sm-8 col-md-9 properties">
 
 					<NameInput value={this.props.thing.name} originalValue={originalName} isUpdated={nameUpdated} 
 						handleChange={this.props.updateThing} validate={this.validate}  />
@@ -262,31 +241,16 @@ export default class ThingView extends React.Component{
 					<SubmitButton name={this.props.thing.name} isValid={this.state.isValid} isUpdated={isUpdated}
 						handleSave={this.handleSave} handleDelete={this.handleDelete} />
 
-				</Col>
-				<Col lg={2} md={3} sm={4} xs={6}>
+				</div>
+				<div className="col-xs col-sm-4 col-md-3 col-lg-2">
 					<Preview {...this.state.instance} />
 
-					<Button bsStyle={this.props.thing.name && this.props.thing.name.length ? "default" : "danger"} onClick={this.handleDelete} className="delete-btn">
+					<button onClick={this.handleDelete}
+						className={`delete-btn ${this.props.thing.name && this.props.thing.name.length ? "default" : "danger"}`} >
 						<i className="fa fa-trash"></i> Delete
-					</Button>
-					<br/>
-					<Button bsStyle={"default"} onClick={this.handleImport}>
-						<i className="fa fa-save">Import {this.props.thing.name}</i> 
-					</Button>
-					<Button bsStyle={"default"} onClick={()=>{this.handleImportAll()}}>
-						<i className="fa fa-save">Import One Pack New</i> 
-					</Button>
-					<Button bsStyle={"default"} onClick={()=>{this.handleImportAll(true)}}>
-						<i className="fa fa-save">Import All Packs New</i> 
-					</Button>
-					<Button bsStyle={"default"} onClick={()=>{this.handleImportAll(false, true)}}>
-						<i className="fa fa-save">Import One Packs Update</i> 
-					</Button>
-					<Button bsStyle={"default"} onClick={()=>{this.handleImportAll(true, true)}}>
-						<i className="fa fa-save">Import All Packs Update</i> 
-					</Button>
-				</Col>
-			</Row>
+					</button>
+				</div>
+			</div>
 		)
 	}
 }
@@ -320,8 +284,8 @@ class Preview extends React.Component{
 
 function SubmitButton(props){
 	return(
-	<ButtonToolbar className="submit-buttons">
-		<Button bsStyle="success" bsSize="lg" className={props.isUpdated ? "" : "hidden"} disabled={!props.isValid}
-			 onMouseDown={props.handleSave}>Save</Button>
-	</ButtonToolbar>);
+	<div className="btn-group submit-buttons">
+		<button bsStyle="success" bsSize="lg" className={props.isUpdated ? "" : "hidden"} disabled={!props.isValid}
+			 onMouseDown={props.handleSave}>Save</button>
+	</div>);
 }

@@ -1,57 +1,28 @@
-@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/_variables";
+@import "../../variables.scss";
+
+$totalNavHeight: ($navbar-brand-height+$navbar-brand-padding-y*2)+($navbar-padding-y*2);
 
 h1,h2,h3,h4,h5{
   text-align:left;
 }
 
+html, body {
+	margin: 0;
+	height: 100%;
+}
+
+#root, .App{
+	height:100%;
+}
+
+
 @media print {
-  .App-header, .navbar-nav, .status-bar, .sidebar, .nav-tabs {
+  .navbar-nav, .status-bar, .sidebar, .nav-tabs {
     display:none!important;
   }
   body{
     padding:0!important;
   }
-  .main{
-    padding:0!important;
-    margin:0!important;
-  }
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-#navbar{
-	background-color: rgba(0,0,0,0.5);
-
-	li > a{
-		color: #ddd;
-
-		&:hover{
-			color: white;
-			background-color: black;
-			cursor:pointer;
-		}
-	}
-	button{
-		color:white;
-		background-color: black;
-		border-color: #333;
-
-		&:hover{
-			filter: brightness(100%); 
-			background-color: #222;
-		}
-	}
-	.navbar-brand{
-		color: #ddd;
-	}
-}
-
-.form-group-lg .glyphicon{
-  line-height:42px;
-  width:42px;
 }
 
 .btn-circle {
@@ -107,7 +78,7 @@ h1,h2,h3,h4,h5{
   z-index:4;
 
   &:hover{
-    color: $brand-danger;
+    color: theme-color("danger");
   }
 }
 
@@ -138,59 +109,7 @@ h1,h2,h3,h4,h5{
   font-size: inherit;
 }
 
-i.animated{
-  animation-duration:2s;
-}
 
-.spinReverse {
-  animation-name: spin-reverse;
-  animation-timing-function:linear;
-}
-
-.spin {
-  animation-name: fa-spin;
-  animation-timing-function:linear;
-}
-
-i.spin{
-  animation-duration: 3s;
-}
-
-i.spinReverse{
-  animation-duration: 3s;
-}
-
-i.flash{
-  animation-duration:6s;
-}
-
-i.pulse{
-  animation-duration:1s;
-}
-
-
-
-@-webkit-keyframes spin-reverse {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(-359deg);
-  }
-}
-
-@keyframes spin-reverse {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(-359deg);
-  }
-}
 
 .status-bar{
   border-radius:0;
@@ -214,15 +133,11 @@ i.pulse{
   }
 }
 
-.main{
-  margin-top:52px;
-}
-
 .delete-btn{
   border:0;
   
   &:hover,&:focus,&:active,&:focus:active{
-    background-color: $brand-danger;
+    background-color: theme-color("danger");
     color:#fff;
     cursor:pointer;
   }
@@ -237,20 +152,8 @@ i.pulse{
   border-bottom: 1px solid #eee;
 }
 
-.no-margin{
-  margin:0;
-}
-
 /*
- * Top navigation
- * Hide default border to remove 1px line.
- */
-.navbar-fixed-top {
-  border: 0;
-}
-
-/*
- * Sidebar
+ * Sidebar --------------------------------
  */
 
 /* Hide for mobile, show later */
@@ -293,26 +196,15 @@ i.pulse{
 
 /*
  * Main content
+ * ------------------------------
  */
 
 .main {
-  padding: 20px;
-}
-@media screen and (min-width: 768px) {
-  .main {
-    padding-right: 40px;
-    padding-left: 40px;
-  }
-}
-.main .page-header {
-  margin-top: 0;
+	padding-top: ($navbar-brand-height+$navbar-brand-padding-y*2)+($navbar-padding-y*2);
+  min-height: 100%;
 }
 
-/* LOGIN */
-
-.loginForm{
-	max-width: 400px;
-}
+// end main---------------------------------------
 
 .loader {
 	text-align:center;
@@ -325,6 +217,7 @@ i.pulse{
 		display: block;
 	}
 }
+
 .loading {
 	font-size: 3em;
 	margin:1em;

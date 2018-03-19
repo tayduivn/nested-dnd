@@ -1,13 +1,8 @@
 import React from "react";
-import CharacterSettings from "./CharacterSettings";
 import CharacterSheet from "./CharacterSheet/CharacterSheet";
-import EditCharacter from "./EditCharacter";
 import Cards from "./Cards";
-import PackLoader from "../../util/PackLoader";
 
 import characterStore from "../../stores/characterStore";
-
-import { Row, Col, ListGroup, ListGroupItem, Tabs, Tab } from "react-bootstrap";
 
 import "./Characters.css";
 
@@ -22,10 +17,10 @@ export default class Characters extends React.Component {
 		this.updateCharacter = this.updateCharacter.bind(this);
 	}
 	componentDidMount() {
-		let _this = this;
-		PackLoader.load(() => {
+		// let _this = this;
+		/*PackLoader.load(() => {
 			_this.setState({ characters: characterStore.getAll() });
-		});
+		});*/
 	}
 	selectDeselect(character, selected) {
 		var index = this.state.selected.indexOf(character);
@@ -59,10 +54,9 @@ export default class Characters extends React.Component {
 	render() {
 		return (
 			<div className="container-fluid">
-				<CharacterSettings />
-				<Row>
-					<Col sm={3} md={2} className="sidebar">
-						<ListGroup className="characterList">
+				<div className="row">
+					<div className="col-sm-3 col-md-2 sidebar">
+						<ul className="list-group characterList">
 							{this.state.characters.map((c, i) =>
 								<SidebarItem
 									key={i}
@@ -71,41 +65,29 @@ export default class Characters extends React.Component {
 									handleClick={this.selectDeselect}
 								/>
 							)}
-						</ListGroup>
-					</Col>
-					<Col
-						sm={9}
-						smOffset={3}
-						md={10}
-						mdOffset={2}
-						className="main"
-					>
-						<Tabs defaultActiveKey={3} id="characterInfo">
-							<Tab eventKey={1} title="Edit">
-								<EditCharacter
-									{...this.getCharacterToEdit()}
-									handleChange={this.updateCharacter}
-								/>
-							</Tab>
-							<Tab eventKey={2} title="Sheet" />
-							<Tab eventKey={3} title="Print Sheet">
+						</ul>
+					</div>
+					<div className="col-sm-9 col-md-9 offset-sm-3 offset-md-2 main">
+						<ul id="characterInfo" className="nav nav-tabs">
+							<li class="nav-item" eventKey={2} title="Sheet" />
+							<li class="nav-item" eventKey={3} title="Print Sheet">
 								<div className="printme" id="charsheets">
 									{this.state.selected.map((c, i) =>
 										<CharacterSheet key={i} character={c} />
 									)}
 								</div>
-							</Tab>
-							<Tab eventKey={4} title="Print Cards">
+							</li>
+							<li eventKey={4} title="Print Cards">
 								<div className="printme" id="cardSheets">
 									{this.state.selected.map((c, i) =>
 										<Cards key={i} character={c} />
 									)}
 								</div>
 								<Cards />
-							</Tab>
-						</Tabs>
-					</Col>
-				</Row>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -122,7 +104,7 @@ class SidebarItem extends React.Component {
 	render() {
 		let c = this.props.character;
 		return (
-			<ListGroupItem
+			<ul className="list-group"
 				active={this.props.selected}
 				onClick={this.handleClick}
 			>
@@ -131,7 +113,7 @@ class SidebarItem extends React.Component {
 				</div>
 				<p className="charName">{c.name ? c.name : c.classes[0].name}</p>
 				<p className="playerName">{c.player}</p>
-			</ListGroupItem>
+			</ul>
 		);
 	}
 }

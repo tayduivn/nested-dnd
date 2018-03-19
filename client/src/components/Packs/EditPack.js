@@ -1,12 +1,6 @@
 import React, { Component } from "react";
-import {
-	FormGroup, 
-	ControlLabel, 
-	FormControl,
-	Checkbox, 
-	Button
-} from "react-bootstrap";
 import PropTypes from "prop-types";
+
 import DB from '../../actions/CRUDAction';
 
 
@@ -60,30 +54,30 @@ export default class EditPack extends Component {
 				<form onSubmit={this.handleSubmit}>
 
 					{/* --------- Name ------------ */}
-					<FormGroup>
-						<ControlLabel>Name</ControlLabel>
-						<FormControl defaultValue={pack.name} required name="name" />
-					</FormGroup>
+					<div class="form-group">
+						<label>Name</label>
+						<input value={pack.name} required name="name" />
+					</div>
 
 					{/* --------- Public ------------ */}
-					<Checkbox defaultChecked={pack.public} name="public">Make Public</Checkbox>
-					<FormGroup>
-						<ControlLabel>URL</ControlLabel>
-						<FormControl defaultValue={pack.url} name="url" />
-					</FormGroup>
+					<input type="checkbox" checked={pack.public} name="public">Make Public</input>
+					<div class="form-group">
+						<label>URL</label>
+						<input vlue={pack.url} name="url" />
+					</div>
 
 					{/* --------- Default Seed ------------ */}
-					<FormGroup>
-						<ControlLabel>Default Seed</ControlLabel>
-						<FormControl defaultValue={pack.defaultSeed} name="defaultSeed" />
-					</FormGroup>
+					<div class="form-group">
+						<label>Default Seed</label>
+						<input value={pack.defaultSeed} name="defaultSeed" />
+					</div>
 
 					{/* --------- Dependencies: TODO ------------ */}
 
-					<Button type="submit" bsStyle="primary">Save</Button>
+					<button type="submit" className="btn btn-primary">Save</button>
 
 
-					<Button bsStyle="danger" onClick={ this.handleDelete }>Delete Pack</Button>
+					<button className="btn btn-danger" onClick={ this.handleDelete }>Delete Pack</button>
 				</form>
 			</div>
 		);

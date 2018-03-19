@@ -1,8 +1,6 @@
 import React from 'react';
 import { Creatable  } from 'react-select';
-import { FormGroup, HelpBlock } from 'react-bootstrap';
 
-import thingStore from '../../stores/thingStore';
 import Styler from '../../util/Styler';
 
 const BLANK_VALUE = <span>&nbsp;</span>;
@@ -25,9 +23,9 @@ export default class IsASelect extends React.Component {
 		this.handleSelectedClick = this.handleSelectedClick.bind(this);
 	}
 	componentDidMount() {
-		thingStore.bindListener('IsASelect',()=>{
+		/*thingStore.bindListener('IsASelect',()=>{
 			this.setState({options: this._getIsaOptions() });
-		});
+		});*/
 	}
 	shouldComponentUpdate(nextProps, nextState){
 		var changed = nextState !== this.state 
@@ -38,17 +36,17 @@ export default class IsASelect extends React.Component {
 		return changed;
 	}
 	componentWillUnmount(){
-		thingStore.unbindListener('IsASelect');
+		// thingStore.unbindListener('IsASelect');
 	}
 	_getIsaOptions(){
-		var options = thingStore.isaOptions.map( (o)=>({value:o,label:o}) );
-		return [{value:false, label: BLANK_VALUE}, ...options];
+		// var options = thingStore.isaOptions.map( (o)=>({value:o,label:o}) );
+		// return [{value:false, label: BLANK_VALUE}, ...options];
 	}
 	onNewOptionClick({value}){
 		if(DEBUG) console.log("IsASelect._onNewOptionClick: "+value);
 
 		this.justAdded = true;
-		thingStore.add({name: value});
+		// thingStore.add({name: value});
 		this.props.addThing(value);
 		this.props.handleChange("isa",value);
 
@@ -107,7 +105,7 @@ export default class IsASelect extends React.Component {
 			: "";
 		
 		return (
-		<FormGroup validationState={this.props.status.isUpdated?"success":null} className={this.props.status.isEnabled ? "" : "fake-disabled"}>
+		<div validationState={this.props.status.isUpdated?"success":null} className={`form-group ${this.props.status.isEnabled ? "" : "fake-disabled"}`}>
 			<label>Is a...</label>
 			<Creatable name="isa" value={value} 
 				onChange={this.handleChange}
@@ -119,8 +117,8 @@ export default class IsASelect extends React.Component {
 				ref={(createable) => this.select = (createable) ? createable.select : null}
 				shouldKeyDownEventCreateNewOption={_false} 
 				onInputKeyDown={this.onInputKeyDown} onValueClick={this.handleSelectedClick} />
-			<HelpBlock>{helpText}</HelpBlock>
-		</FormGroup>);
+			<small>{helpText}</small>
+		</div>);
 	} 
 }
 

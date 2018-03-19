@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { FormGroup, FormControl, ControlLabel, Button, HelpBlock } from 'react-bootstrap';
 import PropTypes from "prop-types";
+
+import './Login.css'
 
 export default class Login extends Component {
 	state = {
@@ -56,25 +57,25 @@ export default class Login extends Component {
 
 
 		return (
-			<div id="content" className="container-fluid loginForm">
+			<div className="main mt-5 container-fluid loginForm">
 				<h1>{this.props.title}</h1>
 				<form onSubmit={this.handleSubmit}>
-					<FormGroup controlId="email" validationState={this.state.emailVaidation}>
-						<ControlLabel>Email</ControlLabel>
-						<FormControl type="email" placeholder="email" value={this.state.email} onChange={this.handleChange} required></FormControl>
-						<HelpBlock>{this.state.emailError}</HelpBlock>
-					</FormGroup>
-					<FormGroup controlId="password" validationState={this.state.passwordValidation}>
-						<ControlLabel>Password</ControlLabel>
-						<FormControl type="password" placeholder="password" 
+					<div className="form-group" controlId="email" validationState={this.state.emailVaidation}>
+						<label>Email</label>
+						<input type="email" placeholder="email" value={this.state.email} onChange={this.handleChange} required></input>
+						<small>{this.state.emailError}</small>
+					</div>
+					<div className="form-group" controlId="password" validationState={this.state.passwordValidation}>
+						<label>Password</label>
+						<input type="password" placeholder="password" 
 							autoComplete="new-password" 
 							value={this.state.password} 
 							onChange={this.handleChange} 
 							minLength="8"
-							required></FormControl>
-						<HelpBlock>{this.state.passwordError}</HelpBlock>
-					</FormGroup>
-					<Button type="submit" bsStyle="primary">Submit</Button>
+							required></input>
+						<small>{this.state.passwordError}</small>
+					</div>
+					<button type="submit" bsStyle="primary">Submit</button>
 				</form>
 			</div>
 		);

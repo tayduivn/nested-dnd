@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Row, Col, FormControl, Button } from "react-bootstrap";
 import Select, { Creatable } from "react-select";
 
 import classStore from "../../stores/classStore";
@@ -51,14 +50,14 @@ export default class ClassInfo extends Component {
 		const prefix = "classes." + this.props.index + ".";
 		const subclasses = this.props.subclasses ? this.props.subclasses : {};
 		return (
-			<Row>
-				<Col lg={3} md={3}>
+			<div className="row">
+				<div className="col-lg-3 col-md-3">
 					<div
 						className={
 							this.props.count < 2 ? "" : "left-delete-btn"
 						}
 					>
-						<Button
+						<button
 							className={
 								"delete-btn " +
 								(this.props.count < 2 ? "hidden" : "")
@@ -70,9 +69,8 @@ export default class ClassInfo extends Component {
 							<span>
 								<i className="fa fa-trash" />
 							</span>
-						</Button>
-						<FormControl
-							componentClass="select"
+						</button>
+						<select
 							name={prefix + "name"}
 							value={this.props.name}
 							onChange={this.props.handleChange}
@@ -83,11 +81,11 @@ export default class ClassInfo extends Component {
 									{str}
 								</option>
 							)}
-						</FormControl>
+						</select>
 					</div>
-				</Col>
-				<Col lg={1} md={2} sm={2}>
-					<FormControl
+				</div>
+				<div className="col-lg-1 col-md-2 col-sm-2">
+					<input
 						min="1"
 						max="20"
 						type="number"
@@ -95,15 +93,15 @@ export default class ClassInfo extends Component {
 						value={this.props.level}
 						onChange={this.props.handleChange}
 					/>
-				</Col>
-				<Col lg={2} md={3}>
-					<FormControl
+				</div>
+				<div className="col-lg-2 col-md-3">
+					<input
 						name={prefix + "label"}
 						value={this.props.label}
 						onChange={this.props.handleChange}
 					/>
-				</Col>
-				<Col lg={6}>
+				</div>
+				<div className="col-lg-6">
 					{this.renderSubclasses(subclasses, prefix + "subclasses.")}
 					<div
 						className={
@@ -113,13 +111,13 @@ export default class ClassInfo extends Component {
 								: "hidden"
 						}
 					>
-						<Button bsSize="sm" onClick={this.handleAddSubclass}>
+						<button className="btn btn-sm" onClick={this.handleAddSubclass}>
 							<i className="fa fa-plus" /> Add {this.props.name}{" "}
 							Subclass
-						</Button>
+						</button>
 					</div>
-				</Col>
-			</Row>
+				</div>
+			</div>
 		);
 	}
 }
@@ -171,10 +169,10 @@ class Subclass extends Component {
 	}
 	render() {
 		return (
-			<Row>
-				<Col xs={6}>
+			<div className="row">
+				<div className="col">
 					<div className="left-delete-btn">
-						<Button
+						<button
 							className="delete-btn"
 							data-index={this.props.index}
 							data-value={this.props.value}
@@ -183,7 +181,7 @@ class Subclass extends Component {
 							<span>
 								<i className="fa fa-trash" />
 							</span>
-						</Button>
+						</button>
 						<Creatable
 							name={
 								this.props.prefix + this.props.name + ".RENAME"
@@ -194,8 +192,8 @@ class Subclass extends Component {
 							onChange={this.props.handleChange}
 						/>
 					</div>
-				</Col>
-				<Col xs={6}>
+				</div>
+				<div className="col">
 					<Select
 						simpleValue
 						multi={true}
@@ -203,8 +201,8 @@ class Subclass extends Component {
 						options={this.getChoices()}
 						onChange={this.handleChangeMultiselect}
 					/>
-				</Col>
-			</Row>
+				</div>
+			</div>
 		);
 	}
 }

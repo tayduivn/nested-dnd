@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { Button } from "react-bootstrap";
 import DB from "../../actions/CRUDAction";
 import Generator from '../Generators/Generator';
 import EditGenerator from '../Generators/EditGenerator';
-import { PrivateRoute, PropsRoute } from '../App';
+import { PrivateRoute, PropsRoute } from '../Routes';
 import { Link } from "react-router-dom";
 
 import EditPack from "./EditPack";
@@ -64,9 +63,9 @@ class ViewPack extends Component {
 				{/* --------- Edit Button ------------ */}
 				{this.props.loggedIn ? (
 					<Link to={"/packs/" + pack._id + "/edit"}>
-						<Button bsStyle="primary">
+						<button className="btn btn-primary">
 							Edit Pack
-						</Button>
+						</button>
 					</Link>
 				) : null}
 
@@ -104,9 +103,9 @@ class ViewPack extends Component {
 					</ul>
 
 					<Link to={"/packs/" + pack._id + "/generator/create"}>
-						<Button bsStyle="primary">
+						<button className="btn btn-primary">
 							Add Generator
-						</Button>
+						</button>
 					</Link>
 				</div>
 

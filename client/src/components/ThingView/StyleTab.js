@@ -1,6 +1,5 @@
 import React from 'react'
 import Select from 'react-select'
-import { FormGroup, Row, Col } from 'react-bootstrap';
 
 import Styler from '../../util/Styler';
 import IconSelect from './IconSelect';
@@ -15,16 +14,16 @@ export default class StyleTab extends React.Component{
 		const txtStatus = this.props.getStatus("textColor");
 
 		return(<div>
-			<Row>
-				<Col sm={12} md={6}>
+			<div className="row">
+				<div class="col-md">
 					<ColorDropdown label="Background" name="background" value={this.props.thing.background} status={bgStatus}
 						saveProperty={this.props.handleChange} setPreview={this.props.setPreview} />
-				</Col>
-				<Col sm={12} md={6}>
+				</div>
+				<div class="col-md">
 					<ColorDropdown label="Text color" name="textColor" value={this.props.thing.textColor} status={txtStatus}
 						saveProperty={this.props.handleChange} setPreview={this.props.setPreview} />
-				</Col>
-			</Row>
+				</div>
+			</div>
 			<IconSelect value={this.props.thing.icon} status={iconStatus}
 				saveProperty={this.props.handleChange} setPreview={this.props.setPreview}    /> 
 		</div>)
@@ -70,7 +69,7 @@ class ColorDropdown extends React.Component {
 			console.log("\t\t "+this.props.name+" isUpdated:"+this.props.status.isUpdated+" isEnabled:"+this.props.status.isEnabled+" isClearable:"+this.props.status.isClearable);
 		} 
 
-		return (<FormGroup className={this.props.status.isEnabled ? "" : "fake-disabled"} 
+		return (<div className={`form-group ${this.props.status.isEnabled ? "" : "fake-disabled"}`} 
 					validationState={this.props.status.isUpdated ? "success" : null}>
 				<label>{this.props.label}</label> 
 				<Select.Creatable value={value} multi={true} 
@@ -80,6 +79,6 @@ class ColorDropdown extends React.Component {
 					optionRenderer={Styler.renderColorOption}
 					onChange={this.handleChange} onValueClick={this.handleClickValue}
 					options={options} />
-			</FormGroup>);
+			</div>);
 	}
 }

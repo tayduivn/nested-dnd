@@ -1,5 +1,4 @@
 import classStore, { raceStore, backgroundStore } from "./classStore";
-import thingStore from "./thingStore";
 import spellStore from "./spellStore";
 
 import { Abilities, Skills } from "./CharacterAbilities";
@@ -421,8 +420,7 @@ class Equipment {
 		character
 	) {
 		if (armor) armor = armor.toLowerCase();
-		this.armor =
-			armor && thingStore.exists(armor) ? thingStore.get(armor) : false;
+		// this.armor = armor && thingStore.exists(armor) ? thingStore.get(armor) : false;
 		this.hasShield = !!hasShield;
 		this.weapons = weapons;
 		this.containers = containers.map(c => new Container(c));
@@ -430,13 +428,13 @@ class Equipment {
 		this.character = character;
 
 		items.forEach(item => {
-			if (thingStore.exists(item)) {
+			/*if (thingStore.exists(item)) {
 				this.items.push(thingStore.get(item));
 				return;
 			}
 			item = item.toLowerCase();
 			if (thingStore.exists(item)) this.items.push(thingStore.get(item));
-			else console.error(item + " does not exist");
+			else console.error(item + " does not exist");*/
 		});
 	}
 	getAC() {

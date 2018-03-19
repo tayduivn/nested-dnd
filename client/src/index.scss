@@ -1,5 +1,22 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+
+@import './variables.scss';
+
+// BOOTSTRAP ------------------------------
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+
+// App global css--------------------------
+@import "./colors.scss";
+@import "./textures.scss";
+@import './animations.scss';
+
+
+// Bootstrap fixes ------------------------
+
+.btn-outline {
+	border-color: currentColor;
+}
+
+.dropdown-menu button{
+	cursor: pointer;
 }

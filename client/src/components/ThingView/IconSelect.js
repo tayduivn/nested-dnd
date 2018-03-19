@@ -1,6 +1,5 @@
 import React from 'react';
 import VirtualizedSelect from 'react-virtualized-select'
-import { FormGroup, FormControl, ControlLabel, Row, Col } from 'react-bootstrap';
 
 import iconStore from '../../stores/iconStore';
 import Styler from '../../util/Styler';
@@ -101,12 +100,12 @@ class IconSelect extends React.Component{
 		const validationState = this.props.status.isUpdated ? "success" : null;
 
 		return (<div className={this.props.status.isEnabled ? "" : "fake-disabled"}>
-			<FormGroup className="no-margin" validationState={validationState}>
-				<ControlLabel>Icon</ControlLabel>
-			</FormGroup>
-			<Row>
-				<Col sm={12} md={6} >
-					<FormGroup validationState={validationState}>
+			<div className="form-group m-0" validationState={validationState}>
+				<label>Icon</label>
+			</div>
+			<div className="row">
+				<div className="col-md">
+					<div validationState={validationState} className="form-group">
 						<VirtualizedSelect name="icon" value={this.iconArr} simpleValue
 							onChange={this.handleChange}
 							clearable={this.props.status.isClearable} 
@@ -115,24 +114,24 @@ class IconSelect extends React.Component{
 							optionRenderer={renderIcon} options={ iconStore.iconOptions }
 							onValueClick={this.handleClickChosen}
 							multi={true} matchProp="label" ignoreCase={false} searchable={true}  />
-					</FormGroup>
-				</Col>
-				<Col sm={12} md={6} id="icons-preview" className="row">
+					</div>
+				</div>
+				<div id="icons-preview" className="col-md row">
 					{this.iconArr.map((icon, index) => (
-					<Col sm={4} className="icon-wrap" key={index} >
-						<FormGroup bsSize="sm" className="icon" controlId={"icon"+index}>
-							<ControlLabel>
+					<div className="col-sm-4 icon-wrap" key={index} >
+						<div className="form-group icon" controlId={"icon"+index}>
+							<label>
 								<i className={icon+" "+this.animArr[index]+" animated infinite"} title={icon} />
-							</ControlLabel>
-							<FormControl componentClass="select" onChange={this.handleChangeAnim}
+							</label>
+							<select onChange={this.handleChangeAnim}
 								value={this.animArr[index]} data-index={index} data-icon={icon}>
 								{animationOptions}
-							</FormControl>
-						</FormGroup>
-					</Col>
+							</select>
+						</div>
+					</div>
 					) )}
-				</Col>
-			</Row>
+				</div>
+			</div>
 		</div>)
 	}
 }

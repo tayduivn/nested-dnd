@@ -1,5 +1,3 @@
-import tableStore from './tableStore';
-
 let iconStore = {};
 
 iconStore.iconOptions  = [];
@@ -40,7 +38,7 @@ iconStore.extractSpin = function(value){
 
 iconStore.load = function(){
 
-	var all = tableStore.get("ALL ICONS").rows;
+	var all = [] //tableStore.get("ALL ICONS").rows;
 
 	this.iconOptions = all.map((value) => {return {label: this.makeLabel(value), value: value}} );
 	this.iconOptions = [{label:"none",value:null}].concat(this.iconOptions);

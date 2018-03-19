@@ -1,9 +1,4 @@
 import React from 'react'; 
-import { FormGroup, FormControl, InputGroup, Button, ButtonToolbar, HelpBlock } from 'react-bootstrap';
-import Contain from '../../util/Contain.js';
-
-import thingStore from '../../stores/thingStore';
-
 const DEBUG = false;
 
 class ContainsList extends React.Component {
@@ -92,11 +87,11 @@ class ContainsList extends React.Component {
 		if(thing.charAt(0) === ".") {
 			thing = thing.substring(1);
 		}
-		thing = new Contain(thing).value
+		/*thing = new Contain(thing).value
 		setTimeout(() =>{
 			if(DEBUG) console.log("===== GOTO "+thing);
 			window.location.hash = '#'+encodeURIComponent(thing);
-		},10)
+		},10)*/
 	}
 	render(){
 		if(DEBUG) console.log("\t----- ContainsList RENDER: "+this.props.list.join(", "));
@@ -109,27 +104,27 @@ class ContainsList extends React.Component {
 			var type = (item === "") ? "" 
 				: (item.roll) ? "Table" 
 				: (typeof item !== "string") ? "embedded thing"
-				: (thingStore.exists(item)) ? "thing" : "text";
+				: (true) ? "thing" : "text"; //thingStore.exists(item)
 
 			var value = (typeof item === "string") ? item : JSON.stringify(item);
 
 			return (
-			<FormGroup key={index} validationState={this.validationState[index]}>
-				<InputGroup className={value ? "":"no-input-addons"}>
+			<div class="form-group" key={index} validationState={this.validationState[index]}>
+				<div className={`input-group ${value ? "":"no-input-addons"}`}>
 					
-					<FormControl onChange={this.handleChange} value={value} type="text" data-index={index}
+					<input onChange={this.handleChange} value={value} type="text" data-index={index}
 						className={ (this.props.status.isEditable ?"":"fake-disabled")}
 						componentClass="textarea" rows={(value) ? Math.ceil(value.length/50) : 1} />
-					<InputGroup.Addon className={value ? ("type "+type ): ("type hidden "+type)} 
+					<div className={`input-group-addon ${value ? ("type "+type ): ("type hidden "+type)}`} 
 						data-thing={item} data-type={type} onClick={this.handleClickThing} >
 						{type}
-					</InputGroup.Addon>
-				</InputGroup>
-				<Button className="delete-btn" data-index={index} data-value={value}  onClick={this.handleRemove}>
+					</div>
+				</div>
+				<button className="btn delete-btn" data-index={index} data-value={value}  onClick={this.handleRemove}>
 					<span><i className="fa fa-trash" /></span>
-				</Button>
-				<HelpBlock>{this.helpText[index]}</HelpBlock>
-			</FormGroup>
+				</button>
+				<small>{this.helpText[index]}</small>
+			</div>
 			)
 		});
 
@@ -138,12 +133,12 @@ class ContainsList extends React.Component {
 		<div id="containsList">
 				{list}
 				<br/>
-				<ButtonToolbar>
-					<Button onClick={this.handleAdd}><i className="fa fa-plus"></i> Add</Button>
-					<Button className={"clear-button "+(this.props.status.isClearable ? "": "hidden")} onClick={this.handleClear}>
+				<div className="btn-group">
+					<button onClick={this.handleAdd}><i className="fa fa-plus"></i> Add</button>
+					<button className={"clear-button "+(this.props.status.isClearable ? "": "hidden")} onClick={this.handleClear}>
 						<i className="glyphicon glyphicon-remove"></i> Clear all changes
-					</Button>
-				</ButtonToolbar>
+					</button>
+				</div>
 		</div>)
 	}
 }

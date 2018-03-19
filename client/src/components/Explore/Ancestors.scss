@@ -1,0 +1,29 @@
+@import "../../variables.scss";
+
+.parent{
+	.btn{
+		color:inherit;
+	}
+	.btn-group{
+		border-radius: $border-radius-lg;
+	}
+
+	.fa-caret-left{
+		font-size: $font-size-base;
+	}
+
+	.dropdown-menu{
+		background-color: inherit;
+		background-color: var(--slightlyOff);
+		color: inherit;
+
+		.dropdown-item {
+			color: inherit;
+
+			&:hover{
+				background-color: inherit;
+				background-color: var(--theme);
+			}
+		}
+	}
+}

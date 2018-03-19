@@ -1,28 +1,23 @@
 import React from 'react';
-import { Checkbox } from 'react-bootstrap';
 
-import thingStore from '../../stores/thingStore.js';
-import PackLoader from '../../util/PackLoader.js';
-import {valueIsUndefined} from '../../util/util.js';
-import ThingChoices from './ThingChoice';
-import ThingView from '../ThingView/ThingView';
+// import {valueIsUndefined} from '../../util/util.js';
+/*import ThingChoices from './ThingChoice';
+import ThingView from '../ThingView/ThingView';*/
 import NewPackInfo from './NewPackInfo';
-import SaveThingAction from '../../actions/SaveThingAction';
-import ExportPackAction from '../../actions/ExportPackAction';
 
 import './ThingExplorer.css';
 
 const DEBUG = false;
 
-function getInitialState(){
-	return {
-		filteredThings: thingStore.sortedThingNames,
-		currentThing: thingStore.get(thingStore.sortedThingNames[0]),
-		lookupName: thingStore.sortedThingNames[0],
-		newPack: PackLoader.getNewPack()
-	};
+/*function getInitialState(){
+	// return {
+	// 	filteredThings: thingStore.sortedThingNames,
+	// 	currentThing: thingStore.get(thingStore.sortedThingNames[0]),
+	// 	lookupName: thingStore.sortedThingNames[0],
+	// 	newPack: PackLoader.getNewPack()
+	// };
 }
-
+*/
 class ThingExplorer extends React.Component{
 	constructor(props){
 		super(props);
@@ -43,22 +38,22 @@ class ThingExplorer extends React.Component{
 	}
 
 	componentDidMount() {
-		var _this = this;
-		PackLoader.load(function(packs){
+		// var _this = this;
+		/*PackLoader.load(function(packs){
 			thingStore.bindListener('ThingExplorer',()=>{
 				_this.setState({filteredThings: _this.doFilter(_this.state.query, _this.state.isMissingIcons)});
 			});
 
 			_this.setState(getInitialState())
-		});
+		});*/
 	}
 
 	componentWillUnmount(){
-		thingStore.unbindListener('ThingExplorer');
+		// thingStore.unbindListener('ThingExplorer');
 	}
 
 	exportPack(packName){
-		ExportPackAction(packName, this.state.newPack)
+		//ExportPackAction(packName, this.state.newPack)
 	}
 
 	/**
@@ -67,48 +62,29 @@ class ThingExplorer extends React.Component{
  	 */
 	updateThing(property, value, reset){
 		var thing = this.state.currentThing;
-		var newPack = this.state.newPack.things[this.state.lookupName];
-
-		if(DEBUG){
-			if(thing !== thingStore.get(this.state.lookupName)){
-				console.error("ThingExplorer -- rogue thing not in thingStore");
-			}
-			console.log("Update "+thing.name+" "+property+": "+value+"  (reset: "+reset);
-		}
+		// var newPack = this.state.newPack.things[this.state.lookupName];
 
 		// don't reset when equals originalOptions -- annoying while typing
-		const doReset = reset || (valueIsUndefined(value) && thing.originalOptions[property] === undefined);
+		/*const doReset = reset || (valueIsUndefined(value) && thing.originalOptions[property] === undefined);
 		const inNewPack = newPack && newPack[property] !== undefined;
-
-		(doReset) ? thingStore.resetProperty(thing, property, inNewPack) : thing.setProperty(property, value);
-		
-		if(DEBUG){
-			console.log("* Acheron background: "+thingStore.get("Acheron").background);
-		}
-
+*/
+		// (doReset) ? thingStore.resetProperty(thing, property, inNewPack) : thing.setProperty(property, value);
+		// 
 		this.setState({currentThing:thing});
 
 	}
 
 	saveThing(lookupName, isDelete){
-		var state = SaveThingAction.call(this, lookupName, isDelete);
-		if(DEBUG){
-			if(state.currentThing && state.currentThing !== thingStore.get(state.currentThing.name)){
-				console.error("ThingExplorer -- rogue thing not in thingStore");
-			}
-		} 
-		if(DEBUG){
-			console.log("* Acheron background: "+thingStore.get("Acheron").background);
-		}
-		this.setState(state);
+		//var state = SaveThingAction.call(this, lookupName, isDelete);
+		//this.setState(state);
 	}
 
 	doFilter(query, isMissingIcons){
 		if(!query && !isMissingIcons){
-			return thingStore.sortedThingNames;
+			// return thingStore.sortedThingNames;
 		}
 
-		return thingStore.sortedThingNames.filter((name) => {
+		/*return thingStore.sortedThingNames.filter((name) => {
 			var match	= false;
 			var t;
 
@@ -127,7 +103,7 @@ class ThingExplorer extends React.Component{
 			//process isMissingIcons
 			if(!t) t = thingStore.get(name);
 			return !t.icon && !t.isa;
-		});
+		});*/
 	}
 
 	filterList(event){
@@ -152,17 +128,11 @@ class ThingExplorer extends React.Component{
 	}
 
 	selectThing(name){
-		if(DEBUG){
-			console.log("*~~~~~~~~~ Acheron background: "+thingStore.get("Acheron").background);
-		}
 		if(!this.state.currentThing || name !== this.state.currentThing.name){
 			//need to process isa every time in case super was changed
 			var state = {
-				currentThing: thingStore.get(name),
+				// currentThing: thingStore.get(name),
 				lookupName: name
-			}
-			if(DEBUG){
-				console.log("*$$$$$$$$ Acheron background: "+thingStore.get("Acheron").background);
 			}
 			this.setState(state);
 		}
@@ -173,16 +143,17 @@ class ThingExplorer extends React.Component{
 			console.log("ThingExplorer RENDER ---------------------");
 		}
 
-		const page = (
+		/*const page = (
 			<div className="row">
 				<div id="thingSearch" className="col-sm-3 col-md-2 sidebar">
 					<div className="search form-group has-feedback">
 						<input type="text" name="query" className="form-control" placeholder="Search" onChange={this.filterList}/>
 						<span className="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
 					</div>
-					<Checkbox className="col-xs-12" name="isMissingIcons" onChange={this.filterList} value={this.state.isMissingIcons}>
-						Missing an icon
-					</Checkbox>
+					<div className="form-check col">
+						<input type="checkbox" name="isMissingIcons" onChange={this.filterList} value={this.state.isMissingIcons} />
+						<label>Missing an icon</label>
+					</div>
 					<ThingChoices things={this.state.filteredThings} currentThing={this.state.currentThing} 
 						currentThingName={this.state.lookupName} 
 						selectFunc={this.selectThing} saveThing={this.saveThing} />
@@ -195,12 +166,12 @@ class ThingExplorer extends React.Component{
 					</div>
 				</div>
 			</div>
-		)
+		)*/
 
 		return (
 			<div id="content" className="container-fluid">
 				<NewPackInfo newPack={this.state.newPack} export={this.exportPack} />
-				{ (!thingStore.sortedThingNames.length) ? <p>No things are defined</p> : page }
+				{/* (!thingStore.sortedThingNames.length) ? <p>No things are defined</p> : page*/ }
 			</div>
 		)
 	}

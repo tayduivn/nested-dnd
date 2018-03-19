@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Button } from 'react-bootstrap';
 import { Link, Route } from "react-router-dom";
 import PropTypes from "prop-types";
+
 import DB from '../../actions/CRUDAction';
-import { PrivateRoute } from '../App';
+import { PrivateRoute } from '../Routes';
 import Pack from './Pack';
 
 
@@ -12,7 +12,7 @@ import EditPack from "./EditPack";
 const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
 
 const Packs = ({ match }) => (
-	<div id="content">
+	<div className="main mt-5">
 		<Route exact path={match.url} component={PackList} />
 		<PrivateRoute path={`${match.url}/create`} component={EditPack}  />
 		<Route path={`${match.url}/:pack`} component={Pack}  />
@@ -52,7 +52,7 @@ class PackList extends Component{
 				<ul>
 					{(myPacks)  ? myPacks.map((p)=>(<li key={p._id} ><Link to={"/packs/"+p._id}>{p.name}</Link></li>)) : null}
 				</ul>
-				<Button bsStyle="primary" href="/packs/create">Create a New Pack</Button>
+				<button className="btn btn-primary" href="/packs/create">Create a New Pack</button>
 			</div>
 		);
 

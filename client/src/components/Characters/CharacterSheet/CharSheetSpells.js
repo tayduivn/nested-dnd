@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
-
 
 class SpellSlots extends Component {
 	getSpellSlots(slots = []) {
@@ -129,11 +127,8 @@ export default class Spells extends Component {
 		if (spellcasting.totalSpells === 0) return <span />;
 
 		return (
-			<Row className="push-top">
-				<Col
-					xs={this.props.prepares ? 6 : 8}
-					className="title-tag left"
-				>
+			<div className="row push-top">
+				<div className={`title-tag left ${this.props.prepares ? 6 : 8}`}>
 					<p className="title">
 						{this.props.title}
 					</p>
@@ -144,40 +139,33 @@ export default class Spells extends Component {
 								</span>
 							: ""}
 					</label>
-				</Col>
-				<Col xs={2} className="title-tag">
+				</div>
+				<div className="col-2 title-tag">
 					<p>
 						{spellcasting.printAbility()}
 					</p>
 					<label>Ability</label>
-				</Col>
-				<Col xs={2} className="title-tag">
+				</div>
+				<div className="col-2 title-tag">
 					<p className="num">
 						{spellcasting.dc}
 					</p>
 					<label>DC</label>
-				</Col>
-				<Col
-					xs={2}
-					className={
-						"title-tag " + (this.props.prepares ? "" : "hidden")
-					}
-				>
+				</div>
+				<div className={`col-2 title-tag ${this.props.prepares ? "" : "hidden"}`}>
 					<p className="num">
 						{this.props.numPrepared}
 					</p>
 					<label>Prep ●</label>
-				</Col>
-				<div
-					className="spellbook"
-				>
+				</div>
+				<div className="spellbook">
 					{this.spellbook(
 						spellcasting.spellsByLevel(),
 						this.props.prepares,
 						spellcasting.source === "Wizard"
 					)}
 				</div>
-			</Row>
+			</div>
 		);
 	}
 }

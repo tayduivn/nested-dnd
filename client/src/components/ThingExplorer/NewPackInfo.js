@@ -1,8 +1,5 @@
 import React from 'react';
 import Select from 'react-select';
-import {Row,Col,Form,ControlLabel,FormGroup, Button,Popover,OverlayTrigger} from 'react-bootstrap';
-
-import PackLoader from '../../util/PackLoader.js';
 
 const DEBUG = false;
 
@@ -17,7 +14,7 @@ class PackSelect extends React.Component {
 		 this.loadOptions = this.loadOptions.bind(this);
 	}
 	loadOptions(input, callback){
-		PackLoader.load(() => {
+		/*PackLoader.load(() => {
 			var result = PackLoader.getPackOptions();
 			if(DEBUG) console.log("PackSelect.loadOptions -- packs loaded");
 
@@ -30,30 +27,30 @@ class PackSelect extends React.Component {
 			}
 
 			callback(null,result);
-		});
+		});*/
 	}
 	updateState(element) {
 		localStorage.exportToPack = element.value;
 		this.setState({selectedPack: element});
 	}
 	clear(){
-		var doDelete = window.confirm("Are you sure you want to delete your changes?");
-		if(doDelete){
+		// var doDelete = window.confirm("Are you sure you want to delete your changes?");
+		/*if(doDelete){
 			PackLoader.setNewPack(null);
 			window.location.reload();
-		}
+		}*/
 	}
 	export(){
 		var packName = (this.state.selectedPack.value) ? this.state.selectedPack.value : this.state.selectedPack;
 		this.props.export( (packName === "new" ) ? null : packName );
 	}
 	render(){
-		const popoverBottom = (
-			<Popover id="copiedToClipboard">Click to copy to clipboard</Popover>
-		)
+		/*const popoverBottom = (
+			<button className="btn" data-toggle="popover" id="copiedToClipboard">Click to copy to clipboard</button>
+		)*/
 		return(
-				<FormGroup>
-					<ControlLabel>export pack:</ControlLabel>
+				<div class="form-group">
+					<label>export pack:</label>
 					{' '}
 					<Select.Async clearable={false}
 						loadOptions={this.loadOptions}
@@ -61,14 +58,12 @@ class PackSelect extends React.Component {
 						value={this.state.selectedPack}
 						onChange={this.updateState}
 					/>
-					<OverlayTrigger trigger={["hover","focus"]} placement="bottom" overlay={popoverBottom}>
-						<Button bsStyle="success" onClick={this.export}>export</Button>
-					</OverlayTrigger>
-					<Button bsStyle="danger" onClick={this.clear}>clear</Button>
-				</FormGroup>
+					<button className="btn btn-success" onClick={this.export}>export</button>
+					<button className="btn btn-danger" onClick={this.clear}>clear</button>
+				</div>
 	 );
 	}
-}
+} // <OverlayTrigger trigger={["hover","focus"]} placement="bottom" overlay={popoverBottom}>
 
 export default class NewPackInfo extends React.Component{
 	shouldComponentUpdate(nextProps){
@@ -90,14 +85,16 @@ export default class NewPackInfo extends React.Component{
 		)
 
 		return (
-		<Row className={"status-bar alert "+(hasData ? "alert-success" : "alert-info")}>
-			<Col sm={5} xs={12} className={hasData ? "animated pulse": "col-lg-12 col-md-12 col-sm-12 col-xs-12"}>{message}</Col>
-			<Col sm={7} xs={12} className={hasData ? "" : "hidden"}>
-				<Form inline className="pull-right">
+		<div className={"row status-bar alert "+(hasData ? "alert-success" : "alert-info")}>
+			<div className={"col-sm-5" +(hasData ? "animated pulse": "col-lg-12 col-md-12 col-sm-12 col-xs-12")}>
+				{message}
+			</div>
+			<div sm={7} xs={12} className={hasData ? "" : "hidden"}>
+				<form inline className="pull-right">
 					<PackSelect export={this.props.export} /> 
-				</Form>
-			</Col>
+				</form>
+			</div>
 			<a id="downloadAnchorElem"> </a>
-		</Row>);
+		</div>);
 	}
 }

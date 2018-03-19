@@ -1,5 +1,4 @@
 import React from 'react';
-import { FormGroup, ControlLabel, FormControl, Tabs, Tab } from 'react-bootstrap';
 
 import StyleTab from './StyleTab'
 import EditableInput from './EditableInput'
@@ -49,24 +48,24 @@ export default class CategoryTabs extends React.Component{
 		const contains = (this.props.thing.contains) ? [...this.props.thing.contains] : [];
 
 		return (
-			<Tabs activekey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example"
+			<div className="nav nav-tabs" activekey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example"
 				mountOnEnter={true}>
-				<Tab eventKey={1} title="Style">
+				<div className="nav-item" eventKey={1} title="Style">
 					<StyleTab {...this.props} />
-				</Tab>
-				<Tab eventKey={2} title="Name Generator">
+				</div>
+				<div className="nav-item" eventKey={2} title="Name Generator">
 					<EditableInput  {...this.props} label="Name generator" property="namegen" value={namegen} 
 						status={namegenStatus} defaultHelpText={namegenHelpText} />
-				</Tab>
-				<Tab eventKey={3} title="Contains">
+				</div>
+				<div className="nav-item" eventKey={3} title="Contains">
 					<ContainsList list={contains} {...this.props} status={containsStatus} />
-				</Tab>
-				<Tab eventKey={4} title="Advanced">
+				</div>
+				<div className="nav-item" eventKey={4} title="Advanced">
 					<EditableInput  {...this.props} label="Data (JSON format)" property="data" value={data} 
 						status={dataStaus} isJSON={true} />
 					<ThingFunctions thing={this.props.thing} />
-				</Tab>
-			</Tabs>
+				</div>
+			</div>
 		);
 	}
 };
@@ -87,17 +86,17 @@ function ThingFunctions (props) {
 
 	return (<div>
 		
-		<FormGroup className={(props.thing.b4Make) ? "" : "hidden"} validationState="warning">
-			<ControlLabel>beforeMake() - Edit in *.js pack file</ControlLabel>
-			<FormControl componentClass="textarea" value={f1.str} rows={f1.rows} disabled />
-		</FormGroup>
-		<FormGroup className={(props.thing.afMake) ? "" : "hidden"} validationState="warning">
-			<ControlLabel>afterMake() - Edit in *.js pack file</ControlLabel>
-			<FormControl componentClass="textarea" value={f2.str} rows={f3.rows} disabled />
-		</FormGroup>
-		<FormGroup className={(props.thing.b4Render) ? "" : "hidden"} validationState="warning">
-			<ControlLabel>beforeRender() - Edit in *.js pack file</ControlLabel>
-			<FormControl componentClass="textarea" value={f3.str} rows={f3.rows} disabled />
-		</FormGroup>
+		<div className={`form-group ${(props.thing.b4Make) ? "" : "hidden"}`} validationState="warning">
+			<label>beforeMake() - Edit in *.js pack file</label>
+			<textarea value={f1.str} rows={f1.rows} disabled />
+		</div>
+		<div className={`form-group ${(props.thing.afMake) ? "" : "hidden"}`} validationState="warning">
+			<label>afterMake() - Edit in *.js pack file</label>
+			<textarea value={f2.str} rows={f3.rows} disabled />
+		</div>
+		<div className={`form-group ${(props.thing.b4Render) ? "" : "hidden"}`} validationState="warning">
+			<label>beforeRender() - Edit in *.js pack file</label>
+			<textarea value={f3.str} rows={f3.rows} disabled />
+		</div>
 	</div>);
 }

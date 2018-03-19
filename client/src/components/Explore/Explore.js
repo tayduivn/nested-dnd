@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import {TransitionGroup,  CSSTransition} from 'react-transition-group'
-import { Button,MenuItem,SplitButton } from 'react-bootstrap';
 import PropTypes from "prop-types";
 
 import DB from "../../actions/CRUDAction";
+import Ancestors from './Ancestors';
+
+import './Explore.css';
 
 const EMPTY_MESSAGE = <p>Contains nothing</p>; 
 
@@ -179,7 +181,7 @@ class CurrentNode extends Component {
 						handleClick={this.props.handleClick}  />
 					&nbsp;&nbsp;
 					<i className={inst.icon}></i> {inst.name ? inst.name : inst.isa}
-					<Button className={"pull-right "+cssClass} bsStyle="default" onClick={this.props.handleRestart}>Restart</Button>
+					<button className="btn btn-lg pull-right" onClick={this.props.handleRestart}>Restart</button>
 				</h1>
 				{ 
 					inst.in === true ? LOADING : <Children arr={inst.in} handleClick={this.props.handleClick} parent={inst} />
@@ -240,68 +242,10 @@ class Children extends Component {
 				
 		});
 
-		return <TransitionGroup>{list}</TransitionGroup>;
+		return <TransitionGroup className="row">{list}</TransitionGroup>;
 	}
 }
 
-class Ancestors extends React.Component {
-	static get propTypes(){
-		return {
-			ancestors: PropTypes.array, // index n ame
-			handleClick: PropTypes.func.isRequired
-		}
-	}
-	constructor(props){
-		super(props);
-		this.onClick = this.onClick.bind(this);
-	}
-	onClick(ancestor){
-		ancestor.in = true;
-		this.props.handleClick(ancestor);
-	}
-	render(){
-		const ancestors = this.props.ancestors;
-
-		if(!ancestors || !ancestors.length) return null;
-
-		var parentInst = ancestors[0];
-		var title = <span><i className="fa fa-angle-left"></i> {parentInst.name}</span>;
-		var renderParent;
-		var style = {color:parentInst.txt};
-
-		if(ancestors.length > 1){
-
-			var renderAncestors = ancestors.map((a,i)=>{
-				if(i === 0) return null;
-
-				return <MenuItem key={i} eventKey={i}
-					onSelect={(key) => ( this.onClick(ancestors[key])) } href={"#"+a.index}> 
-					{a.name}
-				</MenuItem>
-			});
-
-			renderParent = <SplitButton 
-				title={title} href=""
-				onClick={() => ( this.onClick(parentInst)) }
-				id="ancestorDropdown" 
-				className={parentInst.cssClass}
-				style={style}>
-					{renderAncestors}
-			</SplitButton>
-
-		}else{
-			renderParent = (<a onClick={() => ( this.onClick(parentInst)) }
-				className={"btn btn-default "+parentInst.cssClass}
-				style={style}>
-				{title}
-			</a>)
-		}
-
-		return (<span className={"parent "+parentInst.cssClass} style={style}>
-				{renderParent}
-		</span>)
-	}
-}
 
 const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
 const LOADING =  (

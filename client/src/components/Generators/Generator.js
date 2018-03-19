@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { Button } from "react-bootstrap";
 import DB from "../../actions/CRUDAction";
 import PropType from "prop-types";
 import { Link } from "react-router-dom";
-import { PrivateRoute, PropsRoute } from '../App';
+import { PrivateRoute, PropsRoute } from '../Routes';
 
 import EditGenerator from "./EditGenerator";
 
@@ -65,9 +64,9 @@ class ViewGenerator extends Component {
 				{/* --------- Edit Button ------------ */}
 				{this.context.loggedIn ? (
 					<Link to={"/packs/" + gen.pack_id + "/generator/"+ gen._id +"/edit"}>
-						<Button bsStyle="primary">
+						<button className="btn btn-primary">
 							Edit Generator
-						</Button>
+						</button>
 					</Link>
 				) : null}
 

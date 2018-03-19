@@ -1,0 +1,82 @@
+i.animated{
+  animation-duration:2s;
+}
+
+.spinReverse {
+  animation-name: spin-reverse;
+  animation-timing-function:linear;
+}
+
+.spin {
+  animation-name: fa-spin;
+  animation-timing-function:linear;
+}
+
+i.spin{
+  animation-duration: 3s;
+}
+
+i.spinReverse{
+  animation-duration: 3s;
+}
+
+i.flash{
+  animation-duration:6s;
+}
+
+i.pulse{
+  animation-duration:1s;
+}
+
+
+@-webkit-keyframes spin-reverse {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(-359deg);
+  }
+}
+
+@keyframes spin-reverse {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(-359deg);
+  }
+}
+
+
+@keyframes colorchange
+{
+	0%   {background: red;}
+	25%  {background: yellow;}
+	50%  {background: blue;}
+	75%  {background: green;}
+	100% {background: red;}
+}
+
+@-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
+{
+	0%   {background: red;}
+	25%  {background: yellow;}
+	50%  {background: blue;}
+	75%  {background: green;}
+	100% {background: red;}
+}
+
+.colorchange {
+	animation: colorchange 10s infinite;
+	-webkit-animation: colorchange 10s infinite;
+	color:black;
+
+	&.fa, &.gi, &.glyphicon{
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+}

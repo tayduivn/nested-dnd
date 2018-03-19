@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import Spells, { SpellSlotsAndMoney } from "./CharSheetSpells.js";
@@ -52,19 +51,19 @@ class SinglePage extends Component {
 		return (
 			<div>
 				<div className="paper">
-					<Row className="halfpage">
-						<Col xs={4}>
+					<div className="row halfpage">
+						<div className="col-4">
 							<BasicInfo
 								name={char.name}
 								classes={char.classes}
 								player={char.player}
 							/>
 							<Skills skills={char.getSkills()} />
-						</Col>
-						<Col xs={8} className="full-height">
+						</div>
+						<div className="col-8 full-height">
 							<Abilities abilities={char.abilities} />
-							<Row className="full-height main-content">
-								<Col xs={6}>
+							<div className="row full-height main-content">
+								<div className="col">
 									<Health
 										char={char}
 										hitDice={char.getHitDice()}
@@ -80,16 +79,16 @@ class SinglePage extends Component {
 										label="Features"
 										char={char}
 									/>
-								</Col>
-								<Col xs={6} className="top-col">
+								</div>
+								<div className="col top-col">
 									<Equipment equipment={char.equipment} />
 									<SpellSlotsAndMoney char={char} />
-								</Col>
-							</Row>
-						</Col>
-					</Row>
-					<Row
-						className="halfpage bottom"
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						className="row halfpage bottom"
 						style={{ background: "url(css/img/" + char.img + ")" }}
 					>
 						<RolePlay
@@ -114,15 +113,15 @@ class SinglePage extends Component {
 									spellcasting={char.getSpellcasting()}
 								/>
 							: ""}
-					</Row>
+					</div>
 				</div>
 				{spellcasting && twoPages
 					? <div className="paper">
-							<Row className="halfpage">
+							<div className="row halfpage">
 								<SpellbookAllClasses
 									spellcasting={char.getSpellcasting()}
 								/>
-							</Row>
+							</div>
 						</div>
 					: ""}
 			</div>
@@ -186,19 +185,16 @@ class SpellbookAllClasses extends Component {
 		const COUNT = this.props.spellcasting.totalSpells;
 
 		return (
-			<Col
-				xs={this.props.col}
-				className={
-					"close-col " +
-					(COUNT > BREAK_TO_2PAGE
-						? "fullpage"
-						: COUNT > BREAK_TO_2COL ? "long" : "")
-				}
+			<div className={`close-col col-${this.props.col} 
+									${COUNT > BREAK_TO_2PAGE
+																			? "fullpage"
+																			: COUNT > BREAK_TO_2COL ? "long" : ""}
+								`}
 			>
 				{this.props.spellcasting.list.map((a, i) =>
 					<Spells key={i} {...a} count={COUNT} />
 				)}
-			</Col>
+			</div>
 		);
 	}
 }

@@ -1,10 +1,4 @@
 import React, { Component } from "react";
-import {
-	FormGroup, 
-	ControlLabel, 
-	FormControl,
-	Button
-} from "react-bootstrap";
 import PropTypes from "prop-types";
 import DB from '../../actions/CRUDAction';
 
@@ -56,14 +50,14 @@ export default class EditGenerator extends Component {
 				<form onSubmit={this.handleSubmit}>
 
 					{/* --------- Name ------------ */}
-					<FormGroup>
-						<ControlLabel>Name</ControlLabel>
-						<FormControl defaultValue={gen.isa} required name="isa" />
-					</FormGroup>
+					<div class="form-group">
+						<label>Name</label>
+						<input value={gen.isa} required name="isa" />
+					</div>
 
-					<Button type="submit" bsStyle="primary">Save</Button>
+					<button type="submit" className="btn btn-primary">Save</button>
 
-					<Button bsStyle="danger" onClick={ this.handleDelete }>Delete Generator</Button>
+					<button className="btn btn-danger" onClick={ this.handleDelete }>Delete Generator</button>
 				</form>
 			</div>
 		);

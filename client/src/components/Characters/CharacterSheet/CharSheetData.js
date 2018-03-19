@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import {
@@ -24,8 +23,8 @@ export class RolePlay extends Component {
 	}
 	render() {
 		return (
-			<Col xs={this.props.col} className="close-col">
-				<Row>
+			<div className={`close-col col-${this.props.col}`}>
+				<div className="row">
 					<Item
 						xs={12}
 						label="Race"
@@ -57,13 +56,13 @@ export class RolePlay extends Component {
 						value={this.props.profBonus}
 					/>
 					<Item xs={4} label="Size" value={this.props.race.size} />
-				</Row>
-				<Row>
+				</div>
+				<div className="row">
 					<Item xs={4} label="Eyes" value={this.props.body.eyes} />
 					<Item xs={4} label="Skin" value={this.props.body.skin} />
 					<Item xs={4} label="Hair" value={this.props.body.hair} />
-				</Row>
-				<Row>
+				</div>
+				<div className="row">
 					<Item xs={4} label="Age" value={this.props.body.age} />
 					<Item
 						xs={4}
@@ -75,16 +74,16 @@ export class RolePlay extends Component {
 						label="Weight"
 						value={this.props.body.weight}
 					/>
-				</Row>
+				</div>
 				<BaseAbilityScores abilities={this.props.abilities} />
 				<p>&nbsp;</p>
-				<Row>
+				<div className="row">
 					<ProficienciesList
 						proficiencies={this.props.proficiencies}
 						profBonus={this.props.profBonus}
 					/>
-				</Row>
-			</Col>
+				</div>
+			</div>
 		);
 	}
 }
@@ -97,8 +96,8 @@ class BaseAbilityScores extends Component {
 	}
 	render() {
 		return (
-			<Row>
-				<Col xs={6} className="no-padding">
+			<div className="row">
+				<div xs={6} className="col no-padding">
 					<Item
 						xs={4}
 						label="STR"
@@ -114,8 +113,8 @@ class BaseAbilityScores extends Component {
 						label="CON"
 						value={this.props.abilities.Constitution.getScore()}
 					/>
-				</Col>
-				<Col xs={6} className="no-padding">
+				</div>
+				<div xs={6} className="col no-padding">
 					<Item
 						xs={4}
 						label="INT"
@@ -131,8 +130,8 @@ class BaseAbilityScores extends Component {
 						label="CHA"
 						value={this.props.abilities.Charisma.getScore()}
 					/>
-				</Col>
-			</Row>
+				</div>
+			</div>
 		);
 	}
 }
@@ -188,31 +187,31 @@ export class ShowWork extends Component {
 	render() {
 		var subclasses = this.subclasses(this.props.classes);
 		return (
-			<Col xs={this.props.col} className="close-col">
-						<p className="title-sm">Personality Trait</p>
-						<p>
-							{this.props.background.personality}
-						</p>
-						<p className="title-sm">Ideal</p>
-						<p>
-							{this.props.background.ideal}
-						</p>
-						<p className="title-sm">Bond</p>
-						<p>
-							{this.props.background.bond}
-						</p>
-						<p className="title-sm">Flaw</p>
-						<p>
-							{this.props.background.flaw}
-						</p>
-					<Item
-						className={subclasses.length ? "" : "hidden"}
-						label="Subclasses"
-						value={this.props.classes.map((c,i) =>
-							<Subclass subclasses={c.subclasses} key={i} />
-						)}
-					/>
-			</Col>
+			<div className={`close-col col-${this.props.col}`}>
+				<p className="title-sm">Personality Trait</p>
+				<p>
+					{this.props.background.personality}
+				</p>
+				<p className="title-sm">Ideal</p>
+				<p>
+					{this.props.background.ideal}
+				</p>
+				<p className="title-sm">Bond</p>
+				<p>
+					{this.props.background.bond}
+				</p>
+				<p className="title-sm">Flaw</p>
+				<p>
+					{this.props.background.flaw}
+				</p>
+				<Item
+					className={subclasses.length ? "" : "hidden"}
+					label="Subclasses"
+					value={this.props.classes.map((c,i) =>
+						<Subclass subclasses={c.subclasses} key={i} />
+					)}
+				/>
+			</div>
 		);
 	}
 }
@@ -242,32 +241,30 @@ class ProficienciesList extends Component {
 
 
 		return (
-			<div>
-				<Col xs={12} className="description">
-					<p className="title-sm">Proficiencies</p>
-					<p>
-						<em>Languages: </em>
-						{this.props.proficiencies.languages.list.join(", ")}
-					</p>
-					<p>
-						{this.props.proficiencies.armor.list.length
-							? <em>Armor: </em>
-							: ""}
-						{this.props.proficiencies.armor.list.join(", ")}
-					</p>
-					<p>
-						{this.props.proficiencies.weapons.list.length
-							? <em>Weapons: </em>
-							: ""}
-						{this.props.proficiencies.weapons.list.join(", ")}
-					</p>
-					<p>
-						{this.props.proficiencies.tools.list.length
-							? <em>Tools: </em>
-							: ""}
-						{toolsStr}
-					</p>
-				</Col>
+			<div className="description">
+				<p className="title-sm">Proficiencies</p>
+				<p>
+					<em>Languages: </em>
+					{this.props.proficiencies.languages.list.join(", ")}
+				</p>
+				<p>
+					{this.props.proficiencies.armor.list.length
+						? <em>Armor: </em>
+						: ""}
+					{this.props.proficiencies.armor.list.join(", ")}
+				</p>
+				<p>
+					{this.props.proficiencies.weapons.list.length
+						? <em>Weapons: </em>
+						: ""}
+					{this.props.proficiencies.weapons.list.join(", ")}
+				</p>
+				<p>
+					{this.props.proficiencies.tools.list.length
+						? <em>Tools: </em>
+						: ""}
+					{toolsStr}
+				</p>
 			</div>
 		);
 	}
@@ -282,14 +279,14 @@ export class Item extends Component {
 	}
 	render() {
 		return (
-			<Col xs={this.props.xs}>
+			<div className={"col-"+this.props.xs}>
 				<p className="title-sm">
 					{this.props.label}
 				</p>
 				<div className="item-entry">
 					{this.props.value}
 				</div>
-			</Col>
+			</div>
 		);
 	}
 }

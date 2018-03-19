@@ -1,6 +1,4 @@
 import React from "react";
-import thingStore from "../../stores/thingStore";
-import { FormGroup, FormControl, HelpBlock, Glyphicon } from "react-bootstrap";
 
 const DEBUG = false;
 
@@ -11,11 +9,6 @@ export default class NameInput extends React.Component {
 		this.handleClear = this.handleClear.bind(this);
 	}
 	shouldComponentUpdate(nextProps) {
-		if (DEBUG) {
-			console.log(
-				"* Acheron background: " + thingStore.get("Acheron").background
-			);
-		}
 		return !Object.values(this.props).equals(Object.values(nextProps));
 	}
 	componentWillUpdate(nextProps) {
@@ -37,7 +30,7 @@ export default class NameInput extends React.Component {
 			this.validationState = "error";
 			this.helpText = "Name is required";
 		} else if (props.isUpdated) {
-			if (thingStore.exists(props.value.trim())) {
+			if (true) { //thingStore.exists(props.value.trim())
 				this.validationState = "error";
 				this.helpText = (
 					<span>
@@ -67,31 +60,30 @@ export default class NameInput extends React.Component {
 	}
 	render() {
 		return (
-			<FormGroup
-				className="title clearable"
+			<div
+				className="form-group title clearable"
 				bsSize="large"
 				controlId="thing-name"
 				validationState={this.validationState}
 			>
-				<FormControl
+				<input
 					type="text"
 					value={this.props.value}
 					onChange={this.handleChange}
 				/>
-				<HelpBlock>
+				<small>
 					{this.helpText}
-				</HelpBlock>
-				<FormControl.Feedback
-					className={
-						this.props.value === this.props.originalValue
-							? "hidden"
-							: ""
-					}
+				</small>
+				<div className={`valid-feedback ${
+														this.props.value === this.props.originalValue
+															? "hidden"
+															: ""
+													}`}
 					onClick={this.handleClear}
 				>
-					<Glyphicon glyph="remove" />
-				</FormControl.Feedback>
-			</FormGroup>
+					<i className="fa fa-cross" />
+				</div>
+			</div>
 		);
 	}
 }
