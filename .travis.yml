@@ -6,11 +6,9 @@ addons:
     code_climate:
       repo_token:
         secure: "cp2dI1mLqpwhvsIVsB0tWgTZNSSMSqSsubJtXN/2PZipQ0HlPSOQhwG4rcMObgYvodz0EgjtAYlPXw9i5yf57nGZQ6mRxcvlxtJ+hlveifYnT4yCx/IWnl4jgqKHrXBxT6jCbCI9MOKYnv6x9pZlEdKFMiUpMB2lz7SDGY9ODB3GQYC1A1Zad5yQbV0E1A8oHbDW3gge0Rj3R1l60WpxZBpbtj5U6fslFx6a8ZGjm25rxyIHPM5bFhfAj4xo/WaVZwDz23JCFdsvFhOGoyzNJkDljFdnWFXFedVxLrUYPeC4WG70sG4CjL62bxgQ92wLkPigwm+nkh/3WUm2nOmJVM5xnwekObAU8jgUE6FnRuyZfXTBoYpL/4wIS/CK/GvcY8fyHot/KL1eEhIk8LvuhVUBXpUIfrKR2Mf8luuDbDD9cwicLwKELQYU0IunaXCX96ML53vv5pb4sunlpL6gmZZ3c61Xzrjk1YWuj4RB5GuAtKul6LAahcMUI78h+hNmk+9kb/0LPo62uFkfhPamNBN9HI0muCegXwmyCvfaeK7+CCUV0yJgfvSf0Unac+hL1Y9bBvOXmcpiT33wEkESuO8msrc1i6Lj33BpCJXG0jCavLofTlyIz41Gm8VuQO3Z5uFKJKc6UYADlRhQezB70mKAAHiU+5uES5P2PMIwYRI="
-install:
-  - yarn global add cross-env
+after_success:
   - yarn global add codecov
   - yarn global add codeclimate-test-reporter
-after_success:
   - yarn report-coverage
 deploy:
   provider: heroku
