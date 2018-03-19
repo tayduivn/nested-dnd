@@ -18,7 +18,7 @@
     "build-css": "node-sass-chokidar client/src/ -o client/src/",
     "watch-css": "npm run build-css && node-sass-chokidar client/src/ -o client/src/ --watch --recursive",
     "heroku-postbuild": "npm run build",
-    "test": "yarn cross-env NODE_ENV=test nyc mocha server/test --timeout=3000",
+    "test": "cross-env NODE_ENV=test nyc mocha server/test --timeout=3000",
     "eject": "react-scripts eject --dir client",
     "predeploy": "npm run build",
     "report-coverage": "nyc report --reporter=json > coverage/coverage.json && codecov"
