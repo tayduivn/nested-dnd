@@ -107,7 +107,8 @@ app.use(function (err, req, res, next) {
 	else{
 		res.status(500);
 		console.error(err); // internal error
-		console.error(err.stack); // internal error
+		console.error(err.fileName+" | col:"+err.columnNumber+" | line:"+err.lineNumber); // internal error
+		console.error(err.stack);
 	}
 	
 	return res.json({ error: err.toJSON() });

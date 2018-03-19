@@ -17,8 +17,5 @@
 	},
 	"rules": {
 		"node/no-unpublished-require": "off"
-	},
-	"engines": {
-    "node": ">= 6"
 	}
 }

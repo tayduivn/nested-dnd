@@ -2,6 +2,7 @@
 
 ![David](https://david-dm.org/cattegy/nested-dnd.svg)
 ![Code Climate](https://img.shields.io/codeclimate/github/cattegy/nested-dnd.svg)
+[![bitHound Overall Score](https://www.bithound.io/github/cattegy/nested-dnd/badges/score.svg)](https://www.bithound.io/github/cattegy/nested-dnd)
 
 
 # Nested D&D
@@ -23,3 +24,4 @@ open static/js/bundle
 
 yalc publish 
 yalc add react-scripts
+depcheck
