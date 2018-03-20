@@ -23,7 +23,7 @@
     "server": "nodemon server/server.js",
     "start": "node server/server.js",
     "start-js": "react-scripts start --dir client --prefix ../../node_modules",
-    "test": "cross-env NODE_ENV=test nyc mocha --require ./client/.testSetup.js --require ignore-styles --timeout=3000 server/**/*.test.js client/**/*.test.js",
+    "test": "cross-env NODE_ENV=test nyc --cache --require ignore-styles --require ./client/.testSetup.js  mocha --timeout=3000 server/**/*.test.js client/**/*.test.js",
     "watch-css": "npm run build-css && node-sass-chokidar client/src/ -o client/src/ --watch --recursive"
   },
   "dependencies": {
