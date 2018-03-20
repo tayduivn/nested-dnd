@@ -7,7 +7,8 @@ const HEADERS = {
 	}
 };
 
-const URL_PREFIX = "/api/";
+const server = process.env.PUBLIC_URL || "http://localhost:3001";
+const URL_PREFIX = server+"/api/";
 
 /**
  * Always returns a promise, which returns { err, data }
@@ -16,7 +17,7 @@ var DB = {
 	fetch: (url, method, headers)=>{
 		headers = setHeader(method, headers);
 		url = url.replace(/^\//, ''); // get rid of extra slash
-		return fetch(URL_PREFIX+url, headers).then(getResponse);
+		return fetch(URL_PREFIX+url, headers).then(getResponse).catch(handleError);
 	},
 	create: function(url, payload){
 		return this.fetch(url, "POST", {body: payload});
@@ -62,6 +63,10 @@ function formDataTOJson(formData){
 	    jsonObject[key] = value;
 	}
 	return jsonObject;
+}
+
+function handleError(error){
+	return { error }
 }
 
 async function getResponse(response){

@@ -1,21 +1,37 @@
 const chai = require('chai');
+const Node = require('../app/routes/packs/Node.js');
 const Explore = require('../app/routes/packs/explore.js');
+const assert = require('assert');
+const should = chai.should();
 
-var assert = require('assert');
-describe('Array', function() {
-	describe('#indexOf()', function() {
-		it('should return -1 when the value is not present', function() {
-			assert.equal([1,2,3].indexOf(4), -1);
-		});
-	});
-});
+// what we get out of the make function
+// root node
+
+var sampleNode = {
+	name: 'foofoo',
+	isa: 'foo',
+	up: [],
+	cssClass: 'black',
+	txt: 'white',
+	img: 'fooimg',
+	icon: 'fa fa-foo',
+	in: [
+		{
+			isa: 'bar'
+		},
+		{
+			name: 'string'
+		},
+		{
+			isa: 'barbar',
+			in: true
+		}
+	]
+}
+
+
 
 describe('Explore', function(){
-	describe('treeToArray()', function(){
-		it('should return a tree and an array', function(){
-			var { tree, array } = Explore.treeToArray({});
-			assert(array instanceof Array, "returned array is an Array");
-			assert(tree instanceof Object, "returned tree is an Object");
-		});
-	})
+
+
 })

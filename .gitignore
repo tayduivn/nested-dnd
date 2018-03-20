@@ -12,7 +12,7 @@ coverage.lcov
 
 # build
 /client/build
-/client/src/**/*.css
+/client/**/*.css
 !/client/src/assets/font/*.css
 
 # server

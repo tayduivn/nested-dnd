@@ -33,7 +33,7 @@ module.exports = function(app) {
 	app.get("/api/pack/:pack/generate/:isa", utils.canViewPack, (req, res, next) => {
 
 		BuiltPack.findOrBuild(req.pack).then((builtpack)=> {
-			var gen = builtpack.generators[req.params.isa];
+			var gen = builtpack.getGen(req.params.isa);
 			if(!gen) 
 				return res.status(404).json("Can't find a generator that is a "+req.params.isa);
 

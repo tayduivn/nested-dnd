@@ -73,14 +73,14 @@ var Maintainer = {
 	insertNew: async function(data, pack, builtpack){
 
 		//validate isa
-		if(builtpack.generators[data.isa]){
+		if(builtpack.getGen(data.isa)){
 			var e = new Error(data.isa+" generator already exists in pack "+pack._id);
 			e.status = 412;
 			throw e;
 		}
 
 		//validate extends
-		if(data.extends && !builtpack.generators[data.extends]){
+		if(data.extends && !builtpack.getGen(data.extends)){
 			var e = new Error(data.extends+" extends generator doesn't exist in pack "+pack._id);
 			e.status = 412;
 			throw e;
@@ -91,7 +91,7 @@ var Maintainer = {
 			var isas = this.getGeneratorChildren(data.in);
 
 			for(var i = 0; i < isas.length; i++){
-				if(!builtpack.generators[isas[i]] && isas[i] !== data.isa){
+				if(!builtpack.getGen(isas[i]) && isas[i] !== data.isa){
 					var e = new ReferenceError("Could not find child generator that is a "+isas[i])
 					e.status = 412;
 					throw e;
@@ -163,7 +163,7 @@ var Maintainer = {
 		gens.forEach((gen)=>{
 			var changed = false;
 			var newGen = this.renameChildren(gen, isaOld, isaNew);
-			var builtGen = builtpack.generators[gen.isa];
+			var builtGen = builtpack.getGen(gen.isa);
 
 			if(!builtGen){
 				throw new Error("Could not find build for "+gen.isa+" in pack "+gen.pack_id);

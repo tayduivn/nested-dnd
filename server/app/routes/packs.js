@@ -5,6 +5,7 @@ const Pack = require("../models/pack");
 const Generator = require("../models/generator");
 const BuiltPack = require("../models/builtpack");
 const Explore = require('./packs/explore');
+const Node = require('./packs/Node');
 
 
 module.exports = function(app) {
@@ -62,7 +63,7 @@ module.exports = function(app) {
 					// todo get from DB if logged in
 					// TODO: figure out how to store the newly generated stuff in array
 					var generated = await Generator.makeAsNode(origTree, universe, builtpack);
-					var { tree, array } = Explore.treeToArray(generated, index, universe.array.length);
+					var { tree, array } = generated.setIndex(index).flatten(universe.array.length);
 
 					// store in session
 					array.forEach((n)=>{
@@ -82,10 +83,11 @@ module.exports = function(app) {
 		else{
 			BuiltPack.findOrBuild(req.pack).then(async (builtpack)=>{
 				var generated = await builtpack.growFromSeed(req.pack)
+				generated.index = 0;
 
 				// save to universe
 				// TODO get from DB if logged in
-				var { tree, array } = Explore.treeToArray(generated);
+				var { tree, array } = generated.flatten();
 				array = array.map((n)=>{ // don't need indexes if starting fresh
 					delete n.index;
 					return n;
@@ -160,7 +162,7 @@ module.exports = function(app) {
 		if(newVals.seed){
 			BuiltPack.findOrBuild(req.pack)
 				.then(builtpack=>{
-					if(!req.pack.seedIsValid(newVals.seed, builtpack.generators)){
+					if(!req.pack.seedIsValid(newVals.seed, builtpack)){
 						return res.status(412).json({ error: "Seed is not valid: "+newVals.seed});
 					}
 					else save();

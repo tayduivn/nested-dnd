@@ -1,3 +1,6 @@
+
+const Node = require('../../routes/packs/Node');
+
 var Maker = {
 
 	/**
@@ -30,46 +33,32 @@ var Maker = {
 
 	/**
 	 * Creates a random version of a generator
-	 * @param  {Generator} gen         the generator
+	 * @param  {Object|Generator} gen         the generator 
 	 * @param  {Integer} generations the number of nested levels to generate
 	 * @param  {BuiltPack} builtpack        the compiled built pack with combined definitions of generators to use
 	 * @param {Object} node the pre-existing node that we are generating children for
-	 * @return {Object}             the node that will be passed to the user
+	 * @return {Node}             the node that will be passed to the user
 	 */
 	make: async function(gen, generations, builtpack, node){
 		if(!gen){
 			console.trace("gen cannot be undefined");
 			throw new Error("make(): gen cannot be undefined");
 		}
-
 		if(isNaN(generations) || generations < 0) generations = 0;
 
 		//make into a Generator obj if not
 		if(!gen.save){
 			var Generator = builtpack.model('Generator');
-			gen = new Generator(gen);
+			gen = new Generator(gen)
 		}
-
-		//extends
-		if(gen.extends){
-			var extendsGen = new Generator(builtpack.generators[gen.extends])
-			extendsGen.set(gen);
-			gen = extendsGen;
-		}
+		gen = gen.extend(builtpack);
 
 		// make a new node if doesn't exist yet
 		if(!node){
-			node = {
-				up: [] // placeholder for later
-			};
-			//optional fields, if new -----------------------------
-
 			var name = await gen.makeName;
 			var style = await gen.makeStyle;
-			node = Object.assign({}, node, style);
-			if(name) node.name = name;
-			if(gen.isa) node.isa = gen.isa;
-			if(gen.in && gen.in.length) node.in = true; // placeholder for later;
+
+			node = new Node(name, gen, style);
 		}
 		
 		// in ---------------------------------------------
@@ -161,7 +150,7 @@ async function checkTypes(child, Table, builtpack){
 		table = await Table.findById(child.value)
 	}
 	else if(child.type === "generator"){
-		gen = builtpack.generators[child.value]
+		gen = builtpack.getGen(child.value)
 	}
 	else if(child.type === "embed"){
 		gen = child.value;

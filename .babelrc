@@ -1,0 +1,29 @@
+{
+	"plugins": [
+		"transform-class-properties",
+		"babel-plugin-transform-es2015-modules-commonjs"
+	],
+	"presets": [
+		"env",
+		"react-app"
+	],
+	"env": {
+		"test": {
+			"plugins": [
+				[
+					"istanbul",
+					{
+						"exclude": [
+							"client/build/**",
+							"client/public/**",
+							"client/src/registerServiceWorker.js",
+							"client/.testSetup.js",
+							"**/*.test.js",
+							"coverage/**"
+						]
+					}
+				]
+			]
+		}
+	}
+}

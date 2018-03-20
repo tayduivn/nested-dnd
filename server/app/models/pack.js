@@ -100,17 +100,17 @@ packSchema.methods.getSeedFromTree = function(tree){
 /**
  * Check if seed is valid and get array of generators
  * @param  {string} seed       to check
- * @param  {Object} generators map of built generators
+ * @param  {BuiltPack} builtpack the built pack
  * @return {Object[]|boolean}            array of generators or false
  */
-packSchema.methods.seedIsValid = function(seed, generators){
+packSchema.methods.seedIsValid = function(seed, builtpack){
 	var arr = seedArray(seed);
 	var gens = []
 	for(var i = 0; i < arr.length; i++){
-		if(!generators[arr[i]]){
+		if(!builtpack.getGen(arr[i])){
 			return false;
 		}
-		gens.push(generators[arr[i]]);
+		gens.push(builtpack.getGen(arr[i]));
 	}
 	return (gens.length) ? gens : false;
 }

@@ -66,8 +66,31 @@ schema.methods.pushGenerator = function(gen){
 		throw new Error("Cannot auto push new generator that has dependencies");
 	}
 
-	this.generators[gen.isa] = combineGenerators([gen]);
+	this.setGen(combineGenerators([gen]));
 	this.markModified('generators.'+gen.isa)
+}
+
+/**
+ * Retrieve a generator with a specific isa name
+ * @param  {string} isa what the generator is
+ * @return {Generator}     the generator out of the map
+ */
+schema.methods.getGen = function(isa){
+	var gen = this.generators[isa];
+	if(!gen) return undefined;
+
+	gen.isa = isa;
+	return gen;
+}
+
+/**
+ * Put a generator into the map, without duplicating isa name
+ * @param  {Generator} the generator to push
+ */
+schema.methods.setGen = function(generator){
+	var isa = generator.isa;
+	delete generator.isa;
+	this.generators[isa] = generator;
 }
 
 /**
@@ -91,7 +114,7 @@ schema.methods.rebuildGenerator = async function(isa, pack){
 	if(!this.generators)
 		this.generators = {};
 
-	this.generators[isa] = combineGenerators(gens);
+	this.setGen(combineGenerators(gens));
 	this.markModified('generators.'+isa)
 	await this.save();
 }
@@ -99,7 +122,7 @@ schema.methods.rebuildGenerator = async function(isa, pack){
 /**
  * Using this buildpack, it will generate 
  * @param  {Pack} seedArray array of isa's
- * @return {Object}           the grown tree of generated things to be passed to the user
+ * @return {Promise<Node>}           the grown tree of generated things to be passed to the user
  */
 schema.methods.growFromSeed = function(pack){
 	if(!pack.seed){
@@ -108,8 +131,8 @@ schema.methods.growFromSeed = function(pack){
 		throw error;
 	}
 
-	var gens = pack.seedIsValid(pack.seed, this.generators);
-	if(!gens){
+	var gens = pack.seedIsValid(pack.seed, this);
+	if(!gens || !gens.length){
 		throw new Error("Could not find seed "+pack.seed+" in built pack "+this._id);
 	}
 	return this.model('Generator').makeAsRoot(gens, this);

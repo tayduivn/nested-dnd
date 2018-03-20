@@ -70,7 +70,7 @@ generatorSchema.virtual('makeStyle').get(async function(){
 })
 
 generatorSchema.virtual('makeName').get(function(){
-	return (this.name) ? Maker.makeMixedThing(this.name, this.model('Table')) : null;
+	return (this.name) ? Maker.makeMixedThing(this.name, this.model('Table')) : undefined;
 })
 
 // ----------------------- STATICS
@@ -92,7 +92,7 @@ generatorSchema.statics.insertNew = async function(data, pack){
  * Generates a random version as the root node of a tree, with 3 levels.
  * @param  {Object[]} seedArray An array of built version of generators that are the seeds. 
  * @param  {BuiltPack} builtpack 
- * @return {Object}           the root node of the tree
+ * @return {Node}           the root node of the tree
  */
 generatorSchema.statics.makeAsRoot = async function(seedArray, builtpack){
 	var seed = seedArray.shift();
@@ -130,6 +130,7 @@ generatorSchema.statics.makeAsRoot = async function(seedArray, builtpack){
 	}
 };
 
+
 /**
  * Generates random children of a node that already exists in the universe
  * @param  {Object} tree      the node you want to generate descendents for, as a nested tree
@@ -145,7 +146,7 @@ generatorSchema.statics.makeAsNode = async function(tree, universe, builtpack){
 	// has children, but they are not generated yet.
 	// TODO: check if deeply nested embeds are being generated correctly
 	if(builtpack && tree.in === true){
-		var generator = builtpack.generators[tree.isa];
+		var generator = builtpack.getGen(tree.isa);
 		if(generator){
 			tree = await Maker.make(generator, 1, builtpack, tree);
 		}
@@ -153,7 +154,7 @@ generatorSchema.statics.makeAsNode = async function(tree, universe, builtpack){
 
 	// up is index, not obj
 	if(tree.up !== undefined && !isNaN(tree.up)){
-		tree.up = Explore.populateUp(tree,universe.array)
+		tree.up = tree.expandUp(universe.array)
 	}
 
 	return tree;
@@ -179,6 +180,20 @@ generatorSchema.statics.make = function(generator, builtpack){
  */
 generatorSchema.methods.rename = function(isaOld, pack){
 	return Maintainer.rename(this, pack, isaOld, this.model('Generator'))
+}
+
+/**
+ * Extends this generator with another one
+ * @param  {BuiltPack} builtpack the builtpack to get the extendgen out of
+ * @return {Generator}              the new Generator
+ */
+generatorSchema.methods.extend = function(builtpack){
+	if(!this.extends) return this;
+	const Generator = this.model('Generator');
+
+	var extendsGen = new Generator(builtpack.getGen(this.extends));
+	extendsGen.set(this); // this overwrites the extends
+	return extendsGen;
 }
 
 

@@ -37,9 +37,9 @@ class App extends Component {
 	}
 	componentDidMount(){
 		DB.fetch("loggedIn").then((result) => {
-			this.setState({ loggedIn: result.data.loggedIn })
-			return result;
-		});
+			if(result.data)
+				this.setState({ loggedIn: result.data.loggedIn })
+		})
 	}
 	handleLogin(url, payload){
 		return DB.create(url, payload).then((result) => {
