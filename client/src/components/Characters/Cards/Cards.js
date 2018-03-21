@@ -13,37 +13,6 @@ export default class Cards extends React.Component {
 			recalcFontSize(arr[i]);
 		}
 	}
-	renderFrontBack() {
-		if (!this.props.character) return <div />;
-
-		var pages = [];
-		var cards = [];
-		let c = this.props.character;
-		const ALL_CARDS = c.cards.get();
-		const LVL = c.getTotalLevel();
-		let name = (c.name) ? c.name+" "+LVL: c.classes[0].name+" "+LVL;
-
-		for (var i = 0; i < ALL_CARDS.length; i++) {
-			cards.push(ALL_CARDS[i]);
-			if (
-				cards.length === 9 ||
-				(ALL_CARDS.length && i === ALL_CARDS.length - 1)
-			) {
-				pages.push(
-					<Page cards={cards} side="front" key={pages.length} name={name} />
-				);
-				pages.push(
-					<Page cards={cards} side="back" key={pages.length}  name={name} />
-				);
-				cards = [];
-			}
-		}
-		return (
-			<div>
-				{pages}
-			</div>
-		);
-	}
 	render() {
 		if (!this.props.character || !this.props.character.cards)
 			return <div />;
