@@ -115,21 +115,15 @@ app.use(function (err, req, res, next) {
 		console.error(err.stack);
 	}
 	
-	return res.json({ error: err.toJSON() });
+	return res.json({ error: toJSON(err) });
 })
 
-if (!("toJSON" in Error.prototype)){
-	Object.defineProperty(Error.prototype, "toJSON", {
-		value: function() {
-			var alt = {};
+function toJSON(err){
+	var alt = {};
 
-			Object.getOwnPropertyNames(this).forEach(function(key) {
-				alt[key] = this[key];
-			}, this);
+	Object.getOwnPropertyNames(this).forEach(function(key) {
+		alt[key] = this[key];
+	}, this);
 
-			return alt;
-		},
-		configurable: true,
-		writable: true
-	});
+	return alt;
 }
