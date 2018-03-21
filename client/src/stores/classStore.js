@@ -60,41 +60,40 @@ class ClassStore {
 	}
 }
 
-
-
 function processFeature(feature, name, subclasses){
 	if (name === "slots") return;
 
 	var desc = feature.desc;
+	var ret = { ...feature, name };
 
 	//description
 	if (subclasses[name]) {
 		// it is the subclass category (the superclass)
-		if (desc && desc.length)
-			desc += subclasses[name]; // add the subclass choice to the desc of the superclass
-		else desc = false;
-	} 
-	else if (feature.subclass) {
-		let len = feature.subclass.length;
-		let subclassName = feature.subclass[len-1]; // 1
-		let superclassName = feature.subclass[len-2]; // 0
-		// it is the chosen subclass
-		let isSubclass = subclasses[subclassName] === name;
-		// it is a feature of the chosen subclass
-		let isSubclassFeature = subclasses[superclassName] && subclasses[superclassName] === subclassName; 
-		let doInclude = isSubclass || isSubclassFeature;
-
-		if(!doInclude) return;
-			
-		let useDesc = desc !== false && desc === "" && feature.description;
-		if(useDesc) desc = feature.description;
+		// add the subclass choice to the desc of the superclas
+		desc = (desc && desc.length) ? desc+subclasses[name] : false;
+		return { ...ret, desc }
 	}
 
-	return {
-		...feature,
-		name: name,
-		desc: desc
-	};
+	if(!feature.subclass) 
+		return ret;
+
+	if(!doInclude(feature.subclass, name, subclasses)) 
+		return ret;
+		
+	let useDesc = desc !== false && desc === "" && feature.description;
+	if(useDesc) desc = feature.description;
+
+	return { ...ret, desc };
+}
+
+function doInclude(sc, name, subclasses){
+	let subclassName = sc[sc.length-1]; // 1
+	let superclassName = sc[sc.length-2]; // 0
+	// it is the chosen subclass
+	let isSubclass = subclasses[subclassName] === name;
+	// it is a feature of the chosen subclass
+	let isSubclassFeature = subclasses[superclassName] && subclasses[superclassName] === subclassName; 
+	return isSubclass || isSubclassFeature;
 }
 
 class Race {
