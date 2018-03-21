@@ -1,5 +1,3 @@
-const DEBUG_FEATURE = "Martial Arts";
-
 class ClassStore {
 	constructor() {
 		this.classes = {};
@@ -52,56 +50,49 @@ class PlayerClass {
 			var level = this.levels[i];
 
 			for (var name in level) {
-				var feature = level[name];
-				var desc = feature.desc;
-
-				if (name === DEBUG_FEATURE) {
-					console.log(DEBUG_FEATURE + " raw");
-					console.log(feature);
-				}
-
-				if (name === "slots") continue;
-
-				//description
-				if (subclasses[name]) {
-					// it is the subclass category (the superclass)
-					if (desc && desc.length)
-						desc += subclasses[name]; // add the subclass choice to the desc of the superclass
-					else desc = false;
-				} else if (feature.subclass) {
-					let subclassName = feature.subclass[feature.subclass.length-1]; // 1
-					let superclassName = feature.subclass[feature.subclass.length-2]; // 0
-					if (
-						subclasses[subclassName] === name || // it is the chosen subclass
-						(subclasses[superclassName]  && subclasses[superclassName] === subclassName) // it is a feature of the chosen subclass
-					) {
-						if (
-							desc !== false &&
-							desc === "" &&
-							feature.description
-						)
-							desc = feature.description;
-					} else continue;
-				}
-
-				let returnData = {
-					...feature,
-					name: name,
-					desc: desc,
-					className: this.name,
-					notes: "level " + (i + 1) + " " + this.name
-				};
-
-				if (name === DEBUG_FEATURE) {
-					console.log(DEBUG_FEATURE + " final");
-					console.log(returnData);
-				}
-
-				features.push(returnData);
+				var feature = processFeature(level[name], name, subclasses);
+				feature.notes = "level " + (i + 1) + " " + this.name;
+				feature.className = this.name;
+				features.push();
 			}
 		}
 		return features;
 	}
+}
+
+function processFeature(feature, name, subclasses){
+	if (name === "slots") return;
+
+	var desc = feature.desc;
+
+	//description
+	if (subclasses[name]) {
+		// it is the subclass category (the superclass)
+		if (desc && desc.length)
+			desc += subclasses[name]; // add the subclass choice to the desc of the superclass
+		else desc = false;
+	} 
+	else if (feature.subclass) {
+		let len = feature.subclass.length;
+		let subclassName = feature.subclass[len-1]; // 1
+		let superclassName = feature.subclass[len-2]; // 0
+		// it is the chosen subclass
+		let isSubclass = subclasses[subclassName] === name;
+		// it is a feature of the chosen subclass
+		let isSubclassFeature = subclasses[superclassName] && subclasses[superclassName] === subclassName; 
+		let doInclude = isSubclass || isSubclassFeature;
+
+		if(!doInclude) return;
+			
+		let useDesc = desc !== false && desc === "" && feature.description;
+		if(useDesc) desc = feature.description;
+	}
+
+	return {
+		...feature,
+		name: name,
+		desc: desc
+	};
 }
 
 class RaceStore {
