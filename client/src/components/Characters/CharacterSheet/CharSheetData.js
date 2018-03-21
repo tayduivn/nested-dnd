@@ -1,12 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import {
-	Body,
-	Background,
-	Proficiencies,
-	ClassInfo
-} from "../../../stores/Character";
+import { Body, Background, ClassInfo } from "../../../stores/CharRolePlay"
+import { Proficiencies } from "../../../stores/CharMiddleCol"
 import { Abilities } from "../../../stores/CharacterAbilities";
 
 export class RolePlay extends Component {

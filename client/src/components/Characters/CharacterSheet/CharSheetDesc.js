@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import Character, { Feature } from "../../../stores/Character";
+import Character from "../../../stores/Character";
+import { Feature } from '../../../stores/CharMiddleCol'
 
 export class AdvResist extends Component {
 	static get propTypes() {
