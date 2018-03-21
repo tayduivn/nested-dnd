@@ -59,4 +59,30 @@ styleSchema.methods.makePattern = async function(){
 	return Maker.makeMixedThing(this.pattern, this.parent().model('Table'))
 };
 
+// TODO
+styleSchema.methods.strToColor = function(str) {
+	var colors = "multicolored|opaline|rainbow|red|magenta|orange|yellow|teal|green|blue|turquoise|purple|gold|golden|glowing|shimmering|luminous|faint|white|black|brown|pale|silver|silvery|gray|tan|grey|pink|shady|sharkverse|baconverse|doughnutverse|lasagnaverse";
+
+	str = " "+str.replace(/-/g," ")+" ";
+	var matches = str.match("^.*\\s("+colors+")\\s.*$");
+	if(!matches) matches = str.match("^.*\\s("+colors+")ish\\s.*$");
+	if(matches && matches[1])
+		str = matches[1];
+	else
+		return "";
+
+	if(str === "tan") str = 'khaki';
+	if(str === "silvery") str = "silver";
+	if(str === "red") str = "darkred";
+	if(str === "shady") str = "grey";
+	if(str === "blue") str = "darkblue";
+	if(str === "multicolored") str = "rainbow";
+	if(str === "golden") str = "gold";
+	if(str === "shimmering" || str === "glowing" || str === "luminous") str = "glow";
+	if(str === "faint" || str === "pale") str = "white";
+	if(str === "opaline") str = "floralwhite";
+
+	return str.trim();
+}
+
 module.exports = styleSchema;
