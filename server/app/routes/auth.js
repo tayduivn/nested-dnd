@@ -1,49 +1,17 @@
 const User = require("../models/user");
 const md = require("./middleware.js");
 
-module.exports = function(app, passport) {
+const auth = (app, passport) => {
 
 	app.post("/api/login", function(req, res, next) {
 		passport.authenticate("local", function(err, user, info) {
-			if (err) {
-				return res.status(401).json(err);
-			}
-			if (!user) {
-				return res.status(401).send(info);
-			}
-			req.logIn(user, function(err) {
-
-				if (err) {
-					return res.status(401).json(err);
-				}
-
-				res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
-    		res.header('Access-Control-Allow-Credentials','true')
-
-				return res.json({ "loggedIn" : true, "user": user });
-			});
+			login(err, user, info, req, res);
 		})(req, res, next);
 	});
 
 	app.post("/api/signup", function(req, res, next) {
 		passport.authenticate("local-signup", function(err, user, info) {
-			if (err) {
-				return res.status(401).json(err);
-			}
-			if (!user) {
-				return res.status(401).send(info);
-			}
-			req.logIn(user, function(err) {
-
-				if (err) {
-					return res.status(401).json(err);
-				}
-
-				res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
-    		res.header('Access-Control-Allow-Credentials','true')
-
-				return res.json({ "loggedIn" : true, "user": user });
-			});
+			login(err, user, info, req, res);
 		})(req, res, next);
 	});
 
@@ -76,22 +44,6 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	function logout(req, res, callback){
-		req.logout();
-		req.session.destroy(function(err) {
-			if (!err) {
-				res.clearCookie("connect.sid", {
-					path: "/",
-					httpOnly: true,
-					secure: false,
-					maxAge: null
-				});
-				callback(null);
-			} 
-			else callback(err);
-		});
-	}
-
 	app.get("/api/user", function(req, res) {
 		if (req.user) {
 			res.json(req.user);
@@ -104,6 +56,45 @@ module.exports = function(app, passport) {
 	app.get("/api/loggedIn", function(req, res) {
 		return res.json({ loggedIn: !!req.user });
 	});
-
 	
 };
+
+
+
+function logout(req, res, callback){
+	req.logout();
+	req.session.destroy(function(err) {
+		if (!err) {
+			res.clearCookie("connect.sid", {
+				path: "/",
+				httpOnly: true,
+				secure: false,
+				maxAge: null
+			});
+			callback(null);
+		} 
+		else callback(err);
+	});
+}
+
+function login(err, user, info, req, res){
+	if (err) {
+		return res.status(401).json(err);
+	}
+	if (!user) {
+		return res.status(401).send(info);
+	}
+	req.logIn(user, function(err) {
+
+		if (err) {
+			return res.status(401).json(err);
+		}
+
+		res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+		res.header('Access-Control-Allow-Credentials','true')
+
+		return res.json({ "loggedIn" : true, "user": user });
+	});
+}
+
+module.exports = auth;

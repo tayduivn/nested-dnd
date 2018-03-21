@@ -1,29 +1,3 @@
-class ClassStore {
-	constructor() {
-		this.classes = {};
-	}
-	addAll(classes = {}) {
-		this.classes = { ...this.classes, ...classes };
-	}
-	getAll() {
-		var classes = {};
-		for (var name in this.classes) {
-			classes[name] = new PlayerClass(this.classes[name]);
-		}
-		return classes;
-	}
-	get(name) {
-		if(!this.classes[name]){
-			console.error("Can't find class with name "+name);
-		}
-		var c = this.classes[name] ? this.classes[name] : {};
-		return new PlayerClass(c);
-	}
-	getNames() {
-		return Object.keys(this.classes).sort();
-	}
-}
-
 class PlayerClass {
 	constructor({
 		name = "",
@@ -60,6 +34,34 @@ class PlayerClass {
 	}
 }
 
+class ClassStore {
+	constructor() {
+		this.classes = {};
+	}
+	addAll(classes = {}) {
+		this.classes = { ...this.classes, ...classes };
+	}
+	getAll() {
+		var classes = {};
+		for (var name in this.classes) {
+			classes[name] = new PlayerClass(this.classes[name]);
+		}
+		return classes;
+	}
+	get(name) {
+		if(!this.classes[name]){
+			console.error("Can't find class with name "+name);
+		}
+		var c = this.classes[name] ? this.classes[name] : {};
+		return new PlayerClass(c);
+	}
+	getNames() {
+		return Object.keys(this.classes).sort();
+	}
+}
+
+
+
 function processFeature(feature, name, subclasses){
 	if (name === "slots") return;
 
@@ -95,6 +97,30 @@ function processFeature(feature, name, subclasses){
 	};
 }
 
+class Race {
+	constructor({
+		name = "",
+		label = "",
+		proficiencies = {},
+		abilities = {},
+		size = "Medium",
+		speed = 30,
+		features = {},
+		advResist = {},
+		spellcasting
+	}) {
+		this.name = name;
+		this.label = label;
+		this.proficiencies = proficiencies;
+		this.abilities = abilities;
+		this.size = size;
+		this.speed = speed;
+		this.features = features;
+		this.advResist = advResist;
+		this.spellcasting = spellcasting;
+	}
+}
+
 class RaceStore {
 	constructor() {
 		this.races = {};
@@ -128,29 +154,26 @@ class RaceStore {
 	}
 }
 
-class Race {
+class Background {
 	constructor({
 		name = "",
-		label = "",
 		proficiencies = {},
-		abilities = {},
 		size = "Medium",
 		speed = 30,
-		features = {},
-		advResist = {},
-		spellcasting
+		feature = {},
+		advantages = {},
+		equipment = []
 	}) {
 		this.name = name;
-		this.label = label;
 		this.proficiencies = proficiencies;
-		this.abilities = abilities;
 		this.size = size;
 		this.speed = speed;
-		this.features = features;
-		this.advResist = advResist;
-		this.spellcasting = spellcasting;
+		this.feature = feature;
+		this.advantages = advantages;
+		this.equipment = equipment;
 	}
 }
+
 
 class BackgroundStore {
 	constructor() {
@@ -175,25 +198,6 @@ class BackgroundStore {
 	}
 }
 
-class Background {
-	constructor({
-		name = "",
-		proficiencies = {},
-		size = "Medium",
-		speed = 30,
-		feature = {},
-		advantages = {},
-		equipment = []
-	}) {
-		this.name = name;
-		this.proficiencies = proficiencies;
-		this.size = size;
-		this.speed = speed;
-		this.feature = feature;
-		this.advantages = advantages;
-		this.equipment = equipment;
-	}
-}
 
 let classStore = new ClassStore();
 let raceStore = new RaceStore();

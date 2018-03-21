@@ -10,7 +10,7 @@ module.exports = {
 		// CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
 		// you can do this however you want with whatever variables you set up
 		if (req.isAuthenticated())
-				return next();
+			return next();
 
 		// IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
 		res.status(401).json({error:"You need to be logged in to do that"})
@@ -70,12 +70,17 @@ function getPack(req, res, next){
 
 	packGetter.exec((err, pack)=>{
 		if (err) {
-			if(!res.headersSent) res.status(500);
-			return res.json(err)
+			if(!res.headersSent) {
+				res.status(500).json(err);
+			}
+			return next(error);
 		};
 		if(!pack){
-			return res.status(404)
-				.json({"error": "Couldn't find pack? "+req.params.pack+req.params.url})
+			var error = {"error": "Couldn't find pack? "+req.params.pack+req.params.url};
+			if(!res.headersSent) {
+				res.status(404).json(error)
+			}
+			return next(error);
 		}
 
 		req.pack = pack;
