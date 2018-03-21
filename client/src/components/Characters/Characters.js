@@ -1,6 +1,6 @@
 import React from "react";
 import CharacterSheet from "./CharacterSheet/CharacterSheet";
-import Cards from "./Cards";
+import Cards from "./Cards/Cards";
 
 import characterStore from "../../stores/characterStore";
 

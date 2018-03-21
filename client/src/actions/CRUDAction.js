@@ -1,3 +1,10 @@
+import React from 'react';
+
+const ErrorDisplay = ({message}) => (
+	<div className="alert alert-danger">
+		{message}
+	</div>
+);
 
 const HEADERS = {
 	credentials: 'include',
@@ -7,7 +14,7 @@ const HEADERS = {
 	}
 };
 
-const server = process.env.PUBLIC_URL || "http://localhost:3001";
+const server = process.env.PUBLIC_URL || "http://localhost:3000";
 const URL_PREFIX = server+"/api/";
 
 /**
@@ -23,7 +30,8 @@ var DB = {
 		return this.fetch(url, "POST", {body: payload});
 	},
 	get: function(url, id){
-		return this.fetch(url+"/"+id)
+		if(id !== undefined) return this.fetch(url+"/"+id)
+		else return this.fetch(url)
 	},
 	set: function(url, id, payload){
 		return this.fetch(url+"/"+id, "PUT",{body: payload});
@@ -66,6 +74,11 @@ function formDataTOJson(formData){
 }
 
 function handleError(error){
+	// ERR_CONNECTION_REFUSED
+	if(error.message === "Failed to fetch"){
+		error.message = "We're having trouble communicating with the server right now. Please check your internet connection."
+	}
+	error.display = <ErrorDisplay {...error} />
 	return { error }
 }
 
@@ -80,7 +93,9 @@ async function getResponse(response){
 	if(contentType && contentType.includes("json"))
 		data = await response.json()
 	else{
-		error = await response.text();
+		error = {
+			message: await response.text()
+		}
 	}
 
 	if(response.status === 404){
@@ -88,8 +103,10 @@ async function getResponse(response){
 	}
 	if(response.status !== 200) {
 		if(data && data.error){
-			if(response.status === 500)
+			if(response.status === 500){
+				data.error.message = "500 Server Error: "+data.error.message
 				console.error(data.error);
+			}
 			console.log(data.error); 
 			error = data.error;
 			delete data.error; // remove error from the return object
@@ -100,6 +117,8 @@ async function getResponse(response){
 	}
 
 	if(!data) data = {};
+	if(error)
+		error.display = <ErrorDisplay {...error} />
 
 	return { error, data }
 }

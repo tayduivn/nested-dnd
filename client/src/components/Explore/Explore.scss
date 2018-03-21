@@ -32,6 +32,7 @@
 i.gi{
 	font-size:inherit;
 }
+
 .child-appear, .child-enter {
 	opacity: 0.01;
 }
@@ -98,7 +99,8 @@ i.gi{
 
 			.wrap{
 				i{
-					font-size:5em;
+					font-size: 5rem;
+					line-height: 1em;
 				}
 
 				h1{

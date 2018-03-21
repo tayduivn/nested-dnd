@@ -4,8 +4,8 @@ const MW = require("./middleware.js");
 const Pack = require("../models/pack");
 const Generator = require("../models/generator");
 const BuiltPack = require("../models/builtpack");
-const Explore = require('./packs/explore');
-const Node = require('./packs/Node');
+const Universe = require("../models/universe");
+const Nested = require('./packs/nested');
 
 
 module.exports = function(app) {
@@ -43,72 +43,19 @@ module.exports = function(app) {
 
 	app.get("/api/explore/:url/:index?", MW.canViewPack, (req, res, next) =>{
 
-		//get universe
-		var universe = req.session.universe;
-		var index = (req.params.index) ? parseInt(req.params.index,10) : 0;
+		Universe.getTemp(req.sessionID, req.pack, req.params.index)
+			.then(nested=>res.json(nested))
+			.catch(next);
 
-		// pack exists
-		if(universe && universe.pack_id.toString() === req.pack.id){
-
-			var origTree = Explore.arrayToTree(universe.array, index);
-
-			if(origTree.in === true){
-
-				BuiltPack.findOrBuild(req.pack).then(async (builtpack)=>{
-					if(!builtpack){
-						throw Error("Could not get buildpack");
-					}
-					// TODO get an array of only the newly generated ones
-					// todo save to universe
-					// todo get from DB if logged in
-					// TODO: figure out how to store the newly generated stuff in array
-					var generated = await Generator.makeAsNode(origTree, universe, builtpack);
-					var { tree, array } = generated.setIndex(index).flatten(universe.array.length);
-
-					// store in session
-					array.forEach((n)=>{
-						var index = n.index+0;
-						delete n.index;
-						universe.array[index] = n;
-					})
-					return res.json(tree);
-				}).catch(next);
-			}
-			else {
-				return Generator.makeAsNode(origTree, universe).then(r=>res.json(r));
-			}
-		}
-
-		// pack doesn't exist, build it and return the root
-		else{
-			BuiltPack.findOrBuild(req.pack).then(async (builtpack)=>{
-				var generated = await builtpack.growFromSeed(req.pack)
-				generated.index = 0;
-
-				// save to universe
-				// TODO get from DB if logged in
-				var { tree, array } = generated.flatten();
-				array = array.map((n)=>{ // don't need indexes if starting fresh
-					delete n.index;
-					return n;
-				})
-				req.session.universe = {
-					pack_id: req.pack._id,
-					array: array
-				};
-
-				return res.json(req.pack.getSeedFromTree(tree));
-			}).catch(next)
-		}
 	})
 
+	// Restart the universe
 	app.delete("/api/explore", (req,res,next) =>{
-		if(req.session.universe){
-			req.session.universe = false;
-			res.json({"success":true});
+		var query = {
+			session_id: req.sessionID,
+			expires: { $exists: true }
 		}
-		else
-			res.json({"success": "no saved universe"});
+		Universe.remove(query).then(o=>res.json(o)).catch(next);
 	})
 
 

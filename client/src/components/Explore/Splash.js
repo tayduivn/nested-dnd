@@ -1,25 +1,60 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import WebFont from 'webfontloader';
 
 import "./Splash.css"
 
-const Splash = () => (
-	<div className="container-fluid">
-		<link href="https://fonts.googleapis.com/css?family=IM+Fell+English+SC" rel="stylesheet" />
-		<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet" />
-		<div className="row fullscreen">
-			<Link to="/explore/nested" className="nested stardust col-xs-12 col-sm-6">
-				<div>
-					<p>Nested</p>
+const nestedLink = {
+	pathname: "/explore/nested",
+	state: {
+		fromSplash: true,
+		current: {
+			in: true,
+			cssClass: 'black stardust',
+			name: 'Nested'
+		}
+	}
+}
+
+const dndLink = {
+	pathname: "/explore/dnd",
+	state: {
+		fromSplash: true,
+		current: {
+			in: true,
+			cssClass: 'tan purty-wood',
+			name: 'Dungeons & Dragons',
+			font: 'IM Fell English SC'
+		}
+	}
+}
+
+class Splash extends React.Component {
+	componentWillMount(){
+		WebFont.load({
+			google: {
+				families: ['IM Fell English SC','Press Start 2P']
+			}
+		})
+	}
+	render(){
+		return (
+			<div className="container-fluid">
+				<div className="row fullscreen">
+					<Link to={nestedLink} className="nested black stardust col-lg">
+						<div>
+							<p className="webfont">Nested</p>
+						</div>
+					</Link>
+					<Link to={dndLink} className="dnd purty-wood burlywood col-lg">
+						<div>
+							<p className="webfont">Dungeons & Dragons</p>
+						</div>
+					</Link>
 				</div>
-			</Link>
-			<Link to="/explore/dnd" className="dnd purty-wood lightgoldenrodyellow col-xs-12 col-sm-6">
-				<div>
-					<p>Dungeons & Dragons</p>
-				</div>
-			</Link>
-		</div>
-	</div>
-)
+			</div>
+		)
+	}
+}
 
 export default Splash;

@@ -6,7 +6,7 @@ chai.use(chaiAsPromised);
 const Generator = require('../app/models/generator');
 const Pack = require('../app/models/pack');
 const BuiltPack = require('../app/models/builtpack');
-const Node = require('../app/routes/packs/Node')
+const Nested = require('../app/routes/packs/nested')
 
 const builtpack = new BuiltPack({
 	generators:{
@@ -22,14 +22,14 @@ const pack = new Pack({
 
 const generator = new Generator({
 	isa: 'universe'
-})
+});
 
 describe('Generator', ()=>{
 
 	describe('makeAsRoot()', function(){
 
 		it('should should return a node',function(){
-			return Generator.makeAsRoot([generator], builtpack).should.eventually.be.an.instanceOf(Node)
+			return Generator.makeAsRoot([generator], builtpack).should.eventually.be.an.instanceOf(Nested)
 		})
 	})
 

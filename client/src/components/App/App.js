@@ -11,10 +11,9 @@ import ThingExplorer from "../ThingExplorer/ThingExplorer.js";
 import Characters from "../Characters/Characters.js";
 import Login from "./Login.js";
 import Packs from "../Packs/Packs";
-import ExplorePack from "../Explore/Explore";
+import Explore from "../Explore/Explore";
 import DB from "../../actions/CRUDAction";
 import Nav from './Nav';
-import Splash from '../Explore/Splash'
 
 import "./App.css";
 
@@ -63,7 +62,7 @@ class App extends Component {
 						<Route
 							exact
 							path="/"
-							component={Splash}
+							component={Explore}
 						/>
 						<Route
 							path="/things"
@@ -88,7 +87,7 @@ class App extends Component {
 
 						<PropsRoute path="/packs" component={Packs} />
 						
-						<Route path="/explore/:packurl" component={ExplorePack} />
+						<Route path="/explore/:packurl" component={Explore} />
 						<Route component={NotFound} />
 
 					</Switch>

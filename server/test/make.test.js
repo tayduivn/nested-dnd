@@ -6,7 +6,7 @@ chai.use(chaiAsPromised);
 const Maker = require('../app/models/generator/make');
 const BuiltPack = require('../app/models/builtpack');
 const Generator = require('../app/models/generator');
-const Node = require('../app/routes/packs/Node')
+const Nested = require('../app/routes/packs/nested')
 
 const builtpack = new BuiltPack({
 	generators:{
@@ -25,7 +25,7 @@ describe('Maker',()=>{
 	describe('make()',()=>{
 
 		it('should return a node',()=>{
-			return Maker.make(generator, 0, builtpack).should.eventually.be.an.instanceOf(Node)
+			return Maker.make(generator, 0, builtpack).should.eventually.be.an.instanceOf(Nested)
 		})
 
 	})

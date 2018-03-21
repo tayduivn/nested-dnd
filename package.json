@@ -18,8 +18,8 @@
     "predeploy": "npm run build",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "devcov": "nyc --reporter=lcov --reporter=text-lcov > coverage.lcov yarn test ",
-    "devtest": "mocha client/**/*.test.js server/**/*.test.js",
-    "devtestDebug": "cross-env NODE_ENV=test mocha --inspect-brk server/**/*.test.js client/.testSetup.js client/**/*.test.js",
+    "devtest": "cls && cross-env NODE_ENV=test mocha --require ./client/.testSetup.js server/**/*.test.js client/**/*.test.js",
+    "devtestDebug": "cross-env NODE_ENV=test mocha --inspect-brk --require ./client/.testSetup.js server/**/*.test.js client/**/*.test.js",
     "server": "nodemon server/server.js",
     "start": "node server/server.js",
     "start-js": "react-scripts start --dir client --prefix ../../node_modules",
@@ -56,7 +56,8 @@
     "react-scripts": "https://github.com/cattegy/create-react-app#react-scripts",
     "react-select": "^1.0.0-rc.5",
     "react-transition-group": "^2.2.1",
-    "react-virtualized-select": "^3.1.0"
+    "react-virtualized-select": "^3.1.0",
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "babel-eslint": "7.2.3",

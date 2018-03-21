@@ -1,9 +1,8 @@
 const chai = require('chai');
-const Node = require('../app/routes/packs/Node.js');
-const Explore = require('../app/routes/packs/explore.js');
+const Nested = require('../app/routes/packs/nested.js');
+const Universe = require('../app/models/universe.js');
 const assert = require('assert');
 const should = chai.should();
-
 
 var sampleNode = {
 	name: 'foofoo',
@@ -27,11 +26,11 @@ var sampleNode = {
 	]
 }
 
-describe('Node', function(){
+describe('Nested', function(){
 
-	describe('_toIndexes()',function(){
+	describe('_toInstance()',function(){
 
-		var flat = Node.copy({
+		var flat = Nested.copy({
 			name: 'foofoo',
 			isa: 'foo',
 			index: 1,
@@ -60,7 +59,7 @@ describe('Node', function(){
 					index: 4
 				}
 			]
-		})._toIndexes();
+		})._toInstance();
 
 		it('should set .up to 0', function(){
 			flat.up.should.be.a('number').and.equal(0);
@@ -73,26 +72,22 @@ describe('Node', function(){
 
 	describe('flatten()',function(){
 
-		it('should return a tree and an array with no input', function(){
-			var { tree, array } = new Node().flatten();
-			assert(array instanceof Array, "returned array is an Array");
+		it('should return an array of flat instances', function(){
+
+		})
+
+		it('should return a tree with no input', function(){
+			var tree = new Nested().flatten(new Universe());
 			assert(tree instanceof Object, "returned tree is an Object");
 		});
 
-		it('should return a tree and an array with good input', function(){
-			var { tree, array } = Node.copy(sampleNode).flatten();
-			assert(array instanceof Array, "returned array is an Array");
+		it('should return a tree with good input', function(){
+			var universe = new Universe();
+			var tree = Nested.copy(sampleNode).flatten(universe);
 			assert(tree instanceof Object, "returned tree is an Object");
 
-			array.should.have.lengthOf(4);
-			array[0].should.have.property('in').that.is.an('array').with.lengthOf(3).and.have.members([1,2,3]);
-
-			//assert(array.length === 4, "array has 4 items");
-			//assert(array[0].index === 1, "index is set");
-			//assert(tree.in instanceof Array, "return tree has in");
-			//assert(tree.in.length === 3, "return tree has 3 children");
-			//assert(tree.in[0].up[0].index === 1, "parent is set");
-			//assert(array[1].txt === array[0].txt, "style is inherited");
+			universe.array.should.have.lengthOf(4);
+			universe.array[0].should.have.property('in').that.is.an('array').with.lengthOf(3).and.have.members([1,2,3]);
 		});
 
 	});

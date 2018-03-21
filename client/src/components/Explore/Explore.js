@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import {TransitionGroup,  CSSTransition} from 'react-transition-group'
 import PropTypes from "prop-types";
+import WebFont from 'webfontloader';
 
 import DB from "../../actions/CRUDAction";
 import Ancestors from './Ancestors';
+import Splash from '../Explore/Splash'
 
 import './Explore.css';
 
@@ -13,18 +15,19 @@ const EMPTY_MESSAGE = <p>Contains nothing</p>;
  * This manages the tree data
  */
 export default class TreeManager extends Component {
-	static get propTypes(){
-		return {
-			// should be auto-passed from router
-			location: PropTypes.object.isRequired
-		}
+	static propTypes = {
+		// should be auto-passed from router
+		location: PropTypes.object.isRequired,
+		match: PropTypes.object.isRequired
+	}
+	state = {
+		current: null, // the current node being viewed
+		lookup: {}, // a lookup of index pointers in case the user uses back/forward
+		error: null,
+		loadedFonts: []
 	}
 	constructor(props){
 		super(props);
-		this.state = {
-			current: null, // the current node being viewed
-			lookup: {} // a lookup of index pointers in case the user uses back/forward
-		}
 
 		this.handleRestart = this.handleRestart.bind(this);
 		this.handleClick = this.handleClick.bind(this);
@@ -33,23 +36,41 @@ export default class TreeManager extends Component {
 	// first ajax data pull
 	componentDidMount(){
 		var index = this.getIndexFromHash(this.props);
+		var _this = this;
+
+		if(!this.props.match.params.packurl) return;
 
 		DB.get(this.props.location.pathname, index)
 			.then(({ error, data: current })=>{
-				var lookup = this.state.lookup;
-				lookup[current.index] = current;
-				this.setCurrent({ current , lookup });
-				if(current.index !== index) this.setIndex(index);
+
+				if(error){
+					_this.setState({ error: error.display });
+				}
+
+				else{
+					var lookup = this.state.lookup;
+					lookup[current.index] = current;
+					_this.setCurrent({ current , lookup, error });
+					if(current.index !== index) _this.setIndex(index);
+				}
 			});
 	}
 
 	// location has changed
 	componentWillReceiveProps(nextProps){
-		if(this.props.location.hash !== nextProps.location.hash
-			 && "#"+this.state.current.index !== nextProps.location.hash){
+		const isNewPack = (this.props.match.params.packurl !== nextProps.match.params.packurl) && (!!nextProps.match.params.packurl);
+		const isNoPack = (this.props.match.params.packurl !== nextProps.match.params.packurl) && (!nextProps.match.params.packurl);
+		const isNewNode = (this.props.location.hash !== nextProps.location.hash
+					 && "#"+this.state.current.index !== nextProps.location.hash);
+
+		// set current does the lookup
+		if(isNewNode || isNewPack || isNoPack){
 			var index = this.getIndexFromHash(nextProps);
 			if(this.state.lookup[index]){
-				this.setCurrent({ current: this.state.lookup[index]})
+				this.setCurrent({ current: this.state.lookup[index], error: null }, nextProps)
+			}
+			else if(isNewPack && this.props.location.state !== nextProps.location.state){
+				this.setCurrent({ current: nextProps.location.state.current, error: null }, nextProps);
 			}
 		}
 	}
@@ -57,46 +78,62 @@ export default class TreeManager extends Component {
 	shouldComponentUpdate(nextProps, nextState){
 		this.makeUrlMatchCurrent(nextState, nextProps);
 
-		return this.state.current !== nextState.current;
+		return this.state.current !== nextState.current 
+			|| this.state.error !== nextState.error
+			|| this.props.match !== nextProps.match;
 	}
 
 	getIndexFromHash(props){
-		return props.location.hash ? parseInt(props.location.hash.substr(1), 10) : 0;
+		return props.location.hash ? parseInt(props.location.hash.substr(1), 10) : "";
 	}
 
-	setCurrent(data){
+	setCurrent(data, props){
 
-		if(data)
+		if(data){
+			data.error = null;
 			this.setState(data);
+		}
+
+		if(!props) props = this.props;
 
 		var curr = data.current;
 		if(curr === null) return;
+		const _this = this;
 
-		//detect if need to start the ajax call
-		var getChildren = (curr.in === true)
-		/*if(!getChildren && curr.in){
-			for(var i = 0; i < curr.in.length; i++){
-				if(curr.in[i] === true){
-					getChildren = true;
-					break;
+		// load webfont
+		if(curr.font && !this.state.loadedFonts.includes(curr.font)){
+			WebFont.load({
+				google: {
+					families: [curr.font]
 				}
-			}
-		}*/
+			});
+			var lf = [curr.font].concat(this.state.loadedFonts)
+			this.setState({loadedFonts:lf});
+		}
 
+		// detect if need to start the ajax call
+		var getChildren = (curr.in === true)
 		if(getChildren){
-			DB.get(this.props.location.pathname, curr.index)
+			DB.get(props.location.pathname, curr.index)
 				.then(({ error, data: current })=>{
-
-					var lookup = this.state.lookup;
-					lookup[current.index] = current;
-
-					if(this.state.current.index === current.index){
-						this.setState({ current, lookup });
-					}else{
-						this.setState({lookup});
+					if(error){
+						_this.setState({ error: error.display });
 					}
+					else{
+						current.index = parseInt(current.index, 10);
+						var lookup = _this.state.lookup;
+						lookup[current.index] = current;
+						var isCurrentlyVisible = _this.props.match.params.packurl && 
+							(_this.state.current.index === current.index 
+							|| typeof _this.state.current.index === 'undefined');
 
-				});
+						if(isCurrentlyVisible){
+							_this.setState({ current, lookup });
+						}else{
+							_this.setState({lookup});
+						}
+				}
+			});
 		}
 	}
 
@@ -114,10 +151,7 @@ export default class TreeManager extends Component {
 	}
 
 	handleRestart(){
-		this.setCurrent({current: {
-			in: true,
-			cssClass: this.state.current.cssClass //keep the same background color
-		}, lookup: {}});
+		this.setCurrent({current: null, lookup: {}, error: null });
 		this.setIndex(0);
 
 		// reset universe
@@ -139,22 +173,32 @@ export default class TreeManager extends Component {
 			lookup[child.index] = child;
 		}
 
-		this.setCurrent({ current: child,lookup: lookup })
+		this.setCurrent({ current: child, lookup: lookup, error: null })
 	}
 
 	makeUrlMatchCurrent(nextState, nextProps){
-		var nextHash = this.getIndexFromHash(nextProps);
+		const nextHash = this.getIndexFromHash(nextProps);
+		const isNewIndex = nextState.current	&& nextState.current.index !== nextHash;
 
 		//ensure that the url matches the thing being rendered
-		if(nextState.current	&& nextState.current.index !== nextHash
-			){
+		if(isNewIndex){
 			this.setIndex(nextState.current.index);
 		}
 	}
 
 	render(){
-		return <CurrentNode current={this.state.current} handleRestart={this.handleRestart} 
-			handleClick={this.handleClick} setIndex={this.setIndex} />
+
+		if(this.state.error)	return <div className="main">{this.state.error}</div>;
+
+		if(!this.props.match.params.packurl) 
+			return <Splash />
+
+		return (
+			<CurrentNode current={this.state.current} 
+						handleRestart={this.handleRestart} 
+						handleClick={this.handleClick} 
+						setIndex={this.setIndex} />
+		)
 	}
 }
 
@@ -173,14 +217,19 @@ class CurrentNode extends Component {
 		if(!inst) return <div id="content"><div id="title"></div>{LOADING}</div>;
 
 		const cssClass = inst.cssClass+(!inst.in ? " empty":"");
+		const fontStyle = (inst.font) ? {fontFamily:inst.font+', sans-serif'} : {};
 
 		return (
-			<div id="content" className={"container-fluid "+cssClass} style={{color:inst.txt}}>
+			<div className={`main pt-5 container-fluid ${cssClass}`} style={{color:inst.txt}}>
 				<h1 id="title">
 					<Ancestors ancestors={inst.up ? inst.up : []}
 						handleClick={this.props.handleClick}  />
 					&nbsp;&nbsp;
-					<i className={inst.icon}></i> {inst.name ? inst.name : inst.isa}
+					<i className={inst.icon}></i>
+					&nbsp;
+					<span className="webfont" style={fontStyle}>
+						{inst.name ? inst.name : inst.isa}
+					</span>
 					<button className="btn btn-lg pull-right" onClick={this.props.handleRestart}>Restart</button>
 				</h1>
 				{ 

@@ -5,7 +5,6 @@ const childSchema = require('./generator/childSchema');
 const styleSchema = require('./generator/styleSchema');
 const Maintainer = require('./generator/maintain')
 const Maker = require('./generator/make');
-const Explore = require('../routes/packs/explore');
 
 const SEED_DELIM = ">";
 
@@ -92,7 +91,7 @@ generatorSchema.statics.insertNew = async function(data, pack){
  * Generates a random version as the root node of a tree, with 3 levels.
  * @param  {Object[]} seedArray An array of built version of generators that are the seeds. 
  * @param  {BuiltPack} builtpack 
- * @return {Node}           the root node of the tree
+ * @return {Nested}           the root node of the tree
  */
 generatorSchema.statics.makeAsRoot = async function(seedArray, builtpack){
 	var seed = seedArray.shift();

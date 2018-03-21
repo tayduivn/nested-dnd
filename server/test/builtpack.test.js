@@ -5,7 +5,7 @@ chai.use(chaiAsPromised);
 
 const BuiltPack = require('../app/models/builtpack');
 const Pack = require('../app/models/pack');
-const Node = require('../app/routes/packs/Node')
+const Nested = require('../app/routes/packs/nested');
 
 const builtpack = new BuiltPack({
 	generators:{
@@ -24,7 +24,7 @@ describe('BuiltPack',()=>{
 	describe('growFromSeed()', function(){
 		
 		it('should should return a node',function(){
-			return builtpack.growFromSeed(pack).should.eventually.be.an.instanceOf(Node)
+			return builtpack.growFromSeed(pack).should.eventually.be.an.instanceOf(Nested)
 		})
 
 	})

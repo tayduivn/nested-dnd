@@ -7,3 +7,5 @@
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/mixins";
+
+$totalNavHeight: ($navbar-brand-height+$navbar-brand-padding-y*2)+($navbar-padding-y*2);

@@ -30,6 +30,10 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/nested-dn
 			console.log(err);
 			throw new Error("Couldn't connect to mongo database")
 		}
+		else{
+			// launch ======================================================================
+			app.listen(port, () => console.log(`Listening on port ${port}`));
+		}
 	});
 
 
@@ -113,11 +117,6 @@ app.use(function (err, req, res, next) {
 	
 	return res.json({ error: err.toJSON() });
 })
-
-
-// launch ======================================================================
-
-app.listen(port, () => console.log(`Listening on port ${port}`));
 
 if (!("toJSON" in Error.prototype)){
 	Object.defineProperty(Error.prototype, "toJSON", {

@@ -1,14 +1,12 @@
-
-
+@import '../../variables.scss';
 
 .fullscreen{
 	height: 100vh;
-	font-size: 5em;
+	font-size: 6vw;
 
 	.nested{ 
-		background-color: black;
 		color: white;
-		font-family: 'Press Start 2P', cursive;
+		font-family: 'Press Start 2P', serif;
 
 		&:hover{
 			color: antiquewhite;
@@ -16,13 +14,11 @@
 		}
 	}
 	.dnd{
-		color: saddlebrown;
-		background-color: burlywood;
-		background-blend-mode: color-burn;
+		color: darkred;
 		font-family: 'IM Fell English SC', serif;
 
 		&:hover{
-			color: darkred;
+			color: saddlebrown;
 			background-color: tan;
 		}
 	}
@@ -31,10 +27,11 @@
 		vertical-align: middle;
 		text-align: center;
 		position: relative;
-		
+		overflow: hidden;
 
 		> div{
-			padding-top:  50px;
+			margin-top: $totalNavHeight;
+			padding: 2.5rem;
 			z-index:1;
 			position:absolute;
 	    top:0;
@@ -51,17 +48,20 @@
 
 
 	}
-	
 }
 
 
 
-@media (max-width: 576px) { 
+@media (max-width: map-get($grid-breakpoints, "lg")) { 
 	.fullscreen{
-		font-size: 4em;
+		font-size: 12vw;
 
 		.nested, .dnd{
 			height: 50%;
+
+			> div{
+				padding: 1rem;
+			}
 		}
 	} 
 }

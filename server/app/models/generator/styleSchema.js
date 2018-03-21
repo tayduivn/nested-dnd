@@ -44,7 +44,11 @@ styleSchema.methods.makeBackgroundColor = async function(){
 };
 
 styleSchema.methods.makeIcon = async function(){
-	return Maker.makeMixedThing(this.icon, this.parent().model('Table'))
+	var icon = await Maker.makeMixedThing(this.icon, this.parent().model('Table'));
+	if(icon && typeof icon === 'string' && icon.includes('flaticon')){ // TODO hack
+		icon = icon.replace('fa ', 'fi ');
+	}
+	return icon;
 };
 
 styleSchema.methods.makeImage = async function(){

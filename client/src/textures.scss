@@ -10,3 +10,7 @@ $textures: ['purty-wood', 'stardust', 'nestedSharkverse', 'nestedBaconverse', 'n
 		background-image: url('./assets/patterns/#{$name}.png');
 	} 
 }
+
+.purty-wood{
+	background-blend-mode: color-burn;
+}

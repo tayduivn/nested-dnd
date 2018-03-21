@@ -11,6 +11,6 @@ spy(App.prototype, 'componentDidMount');
 describe('<App />', () => {
   it('calls componentDidMount', () => {
     const wrapper = mount(<App />);
-    // expect(App.prototype.componentDidMount.calledOnce).to.equal(true);
+    expect(App.prototype.componentDidMount.calledOnce).to.equal(true);
   });
 });

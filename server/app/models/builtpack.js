@@ -122,7 +122,7 @@ schema.methods.rebuildGenerator = async function(isa, pack){
 /**
  * Using this buildpack, it will generate 
  * @param  {Pack} seedArray array of isa's
- * @return {Promise<Node>}           the grown tree of generated things to be passed to the user
+ * @return {Promise<Nested>}           the grown tree of generated things to be passed to the user
  */
 schema.methods.growFromSeed = function(pack){
 	if(!pack.seed){

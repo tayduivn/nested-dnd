@@ -1,5 +1,5 @@
 
-const Node = require('../../routes/packs/Node');
+const Nested = require('../../routes/packs/nested');
 
 var Maker = {
 
@@ -37,7 +37,7 @@ var Maker = {
 	 * @param  {Integer} generations the number of nested levels to generate
 	 * @param  {BuiltPack} builtpack        the compiled built pack with combined definitions of generators to use
 	 * @param {Object} node the pre-existing node that we are generating children for
-	 * @return {Node}             the node that will be passed to the user
+	 * @return {Nested}             the node that will be passed to the user
 	 */
 	make: async function(gen, generations, builtpack, node){
 		if(!gen){
@@ -58,7 +58,7 @@ var Maker = {
 			var name = await gen.makeName;
 			var style = await gen.makeStyle;
 
-			node = new Node(name, gen, style);
+			node = new Nested(name, gen, style);
 		}
 		
 		// in ---------------------------------------------
