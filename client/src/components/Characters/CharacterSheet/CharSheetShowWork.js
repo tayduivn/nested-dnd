@@ -84,23 +84,13 @@ class Subclass extends Component {
 	}
 }
 
-export class Item extends Component {
-	static get propTypes() {
-		return {
-			xs: PropTypes.number,
-			label: PropTypes.string
-		};
-	}
-	render() {
-		return (
-			<div className={"col-"+this.props.xs}>
-				<p className="title-sm">
-					{this.props.label}
-				</p>
-				<div className="item-entry">
-					{this.props.value}
-				</div>
-			</div>
-		);
-	}
-}
+export const Item = ({ xs, label, value}) => (
+	<div className={"col-"+(xs ? xs : 4)}>
+		<p className="title-sm">
+			{label}
+		</p>
+		<div className="item-entry">
+			{value}
+		</div>
+	</div>
+);

@@ -28,38 +28,35 @@ export const RolePlay = ({race, body, abilities, background, profBonus, proficie
 				label="Start Coin"
 				value={background.startingCoin}
 			/>
-
-			<Item xs={4} label="Speed" value={body.speed+" ft."} />
+			<Item label="Speed" value={body.speed+" ft."} />
 			<Item
 				xs={8}
 				label="Proficiency Bonus"
 				value={profBonus}
 			/>
-			<Item xs={4} label="Size" value={race.size} />
+			<Item label="Size" value={race.size} />
 		</div>
 		<div className="row">
-			<Item xs={4} label="Eyes" value={body.eyes} />
-			<Item xs={4} label="Skin" value={body.skin} />
-			<Item xs={4} label="Hair" value={body.hair} />
+			<Item label="Eyes" value={body.eyes} />
+			<Item label="Skin" value={body.skin} />
+			<Item label="Hair" value={body.hair} />
 		</div>
 		<div className="row">
-			<Item xs={4} label="Age" value={body.age} />
+			<Item label="Age" value={body.age} />
 			<Item
-				xs={4}
 				label="Height"
 				value={body.height}
 			/>
 			<Item
-				xs={4}
 				label="Weight"
 				value={body.weight}
 			/>
 		</div>
-		<BaseAbilityScores abilities={abilities} />
+		<BaseAbilityScores {...abilities} />
 		<p>&nbsp;</p>
 		<div className="row">
 			<ProficienciesList
-				proficiencies={proficiencies}
+				{...proficiencies}
 				profBonus={profBonus}
 			/>
 		</div>
@@ -67,69 +64,40 @@ export const RolePlay = ({race, body, abilities, background, profBonus, proficie
 );
 
 // abilties are Abilities
-const BaseAbilityScores = ({abilities}) => (
+const Ability = ({label, score}) => <Item label={label} value={score.getScore()} />;
+
+const BaseAbilityScores = ({Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma}) => (
 	<div className="row">
 		<div xs={6} className="col no-padding">
-			<Item
-				xs={4}
-				label="STR"
-				value={abilities.Strength.getScore()}
-			/>
-			<Item
-				xs={4}
-				label="DEX"
-				value={abilities.Dexterity.getScore()}
-			/>
-			<Item
-				xs={4}
-				label="CON"
-				value={abilities.Constitution.getScore()}
-			/>
-		</div>
-		<div xs={6} className="col no-padding">
-			<Item
-				xs={4}
-				label="INT"
-				value={abilities.Intelligence.getScore()}
-			/>
-			<Item
-				xs={4}
-				label="WIS"
-				value={abilities.Wisdom.getScore()}
-			/>
-			<Item
-				xs={4}
-				label="CHA"
-				value={abilities.Charisma.getScore()}
-			/>
+			<Ability label="STR" score={Strength} />
+			<Ability label="DEX" score={Dexterity} />
+			<Ability label="CON" score={Constitution} />
+			<Ability label="INT" score={Intelligence} />
+			<Ability label="WIS" score={Wisdom} />
+			<Ability label="CHA" score={Charisma} />
 		</div>
 	</div>
 );
 
-const ProficienciesList = ({ proficiencies, profBonus }) => (
+
+const ProficienciesList = ({ languages, armor, weapons, tools, profBonus }) => (
 	<div className="description">
 		<p className="title-sm">Proficiencies</p>
 		<p>
 			<em>Languages: </em>
-			{proficiencies.languages.list.join(", ")}
+			{languages.list.join(", ")}
 		</p>
 		<p>
-			{proficiencies.armor.list.length
-				? <em>Armor: </em>
-				: ""}
-			{proficiencies.armor.list.join(", ")}
+			<em>{armor.list.length ? 'Armor' : ''} </em>
+			{armor.list.join(", ")}
 		</p>
 		<p>
-			{proficiencies.weapons.list.length
-				? <em>Weapons: </em>
-				: ""}
-			{proficiencies.weapons.list.join(", ")}
+			<em>{weapons.list.length ? 'Weapons' : ''} </em>
+			{weapons.list.join(", ")}
 		</p>
 		<p>
-			{proficiencies.tools.list.length
-				? <em>Tools: </em>
-				: ""}
-			{toolsToString(proficiencies.tools, profBonus)}
+			<em>{tools.list.length ? 'Tools' : ''} </em>
+			{toolsToString(tools, profBonus)}
 		</p>
 	</div>
 );
