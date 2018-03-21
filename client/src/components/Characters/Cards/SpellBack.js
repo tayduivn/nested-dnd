@@ -3,68 +3,70 @@ import React from "react";
 import InfoPanel from './InfoPanel';
 import { SPELL_LVL_ICONS } from './CardsUtil';
 
-export default class SpellBack extends React.Component {
-	render() {
-		var spell = this.props.spell;
-		var className = parseInt(spell.level, 10) > 0 ? " purple" : "";
-		let desc = "";
-
-		className +=
-			spell.cast_time === "1 bonus action"
+function getClassName(level, cast_time, consumable){
+	var className = parseInt(level, 10) > 0 ? " purple" : "";
+	className += cast_time === "1 bonus action"
 				? " bonus"
-				: spell.cast_time === "Modifier" ||
-					spell.cast_time === "1 reaction"
+				: cast_time === "Modifier" ||
+					cast_time === "1 reaction"
 					? " bonus modifier"
 					: "";
-		if (spell.consumable) className += " red";
-		if (spell.description && spell.description.map) {
-			desc = spell.description.map((p, i) =>
-				<p
-					key={i}
-					dangerouslySetInnerHTML={{
-						__html: p.replace(
-							"At Higher Levels",
-							"<strong>At Higher Levels</strong>"
-						)
-					}}
-				/>
-			);
-		}
+		if (consumable) className += " red";
+	return className;
+}
 
-		return (
-			<div className={"card spell " + className}>
-				<div className="card-inner back">
-					<h2>
-						{spell.namegen}
-						{spell.ritual ? <i className="i-ritual" /> : ""}
-						<span className="lvl">
-							{spell.consumable || spell.isFeature
-								? ""
-								: SPELL_LVL_ICONS[spell.level]}
-						</span>
-					</h2>
-					<div className="castTime">
-						<em>
-							{spell.cast_time}
-						</em>
-					</div>
-					<InfoPanel
-						range={spell.range}
-						duration={spell.duration}
-						concentration={spell.concentration}
-					/>
-					<div className="desc">
-						{desc}
-					</div>
-					<div className="pin-bottom">
-						<strong>
-							{spell.components.types.replace("M", "").trim()}
-						</strong>{" "}
-						<span className="material">{spell.components.materials}</span>
-						<span className="school">{spell.school}</span>
-					</div>
-				</div>
-			</div>
+function getDesc(description){
+	let desc = "";
+	if (description && description.map) {
+		desc = description.map((p, i) =>
+			<p
+				key={i}
+				dangerouslySetInnerHTML={{
+					__html: p.replace(
+						"At Higher Levels",
+						"<strong>At Higher Levels</strong>"
+					)
+				}}
+			/>
 		);
 	}
+	return desc;
 }
+
+const SpellBack = ({description, namegen, ritual, consumable, isFeature, level, cast_time, range, duration, concentration, components, school}) => (
+	<div className={"card spell " + getClassName(level, cast_time, consumable)}>
+		<div className="card-inner back">
+			<h2>
+				{namegen}
+				{ritual ? <i className="i-ritual" /> : ""}
+				<span className="lvl">
+					{consumable || isFeature
+						? ""
+						: SPELL_LVL_ICONS[level]}
+				</span>
+			</h2>
+			<div className="castTime">
+				<em>
+					{cast_time}
+				</em>
+			</div>
+			<InfoPanel
+				range={range}
+				duration={duration}
+				concentration={concentration}
+			/>
+			<div className="desc">
+				{getDesc(description)}
+			</div>
+			<div className="pin-bottom">
+				<strong>
+					{components.types.replace("M", "").trim()}
+				</strong>{" "}
+				<span className="material">{components.materials}</span>
+				<span className="school">{school}</span>
+			</div>
+		</div>
+	</div>
+)
+
+export default SpellBack;
