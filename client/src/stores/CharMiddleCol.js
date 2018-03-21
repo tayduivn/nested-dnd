@@ -1,5 +1,41 @@
 import spellStore from "./spellStore";
 
+var USES = {
+	"Tides of Chaos": ()=>1,
+	"Fury of the Small": ()=>1,
+	"Relentless Endurance": ()=>1, 
+	"Second Wind": ()=>1,
+	"Wild Shape": ()=>2,
+	"Sorcery Points": (level)=>(level),
+	"Bardic Inspiration": (level, abilities)=>{
+		var uses = abilities.Charisma.getMod();
+		if (uses < 1) uses = 1;
+		return uses;
+	},
+	"Wrath of the Storm": (level, abilities)=>{
+		var uses = abilities.Wisdom.getMod();
+		if (uses < 1) uses = 1;
+		return uses;
+	},
+	"Channel Belief": (level)=>{
+		var uses = 1;
+		if (level >= 6) uses = 2;
+		else if (level >= 18) uses = 3;
+		return uses;
+	},
+	"Rage": (level)=>{
+		var uses = 2;
+		if (level >= 3) uses = 3;
+		if (level >= 6) uses = 4;
+		if (level >= 12) uses = 5;
+		if (level >= 17) uses = 6;
+		return uses;
+	},
+	"Action Surge": (level)=>{
+		return (level >= 17) ? 2 : 1;
+	}
+}
+
 class ProficiencyCategory {
 	constructor({ list = [], notes = [], double_proficiency = [] }) {
 		this.list = list;
@@ -74,44 +110,8 @@ export class Feature {
 		this.notes = notes;
 	}
 	getUses(abilities, level) {
-		var uses;
-		switch (this.name) {
-			case "Tides of Chaos":
-			case "Fury of the Small":
-			case "Relentless Endurance":
-			case "Second Wind":
-				return 1;
-			case "Sorcery Points":
-				return level;
-			case "Bardic Inspiration":
-				uses = abilities.Charisma.getMod();
-				if (uses < 1) uses = 1;
-				break;
-			case "Wrath of the Storm":
-				uses = abilities.Wisdom.getMod();
-				if (uses < 1) uses = 1;
-				break;
-			case "Channel Belief":
-				uses = 1;
-				if (level >= 6) uses = 2;
-				else if (level >= 18) uses = 3;
-				break;
-			case "Rage":
-				uses = 2;
-				if (level >= 3) uses = 3;
-				if (level >= 6) uses = 4;
-				if (level >= 12) uses = 5;
-				if (level >= 17) uses = 6;
-				break;
-			case "Wild Shape":
-				uses = 2;
-				break;
-			case "Action Surge":
-				uses = (level >= 17) ? 2 : 1;
-				break;
-			default:
-				uses = false;
-		}
+		var usesFunc = USES[this.name];
+		var uses = (usesFunc) ? usesFunc(level, abilities) : false;
 
 		// get uses from spell if available
 		let s = spellStore.get(this.name);
