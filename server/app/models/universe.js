@@ -90,7 +90,7 @@ universeSchema.statics.getTemp = async function(session_id, pack, index){
 	if(universe && universe.pack_id.toString() === pack.id){
 		const nested = await universe.getNested(index, pack);
 		universe.expires = Date.now();
-		universe.lastSaw = index;
+		universe.lastSaw = nested.index;
 		universe.save();
 		return nested;
 	}

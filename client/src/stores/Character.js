@@ -43,14 +43,7 @@ export default class Character {
 		this.spellcasting = false;
 		this.cards = new Cards(this.equipment.items, [], this.features);
 
-		// adjust ability scores based on race
-		for (var ability in this.race.abilities) {
-			this.abilities[ability].addAdjustment(
-				this.race.abilities[ability],
-				1,
-				this.race.name
-			);
-		}
+		this.racialAdjustAbilities();
 
 		// adjust speed if Monk
 		let monk = this.getClass("Monk");
@@ -60,6 +53,16 @@ export default class Character {
 
 		this.addProficiencies();
 		this.addFeaturesAndAdvantages();
+	}
+	racialAdjustAbilities(){
+		// adjust ability scores based on race
+		for (var ability in this.race.abilities) {
+			this.abilities[ability].addAdjustment(
+				this.race.abilities[ability],
+				1,
+				this.race.name
+			);
+		}
 	}
 	getSkills() {
 		return new Skills(this.proficiencies.skills.list, this.proficiencies.skills.double_proficiency, this);
@@ -101,6 +104,51 @@ export default class Character {
 			this.getProficiencyBonus()
 		);
 	}
+	_raceFeatures(newAdvantages, newFeatures){
+		var ar = this.race.advResist;
+		if (ar) {
+			for (var adv in ar.other) {
+				newAdvantages.push({
+					name: adv,
+					desc: ar.other[adv]
+				});
+			}
+			if (ar.advantages) {
+				this.advResist.advantages.push(
+					...ar.advantages
+				);
+			}
+			if (ar.resistances) {
+				this.advResist.resistances.push(
+					...ar.resistances
+				);
+			}
+		}
+		for (var feat in this.race.features) {
+			newFeatures.push({ ...this.race.features[feat], name: feat });
+		}
+	}
+	_classFeatures(newFeatures){
+		//classes features
+		this.classes.forEach(({ classData, level, subclasses }) => {
+			newFeatures.push(
+				...classData.getFeaturesAtLevel(level, subclasses)
+			);
+		});
+	}
+	_processAdvantages(newAdvantages, newFeatures){
+		newFeatures.forEach(f => {
+			if (f.advantage) this.advResist.advantages.push(f.advantage);
+			if (f.resist) this.advResist.resistances.push(f.resist);
+			if (f.advResist) newAdvantages.push(f.advResist);
+			if (f.proficiencies)
+				this.proficiencies.add(f.proficiencies, f.name);
+			this.features.push(new Feature(f));
+		});
+		newAdvantages.forEach(a => {
+			this.advResist.other.push(new Feature(a));
+		});
+	}
 	addFeaturesAndAdvantages() {
 		// get features and advantages
 		var newFeatures = [];
@@ -114,59 +162,12 @@ export default class Character {
 			if (bg.feature) newFeatures.push(bg.feature);
 		}
 
-		//race features
-		if (this.race.advResist) {
-			for (var adv in this.race.advResist.other) {
-				newAdvantages.push({
-					name: adv,
-					desc: this.race.advResist.other[adv]
-				});
-			}
-			if (this.race.advResist.advantages) {
-				this.advResist.advantages.push(
-					...this.race.advResist.advantages
-				);
-			}
-			if (this.race.advResist.resistances) {
-				this.advResist.resistances.push(
-					...this.race.advResist.resistances
-				);
-			}
-		}
-
-
-		for (var feat in this.race.features) {
-			newFeatures.push({ ...this.race.features[feat], name: feat });
-		}
-
-		//classes features
-		this.classes.forEach(({ classData, level, subclasses }) => {
-			newFeatures.push(
-				...classData.getFeaturesAtLevel(level, subclasses)
-			);
-		});
-
-		// process advantages
-		newFeatures.forEach(f => {
-			if (f.advantage) this.advResist.advantages.push(f.advantage);
-			if (f.resist) this.advResist.resistances.push(f.resist);
-			if (f.advResist) newAdvantages.push(f.advResist);
-			if (f.proficiencies)
-				this.proficiencies.add(f.proficiencies, f.name);
-			this.features.push(new Feature(f));
-		});
-		newAdvantages.forEach(a => {
-			this.advResist.other.push(new Feature(a));
-		});
+		this._raceFeatures(newAdvantages, newFeatures);
+		this._classFeatures(newFeatures);
+		this._processAdvantages(newAdvantages, newFeatures)
+		
 	}
-	getSpellcasting() {
-		let profBonus = this.getProficiencyBonus();
-
-		if (this.spellcasting) {
-			return this.spellcasting;
-		}
-
-		this.spellcasting = new SpellcastingList();
+	_getRaceSpellcasting(profBonus){
 		if (this.race.spellcasting) {
 			this.spellcasting.add(
 				this.race.spellcasting,
@@ -178,9 +179,11 @@ export default class Character {
 				profBonus
 			);
 		}
+	}
+	_getClassSpellcasting(profBonus){
 		this.classes.forEach(c => {
 			var classSC = c.classData.spellcasting;
-			if (classSC)
+			if (classSC){
 				this.spellcasting.add(
 					classSC,
 					c.name,
@@ -190,7 +193,18 @@ export default class Character {
 					c.knownSpells,
 					profBonus
 				);
+			}
 		});
+	}
+	getSpellcasting() {
+		let profBonus = this.getProficiencyBonus();
+
+		if (this.spellcasting) return this.spellcasting;
+
+		this.spellcasting = new SpellcastingList();
+		
+		this._getRaceSpellcasting(profBonus);
+		this._getClassSpellcasting(profBonus)
 
 		this.cards = new Cards(
 			this.equipment.items,

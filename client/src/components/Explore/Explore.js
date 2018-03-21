@@ -46,7 +46,7 @@ export default class TreeManager extends Component {
 					var lookup = this.state.lookup;
 					lookup[current.index] = current;
 					_this.setCurrent({ current , lookup, error });
-					if(current.index !== index) _this.setIndex(index);
+					if(current.index !== index) _this.setIndex(current.index);
 				}
 			});
 	}
