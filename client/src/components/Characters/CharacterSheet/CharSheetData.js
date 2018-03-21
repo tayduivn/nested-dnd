@@ -43,22 +43,13 @@ export const RolePlay = ({race, body, abilities, background, profBonus, proficie
 		</div>
 		<div className="row">
 			<Item label="Age" value={body.age} />
-			<Item
-				label="Height"
-				value={body.height}
-			/>
-			<Item
-				label="Weight"
-				value={body.weight}
-			/>
+			<Item label="Height" value={body.height} />
+			<Item label="Weight" value={body.weight} />
 		</div>
 		<BaseAbilityScores {...abilities} />
 		<p>&nbsp;</p>
 		<div className="row">
-			<ProficienciesList
-				{...proficiencies}
-				profBonus={profBonus}
-			/>
+			<ProficienciesList {...proficiencies} profBonus={profBonus} />
 		</div>
 	</div>
 );
@@ -79,26 +70,20 @@ const BaseAbilityScores = ({Strength, Dexterity, Constitution, Intelligence, Wis
 	</div>
 );
 
+const ProfParagraph = ({list, label}) => (
+	<p>
+		<em>{list.length ? label : ''} </em>
+		{list}
+	</p>
+)
 
 const ProficienciesList = ({ languages, armor, weapons, tools, profBonus }) => (
 	<div className="description">
 		<p className="title-sm">Proficiencies</p>
-		<p>
-			<em>Languages: </em>
-			{languages.list.join(", ")}
-		</p>
-		<p>
-			<em>{armor.list.length ? 'Armor' : ''} </em>
-			{armor.list.join(", ")}
-		</p>
-		<p>
-			<em>{weapons.list.length ? 'Weapons' : ''} </em>
-			{weapons.list.join(", ")}
-		</p>
-		<p>
-			<em>{tools.list.length ? 'Tools' : ''} </em>
-			{toolsToString(tools, profBonus)}
-		</p>
+		<ProfParagraph label="Languages" list={languages.list.join(", ")} />
+		<ProfParagraph label="Armor" list={armor.list.join(", ")} />
+		<ProfParagraph label="Weapons" list={weapons.list.join(", ")} />
+		<ProfParagraph label="Tools" list={toolsToString(tools, profBonus)} />
 	</div>
 );
 
