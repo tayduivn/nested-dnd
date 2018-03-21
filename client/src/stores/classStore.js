@@ -1,3 +1,11 @@
+function getAll(thisMap, Type){
+	var map = {};
+	for (var name in thisMap) {
+		map[name] = new Type(thisMap[name]);
+	}
+	return map;
+}
+
 class PlayerClass {
 	constructor({
 		name = "",
@@ -42,18 +50,13 @@ class ClassStore {
 		this.classes = { ...this.classes, ...classes };
 	}
 	getAll() {
-		var classes = {};
-		for (var name in this.classes) {
-			classes[name] = new PlayerClass(this.classes[name]);
-		}
-		return classes;
+		return getAll(this.classes, PlayerClass);
 	}
 	get(name) {
 		if(!this.classes[name]){
 			console.error("Can't find class with name "+name);
 		}
-		var c = this.classes[name] ? this.classes[name] : {};
-		return new PlayerClass(c);
+		return new PlayerClass(this.classes[name] ? this.classes[name] : {});
 	}
 	getNames() {
 		return Object.keys(this.classes).sort();
@@ -74,10 +77,7 @@ function processFeature(feature, name, subclasses){
 		return { ...ret, desc }
 	}
 
-	if(!feature.subclass) 
-		return ret;
-
-	if(!doInclude(feature.subclass, name, subclasses)) 
+	if(!feature.subclass || !doInclude(feature.subclass, name, subclasses)) 
 		return ret;
 		
 	let useDesc = desc !== false && desc === "" && feature.description;
@@ -128,15 +128,10 @@ class RaceStore {
 		this.races = { ...this.races, ...races };
 	}
 	getAll() {
-		var races = {};
-		for (var name in this.races) {
-			races[name] = new Race(this.races[name]);
-		}
-		return races;
+		return getAll(this.races, Race);
 	}
 	get(name) {
-		var c = this.races[name] ? this.races[name] : {};
-		return new Race(c);
+		return new Race(this.races[name] ? this.races[name] : {});
 	}
 	getNames() {
 		return Object.keys(this.races).sort();
@@ -182,15 +177,10 @@ class BackgroundStore {
 		this.backgrounds = { ...this.backgrounds, ...backgrounds };
 	}
 	getAll() {
-		var backgrounds = {};
-		for (var name in this.backgrounds) {
-			backgrounds[name] = new Background(this.backgrounds[name]);
-		}
-		return backgrounds;
+		return getAll(this.backgrounds, Background);
 	}
 	get(name) {
-		var c = this.backgrounds[name] ? this.backgrounds[name] : {};
-		return new Background(c);
+		return new Background(this.backgrounds[name] ? this.backgrounds[name] : {});
 	}
 	getNames() {
 		return Object.keys(this.backgrounds).sort();

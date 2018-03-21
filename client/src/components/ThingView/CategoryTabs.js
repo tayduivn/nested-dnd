@@ -63,40 +63,35 @@ export default class CategoryTabs extends React.Component{
 				<div className="nav-item" eventkey={4} title="Advanced">
 					<EditableInput  {...this.props} label="Data (JSON format)" property="data" value={data} 
 						status={dataStaus} isJSON={true} />
-					<ThingFunctions thing={this.props.thing} />
+					<ThingFunctions {...this.props.thing} />
 				</div>
 			</div>
 		);
 	}
 };
 
-function ThingFunctions (props) {
-	function funcToString(func){
-		if(!func) return { rows: 1, value: "" };
+function funcToString(func){
+	if(!func) return { rows: 1, value: "" };
 
-		var str = func.toString().replace(/\t/g, '  ');
-		return {
-			str: str,
-			rows: str.split(/\r\n|\r|\n/).length
-		}
+	var str = func.toString().replace(/\t/g, '  ');
+	return {
+		str: str,
+		rows: str.split(/\r\n|\r|\n/).length
 	}
-	const f1 = funcToString(props.thing.b4Make);
-	const f2 = funcToString(props.thing.afMake);
-	const f3 = funcToString(props.thing.b4Render);
-
-	return (<div>
-		
-		<div className={`form-group ${(props.thing.b4Make) ? "" : "hidden"}`} validationstate="warning">
-			<label>beforeMake() - Edit in *.js pack file</label>
-			<textarea value={f1.str} rows={f1.rows} disabled />
-		</div>
-		<div className={`form-group ${(props.thing.afMake) ? "" : "hidden"}`} validationstate="warning">
-			<label>afterMake() - Edit in *.js pack file</label>
-			<textarea value={f2.str} rows={f3.rows} disabled />
-		</div>
-		<div className={`form-group ${(props.thing.b4Render) ? "" : "hidden"}`} validationstate="warning">
-			<label>beforeRender() - Edit in *.js pack file</label>
-			<textarea value={f3.str} rows={f3.rows} disabled />
-		</div>
-	</div>);
 }
+
+const ThingFunctions = ({ b4Make, afMake, b4Render }) => (
+	<div>
+		<ThingFunc func={b4Make} label="beforeMake" {...funcToString(b4Make)} />
+		<ThingFunc func={afMake} label="afterMake" {...funcToString(afMake)} />
+		<ThingFunc func={b4Render} label="beforeRender" {...funcToString(b4Render)} />
+	</div>
+);
+
+const ThingFunc = ({func, label, str, rows}) => (
+	<div className={`form-group ${(func) ? "" : "hidden"}`}>
+		<label>{label}() - Edit in *.js pack file</label>
+		<textarea value={str} rows={rows} disabled />
+	</div>
+);
+
