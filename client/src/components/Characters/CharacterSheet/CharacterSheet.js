@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import Spells, { SpellSlotsAndMoney } from "./CharSheetSpells.js";
 import { Abilities, Skills, Health } from "./CharSheetNumbers.js";
 import { AdvResist, Equipment } from "./CharSheetDesc.js";
-import { RolePlay, ShowWork } from "./CharSheetData.js";
+import { RolePlay } from "./CharSheetData.js";
+import ShowWork from './CharSheetShowWork';
 
 import Character from "../../../stores/Character";
 import SpellcastingList from "../../../stores/Spellcasting";
