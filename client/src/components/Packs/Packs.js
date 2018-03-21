@@ -21,6 +21,20 @@ const Packs = ({ match }) => (
 
 export default Packs;
 
+const PackLink = ({_id, name}) => <li key={_id} ><Link to={"/packs/"+_id}>{name}</Link></li>
+
+const MyPacks = ({myPacks}) => (
+	<div>
+		<h2>My Packs</h2>
+		{myPacks === null ? LOADING_GIF : ""}
+		{myPacks && myPacks.length === 0 ? <p>You have not created any packs yet</p>: ""}
+		<ul>
+			{(myPacks) ? myPacks.map((p)=>PackLink) : null}
+		</ul>
+		<button className="btn btn-primary" href="/packs/create">Create a New Pack</button>
+	</div>
+);
+
 class PackList extends Component{
 	state = {
 			data: null,
@@ -41,35 +55,22 @@ class PackList extends Component{
 
 	render(){
 		const data = this.state.data;
-		const myPacks = data ? data.myPacks : null;
-		const publicPacks = data ? data.publicPacks : null;
-
-		const myPacksList = (
-			<div>
-				<h2>My Packs</h2>
-				{data === null ? <p>Loading</p>: ""}
-				{myPacks && myPacks.length === 0 ? <p>You have not created any packs yet</p>: ""}
-				<ul>
-					{(myPacks)  ? myPacks.map((p)=>(<li key={p._id} ><Link to={"/packs/"+p._id}>{p.name}</Link></li>)) : null}
-				</ul>
-				<button className="btn btn-primary" href="/packs/create">Create a New Pack</button>
-			</div>
-		);
+		const publicPacks = data ? data.publicPacks : [];
 
 		return (
 			<div className="container">
 				<h1>Packs {this.context.loggedIn}</h1>
 
-				{this.context.loggedIn ? myPacksList : null }
+				{ this.context.loggedIn ? <MyPacks myPacks={data ? data.myPacks : null} /> : null }
 
 				<h2>Public Packs</h2>
 
-				{data === null ? LOADING_GIF: ""}
+				{data === null ? LOADING_GIF : ""}
 				<div className={this.state.error ? "alert alert-danger" : ""}>{this.state.error}</div>
 
 				{publicPacks && publicPacks.length === 0 ? <p>There are no public packs to display</p> : null}
 				<ul>
-					{(publicPacks)  ? publicPacks.map((p)=>(<li key={p._id} ><Link to={"/packs/"+p._id}>{p.name}</Link></li>)) : null}
+					{(publicPacks) ? publicPacks.map((p)=>PackLink) : null}
 				</ul>
 			</div>
 		);

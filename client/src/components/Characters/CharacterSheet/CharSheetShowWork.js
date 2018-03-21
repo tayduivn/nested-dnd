@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { ClassInfo } from "../../../stores/CharRolePlay"
 import { Background } from "../../../stores/CharRolePlay"
 
 export default class ShowWork extends Component {
 	static get propTypes() {
 		return {
 			background: PropTypes.instanceOf(Background),
-			classes: PropTypes.arrayOf(PropTypes.instanceOf(ClassInfo)),
+			classes: PropTypes.array,
 			col: PropTypes.number
 		};
 	}

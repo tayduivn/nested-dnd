@@ -35,6 +35,72 @@ export default class CharacterSheet extends Component {
 	}
 }
 
+const TopHalf = ({char}) => (
+	<div className="row halfpage">
+		<div className="col-4">
+			<BasicInfo
+				name={char.name}
+				classes={char.classes}
+				player={char.player}
+			/>
+			<Skills skills={char.getSkills()} />
+		</div>
+		<div className="col-8 full-height">
+			<Abilities abilities={char.abilities} />
+			<div className="row full-height main-content">
+				<div className="col">
+					<Health
+						char={char}
+						hitDice={char.getHitDice()}
+						hp={char.getHP()}
+					/>
+					<AdvResist
+						{...char.advResist}
+						label="Advantages & Resistances"
+						char={char}
+					/>
+					<AdvResist
+						other={char.features}
+						label="Features"
+						char={char}
+					/>
+				</div>
+				<div className="col top-col">
+					<Equipment equipment={char.equipment} />
+					<SpellSlotsAndMoney char={char} />
+				</div>
+			</div>
+		</div>
+	</div>
+)
+
+const BottomHalf = ({char, spellcasting, twoPages}) =>(
+	<div className="row halfpage bottom" style={{ background: "url(css/img/" + char.img + ")" }}>
+		<RolePlay
+			col={spellcasting && !twoPages ? 3 : 4}
+			race={char.race}
+			body={char.body}
+			abilities={char.abilities}
+			background={char.background}
+			profBonus={char.printProficiencyBonus()}
+			proficiencies={char.proficiencies}
+		/>
+		<ShowWork
+			col={spellcasting && !twoPages ? 4 : 8}
+			char={char}
+			background={char.background}
+			classes={char.classes}
+			proficiencies={char.proficiencies}
+		/>
+		{spellcasting && !twoPages
+			? <SpellbookAllClasses
+					col={5}
+					spellcasting={char.getSpellcasting()}
+				/>
+			: ""}
+	</div>
+)
+
 class SinglePage extends Component {
 	static get propTypes() {
 		return {
@@ -52,69 +118,8 @@ class SinglePage extends Component {
 		return (
 			<div>
 				<div className="paper">
-					<div className="row halfpage">
-						<div className="col-4">
-							<BasicInfo
-								name={char.name}
-								classes={char.classes}
-								player={char.player}
-							/>
-							<Skills skills={char.getSkills()} />
-						</div>
-						<div className="col-8 full-height">
-							<Abilities abilities={char.abilities} />
-							<div className="row full-height main-content">
-								<div className="col">
-									<Health
-										char={char}
-										hitDice={char.getHitDice()}
-										hp={char.getHP()}
-									/>
-									<AdvResist
-										{...char.advResist}
-										label="Advantages & Resistances"
-										char={char}
-									/>
-									<AdvResist
-										other={char.features}
-										label="Features"
-										char={char}
-									/>
-								</div>
-								<div className="col top-col">
-									<Equipment equipment={char.equipment} />
-									<SpellSlotsAndMoney char={char} />
-								</div>
-							</div>
-						</div>
-					</div>
-					<div
-						className="row halfpage bottom"
-						style={{ background: "url(css/img/" + char.img + ")" }}
-					>
-						<RolePlay
-							col={spellcasting && !twoPages ? 3 : 4}
-							race={char.race}
-							body={char.body}
-							abilities={char.abilities}
-							background={char.background}
-							profBonus={char.printProficiencyBonus()}
-							proficiencies={char.proficiencies}
-						/>
-						<ShowWork
-							col={spellcasting && !twoPages ? 4 : 8}
-							char={char}
-							background={char.background}
-							classes={char.classes}
-							proficiencies={char.proficiencies}
-						/>
-						{spellcasting && !twoPages
-							? <SpellbookAllClasses
-									col={5}
-									spellcasting={char.getSpellcasting()}
-								/>
-							: ""}
-					</div>
+					<TopHalf char={char} />
+					<BottomHalf char={char} spellcasting={spellcasting} twoPages={twoPages} />
 				</div>
 				{spellcasting && twoPages
 					? <div className="paper">

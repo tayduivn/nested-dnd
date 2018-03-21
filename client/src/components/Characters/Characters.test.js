@@ -4,7 +4,6 @@ import { mount } from 'enzyme';
 import { spy } from 'sinon';
 
 import Characters from "./Characters";
-import ClassInfo from "./ClassInfo";
 import Character from "../../stores/Character";
 
 spy(Characters.prototype, 'selectDeselect');
@@ -144,14 +143,6 @@ describe('<Characters />', ()=>{
 		wrapper.update();
 		wrapper.find('ul.characterList.list-group > SidebarItem > ul.list-group').simulate('click');
 		
-	});
-
-})
-
-describe('<ClassInfo />', ()=>{
-
-	it('should mount',()=>{
-		var wrapper = mount(<ClassInfo />)
 	});
 
 })
