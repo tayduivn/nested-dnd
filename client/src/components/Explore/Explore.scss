@@ -215,8 +215,8 @@ i.gi{
 }
 
 .slide-up-exit.slide-up-exit-active {
-		opacity: 0;
-		transform: translateY(-15px);
+		display: none;
+		transition-delay: 0 !important;
 }
 
 

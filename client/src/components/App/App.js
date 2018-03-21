@@ -14,6 +14,7 @@ import Packs from "../Packs/Packs";
 import Explore from "../Explore/Explore";
 import DB from "../../actions/CRUDAction";
 import Nav from './Nav';
+import Splash from '../Explore/Splash'
 
 import "./App.css";
 
@@ -62,7 +63,7 @@ class App extends Component {
 						<Route
 							exact
 							path="/"
-							component={Explore}
+							component={Splash}
 						/>
 						<Route
 							path="/things"

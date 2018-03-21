@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import './Ancestors.css'
 
+//const A = ({ancestors, handleClick}) => ();
+
 export default class Ancestors extends Component {
 	static propTypes = {
 		ancestors: PropTypes.array, // index n ame

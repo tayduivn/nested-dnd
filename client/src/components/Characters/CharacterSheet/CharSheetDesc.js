@@ -87,7 +87,7 @@ export class Equipment extends Component {
 				</div>
 				<p className="title">Equipment</p>
 				<p>
-					{e.armor.namegen}
+					{e.armor ? e.armor.namegen : ''}
 					{e.hasShield ? ", Shield" : ""}
 				</p>
 				<p>

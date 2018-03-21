@@ -33,45 +33,45 @@ export default class ItemBack extends React.Component {
 			});
 		}
 
-		
-
 		//todo: simple weapon list
-		var type = MARTIAL_WEAPONS.includes(item.name)
+		item.type = MARTIAL_WEAPONS.includes(item.name)
 			? "martial"
 			: item.consumable ? "consumable" : "simple";
 
-		return (
-			<div className={"card weapon" + (item.consumable ? " red" : item.charges ? " purple": "")}>
-				<div className="card-inner">
-					<h2>
-						{item.name}
-					</h2>
-					<div className="castTime">
-						<em>
-							{item.cast_time
-								? item.cast_time
-								: "1 action"}
-						</em>
-					</div>
-					<InfoPanel
-						range={item.range}
-						duration={item.duration}
-						concentration={item.concentration}
-					/>
-					<div className="desc">
-						<p className={item["Item Type"] === "Wand" ? "hidden": ""}>
-							<strong>
-								{item["Item Type"]}
-							</strong>
-						</p>
-						{props}
-					</div>
-					<div className="pin-bottom">
-						{item.Weight ? item.Weight+" lb." : ""} 
-						<span>{type}</span>
-					</div>
-				</div>
-			</div>
-		);
+		return <Back {...item} />;
 	}
 }
+
+const Back = ({ consumable, charges, name, cast_time, range, duration, concentration, props, weight, item_type, type }) => (
+	<div className={"card weapon" + (consumable ? " red" : charges ? " purple": "")}>
+		<div className="card-inner">
+			<h2>
+				{name}
+			</h2>
+			<div className="castTime">
+				<em>
+					{cast_time
+						? cast_time
+						: "1 action"}
+				</em>
+			</div>
+			<InfoPanel
+				range={range}
+				duration={duration}
+				concentration={concentration}
+			/>
+			<div className="desc">
+				<p className={item_type === "Wand" ? "hidden": ""}>
+					<strong>
+						{item_type}
+					</strong>
+				</p>
+				{props}
+			</div>
+			<div className="pin-bottom">
+				{weight ? weight+" lb." : ""} 
+				<span>{type}</span>
+			</div>
+		</div>
+	</div>
+)
