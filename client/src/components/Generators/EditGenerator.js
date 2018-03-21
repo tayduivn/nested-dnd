@@ -50,7 +50,7 @@ export default class EditGenerator extends Component {
 				<form onSubmit={this.handleSubmit}>
 
 					{/* --------- Name ------------ */}
-					<div class="form-group">
+					<div className="form-group">
 						<label>Name</label>
 						<input value={gen.isa} required name="isa" />
 					</div>

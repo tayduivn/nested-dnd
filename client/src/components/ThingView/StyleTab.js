@@ -15,11 +15,11 @@ export default class StyleTab extends React.Component{
 
 		return(<div>
 			<div className="row">
-				<div class="col-md">
+				<div className="col-md">
 					<ColorDropdown label="Background" name="background" value={this.props.thing.background} status={bgStatus}
 						saveProperty={this.props.handleChange} setPreview={this.props.setPreview} />
 				</div>
-				<div class="col-md">
+				<div className="col-md">
 					<ColorDropdown label="Text color" name="textColor" value={this.props.thing.textColor} status={txtStatus}
 						saveProperty={this.props.handleChange} setPreview={this.props.setPreview} />
 				</div>
@@ -70,7 +70,7 @@ class ColorDropdown extends React.Component {
 		} 
 
 		return (<div className={`form-group ${this.props.status.isEnabled ? "" : "fake-disabled"}`} 
-					validationState={this.props.status.isUpdated ? "success" : null}>
+					validationstate={this.props.status.isUpdated ? "success" : null}>
 				<label>{this.props.label}</label> 
 				<Select.Creatable value={value} multi={true} 
 					clearable={this.props.status.isClearable}

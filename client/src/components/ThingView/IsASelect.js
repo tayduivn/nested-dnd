@@ -105,7 +105,7 @@ export default class IsASelect extends React.Component {
 			: "";
 		
 		return (
-		<div validationState={this.props.status.isUpdated?"success":null} className={`form-group ${this.props.status.isEnabled ? "" : "fake-disabled"}`}>
+		<div validationstate={this.props.status.isUpdated?"success":null} className={`form-group ${this.props.status.isEnabled ? "" : "fake-disabled"}`}>
 			<label>Is a...</label>
 			<Creatable name="isa" value={value} 
 				onChange={this.handleChange}
@@ -114,7 +114,7 @@ export default class IsASelect extends React.Component {
 				multi={true} clearRenderer={Styler.selectClear}
 				onNewOptionClick={this.onNewOptionClick}
 				promptTextCreator={promptCreateNew} 
-				ref={(createable) => this.select = (createable) ? createable.select : null}
+				reff={(createable) => this.select = (createable) ? createable.select : null} //was ref
 				shouldKeyDownEventCreateNewOption={_false} 
 				onInputKeyDown={this.onInputKeyDown} onValueClick={this.handleSelectedClick} />
 			<small>{helpText}</small>

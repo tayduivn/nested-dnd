@@ -49,18 +49,18 @@ export default class CategoryTabs extends React.Component{
 
 		return (
 			<div className="nav nav-tabs" activekey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example"
-				mountOnEnter={true}>
-				<div className="nav-item" eventKey={1} title="Style">
+				mountonenter="true">
+				<div className="nav-item" eventkey={1} title="Style">
 					<StyleTab {...this.props} />
 				</div>
-				<div className="nav-item" eventKey={2} title="Name Generator">
+				<div className="nav-item" eventkey={2} title="Name Generator">
 					<EditableInput  {...this.props} label="Name generator" property="namegen" value={namegen} 
 						status={namegenStatus} defaultHelpText={namegenHelpText} />
 				</div>
-				<div className="nav-item" eventKey={3} title="Contains">
+				<div className="nav-item" eventkey={3} title="Contains">
 					<ContainsList list={contains} {...this.props} status={containsStatus} />
 				</div>
-				<div className="nav-item" eventKey={4} title="Advanced">
+				<div className="nav-item" eventkey={4} title="Advanced">
 					<EditableInput  {...this.props} label="Data (JSON format)" property="data" value={data} 
 						status={dataStaus} isJSON={true} />
 					<ThingFunctions thing={this.props.thing} />
@@ -86,15 +86,15 @@ function ThingFunctions (props) {
 
 	return (<div>
 		
-		<div className={`form-group ${(props.thing.b4Make) ? "" : "hidden"}`} validationState="warning">
+		<div className={`form-group ${(props.thing.b4Make) ? "" : "hidden"}`} validationstate="warning">
 			<label>beforeMake() - Edit in *.js pack file</label>
 			<textarea value={f1.str} rows={f1.rows} disabled />
 		</div>
-		<div className={`form-group ${(props.thing.afMake) ? "" : "hidden"}`} validationState="warning">
+		<div className={`form-group ${(props.thing.afMake) ? "" : "hidden"}`} validationstate="warning">
 			<label>afterMake() - Edit in *.js pack file</label>
 			<textarea value={f2.str} rows={f3.rows} disabled />
 		</div>
-		<div className={`form-group ${(props.thing.b4Render) ? "" : "hidden"}`} validationState="warning">
+		<div className={`form-group ${(props.thing.b4Render) ? "" : "hidden"}`} validationstate="warning">
 			<label>beforeRender() - Edit in *.js pack file</label>
 			<textarea value={f3.str} rows={f3.rows} disabled />
 		</div>

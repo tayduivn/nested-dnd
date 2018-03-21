@@ -62,9 +62,9 @@ export default class NameInput extends React.Component {
 		return (
 			<div
 				className="form-group title clearable"
-				bsSize="large"
-				controlId="thing-name"
-				validationState={this.validationState}
+				bssize="large"
+				name="thing-name"
+				validationstate={this.validationState}
 			>
 				<input
 					type="text"

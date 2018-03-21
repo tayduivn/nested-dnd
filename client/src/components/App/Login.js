@@ -60,12 +60,12 @@ export default class Login extends Component {
 			<div className="main mt-5 container-fluid loginForm">
 				<h1>{this.props.title}</h1>
 				<form onSubmit={this.handleSubmit}>
-					<div className="form-group" controlId="email" validationState={this.state.emailVaidation}>
+					<div className="form-group" name="email" validationstate={this.state.emailVaidation}>
 						<label>Email</label>
 						<input type="email" placeholder="email" value={this.state.email} onChange={this.handleChange} required></input>
 						<small>{this.state.emailError}</small>
 					</div>
-					<div className="form-group" controlId="password" validationState={this.state.passwordValidation}>
+					<div className="form-group" name="password" validationstate={this.state.passwordValidation}>
 						<label>Password</label>
 						<input type="password" placeholder="password" 
 							autoComplete="new-password" 

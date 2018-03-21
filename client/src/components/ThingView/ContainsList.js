@@ -109,12 +109,12 @@ class ContainsList extends React.Component {
 			var value = (typeof item === "string") ? item : JSON.stringify(item);
 
 			return (
-			<div class="form-group" key={index} validationState={this.validationState[index]}>
+			<div className="form-group" key={index} validationstate={this.validationState[index]}>
 				<div className={`input-group ${value ? "":"no-input-addons"}`}>
 					
 					<input onChange={this.handleChange} value={value} type="text" data-index={index}
 						className={ (this.props.status.isEditable ?"":"fake-disabled")}
-						componentClass="textarea" rows={(value) ? Math.ceil(value.length/50) : 1} />
+						componentclass="textarea" rows={(value) ? Math.ceil(value.length/50) : 1} />
 					<div className={`input-group-addon ${value ? ("type "+type ): ("type hidden "+type)}`} 
 						data-thing={item} data-type={type} onClick={this.handleClickThing} >
 						{type}

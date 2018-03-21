@@ -57,7 +57,7 @@ function ThingChoices(props) {
 
 	return (
 		<div>
-			<ul class="list-group">
+			<ul className="list-group">
 				{things}
 			</ul>
 			<NewThingForm addThing={props.saveThing} />
@@ -80,16 +80,16 @@ class ThingChoice extends React.Component {
 		// if (!thingStore.exists(this.props.name)) return <div />;
 
 		const t =  {} //thingStore.get(this.props.name);
-		const icon = t.getIcon();
+		const icon = ''; //t.getIcon();
 		const name = this.props.name.trim().length
 			? this.props.name
 			: <em>new thing</em>;
 		const isa = t.isa && t.isa.join ? t.isa.join(", ") : t.isa;
 
 		return (
-			<li class="list-group-item"
+			<li className="list-group-item"
 				id={encodeURIComponent(this.props.name)}
-				active={this.props.selected}
+				active={this.props.selected.toString()}
 				onClick={this.handleClick}
 			>
 				<h4 className="m-0">

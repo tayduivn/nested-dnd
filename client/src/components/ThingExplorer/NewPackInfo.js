@@ -2,6 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 
 const DEBUG = false;
+const localStorage = window.localStorage;
 
 class PackSelect extends React.Component {
 	constructor(props) {
@@ -49,7 +50,7 @@ class PackSelect extends React.Component {
 			<button className="btn" data-toggle="popover" id="copiedToClipboard">Click to copy to clipboard</button>
 		)*/
 		return(
-				<div class="form-group">
+				<div className="form-group">
 					<label>export pack:</label>
 					{' '}
 					<Select.Async clearable={false}
@@ -90,7 +91,7 @@ export default class NewPackInfo extends React.Component{
 				{message}
 			</div>
 			<div sm={7} xs={12} className={hasData ? "" : "hidden"}>
-				<form inline className="pull-right">
+				<form className="form-inline pull-right">
 					<PackSelect export={this.props.export} /> 
 				</form>
 			</div>

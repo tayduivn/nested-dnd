@@ -4,8 +4,6 @@ import { mount } from 'enzyme';
 import { spy } from 'sinon';
 import App from './App';
 
-
-
 spy(App.prototype, 'componentDidMount');
 
 describe('<App />', () => {

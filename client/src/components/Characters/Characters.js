@@ -2,7 +2,7 @@ import React from "react";
 import CharacterSheet from "./CharacterSheet/CharacterSheet";
 import Cards from "./Cards/Cards";
 
-import characterStore from "../../stores/characterStore";
+//import characterStore from "../../stores/characterStore";
 
 import "./Characters.css";
 
@@ -14,7 +14,6 @@ export default class Characters extends React.Component {
 			selected: []
 		};
 		this.selectDeselect = this.selectDeselect.bind(this);
-		this.updateCharacter = this.updateCharacter.bind(this);
 	}
 	componentDidMount() {
 		// let _this = this;
@@ -36,21 +35,6 @@ export default class Characters extends React.Component {
 			});
 		}
 	}
-	updateCharacter(index, raw) {
-		characterStore.update(index, raw);
-		var characters = characterStore.getAll();
-		this.setState({
-			characters: characters,
-			selected: [characters[index]]
-		});
-	}
-	getCharacterToEdit() {
-		var index = this.state.characters.indexOf(this.state.selected[0]);
-		return {
-			index: index,
-			character: characterStore.getRaw(index)
-		};
-	}
 	render() {
 		return (
 			<div className="container-fluid">
@@ -69,15 +53,15 @@ export default class Characters extends React.Component {
 					</div>
 					<div className="col-sm-9 col-md-9 offset-sm-3 offset-md-2 main">
 						<ul id="characterInfo" className="nav nav-tabs">
-							<li class="nav-item" eventKey={2} title="Sheet" />
-							<li class="nav-item" eventKey={3} title="Print Sheet">
+							<li className="nav-item" eventkey={2} title="Sheet" />
+							<li className="nav-item" eventkey={3} title="Print Sheet">
 								<div className="printme" id="charsheets">
 									{this.state.selected.map((c, i) =>
 										<CharacterSheet key={i} character={c} />
 									)}
 								</div>
 							</li>
-							<li eventKey={4} title="Print Cards">
+							<li eventkey={4} title="Print Cards">
 								<div className="printme" id="cardSheets">
 									{this.state.selected.map((c, i) =>
 										<Cards key={i} character={c} />
@@ -105,7 +89,7 @@ class SidebarItem extends React.Component {
 		let c = this.props.character;
 		return (
 			<ul className="list-group"
-				active={this.props.selected}
+				active={this.props.selected.toString()}
 				onClick={this.handleClick}
 			>
 				<div className="pull-right">

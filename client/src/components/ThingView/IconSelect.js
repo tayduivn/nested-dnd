@@ -100,12 +100,12 @@ class IconSelect extends React.Component{
 		const validationState = this.props.status.isUpdated ? "success" : null;
 
 		return (<div className={this.props.status.isEnabled ? "" : "fake-disabled"}>
-			<div className="form-group m-0" validationState={validationState}>
+			<div className="form-group m-0" validationstate={validationState}>
 				<label>Icon</label>
 			</div>
 			<div className="row">
 				<div className="col-md">
-					<div validationState={validationState} className="form-group">
+					<div validationstate={validationState} className="form-group">
 						<VirtualizedSelect name="icon" value={this.iconArr} simpleValue
 							onChange={this.handleChange}
 							clearable={this.props.status.isClearable} 
@@ -119,7 +119,7 @@ class IconSelect extends React.Component{
 				<div id="icons-preview" className="col-md row">
 					{this.iconArr.map((icon, index) => (
 					<div className="col-sm-4 icon-wrap" key={index} >
-						<div className="form-group icon" controlId={"icon"+index}>
+						<div className="form-group icon" name={"icon"+index}>
 							<label>
 								<i className={icon+" "+this.animArr[index]+" animated infinite"} title={icon} />
 							</label>

@@ -65,7 +65,7 @@ export default class SpellcastingList {
 
 		this.list.push({
 			name: name,
-			title: name.replace(/ \(.*\)/g, "") + " Spells",
+			title: (name) ? name.replace(/ \(.*\)/g, "") + " Spells" : "",
 			spellcasting: spellcasting,
 			prepares: prepares,
 			numPrepared: level + modifier,
@@ -172,7 +172,7 @@ class Spellcasting {
 		});
 	}
 	printAbility() {
-		return skillAbbrev[this.ability].toUpperCase();
+		return (skillAbbrev[this.ability]) ? skillAbbrev[this.ability].toUpperCase() : "";
 	}
 	spellsByLevel() {
 		var levels = [];

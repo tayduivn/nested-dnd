@@ -22,7 +22,7 @@ export default class ThingView extends React.Component{
 		this.validate = this.validate.bind(this);
 		this.getStatus = this.getStatus.bind(this);
 		this.setPreview = this.setPreview.bind(this);
-		this.handleImport = this.handleImport.bind(this);
+		// this.handleImport = this.handleImport.bind(this);
 	}
 
 	shouldComponentUpdate(nextProps, nextState){
@@ -285,7 +285,7 @@ class Preview extends React.Component{
 function SubmitButton(props){
 	return(
 	<div className="btn-group submit-buttons">
-		<button bsStyle="success" bsSize="lg" className={props.isUpdated ? "" : "hidden"} disabled={!props.isValid}
+		<button bsStyle="success" bssize="lg" className={props.isUpdated ? "" : "hidden"} disabled={!props.isValid}
 			 onMouseDown={props.handleSave}>Save</button>
 	</div>);
 }

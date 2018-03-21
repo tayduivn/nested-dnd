@@ -54,20 +54,20 @@ export default class EditPack extends Component {
 				<form onSubmit={this.handleSubmit}>
 
 					{/* --------- Name ------------ */}
-					<div class="form-group">
+					<div className="form-group">
 						<label>Name</label>
 						<input value={pack.name} required name="name" />
 					</div>
 
 					{/* --------- Public ------------ */}
 					<input type="checkbox" checked={pack.public} name="public">Make Public</input>
-					<div class="form-group">
+					<div className="form-group">
 						<label>URL</label>
 						<input vlue={pack.url} name="url" />
 					</div>
 
 					{/* --------- Default Seed ------------ */}
-					<div class="form-group">
+					<div className="form-group">
 						<label>Default Seed</label>
 						<input value={pack.defaultSeed} name="defaultSeed" />
 					</div>

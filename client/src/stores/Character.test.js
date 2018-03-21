@@ -1,6 +1,9 @@
 import Character from './Character';
 
 import chai from 'chai';
+import spellStore from './spellStore';
+import SpellcastingList from './Spellcasting';
+import characterStore from './characterStore';
 
 const should = chai.should();
 
@@ -254,6 +257,44 @@ describe('Character',()=>{
 		should.exist(v);
 		should.exist(v2);
 
+	})
+
+	describe('spellStore', ()=>{
+
+		it('should add',()=>{
+			spellStore.addAll({'hi':{}});
+			spellStore.getAll();
+			spellStore.get('hi');
+			spellStore.exists('');
+			spellStore.getNames();
+			spellStore.getClassSpells('Ranger',1);
+		});
+
+	});
+
+	describe('Spellcasting', ()=>{
+		var s = new SpellcastingList();
+		s.add('hi':{
+			name: 'hi'
+		},
+		"Cleric", 8, 1, [2,3,5])
+		s.getCasterLevels();
+		s.getSlots();
+
+		var Spellcasting = s.list[0].spellcasting;
+		Spellcasting.knowSpell('');
+		Spellcasting.learnSpells({
+			spells: ['test']
+		});
+		Spellcasting.printAbility()
+		Spellcasting.spellsByLevel()
+	})
+
+	describe('characterStore', ()=>{
+		characterStore.addAll([char, char2]);
+		characterStore.getAll();
+		characterStore.getRaw();
+		characterStore.update(0, char)
 	})
 
 });

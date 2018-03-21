@@ -1,9 +1,9 @@
 import React from 'react';
 import { Router, Route } from 'react-router-dom';
-
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import sinon, { spy } from 'sinon';
+
 import Explore from './Explore';
 import ExplorePage from './ExplorePage';
 import Splash from './Splash';
@@ -39,11 +39,12 @@ describe('<Explore />', () => {
   it('calls componentDidMount', () => {
   	const history = createMemoryHistory();
   	history.location.state = current;
-    mount(
+    var wrap = mount(
     	<Router history={history}>
     		<Route path='/' component={Explore} />
     	</Router>
     );
+    wrap.update();
     expect(Explore.prototype.componentDidMount.calledOnce).to.equal(true);
   });
 
@@ -53,7 +54,8 @@ describe('<ExplorePage />', () =>{
 
 	it('displays', ()=>{
 		var wrapper = mount(<ExplorePage {...current} handleClick={()=>{}} />);
-		console.log(wrapper);
+		//wrapper.setState({current:current});
+		wrapper.update();
 	})
 
 });

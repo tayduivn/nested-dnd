@@ -120,7 +120,7 @@ class EditableInput extends React.Component {
 
 		return (
 			<div
-				validationState={this.validationState}
+				validationstate={this.validationState}
 				className={`form-group ${
 													this.props.status.isClearable
 														? "clearable"
@@ -137,7 +137,7 @@ class EditableInput extends React.Component {
 					}
 				>
 					<div
-						componentClass="textarea"
+						componentclass="textarea"
 						value={value}
 						rows={rows}
 						name={this.props.property}
