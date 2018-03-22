@@ -1,5 +1,47 @@
 const DEBUG_SPELL = "Light";
 
+
+class SpellData{
+	constructor(name, options, spells){
+		if(name === DEBUG_SPELL){
+			console.log("DEBUG "+name);
+		}
+
+		//extend the existing spell
+		if(spells[name]){
+			options = { ...spells[name].originalOptions, ...options };
+		}
+		//set the name
+		if(!options.namegen || !options.namegen.length){
+			options.namegen = name;
+		}
+
+		this._saveOptions(options);
+
+		this.originalOptions = options;
+	}
+	_saveOptions({namegen = "", cast_time = "", classes, description = [], components = { types: "" }, school = "", duration = "", level = 0, ritual = false, dice, range, save = false, shortDesc = false, icon = false, isFeature = false, uses, subtitle}){
+		this.namegen = namegen;
+		this.cast_time = cast_time;
+		this.components = components;
+		this.classes = classes;
+		this.description = description;
+		this.duration = duration;
+		this.range = range;
+		this.school = school;
+		this.dice = dice;
+		this.level = level;
+		this.save = save;
+		this.ritual = !!ritual;
+		this.shortDesc = shortDesc;
+		this.icon = icon;
+		this.isFeature = !!isFeature;
+		this.uses = uses;
+		this.subtitle = subtitle;
+	}
+}
+
+
 class SpellStore{
 	constructor(){
 		this.spells = {};
@@ -46,49 +88,5 @@ class SpellStore{
 		return spells;
 	}
 }
-
-class SpellData{
-	constructor(name, options, spells){
-		if(name === DEBUG_SPELL){
-			console.log("DEBUG "+name);
-		}
-
-		//extend the existing spell
-		if(spells[name]){
-			options = { ...spells[name].originalOptions, ...options };
-		}
-		//set the name
-		if(!options.namegen || !options.namegen.length){
-			options.namegen = name;
-		}
-
-		this._saveOptions(options);
-
-		this.originalOptions = options;
-	}
-	_saveOptions({namegen = "", cast_time = "", classes, description = [], components = { types: "" }, school = "", duration = "", level = 0, ritual = false, dice, range, save = false, shortDesc = false, icon = false, isFeature = false, uses, subtitle}){
-		this.namegen = namegen;
-		this.cast_time = cast_time;
-		this.components = components;
-		this.classes = classes;
-		this.description = description;
-		this.duration = duration;
-		this.range = range;
-		this.school = school;
-		this.dice = dice;
-		this.level = level;
-		this.save = save;
-		this.ritual = !!ritual;
-		this.shortDesc = shortDesc;
-		this.icon = icon;
-		this.isFeature = !!isFeature;
-		this.uses = uses;
-		this.subtitle = subtitle;
-	}
-}
-
-
-
-
 
 export default new SpellStore();

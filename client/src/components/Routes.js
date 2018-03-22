@@ -1,6 +1,11 @@
 import React from 'react';
 import { Route, Redirect } from "react-router-dom";
 
+const renderMergedProps = (component, ...rest) => {
+	const finalProps = Object.assign({}, ...rest);
+	return React.createElement(component, finalProps);
+};
+
 const PrivateRoute = ({ component, redirectTo, ...rest }) => {
 	return (
 		<Route
@@ -30,11 +35,6 @@ const PropsRoute = ({ component, ...rest }) => {
 			}}
 		/>
 	);
-};
-
-const renderMergedProps = (component, ...rest) => {
-	const finalProps = Object.assign({}, ...rest);
-	return React.createElement(component, finalProps);
 };
 
 

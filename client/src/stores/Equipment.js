@@ -1,3 +1,10 @@
+class Container {
+	constructor({ name, content }) {
+		this.name = name;
+		this.content = content;
+	}
+}
+
 export default class Equipment {
 	constructor(
 		{
@@ -34,10 +41,10 @@ export default class Equipment {
 		var ac = this.armor.data.AC;
 
 		if (this.armor.data["Item Type"] === "Light Armor") {
-			ac = ac + DEX;
+			ac += DEX;
 		} else if (this.armor.data["Item Type"] === "Medium Armor") {
-			if (DEX === 1) ac = ac + 1;
-			else ac = ac + 2;
+			if (DEX === 1) ac += 1;
+			else ac += 2;
 		}
 
 		if (this.hasShield) {
@@ -63,10 +70,5 @@ export default class Equipment {
 	}
 }
 
-class Container {
-	constructor({ name, content }) {
-		this.name = name;
-		this.content = content;
-	}
-}
+
 

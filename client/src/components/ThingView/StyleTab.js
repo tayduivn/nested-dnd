@@ -7,28 +7,24 @@ import IconSelect from './IconSelect';
 const RESET_VALUE = ",,"
 const DEBUG = false;
 
-export default class StyleTab extends React.Component{
-	render(){
-		const iconStatus = this.props.getStatus("icon");
-		const bgStatus = this.props.getStatus("background");
-		const txtStatus = this.props.getStatus("textColor");
+const StyleTab = (props) => (
+	<div>
+		<div className="row">
+			<Dropdown label="Background" name="background" {...props} status={props.getStatus("background")} />
+			<Dropdown label="Text color" name="textColor" {...props} status={props.getStatus("textColor")} />
+		</div>
+		<IconSelect value={props.thing.icon} status={props.getStatus("icon")}
+			saveProperty={props.handleChange} setPreview={props.setPreview}    /> 
+	</div>
+)
+export default StyleTab;
 
-		return(<div>
-			<div className="row">
-				<div className="col-md">
-					<ColorDropdown label="Background" name="background" value={this.props.thing.background} status={bgStatus}
-						saveProperty={this.props.handleChange} setPreview={this.props.setPreview} />
-				</div>
-				<div className="col-md">
-					<ColorDropdown label="Text color" name="textColor" value={this.props.thing.textColor} status={txtStatus}
-						saveProperty={this.props.handleChange} setPreview={this.props.setPreview} />
-				</div>
-			</div>
-			<IconSelect value={this.props.thing.icon} status={iconStatus}
-				saveProperty={this.props.handleChange} setPreview={this.props.setPreview}    /> 
-		</div>)
-	}
-}
+const Dropdown = ({label, name, thing, status, handleChange, setPreview}) => (
+	<div className="col-md">
+		<ColorDropdown label={label} name={name} value={thing[name]} status={status}
+			saveProperty={handleChange} setPreview={setPreview} />
+	</div>
+);
 
 class ColorDropdown extends React.Component {
 	constructor(){

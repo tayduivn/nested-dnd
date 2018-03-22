@@ -32,6 +32,83 @@ const multiclassSpellSlots = [
 	[4, 3, 3, 3, 3, 2, 2, 1, 1]
 ];
 
+
+class KnownSpell {
+	constructor(name, note) {
+		this.name = name;
+		this.note = note;
+		this.prepared = false;
+
+		if ((note && note.includes("prepared")) || this.getData().level === 0) {
+			this.note = "";
+			this.prepared = true;
+		}
+	}
+	getData() {
+		var spell = spellStore.get(this.name);
+		if(!spell){
+			return {};
+		}
+		return spell;
+	}
+}
+
+class Spellcasting {
+	constructor(
+		{ spells = [], ability, dc, notes = {}, ritual_cast = false },
+		source
+	) {
+		this.spells = spells.map
+			? spells.map(s => new KnownSpell(s, notes[s]))
+			: [];
+		this.ability = ability;
+		this.dc = dc;
+		this.notes = notes;
+		this.ritual_cast = !!ritual_cast;
+		this.source = source;
+
+		this.spells.sort((a, b) => {
+			return a.name.localeCompare(b.name);
+		});
+	}
+	knowSpell(name) {
+		return this.spells.find(s => s.name === name);
+	}
+	learnSpells(obj) {
+		if (!obj) return;
+		if (!obj.spells || !obj.spells.forEach) {
+			return;
+		}
+		if (!obj.notes) obj.notes = {};
+
+		obj.spells.forEach(name => {
+			if (!this.knowSpell(name))
+				this.spells.push(new KnownSpell(name, obj.notes[name]));
+		});
+		this.spells.sort((a, b) => {
+			return a.name ? a.name.localeCompare(b.name) : true;
+		});
+	}
+	printAbility() {
+		return (skillAbbrev[this.ability]) ? skillAbbrev[this.ability].toUpperCase() : "";
+	}
+	spellsByLevel() {
+		var levels = [];
+		this.spells.forEach(s => {
+			var data = s.getData();
+			if (!data) {
+				console.error("Couldn't find spell " + s);
+				return;
+			}
+
+			if (!levels[data.level]) levels[data.level] = [];
+			levels[data.level].push(s);
+		});
+		return levels;
+	}
+}
+
+
 export default class SpellcastingList {
 	constructor() {
 		this.list = [];
@@ -135,80 +212,7 @@ export default class SpellcastingList {
 	}
 }
 
-class Spellcasting {
-	constructor(
-		{ spells = [], ability, dc, notes = {}, ritual_cast = false },
-		source
-	) {
-		this.spells = spells.map
-			? spells.map(s => new KnownSpell(s, notes[s]))
-			: [];
-		this.ability = ability;
-		this.dc = dc;
-		this.notes = notes;
-		this.ritual_cast = !!ritual_cast;
-		this.source = source;
 
-		this.spells.sort((a, b) => {
-			return a.name.localeCompare(b.name);
-		});
-	}
-	knowSpell(name) {
-		return this.spells.find(s => s.name === name);
-	}
-	learnSpells(obj) {
-		if (!obj) return;
-		if (!obj.spells || !obj.spells.forEach) {
-			return;
-		}
-		if (!obj.notes) obj.notes = {};
-
-		obj.spells.forEach(name => {
-			if (!this.knowSpell(name))
-				this.spells.push(new KnownSpell(name, obj.notes[name]));
-		});
-		this.spells.sort((a, b) => {
-			return a.name ? a.name.localeCompare(b.name) : true;
-		});
-	}
-	printAbility() {
-		return (skillAbbrev[this.ability]) ? skillAbbrev[this.ability].toUpperCase() : "";
-	}
-	spellsByLevel() {
-		var levels = [];
-		this.spells.forEach(s => {
-			var data = s.getData();
-			if (!data) {
-				console.error("Couldn't find spell " + s);
-				return;
-			}
-
-			if (!levels[data.level]) levels[data.level] = [];
-			levels[data.level].push(s);
-		});
-		return levels;
-	}
-}
-
-class KnownSpell {
-	constructor(name, note) {
-		this.name = name;
-		this.note = note;
-		this.prepared = false;
-
-		if ((note && note.includes("prepared")) || this.getData().level === 0) {
-			this.note = "";
-			this.prepared = true;
-		}
-	}
-	getData() {
-		var spell = spellStore.get(this.name);
-		if(!spell){
-			return {};
-		}
-		return spell;
-	}
-}
 
 /*
 class SpellListAbility{

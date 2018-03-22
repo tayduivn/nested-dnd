@@ -33,26 +33,6 @@ export function appendPlus(val) {
 }
 
 
-export default class Cards {
-	constructor(items = [], knownSpells = [], features = []) {
-		// find features that have spell cards
-		var featureSpells = [];
-		features.forEach(f => {
-			let spell = spellStore.get(f.name);
-			if (spell && spell.isFeature)
-				featureSpells.push(new Card().setSpell(spell));
-		});
-
-		this.arr = items
-			.map(i => new Card().setItem(i))
-			.concat(knownSpells.map(s => new Card().setSpell(s)))
-			.concat(featureSpells);
-	}
-	get() {
-		return this.arr;
-	}
-}
-
 class Card {
 	constructor() {
 		this.category = "";
@@ -122,5 +102,26 @@ class Card {
 			this[name] = knownSpell[name];
 		}
 		return this;
+	}
+}
+
+
+export default class Cards {
+	constructor(items = [], knownSpells = [], features = []) {
+		// find features that have spell cards
+		var featureSpells = [];
+		features.forEach(f => {
+			let spell = spellStore.get(f.name);
+			if (spell && spell.isFeature)
+				featureSpells.push(new Card().setSpell(spell));
+		});
+
+		this.arr = items
+			.map(i => new Card().setItem(i))
+			.concat(knownSpells.map(s => new Card().setSpell(s)))
+			.concat(featureSpells);
+	}
+	get() {
+		return this.arr;
 	}
 }

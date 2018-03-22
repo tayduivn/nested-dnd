@@ -11,16 +11,6 @@ import EditPack from "./EditPack";
 
 const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
 
-const Packs = ({ match }) => (
-	<div className="main mt-5">
-		<Route exact path={match.url} component={PackList} />
-		<PrivateRoute path={`${match.url}/create`} component={EditPack}  />
-		<Route path={`${match.url}/:pack`} component={Pack}  />
-	</div>
-)
-
-export default Packs;
-
 const PackLink = ({_id, name}) => <li key={_id} ><Link to={"/packs/"+_id}>{name}</Link></li>
 
 const MyPacks = ({myPacks}) => (
@@ -76,3 +66,13 @@ class PackList extends Component{
 		);
 	}
 }
+
+const Packs = ({ match }) => (
+	<div className="main mt-5">
+		<Route exact path={match.url} component={PackList} />
+		<PrivateRoute path={`${match.url}/create`} component={EditPack}  />
+		<Route path={`${match.url}/:pack`} component={Pack}  />
+	</div>
+)
+
+export default Packs;

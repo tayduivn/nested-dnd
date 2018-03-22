@@ -18,6 +18,12 @@ import Splash from '../Explore/Splash'
 
 import "./App.css";
 
+const NotFound = () => (
+	<div className="container">
+		<h1>404 Not Found</h1>
+	</div>
+)
+
 class App extends Component {
 	constructor(){
 		super();
@@ -97,13 +103,6 @@ class App extends Component {
 		);
 	}
 }
-
-
-const NotFound = () => (
-	<div className="container">
-		<h1>404 Not Found</h1>
-	</div>
-)
 
 export default App;
 export { PropsRoute, PrivateRoute, NotFound };

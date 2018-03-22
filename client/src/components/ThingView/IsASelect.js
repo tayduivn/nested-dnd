@@ -3,7 +3,7 @@ import { Creatable  } from 'react-select';
 
 import Styler from '../../util/Styler';
 
-const BLANK_VALUE = <span>&nbsp;</span>;
+//const BLANK_VALUE = <span>&nbsp;</span>;
 const DEBUG = false;
 const RESET_VALUE = {label: null, value: "DO THE RESET PLEASE AND THANK YOU"}
 

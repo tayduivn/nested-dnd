@@ -32,7 +32,7 @@ var packSchema = Schema({
 		type: String,
 		isAsync: true,
 		set: function(val){
-			if(val.charAt(val.length-1) != SEED_DELIM)
+			if(val.charAt(val.length-1) !== SEED_DELIM)
 				return val+SEED_DELIM;
 			return val;
 		}

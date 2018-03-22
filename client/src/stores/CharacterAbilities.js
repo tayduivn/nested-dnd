@@ -19,28 +19,18 @@ const skillNames = [
 	"Survival"
 ];
 
-export class Abilities {
-	constructor({
-		Strength = {},
-		Dexterity = {},
-		Constitution = {},
-		Intelligence = {},
-		Wisdom = {},
-		Charisma = {}
-	}) {
-		this.Strength = new Ability(Strength);
-		this.Dexterity = new Ability(Dexterity);
-		this.Constitution = new Ability(Constitution);
-		this.Intelligence = new Ability(Intelligence);
-		this.Wisdom = new Ability(Wisdom);
-		this.Charisma = new Ability(Charisma);
+function appendPlus(val) {
+	if (val > 0) {
+		return "+" + val;
 	}
-	setSaveProficiencies(list = [], profBonus) {
-		list.forEach(ability => {
-			this[ability].save.proficient = true;
-			this[ability].profBonus = profBonus;
-		});
-	}
+	return "" + val;
+}
+
+function getMod(val) {
+	var mod = Math.floor((val - 10) / 2);
+	if (val >= 30) mod = 10;
+	else if (val < 2) mod = -5;
+	return mod;
 }
 
 class Ability {
@@ -95,28 +85,31 @@ class Save {
 	}
 }
 
-export class Skills {
-	constructor(proficient = [], doubleProficient = [], character) {
-		this.proficient = proficient;
-		this.doubleProficient = doubleProficient;
-		this.abilities = character.abilities;
-		this.character = character;
+
+export class Abilities {
+	constructor({
+		Strength = {},
+		Dexterity = {},
+		Constitution = {},
+		Intelligence = {},
+		Wisdom = {},
+		Charisma = {}
+	}) {
+		this.Strength = new Ability(Strength);
+		this.Dexterity = new Ability(Dexterity);
+		this.Constitution = new Ability(Constitution);
+		this.Intelligence = new Ability(Intelligence);
+		this.Wisdom = new Ability(Wisdom);
+		this.Charisma = new Ability(Charisma);
 	}
-	getInitiative() {
-		return appendPlus(this.abilities.Dexterity.getMod());
-	}
-	getList() {
-		var _this = this;
-		return skillNames.map(function(name) {
-			return new Skill(
-				name,
-				_this.proficient.includes(name),
-				_this.doubleProficient.includes(name),
-				_this.character
-			);
+	setSaveProficiencies(list = [], profBonus) {
+		list.forEach(ability => {
+			this[ability].save.proficient = true;
+			this[ability].profBonus = profBonus;
 		});
 	}
 }
+
 
 class Skill {
 	constructor(name, proficient = false, doubleProficient = false, character) {
@@ -167,16 +160,25 @@ class Skill {
 	}
 }
 
-function appendPlus(val) {
-	if (val > 0) {
-		return "+" + val;
+export class Skills {
+	constructor(proficient = [], doubleProficient = [], character) {
+		this.proficient = proficient;
+		this.doubleProficient = doubleProficient;
+		this.abilities = character.abilities;
+		this.character = character;
 	}
-	return "" + val;
-}
-
-function getMod(val) {
-	var mod = Math.floor((val - 10) / 2);
-	if (val >= 30) mod = 10;
-	else if (val < 2) mod = -5;
-	return mod;
+	getInitiative() {
+		return appendPlus(this.abilities.Dexterity.getMod());
+	}
+	getList() {
+		var _this = this;
+		return skillNames.map(function(name) {
+			return new Skill(
+				name,
+				_this.proficient.includes(name),
+				_this.doubleProficient.includes(name),
+				_this.character
+			);
+		});
+	}
 }
