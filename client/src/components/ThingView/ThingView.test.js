@@ -13,7 +13,6 @@ describe('<ThingView />',()=>{
 	it('should mount', ()=>{
 		var wrap = mount(<ThingView />);
 		wrap.update();
-		console.log(wrap);
 		wrap.unmount();
 	})
 

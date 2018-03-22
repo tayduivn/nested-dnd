@@ -10,16 +10,15 @@ var Maintainer = {
 		if(!arr) return [];
 		var isas = [];
 
-		for(var i = 0; i < arr.length; i++){
-			//termination condition
-			if(arr[i].type === "generator"){
-				isas.push(arr[i].value);
+		arr.forEach(({type, value = ''})=>{
+			if(type === "generator"){ //termination condition
+				isas.push(value.toString());
+				return;
 			}
+
 			// recurse
-			if(arr[i].in){
-				isas = isas.concat(this.getGeneratorChildren(arr[i].in));
-			}
-		}
+			isas = isas.concat(this.getGeneratorChildren(value.in));
+		});
 
 		return isas;
 	},
