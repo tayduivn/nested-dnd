@@ -24,17 +24,19 @@ if (process.env.NODE_ENV === "production") {
 	console.log("Serving static files at / from " + staticPath);
 } 
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/nested-dnd", 
-	function (err, client) {
-		if (err) {
-			console.log(err);
-			throw new Error("Couldn't connect to mongo database")
-		}
-		else{
-			// launch ======================================================================
-			app.listen(port, () => console.log(`Listening on port ${port}`));
-		}
-	});
+if (process.env.NODE_ENV !== "test") {
+	mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/nested-dnd", 
+		function (err, client) {
+			if (err) {
+				console.log(err);
+				throw new Error("Couldn't connect to mongo database")
+			}
+			else{
+				// launch ======================================================================
+				app.listen(port, () => console.log(`Listening on port ${port}`));
+			}
+		});
+}
 
 
 require("./config/passport")(passport); // pass passport for configuration

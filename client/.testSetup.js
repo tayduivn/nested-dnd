@@ -1,10 +1,12 @@
-var enzyme = require('enzyme');
-var Adapter = require('enzyme-adapter-react-16');
+const enzyme = require('enzyme');
+const Adapter = require('enzyme-adapter-react-16');
+const assert = require('assert');
 
 require('babel-register')();
 require('ignore-styles');
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
+
 
 enzyme.configure({ adapter: new Adapter() });
 
@@ -51,6 +53,20 @@ if (!global.window.localStorage) {
 global.navigator = {
   userAgent: 'node.js'
 };
+
+global.assertThrowsAsync = async function(test, error) {
+  var result;
+  try {
+      result = await test();
+  } catch(e) {
+      if (!error || e instanceof error){
+      	return "everything is fine";
+      } 
+  }
+  throw new assert.AssertionError({
+  	message: "Missing rejection" + (error ? " with "+error.name : "")+". Function returned "+result 
+  });
+}
 
 var documentRef = document;
 

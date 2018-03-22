@@ -74,6 +74,8 @@ styleSchema.methods.makePattern = async function(){
 
 // TODO
 styleSchema.methods.strToColor = function(str) {
+	if(typeof str !== 'string') return '';
+
 	var colors = "multicolored|opaline|rainbow|red|magenta|orange|yellow|teal|green|blue|turquoise|purple|gold|golden|glowing|shimmering|luminous|faint|white|black|brown|pale|silver|silvery|gray|tan|grey|pink|shady|sharkverse|baconverse|doughnutverse|lasagnaverse";
 
 	str = " "+str.replace(/-/g," ")+" ";

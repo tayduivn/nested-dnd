@@ -53,7 +53,7 @@ generatorSchema.post('remove', Maintainer.cleanAfterRemove);
 
 // ----------------------- VIRTUALS
 
-generatorSchema.virtual('makeStyle').get(async function(){
+generatorSchema.methods.makeStyle = async function(name){
 	var style = {
 		cssClass: []
 	};
@@ -75,10 +75,16 @@ generatorSchema.virtual('makeStyle').get(async function(){
 	if(arr[3]) style.icon = arr[3];
 	if(arr[4]) style.cssClass.push(arr[4]);
 
+	if(!this.style.noAutoColor){
+		var autoColor = this.style.strToColor(name);
+		if(autoColor) style.txt = undefined;
+		style.cssClass.push(autoColor);
+	}
+
 	style.cssClass = style.cssClass.join(" ");
 
 	return style;
-})
+}
 
 generatorSchema.virtual('makeName').get(function(){
 	return (this.name) ? Maker.makeMixedThing(this.name, this.model('Table')) : undefined;

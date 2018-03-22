@@ -23,3 +23,8 @@ open static/js/bundle
 yalc publish 
 yalc add react-scripts
 depcheck
+
+mongodump --db nested-dnd --out server/data/dump
+mongorestore -h <:> -d <heroku_> -u <user> -p <pw> server/data/dump/nested-dnd
+mongorestore -h <:mlab.com> -d <dbname> -u <user> -p <password> <input .bson file> // collection
+cd client\src\assets\patterns && dir /b > patternNames.txt

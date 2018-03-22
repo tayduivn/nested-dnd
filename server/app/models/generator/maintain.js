@@ -71,6 +71,9 @@ var Maintainer = {
 	 */
 	insertNew: async function(data, pack, builtpack){
 
+		if(!data || !pack || !builtpack)
+			return;
+
 		//validate isa
 		if(builtpack.getGen(data.isa)){
 			var e = new Error(data.isa+" generator already exists in pack "+pack._id);
@@ -97,6 +100,9 @@ var Maintainer = {
 				}
 			}
 		}
+
+		// put pack id
+		data.pack_id = pack._id;
 
 		var gen = await pack.model('Generator').create(data)
 

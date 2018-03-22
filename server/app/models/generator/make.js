@@ -62,7 +62,7 @@ var Maker = {
 		// make a new node if doesn't exist yet
 		if(!node){
 			var name = await gen.makeName;
-			var style = await gen.makeStyle;
+			var style = await gen.makeStyle(name);
 
 			node = new Nested(name, gen, style);
 		}

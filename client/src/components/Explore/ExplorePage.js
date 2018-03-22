@@ -20,8 +20,7 @@ const LOADING = (
 const ExplorePage = ({ name, isa, cssClass, in: inArr, txt, up, icon, font, handleClick, handleRestart }) => (
 	<div className={`main pt-5 container-fluid ${cssClass}`} style={{color:txt}}>
 		<h1 id="title">
-			<Ancestors ancestors={up ? up : []}
-				handleClick={handleClick}  />{"  "}
+			<Ancestors ancestors={up ? up : []} handleClick={handleClick}  />{"  "}
 			<i className={icon}></i>{" "}
 			<span className="webfont" style={(font) ? {fontFamily:font+', sans-serif'} : {}}>
 				{name ? name : isa}
