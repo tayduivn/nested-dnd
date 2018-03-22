@@ -71,6 +71,7 @@ i.gi{
 		white-space:pre-wrap;
 		display:table;
 		border-radius: $border-radius-sm;
+		background-position: center;
 
 		width: 96%;
 		height: 150px;
@@ -84,6 +85,12 @@ i.gi{
 			text-align:center;
 			padding:0;
 			margin:0;
+
+			i {
+				font-size: 5rem;
+				line-height: 1em;
+				display: inline-block;
+			}
 		}
 
 		&.link{ 
@@ -96,11 +103,6 @@ i.gi{
 			}
 
 			.wrap{
-				i{
-					font-size: 5rem;
-					line-height: 1em;
-				}
-
 				h1{
 					display: block;
 					text-align: center;

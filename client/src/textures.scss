@@ -1,5 +1,26 @@
 
-$textures: ['purty-wood', 'stardust', 'nestedSharkverse', 'nestedBaconverse', 'nestedDoughnutverse', 'nestedLasagnaverse'];
+$textures: ["3px-tile",
+"45-degree-fabric-dark",
+"45-degree-fabric-light",
+"60-lines",
+"absurdity",
+"ag-square",
+"always-grey",
+"arabesque",
+"dimension",
+"food",
+"nestedBaconverse",
+"nestedDoughnutverse",
+"nestedLasagnaverse",
+"nestedSharkverse",
+"pineapple-cut",
+"purty-wood",
+"random-grey-variations",
+"robots",
+"shattered-dark",
+"stardust",
+"white-diamond-dark"];
+
 
 
 @for $i from 1 through length($textures) {
@@ -11,6 +32,7 @@ $textures: ['purty-wood', 'stardust', 'nestedSharkverse', 'nestedBaconverse', 'n
 	} 
 }
 
-.purty-wood{
+.purty-wood, .shattered-dark{
 	background-blend-mode: color-burn;
 }
+

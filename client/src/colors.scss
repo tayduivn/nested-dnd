@@ -150,6 +150,15 @@ $gradients: (
 	}
 }
 
+@mixin background($color, $gradient){
+	@if ($gradient){
+		background: $color $gradient;
+	}
+	@else{
+		background-color: $color;
+	}
+}
+
 
 /* Apply these in a certain order so they take precendence */
 
@@ -163,6 +172,7 @@ $gradients: (
 	.#{$name}{
 		.btn{
 			@include button-variant($slightlyOff, $slightlyOff);
+			color: $contrast;
 		}
 		* {
 			--parent-theme: moreOff($color);
@@ -180,6 +190,7 @@ $gradients: (
 	.#{$name} {
 		> .btn{
 			@include button-variant($slightlyOff, $slightlyOff);
+			color: $contrast;
 		}
 	}
 }
@@ -191,30 +202,27 @@ $gradients: (
 	$slightlyOff: slightlyOff($color);
 	$contrast: getContrastText($color);
 	$gradient: map-get($gradients, $name);
-	$background: $color;
-
-	@if ($gradient){
-		$background: $color $gradient;
-	}
-
 
 	.#{$name}{
 		--slightlyOff: $slightlyOff;
 		--contrast: $contrast;
 		--theme: $color;
-		
-		background: $background;
+
+		@include background($color, $gradient);
 		color: $contrast;
 
 		&.btn {
 			@include button-variant($color, $color);
-			background: $background;
+			@include background($color, $gradient);
+			color: $contrast;
 		}
 		&.fa, &.gi{
 			color: $color;
 		}
 	}
 }
+
+
 
 
 .rainbow, .child-inner.rainbow{
