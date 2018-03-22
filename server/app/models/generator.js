@@ -8,6 +8,16 @@ const Maker = require('./generator/make');
 
 const SEED_DELIM = ">";
 
+function validateType(input){
+	if(input.type === 'table' && typeof input.value === 'string')
+		input.type = 'string'
+	if(input.type === 'string' && typeof input.value !== 'string'){
+		if(input.value.rows) input.type = 'table'
+		else throw Error("cannot set name to value "+input.value)
+	}
+	return input;
+}
+
 var generatorSchema = Schema({
 	pack_id: {
 		type: Schema.Types.ObjectId,
@@ -23,7 +33,8 @@ var generatorSchema = Schema({
 		type: String
 	},
 	name: {
-		type: Schema.Types.Mixed // todo: handle tables and such
+		type: Schema.Types.Mixed, // todo: handle tables and such
+		set: validateType
 	},
 	desc: {
 	 type: [String],
@@ -31,6 +42,7 @@ var generatorSchema = Schema({
 	},
 	in: {
 	 type: [childSchema],
+	 set: validateType,
 	 default: void 0	
 	},
 	data: Object,
@@ -191,7 +203,12 @@ generatorSchema.methods.extend = function(builtpack){
 	const Generator = this.model('Generator');
 
 	var extendsGen = new Generator(builtpack.getGen(this.extends));
+	var extendsStyle = (new Generator({style: extendsGen.style})).style;
 	extendsGen.set(this); // this overwrites the extends
+	if(extendsStyle && this.style) { // if they both have style, combine them
+		extendsStyle.set(this.style);
+		extendsGen.set({style: extendsStyle}); 
+	}
 	return extendsGen;
 }
 

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
+
 import DB from "../../actions/CRUDAction";
 import Generator from '../Generators/Generator';
 import EditGenerator from '../Generators/EditGenerator';
 import { PrivateRoute, PropsRoute } from '../Routes';
-import { Link } from "react-router-dom";
-
 import EditPack from "./EditPack";
 
 const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
@@ -13,70 +14,62 @@ const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
 /**
  * View a Pack
  */
-class ViewPack extends Component {
-	render() {
-		const pack = this.props.pack;
+const ViewPack = ({name, _id, user_id: user, url, defaultSeed, isOwner, public: isPublic, loggedIn, generators}) => (
+	<div className="container">
+		{/* --------- Name ------------ */}
+		<h1>{name}</h1>
+		
+		{/* --------- Edit Button ------------ */}
+		{loggedIn ? (
+			<Link to={"/packs/" + _id + "/edit"}>
+				<button className="btn btn-primary">
+					Edit Pack
+				</button>
+			</Link>
+		) : null}
 
-		if(!pack) return null;
+		<ul>
+			{/* --------- Author ------------ */}
+			{ !isOwner ? (
+				<li>
+					<strong>Author: </strong>
+					<Link to={"/user/" + user._id}>{user.name}</Link>
+				</li>
+			) : null}
 
-		return (
-			<div className="container">
-				{/* --------- Name ------------ */}
-				<h1>{pack.name}</h1>
-				
-				{/* --------- Edit Button ------------ */}
-				{this.props.loggedIn ? (
-					<Link to={"/packs/" + pack._id + "/edit"}>
-						<button className="btn btn-primary">
-							Edit Pack
-						</button>
-					</Link>
-				) : null}
+			{/* --------- Public ------------ */}
+			<li>{isPublic ? "Public" : "Private"}</li>
+			{url ? <li><Link to={"/explore/"+url}>Explore</Link></li> : null}
 
-				<ul>
-					{/* --------- Author ------------ */}
-					{ !pack.isOwner ? (
-						<li>
-							<strong>Author: </strong>
-							<Link to={"/user/" + pack._user._id}>{pack._user.name}</Link>
-						</li>
-					) : null}
+			{/* --------- Default Seed ------------ */}
+			{defaultSeed ? (
+				<li>
+					<strong>DefaultSeed: </strong> {defaultSeed}
+				</li>
+			) : null}
 
-					{/* --------- Public ------------ */}
-					<li>{pack.public ? "Public" : "Private"}</li>
-					{pack.url ? <li><Link to={"/explore/"+pack.url}>Explore</Link></li> : null}
+			{/* --------- Dependencies: TODO ------------ */}
 
-					{/* --------- Default Seed ------------ */}
-					{pack.defaultSeed ? (
-						<li>
-							<strong>DefaultSeed: </strong> {pack.defaultSeed}
-						</li>
-					) : null}
+		</ul>
 
-					{/* --------- Dependencies: TODO ------------ */}
+		{/* --------- Generators ------------ */}
+		<div>
+			<h2>Generators</h2>
+			<ul>
+				{generators.map((gen, i) =>{
+					return <li key={i}><Link to={'/packs/'+_id+"/generator/"+gen._id}>{gen.isa} {gen.extends ? '  ('+gen.extends+')' : ""}</Link></li>
+				})}
+			</ul>
 
-				</ul>
+			<Link to={"/packs/" + _id + "/generator/create"}>
+				<button className="btn btn-primary">
+					Add Generator
+				</button>
+			</Link>
+		</div>
 
-				{/* --------- Generators ------------ */}
-				<div>
-					<h2>Generators</h2>
-					<ul>
-						{pack.generators.map((gen, i) =>{
-							return <li key={i}><Link to={'/packs/'+pack._id+"/generator/"+gen._id}>{gen.isa} {gen.extends ? '  ('+gen.extends+')' : ""}</Link></li>
-						})}
-					</ul>
-
-					<Link to={"/packs/" + pack._id + "/generator/create"}>
-						<button className="btn btn-primary">
-							Add Generator
-						</button>
-					</Link>
-				</div>
-
-			</div>
-		);
-	}
-}
+	</div>
+)
 
 /**
  * Wrapper Component for Pack pages
@@ -88,9 +81,14 @@ export default class Pack extends Component {
 		error: null
 	};
 
+	static contextTypes = {
+		loggedIn: PropTypes.bool
+	}
+
 	componentDidMount() {
-		if (this.props.match.params.pack && !this.props.match.params.gen) {
-			DB.get("pack", this.props.match.params.pack).then(({error, data}) =>{
+		var params = this.props.match.params;
+		if (params.pack && !params.gen) {
+			DB.get("pack", params.pack).then(({error, data}) =>{
 					this.setState({ pack: data, error: error })
 				}
 			);
@@ -105,7 +103,7 @@ export default class Pack extends Component {
 
 		return (
 			<div>
-				<PropsRoute exact path={`${match}`} component={ViewPack} pack={this.state.pack} />
+				<PropsRoute exact path={`${match}`} component={ViewPack} {...this.state.pack} loggedIn={this.context.loggedIn} />
 				<PrivateRoute path={`${match}/edit`} component={EditPack} pack={this.state.pack}  />
 				<PropsRoute path={`${match}/generator/create`} component={EditGenerator} pack_id={this.props.match.params.pack} />
 				<PropsRoute path={`${match}/generator/:gen`} component={Generator} pack_id={this.props.match.params.pack} />

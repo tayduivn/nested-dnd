@@ -33,6 +33,14 @@ function getMod(val) {
 	return mod;
 }
 
+
+class Save {
+	constructor({ proficient = false, note = "" }) {
+		this.proficient = !!proficient;
+		this.note = note;
+	}
+}
+
 class Ability {
 	/**
 	 * @param {value: Number, level: Number, notes: String} adjust 
@@ -75,13 +83,6 @@ class Ability {
 	}
 	printSave() {
 		return appendPlus(this.getMod() + this.profBonus);
-	}
-}
-
-class Save {
-	constructor({ proficient = false, note = "" }) {
-		this.proficient = !!proficient;
-		this.note = note;
 	}
 }
 

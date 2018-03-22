@@ -147,4 +147,3 @@ function seedArray(seed){
 }
 
 module.exports = mongoose.model('Pack', packSchema);
-module.exports.packSchema = packSchema;

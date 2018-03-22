@@ -2,38 +2,55 @@ const Schema = require("mongoose").Schema;
 
 const Maker = require('./make');
 
+function validateMixedThing(input){
+	if(input.type === 'table' && typeof input.value === 'string')
+		input.type = 'string'
+	if(input.type === 'string' && typeof input.value !== 'string'){
+		if(input.value.rows) input.type = 'table'
+		else throw Error("cannot set name to value "+input.value)
+	}
+	return input;
+}
+
+var mixedTypeSchema = Schema({
+	type: String, // tableid string table -- if no type, it's a string
+	value: Schema.Types.Mixed
+}, { typeKey: '$type' })
+
 var styleSchema = Schema({
 	icon: {
-		type: String, // tableid string table -- if no type, it's a string
-		value: Schema.Types.Mixed
+		type: mixedTypeSchema,
+		set: validateMixedThing
 	},
 
 	img: {
-		type: String,
-		value: Schema.Types.Mixed
+		type: mixedTypeSchema,
+		set: validateMixedThing
 	}, 
 
 	// todo: check hex or valid color name
 	txt: {
-		type: String, // tableid string table -- if no type, it's a string
-		value: Schema.Types.Mixed
+		type: mixedTypeSchema,
+		set: validateMixedThing
 	},
 
 	// todo: check hex or valid color name
 	bg: {
-		type: String, // tableid string table -- if no type, it's a string
-		value: Schema.Types.Mixed
+		type: mixedTypeSchema,
+		set: validateMixedThing
 	},
 
 	pattern: {
-		type: String,
-		value: Schema.Types.Mixed
+		type: mixedTypeSchema,
+		set: validateMixedThing
 	},
 
 	// if the generated name will affect the color
 	// TODO: use to generate background color
 	noAutoColor: Boolean
-}, { typeKey: "$type", _id: false });
+}, { _id: false });
+
+styleSchema.path('icon').set(validateMixedThing);
 
 styleSchema.methods.makeTextColor = async function(){
 	return Maker.makeMixedThing(this.txt, this.parent().model('Table'))
@@ -44,11 +61,7 @@ styleSchema.methods.makeBackgroundColor = async function(){
 };
 
 styleSchema.methods.makeIcon = async function(){
-	var icon = await Maker.makeMixedThing(this.icon, this.parent().model('Table'));
-	if(icon && typeof icon === 'string' && icon.includes('flaticon')){ // TODO hack
-		icon = icon.replace('fa ', 'fi ');
-	}
-	return icon;
+	return Maker.makeMixedThing(this.icon, this.parent().model('Table'))
 };
 
 styleSchema.methods.makeImage = async function(){

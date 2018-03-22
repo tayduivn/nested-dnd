@@ -1,6 +1,8 @@
 @import "../../variables.scss";
 
 .parent{
+	border-radius: $border-radius-lg;
+
 	.btn{
 		color:inherit;
 	}

@@ -22,7 +22,7 @@ const dndLink = {
 		fromSplash: true,
 		current: {
 			in: true,
-			cssClass: 'tan purty-wood',
+			cssClass: 'burlywood purty-wood',
 			name: 'Dungeons & Dragons',
 			font: 'IM Fell English SC'
 		}

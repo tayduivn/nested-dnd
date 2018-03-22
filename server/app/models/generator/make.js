@@ -11,7 +11,7 @@ var Maker = {
 	 * @return {string}              the random value
 	 */
 	makeMixedThing: async function(thing, Table){
-		if(typeof thing === "string") 
+		if(typeof thing === "string" || !thing) 
 			return thing;
 
 		var {type, value} = thing;
@@ -24,8 +24,14 @@ var Maker = {
 				return await table.roll();
 				break;
 			case "table":
-				var table = new Table(value);
-				return await table.roll(); // TODO: roll
+				if(typeof value === 'object'){
+					var table = new Table(value);
+					return await table.roll(); // TODO: roll
+				}
+				else {
+					console.error("Data needs cleanup - table should not be a string: ");
+					console.error(thing.$parent._doc);
+				}
 				break;
 		}
 		return value;
@@ -99,6 +105,7 @@ var Maker = {
 	 */
 	makeChild: async function(child, builtpack, generations){
 		var Table = builtpack.model('Table');
+		var Generator = builtpack.model('Generator');
 		var Maker = this;
 
 		// check chance
@@ -124,8 +131,16 @@ var Maker = {
 					if(typeof result === undefined){
 						continue;
 					}
+
 					var { gen: newGen, table: newTable } = await checkTypes(result, Table, builtpack);
-					arr = arr.concat(await makeAmount(newGen, newTable, result, 1));
+					var newAmount = 1;
+					if(typeof result === 'object') { // got back a child
+						var result = new Generator({in: [ result ]}).in[0];
+						newAmount = result.makeAmount;
+						result = result.value;
+					}
+
+					arr = arr.concat(await makeAmount(newGen, newTable, result, newAmount));
 				}
 				else if(value){
 					arr.push({ 
@@ -144,7 +159,12 @@ async function checkTypes(child, Table, builtpack){
 	var gen, table; 
 
 	if(child.type === "table"){
-		table = new Table(child.value)
+		if(typeof child.value !== 'object'){
+			console.error("Data needs cleanup - table should not be a string: ");
+			console.error(child.parent()._doc);
+		}
+		else
+			table = new Table(child.value)
 	}
 	else if(child.type === "table_id"){
 		table = await Table.findById(child.value)
@@ -152,7 +172,7 @@ async function checkTypes(child, Table, builtpack){
 	else if(child.type === "generator"){
 		gen = builtpack.getGen(child.value)
 	}
-	else if(child.type === "embed"){
+	else if(child.type === 'embed'){ // embed or string
 		gen = child.value;
 	}
 	return {gen, table};
