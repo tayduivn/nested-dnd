@@ -14,8 +14,7 @@ const HEADERS = {
 	}
 };
 
-const server = process.env.PUBLIC_URL || "http://localhost:3000";
-const URL_PREFIX = server+"/api/";
+const URL_PREFIX = "/api/";
 
 /**
  * Always returns a promise, which returns { err, data }
