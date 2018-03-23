@@ -63,9 +63,10 @@ packSchema.pre('save', ()=>{
 });
 
 packSchema.pre('validate', function(next) {
-	if (self.isModified('created')) {
-		self.invalidate('created');
+	if (this.isModified('created')) {
+		this.invalidate('created');
 	}
+	next();
 });
 
 /** 

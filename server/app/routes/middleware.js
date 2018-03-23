@@ -2,6 +2,7 @@
 const Pack = require("../models/pack");
 const BuiltPack = require("../models/builtpack");
 const Util = require("../models/utils");
+const User = require("../models/user");
 
 module.exports = {
 
@@ -78,7 +79,7 @@ module.exports = {
 	getLoggedInUser(req, res, next){
 		req.sessionStore.get(req.sessionID, function(err, mySession) {
 			if (mySession && mySession.passport && mySession.passport.user) {
-				db.users.find(mySession.passport.user, function(err, user) {
+				User.find(mySession.passport.user, function(err, user) {
 					req.user = user;
 					next();
 				});

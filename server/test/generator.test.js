@@ -17,9 +17,7 @@ describe('Generator', ()=>{
 	var generator, gens, pack, builtpack, childGen;
 
 	before(()=>{
-		sinon.stub(Generator, "create").callsFake(function(data){
-			return new Generator(data);
-		});
+
 		sinon.stub(Generator, "find").callsFake(()=>gens);
 
 		sinon.stub(BuiltPack, "findOrBuild").callsFake(()=>builtpack);
@@ -88,21 +86,12 @@ describe('Generator', ()=>{
 		});
 
 		gens = [generator, childGen];
-		
-		sinon.stub(builtpack, "save").callsFake(()=>builtpack);
-
-		sinon.stub(pack, 'save').callsFake(()=>pack);
-
-		builtpack.exec = ()=>builtpack;
-
-		generator.exec = ()=>generator;
 
 		gens.exec = ()=>gens;
 
 	})
 
 	after(()=>{
-		Generator.create.restore();
 		Generator.find.restore();
 		BuiltPack.findOrBuild.restore();
 		BuiltPack.findById.restore();

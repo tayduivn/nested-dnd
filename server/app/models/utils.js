@@ -14,9 +14,9 @@ module.exports = {
 	toJSON: (err)=>{
 		var alt = {};
 
-		Object.getOwnPropertyNames(this).forEach(function(key) {
-			alt[key] = this[key];
-		}, this);
+		Object.getOwnPropertyNames(err).forEach(function(key) {
+			alt[key] = err[key];
+		}, err);
 
 		return alt;
 	}

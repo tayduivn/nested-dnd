@@ -5,13 +5,13 @@ const auth = (app, passport) => {
 
 	app.post("/api/login", function(req, res, next) {
 		passport.authenticate("local", function(err, user, info) {
-			login(err, user, info, req, res);
+			login(err, user, info, req, res, next);
 		})(req, res, next);
 	});
 
 	app.post("/api/signup", function(req, res, next) {
 		passport.authenticate("local-signup", function(err, user, info) {
-			login(err, user, info, req, res);
+			login(err, user, info, req, res, next);
 		})(req, res, next);
 	});
 
@@ -77,7 +77,8 @@ function logout(req, res, callback){
 	});
 }
 
-function login(err, user, info, req, res){
+function login(err, user, info, req, res, next){
+
 	if (err) {
 		return res.status(401).json(err);
 	}
@@ -87,12 +88,14 @@ function login(err, user, info, req, res){
 	req.logIn(user, function(err) {
 
 		if (err) {
-			return res.status(401).json(err);
+			return (res.headersSent) ? next(err) : res.status(401).json(err);
 		}
 
 		res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
 		res.header('Access-Control-Allow-Credentials','true')
 
+		if(user.local)
+			user.local.password = undefined; //don't return the password
 		return res.json({ "loggedIn" : true, "user": user });
 	});
 }

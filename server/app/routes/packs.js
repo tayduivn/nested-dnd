@@ -12,8 +12,6 @@ module.exports = function(app) {
 	// Get All Packs
 	// ---------------------------------
 	app.get("/api/packs", (req, res, next) => {
-		
-		console.log('hi');
 
 		var publicPackSettings = {
 			public: true
@@ -24,20 +22,14 @@ module.exports = function(app) {
 		}
 
 		//get public packs
-		Pack.find(publicPackSettings).exec((err, publicPacks) => {
-			
-			console.log('hi');
-
-			if (err) return res.status(404).json(err);
+		Pack.find(publicPackSettings).exec().then((publicPacks) => {
 
 			if (!req.user) {
 				return res.json({ publicPacks });
 			}
 
 			// find packs I own
-			Pack.find({ _user: req.user._id }).exec((err, myPacks) => {
-				if (err) return res.status(404).json(err);
-
+			Pack.find({ _user: req.user._id }).exec().then((myPacks) => {
 				return res.json({ myPacks, publicPacks });
 			}).catch(next);
 
@@ -88,16 +80,14 @@ module.exports = function(app) {
 	// ---------------------------------
 
 	//TODO: Check public packs have unique names
-	app.post("/api/pack", MW.isLoggedIn, (req, res) => {
+	app.post("/api/pack", MW.isLoggedIn, (req, res, next) => {
 		var newPack = req.body;
 		newPack._user = req.user._id;
 		delete newPack.seed; //can't set, don't have any generators yet
 
-		Pack.create(newPack, function(err, newPack) {
-			if (err) return res.status(412).json(err);
-
+		Pack.create(newPack).then(newPack => {
 			return res.json(newPack);
-		});
+		}).catch(next);
 	});
 
 	// Update Pack

@@ -94,6 +94,3 @@ app.use("/api", function(req, res, next){
 
 // generic error handler
 app.use(MW.errorHandler);
-
-
-module.exports = app; //for testing

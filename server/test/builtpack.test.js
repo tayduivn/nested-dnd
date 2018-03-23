@@ -21,12 +21,6 @@ describe('BuiltPack',()=>{
 			return blank;
 		});
 
-		sinon.stub(BuiltPack, "create").callsFake(function(data){
-			var bp = new BuiltPack(data);
-			bp.exec = ()=>bp;
-			return bp;
-		})
-
 		sinon.stub(Generator, "find").callsFake(()=>gens);
 
 	})
@@ -69,14 +63,6 @@ describe('BuiltPack',()=>{
 		});
 
 		gens = [universe, supercluster];
-
-		sinon.stub(builtpack, "save").callsFake(()=>builtpack);
-
-		sinon.stub(pack, 'save').callsFake(()=>pack);		
-
-		builtpack.exec = ()=>builtpack;
-
-		universe.exec = ()=>universe;
 
 		gens.exec = ()=>gens;
 
