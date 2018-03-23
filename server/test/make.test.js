@@ -66,6 +66,28 @@ describe('Maker',()=>{
 				{
 					type: 'table_id',
 					value: 'asijlakjs'
+				},
+				{
+					type: 'table',
+					value: {
+						rowWeights: true,
+						rows: [
+							{ value: 'test', weight: 2},
+							{ value: 'test', weight: 2},
+							{ value: 'test', weight: 2}
+						]
+					}
+				},
+				{
+					type: 'table',
+					value: {
+						tableWeight: 1.3,
+						rows: [
+							'test',
+							'test',
+							'test'
+						]
+					}
 				}
 			]
 		});
@@ -93,7 +115,7 @@ describe('Maker',()=>{
 		})
 
 		it('should return children',()=>{
-			return Maker.make(generator, 1, builtpack).should.eventually.be.an.instanceOf(Nested).and.have.property('in').with.lengthOf(3)
+			return Maker.make(generator, 1, builtpack).should.eventually.be.an.instanceOf(Nested).and.have.property('in').with.lengthOf(5)
 		})
 
 		it('should return an error on bad input',()=>{
@@ -168,7 +190,38 @@ describe('Maker',()=>{
 
 		it('should roll on table id',()=>{
 			return Maker.makeMixedThing({ type: 'table_id', value: 's124' }, Table).should.eventually.equal('test');
+		});
+
+		it('should roll on table',()=>{
+			var t = {
+				type: 'table',
+				value: {
+					rowWeights: true,
+					rows: [
+						{ value: 'test', weight: 2},
+						{ value: 'test', weight: 2},
+						{ value: 'test', weight: 2}
+					]
+				}
+			}
+			return Maker.makeMixedThing(t, Table).should.eventually.equal('test');
 		})
+
+		it('should concat table',()=>{
+			var t = {
+				type: 'table',
+				value: {
+					concat: true,
+					rows: [
+						'a ',
+						'test'
+					]
+				}
+			}
+			return Maker.makeMixedThing(t, Table).should.eventually.equal('a test');
+		})
+
+		
 
 	})
 

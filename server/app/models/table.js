@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const Maker = require('./generator/make');
+const Util = require('./utils');
 
 var rowSchema = Schema({
 	type: String,
@@ -44,7 +45,7 @@ tableSchema.methods.roll = function(){
 	}
 
 	var row;
-	if(this.hasWeightedRows)
+	if(this.rowWeights)
 		row = weightedDiceChoose(this.rows);
 	else if(this.tableWeight)
 		row = weightedChoose(this.rows, this.tableWeight);
@@ -118,7 +119,7 @@ function weightedDiceChoose(arr){
 		arr[i] = value;
 	}
 	var threshold = 0;
-	var dRoll = Math.rand(1,dSize);
+	var dRoll = Util.rand(1,dSize);
 	
 	for(i = 0; i < percentages.length; i++){
 		threshold+= percentages[i];

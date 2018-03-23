@@ -26,7 +26,7 @@ class Nested {
 
 		if(gen){
 			this.isa = gen.isa;
-			this.in = (gen.in && gen.in.length) ? true : undefined;
+			this.in = ( gen.in && gen.in.length ) ? true : undefined;
 		}
 
 		if(style){
@@ -49,7 +49,7 @@ class Nested {
 		_t.img = inst.img;
 		_t.icon = inst.icon;
 		_t.up =  inst.up;
-		_t.in = (inst.todo) ? true : (inst.in && !inst.in.length) ? undefined : inst.in;
+		_t.in = (inst.todo) ? true : (inst.in && !inst.in.length  && inst.in !== true) ? undefined : inst.in;
 
 		// not added in constructor, added by .expand;
 		_t.index = inst.index;
