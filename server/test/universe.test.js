@@ -10,38 +10,48 @@ const BuiltPack = require('../app/models/builtpack')
 const Nested = require('../app/routes/packs/nested')
 
 
-const universe = new Universe({
-	array: [
-		{
-			isa: "universe",
-			in: [1, 2]
-		},
-		{
-			isa: 'supercluster',
-			up: 0
-		},
-		{
-			isa: 'supercluster',
-			up: 0
-		}
-	]
-});
-
-const pack = new Pack({
-	seed: 'universe'
-});
-
-
-// replace get builtpack function
-sinon.stub(BuiltPack, "findOrBuild").callsFake(function(){
-	return new BuiltPack({
-		generators:{
-			"universe": {}
-		}
-	});
-});
-
 describe('Universe', ()=>{
+
+	var universe, pack;
+
+	before(()=>{
+
+		universe = new Universe({
+			array: [
+				{
+					isa: "universe",
+					in: [1, 2]
+				},
+				{
+					isa: 'supercluster',
+					up: 0
+				},
+				{
+					isa: 'supercluster',
+					up: 0
+				}
+			]
+		});
+
+		pack = new Pack({
+			seed: 'universe'
+		});
+
+
+		// replace get builtpack function
+		sinon.stub(BuiltPack, "findOrBuild").callsFake(function(){
+			return new BuiltPack({
+				generators:{
+					"universe": {}
+				}
+			});
+		});
+
+	})
+
+	after(()=>{
+		BuiltPack.findOrBuild.restore();
+	})
 
 	describe('new Universe()',()=>{
 

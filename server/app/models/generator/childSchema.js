@@ -33,7 +33,7 @@ var childSchema = Schema({
  * @return {boolean} if the child will be included in the generated object based on % chance
  */
 childSchema.virtual('isIncluded').get(function(){
-	if(!this.chance || this.change >= 100) 
+	if(typeof this.chance !== 'number' || this.chance >= 100) 
 		return true;
 	return Math.random()*100<=this.chance;
 });
@@ -42,10 +42,11 @@ childSchema.virtual('isIncluded').get(function(){
  * @return {Integer} how many copies of the child will be generated
  */
 childSchema.virtual('makeAmount').get(function(){
-	if(!this.amount || !this.amount.min)
+	if(!this.amount || typeof this.amount.min !== 'number')
 		return 1;
-	if(this.amount.max)
+	if(this.amount.max){
 		return Util.rand(this.amount.min, this.amount.max);
+	}
 	return this.amount.min;
 });
 

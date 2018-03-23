@@ -11,72 +11,124 @@ const Nested = require('../app/routes/packs/nested')
 const Maintainer = require('../app/models/generator/maintain')
 const assert = require('assert');
 
-const builtpack = new BuiltPack({
-	generators:{
-		'universe': {
-			isa: 'universe'
-		}
-	}
-}) 
 
-const pack = new Pack({
-	seed: 'universe'
-});
-
-const generator = new Generator({
-	isa: 'universe'
-});
 
 
 describe('Maintainer', ()=>{
 
-	var inputGen = {
-		_id: 209810293,
-		in: [
-			{
-				value: 'test'
-			},
-			{
-				type: 'generator',
-				value: 'supercluster'
-			},
-			{
-				type: 'embed',
-				value: {
-					name: 'box',
-					in: [
-						{
-							type: 'generator',
-							value: 'foo'
-						},
-						{
-							type: 'embed',
-							value: {
-								name: 'box',
-								in: [
-									{
-										value: 'hey'
-									},
-									{
-										type: 'generator',
-										value: 'sandwich'
-									}
-								]
+	var builtpack, pack, generator, gens, childGen, inheritorGen;
+
+	before(()=>{
+		sinon.stub(Generator, "create").callsFake(function(data){
+			return new Generator(data);
+		});
+
+		sinon.stub(Generator, "find").callsFake(()=>gens);
+
+		sinon.stub(BuiltPack, "findOrBuild").callsFake(()=>builtpack);
+
+		sinon.stub(BuiltPack, "findById").callsFake(function(id){
+			builtpack._id = id;
+			return builtpack;
+		});
+	})
+
+	beforeEach(()=>{
+
+		pack = new Pack({
+			name: 'The Pack',
+			seed: 'universe>'
+		});
+
+		generator = new Generator({
+			pack_id: pack._id,
+			isa: 'universe',
+			in: [
+				{
+					value: 'test'
+				},
+				{
+					type: 'generator',
+					value: 'supercluster'
+				},
+				{
+					type: 'embed',
+					value: {
+						name: 'box',
+						in: [
+							{
+								type: 'generator',
+								value: 'foo'
+							},
+							{
+								type: 'embed',
+								value: {
+									name: 'box',
+									in: [
+										{
+											value: 'hey'
+										},
+										{
+											type: 'generator',
+											value: 'sandwich'
+										}
+									]
+								}
 							}
-						}
-					]
-				}
-			},
-			{ }
-		]
-	}
-	//stub
-	inputGen.markModified = ()=>{};
+						]
+					}
+				},
+				{ }
+			]
+		});
+
+		childGen = new Generator({
+			pack_id: pack._id,
+			isa: 'supercluster'
+		});
+
+		inheritorGen = new Generator({
+			pack_id: pack._id,
+			isa: 'foo',
+			extends: 'supercluster'
+		});
+
+		builtpack = new BuiltPack({
+			_id: pack._id,
+			generators: {
+				'universe': generator._doc,
+				'supercluster': childGen._doc,
+				'foo': inheritorGen._doc
+			}
+		});
+
+		gens = [generator, childGen, inheritorGen];
+		
+		sinon.stub(builtpack, "save").callsFake(()=>builtpack);
+
+		sinon.stub(pack, 'save').callsFake(()=>pack);
+
+		builtpack.exec = ()=>builtpack;
+
+		generator.exec = ()=>generator;
+
+		gens.exec = ()=>gens;
+
+		generator.markModified = ()=>{};
+
+	})
+
+	after(()=>{
+		Generator.create.restore();
+		Generator.find.restore();
+		BuiltPack.findOrBuild.restore();
+		BuiltPack.findById.restore();
+	})
 
 	describe('getGeneratorChildren()',()=>{
 
 		it('should return nested isas', ()=>{
-			var result = Maintainer.getGeneratorChildren(inputGen.in);
+			var result = Maintainer.getGeneratorChildren(generator.in);
 			result.should.be.an('array').and.have.lengthOf(3);
 		})
 
@@ -95,7 +147,7 @@ describe('Maintainer', ()=>{
 
 		it('should rename top level gen', ()=>{
 			
-			var result = Maintainer.renameChildren(inputGen, 'supercluster', 'super');
+			var result = Maintainer.renameChildren(generator, 'supercluster', 'super');
 			result.should.have.property('in').that.is.an('array');
 			result.in[1].should.have.property('value').that.equals('super');
 
@@ -103,14 +155,14 @@ describe('Maintainer', ()=>{
 
 		it('should rename deeply embedded gen', ()=>{
 			
-			var result = Maintainer.renameChildren(inputGen, 'sandwich', 'sand');
+			var result = Maintainer.renameChildren(generator, 'sandwich', 'sand');
 			result.should.have.property('in').that.is.an('array');
 			result.in[2].value.in[1].value.in[1].value.should.equal('sand')
 
 		});
 
 		it('should return false if not modified',()=>{
-			var result = Maintainer.renameChildren(inputGen, 'asdasd', 'asASASdasd');
+			var result = Maintainer.renameChildren(generator, 'asdasd', 'asASASdasd');
 			result.should.equal(false);
 		})
 
@@ -169,33 +221,54 @@ describe('Maintainer', ()=>{
 
 	describe('cleanAfterRemove()',()=>{
 
-		before(()=>{
-			sinon.stub(BuiltPack, "findById").callsFake(function(id){
-				var bp =  new BuiltPack({
-					_id: id,
-					generators:{
-						"universe": {}
-					}
-				});
-
-				sinon.stub(bp, "save").callsFake(function(){
-					return this;
-				});
-
-				bp.exec = function(){
-					return this;
-				};
-
-				return bp;
-			});
-			
-		})
-
 		it('should return the builtpack',()=>{
 			return Maintainer.cleanAfterRemove.call(generator)
 				.should.eventually.be.instanceOf(BuiltPack)
 				.and.have.property('_doc').with.property('generators').not.with.property('universe');
 		})
 	});
+
+	describe('rename()',()=>{
+
+		it('should return undefined if no generator supplied',()=>{
+			return Maintainer.rename().should.eventually.equal(undefined);
+		});
+
+		it('should return undefined if no generators in pack',()=>{
+			return Maintainer.rename().should.eventually.equal(undefined);
+		});
+
+		it('should return builtpack if good vars supplied',()=>{
+			generator.isa = 'uni';
+
+			return Maintainer.rename(generator, pack, 'universe').then(()=>{
+				builtpack._doc.generators.should.have.property('uni');
+				pack.seed.should.equal('uni>');
+			});
+		});
+
+		it('should rename children in builtpack',()=>{
+			childGen.isa = 'super';
+			return Maintainer.rename(childGen, pack, 'supercluster').then(()=>{
+				builtpack.getGen('universe').in[1].value.should.equal('super');
+			});
+		})
+
+		it('should rename extends in builtpack',()=>{
+			childGen.isa = 'super';
+			return Maintainer.rename(childGen, pack, 'supercluster').then(()=>{
+				builtpack.getGen('foo').extends.should.equal('super');
+			});
+		})
+
+		it('should return undefined if there are no generators',()=>{
+			gens = [];
+			gens.exec = ()=>gens;
+			return Maintainer.rename(generator, pack, 'universe').should.eventually.equal(undefined);
+		});
+
+
+
+	})
 
 })

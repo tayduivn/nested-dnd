@@ -15,14 +15,30 @@ var tableSchema = Schema({
 		required: true
 	},
 	title: String,
-	rows: [rowSchema],
+	rows: {
+		type:[rowSchema]
+	},
 	concat: Boolean,
 	rowWeights: Boolean,
 	tableWeight: Number
 });
 
+/**
+ * Cleans rows to be row schema if they are strings
+ */
+tableSchema.path('rows').set((arr)=>{
+	arr = arr.map((row)=>{
+		if(typeof row === 'string'){
+			return { value: row }
+		}
+		return row;
+	})
+	return arr;
+});
+
 //returns a Promise<String>
 tableSchema.methods.roll = function(){
+
 	if(this.concat){
 		return this.concatenate();
 	}
@@ -34,6 +50,9 @@ tableSchema.methods.roll = function(){
 		row = weightedChoose(this.rows, this.tableWeight);
 	else
 		row = choose(this.rows);
+
+	if(typeof row === 'string')
+		return row;
 
 	return Maker.makeMixedThing(row, this.model('Table'));
 }

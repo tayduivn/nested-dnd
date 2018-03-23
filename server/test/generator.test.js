@@ -11,28 +11,61 @@ const Nested = require('../app/routes/packs/nested')
 const Maintainer = require('../app/models/generator/maintain')
 const assert = require('assert');
 
-const builtpack = new BuiltPack({
-	generators:{
-		'universe': {
-			isa: 'universe'
-		}
-	}
-}) 
-
-const pack = new Pack({
-	seed: 'universe'
-});
-
-const generator = new Generator({
-	isa: 'universe'
-});
-
-
-sinon.stub(Generator, "create").callsFake(function(data){
-	return new Generator(data);
-});
 
 describe('Generator', ()=>{
+
+	var generator, pack, builtpack;
+
+	before(()=>{
+		sinon.stub(Generator, "create").callsFake(function(data){
+			return new Generator(data);
+		});
+	})
+
+	beforeEach(()=>{
+
+		pack = new Pack({
+			seed: 'universe'
+		});
+
+		generator = new Generator({
+			isa: 'universe',
+			pack_id: pack._id,
+			in: [
+				{
+					name: 'always',
+					chance: 100
+				},
+				{
+					name: 'never',
+					chance: 0,
+					amount: {
+						min: 5,
+						max: 5
+					}
+				},
+				{
+					name: 'never',
+					chance: 0,
+					amount: {
+						min: 4
+					}
+				}
+			]
+		});
+
+		builtpack = new BuiltPack({
+			_id: pack._id,
+			generators:{
+				'universe': generator._doc
+			}
+		})
+
+	})
+
+	after(()=>{
+		Generator.create.restore();
+	})
 
 	describe('makeAsRoot()', function(){
 
@@ -103,6 +136,45 @@ describe('Generator', ()=>{
 			var newGen = inheritor.extend(builtpack);
 			should.exist(newGen._doc);
 		});
+
+	})
+
+
+	describe('childSchema', function(){
+
+		describe('.isIncluded', function(){
+
+			it('should return true if chance 100',()=>{
+				generator.in[0].isIncluded.should.equal(true);
+			})
+
+			it('should return false if chance 0',()=>{
+				generator.in[1].isIncluded.should.equal(false);
+			})
+
+		});
+
+		describe('.makeAmount',  function(){
+
+			it('should return 1 if not defined', ()=>{
+				generator.in[0].makeAmount.should.equal(1);
+			})
+
+			it('should return amount if defined', ()=>{
+				generator.in[1].makeAmount.should.equal(5);
+			})
+
+			it('should return min if only defined', ()=>{
+				generator.in[2].makeAmount.should.equal(4);
+			})
+
+			it('should return 0 if only min is 0', ()=>{
+				generator.in[2].amount.min = 0;
+				generator.in[2].makeAmount.should.equal(0);
+			})
+
+		})
+
 
 	})
 

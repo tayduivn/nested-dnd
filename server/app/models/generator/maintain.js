@@ -136,7 +136,7 @@ var Maintainer = {
 	 * @async
 	 */
 	rename: async function(generator, pack, isaOld){
-		if(!generator) return null;
+		if(!generator || !pack || !isaOld) return;
 
 		var isaNew = generator.isa;
 		var Generator = generator.model('Generator');
