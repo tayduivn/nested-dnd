@@ -14,23 +14,39 @@ const assert = require('assert');
 
 describe('Generator', ()=>{
 
-	var generator, pack, builtpack;
+	var generator, gens, pack, builtpack, childGen;
 
 	before(()=>{
 		sinon.stub(Generator, "create").callsFake(function(data){
 			return new Generator(data);
+		});
+		sinon.stub(Generator, "find").callsFake(()=>gens);
+
+		sinon.stub(BuiltPack, "findOrBuild").callsFake(()=>builtpack);
+
+		sinon.stub(BuiltPack, "findById").callsFake(function(id){
+			builtpack._id = id;
+			return builtpack;
 		});
 	})
 
 	beforeEach(()=>{
 
 		pack = new Pack({
-			seed: 'universe'
+			seed: 'universe>',
+			name: 'Test'
 		});
 
 		generator = new Generator({
 			isa: 'universe',
 			pack_id: pack._id,
+			style: {
+				txt: { value: 'blue' } ,
+				img: { value: 'test.png'},
+				icon: { value: 'fa fa-amazing'},
+				bg: { value: 'black'},
+				pattern: { value: 'purty-wood' }
+			},
 			in: [
 				{
 					name: 'always',
@@ -50,21 +66,46 @@ describe('Generator', ()=>{
 					amount: {
 						min: 4
 					}
+				},
+				{
+					type: 'generator',
+					value: 'supercluster'
 				}
 			]
+		});
+
+		childGen = new Generator({
+			isa: 'supercluster',
+			pack_id: pack._id
 		});
 
 		builtpack = new BuiltPack({
 			_id: pack._id,
 			generators:{
-				'universe': generator._doc
+				'universe': generator._doc,
+				supercluster: childGen._doc
 			}
-		})
+		});
+
+		gens = [generator, childGen];
+		
+		sinon.stub(builtpack, "save").callsFake(()=>builtpack);
+
+		sinon.stub(pack, 'save').callsFake(()=>pack);
+
+		builtpack.exec = ()=>builtpack;
+
+		generator.exec = ()=>generator;
+
+		gens.exec = ()=>gens;
 
 	})
 
 	after(()=>{
 		Generator.create.restore();
+		Generator.find.restore();
+		BuiltPack.findOrBuild.restore();
+		BuiltPack.findById.restore();
 	})
 
 	describe('makeAsRoot()', function(){
@@ -72,6 +113,56 @@ describe('Generator', ()=>{
 		it('should should return a node',function(){
 			return Generator.makeAsRoot([generator], builtpack).should.eventually.be.an.instanceOf(Nested)
 		})
+
+		it('should return if there is an extended seed', ()=>{
+			pack.seed = "universe>supercluster>";
+			return Generator.makeAsRoot([generator, childGen], builtpack).should.eventually.be.an.instanceOf(Nested)
+		})
+			
+	})
+
+	describe('makeAsNode()', function(){
+
+		it('should return a node',()=>{
+			var node = {
+				isa: 'supercluster',
+				name: 'supercluster',
+				in: true
+			}
+			return Generator.makeAsNode(node, {array:[]}, builtpack).should.eventually.be.an.instanceOf(Nested)
+		})
+
+	});
+
+	describe('makeStyle()', function(){
+
+		it('shuold return', ()=>{
+			return generator.makeStyle().should.eventually.have.property('txt');
+		})
+	})
+
+	describe('rename()', function(){
+
+		it('should return',()=>{
+			generator.isa = 'uni';
+			return generator.rename('universe', pack);
+		});
+	})
+
+	describe('insertNew()', ()=>{
+
+		it('should return generator', ()=>{
+			return Generator.insertNew({ isa: 'test' }, pack).should.eventually.be.instanceOf(Generator);
+		})
+		
+	})
+
+	describe('make()', ()=>{
+
+		it('should return', ()=>{
+			return Generator.make(generator, builtpack).should.eventually.be.instanceOf(Nested);
+		})
+		
 	})
 
 	describe('extend()', function(){

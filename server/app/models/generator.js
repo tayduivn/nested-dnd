@@ -5,6 +5,7 @@ const childSchema = require('./generator/childSchema');
 const styleSchema = require('./generator/styleSchema');
 const Maintainer = require('./generator/maintain')
 const Maker = require('./generator/make');
+const Nested = require('../routes/packs/nested');
 
 const SEED_DELIM = ">";
 
@@ -109,7 +110,7 @@ generatorSchema.statics.insertNew = async function(data, pack){
  * Generates a random version as the root node of a tree, with 3 levels.
  * @param  {Object[]} seedArray An array of built version of generators that are the seeds. 
  * @param  {BuiltPack} builtpack 
- * @return {Nested}           the root node of the tree
+ * @return {Promise<Nested>}           the root node of the tree
  */
 generatorSchema.statics.makeAsRoot = async function(seedArray, builtpack){
 	var seed = seedArray.shift();
@@ -153,12 +154,15 @@ generatorSchema.statics.makeAsRoot = async function(seedArray, builtpack){
  * @param  {Object} tree      the node you want to generate descendents for, as a nested tree
  * @param  {Object[]} universe  a flattened version of the tree
  * @param  {BuiltPack} builtpack 
- * @return {Object}           the root node of the tree
+ * @return {Promise<Nested>}           the root node of the tree
  */
 generatorSchema.statics.makeAsNode = async function(tree, universe, builtpack){
 	// has no children to generate, return
-	if(!tree || !tree.in) 
+	if(typeof tree !== 'object') 
 		return tree;
+
+	if(!(tree instanceof Nested))
+		tree = Nested.copy(tree)
 
 	// has children, but they are not generated yet.
 	// TODO: check if deeply nested embeds are being generated correctly
@@ -181,7 +185,7 @@ generatorSchema.statics.makeAsNode = async function(tree, universe, builtpack){
  * Generates a random thing from an isa name
  * @param  {Object} generator a built generator
  * @param  {BuiltPack} builtpack
- * @return {Promise<Object>}           the random thing
+ * @return {Promise<Nested>}           the random thing
  */
 generatorSchema.statics.make = function(generator, builtpack){
 	return Maker.make(generator, 1, builtpack);

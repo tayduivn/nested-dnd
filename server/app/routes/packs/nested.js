@@ -40,19 +40,19 @@ class Nested {
 		
 	}
 
-	static copy(node){
+	static copy(inst){
 		var _t = new Nested();
-		_t.name = node.name;
-		_t.isa = node.isa;
-		_t.txt = node.txt;
-		_t.cssClass = node.cssClass;
-		_t.img = node.img;
-		_t.icon = node.icon;
-		_t.up =  node.up;
-		_t.in = node.in;
+		_t.name = inst.name;
+		_t.isa = inst.isa;
+		_t.txt = inst.txt;
+		_t.cssClass = inst.cssClass;
+		_t.img = inst.img;
+		_t.icon = inst.icon;
+		_t.up =  inst.up;
+		_t.in = (inst.todo) ? true : (inst.in && !inst.in.length) ? undefined : inst.in;
 
 		// not added in constructor, added by .expand;
-		_t.index = node.index;
+		_t.index = inst.index;
 		return _t;
 	}
 

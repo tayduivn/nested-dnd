@@ -267,8 +267,6 @@ describe('Maintainer', ()=>{
 			return Maintainer.rename(generator, pack, 'universe').should.eventually.equal(undefined);
 		});
 
-
-
 	})
 
 })

@@ -72,7 +72,22 @@ styleSchema.methods.makePattern = async function(){
 	return Maker.makeMixedThing(this.pattern, this.parent().model('Table'))
 };
 
-// TODO
+const colorConvert = {
+	tan: 'khaki',
+	silvery: 'silver',
+	red: 'darkred',
+	shady: "grey",
+	blue: "darkblue",
+	multicolored: "rainbow",
+	golden: "gold",
+	shimmering: "glow",
+	glowing: "glow",
+	luminous: "glow",
+	faint: "white",
+	pale: "white",
+	opaline: "floralwhite"
+}
+
 styleSchema.methods.strToColor = function(str) {
 	if(typeof str !== 'string') return '';
 
@@ -86,18 +101,14 @@ styleSchema.methods.strToColor = function(str) {
 	else
 		return "";
 
-	if(str === "tan") str = 'khaki';
-	if(str === "silvery") str = "silver";
-	if(str === "red") str = "darkred";
-	if(str === "shady") str = "grey";
-	if(str === "blue") str = "darkblue";
-	if(str === "multicolored") str = "rainbow";
-	if(str === "golden") str = "gold";
-	if(str === "shimmering" || str === "glowing" || str === "luminous") str = "glow";
-	if(str === "faint" || str === "pale") str = "white";
-	if(str === "opaline") str = "floralwhite";
+	str = str.trim();
 
-	return str.trim();
+	for(var oldColor in colorConvert){
+		if(str === oldColor)
+			str = colorConvert[oldColor];
+	}
+
+	return str;
 }
 
 module.exports = styleSchema;
