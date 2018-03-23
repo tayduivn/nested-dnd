@@ -15,6 +15,9 @@ const morgan = require("morgan");
 const app = express();
 const port = process.env.PORT || 3001;
 
+const Util = require('./app/models/utils');
+const MW = require('./app/routes/middleware');
+
 let db;
 
 // serve static files in production
@@ -68,18 +71,7 @@ app.use(
 	})
 ); // session secret
 
-app.use(function(req, res, next) {
-	req.sessionStore.get(req.sessionID, function(err, mySession) {
-		if (mySession && mySession.passport && mySession.passport.user) {
-			db.users.find(mySession.passport.user, function(err, user) {
-				req.user = user;
-				next();
-			});
-		} else {
-			next();
-		}
-	});
-});
+app.use(MW.getLoggedInUser);
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
@@ -101,31 +93,7 @@ app.use("/api", function(req, res, next){
 });
 
 // generic error handler
-app.use(function (err, req, res, next) {
+app.use(MW.errorHandler);
 
-	// headers already sent, continue
-	if (res.headersSent) {
-		return next(err);
-	}
-	
-	if(err.status) // user error
-		res.status(err.status);
-	else{
-		res.status(500);
-		console.error(err); // internal error
-		console.error(err.fileName+" | col:"+err.columnNumber+" | line:"+err.lineNumber); // internal error
-		console.error(err.stack);
-	}
-	
-	return res.json({ error: toJSON(err) });
-})
 
-function toJSON(err){
-	var alt = {};
-
-	Object.getOwnPropertyNames(this).forEach(function(key) {
-		alt[key] = this[key];
-	}, this);
-
-	return alt;
-}
+module.exports = app; //for testing

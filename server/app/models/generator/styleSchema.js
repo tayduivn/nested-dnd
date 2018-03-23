@@ -13,7 +13,10 @@ function validateMixedThing(input){
 }
 
 var mixedTypeSchema = Schema({
-	type: String, // tableid string table -- if no type, it's a string
+	type: {
+		$type: String,
+		enum: ['table_id', 'string', 'table'] // if no type, it's a string
+	}, 
 	value: Schema.Types.Mixed
 }, { typeKey: '$type' })
 

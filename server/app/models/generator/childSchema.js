@@ -4,8 +4,9 @@ const Util = require('../utils');
 
 var childSchema = Schema({
 	type: {
-		$type: String, // string, generator, table, embed
+		$type: String, 
 		require: true,
+		enum: ['string','generator','table','embed','table_id'], //if no type, string
 		default: "string"
 	}, 
 	value: { 

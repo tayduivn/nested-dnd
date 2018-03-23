@@ -11,7 +11,10 @@ const Nested = require('./packs/nested');
 module.exports = function(app) {
 	// Get All Packs
 	// ---------------------------------
-	app.get("/api/packs", (req, res) => {
+	app.get("/api/packs", (req, res, next) => {
+		
+		console.log('hi');
+
 		var publicPackSettings = {
 			public: true
 		};
@@ -22,6 +25,9 @@ module.exports = function(app) {
 
 		//get public packs
 		Pack.find(publicPackSettings).exec((err, publicPacks) => {
+			
+			console.log('hi');
+
 			if (err) return res.status(404).json(err);
 
 			if (!req.user) {
@@ -33,8 +39,9 @@ module.exports = function(app) {
 				if (err) return res.status(404).json(err);
 
 				return res.json({ myPacks, publicPacks });
-			});
-		});
+			}).catch(next);
+
+		}).catch(next);
 	});
 
 
@@ -98,13 +105,6 @@ module.exports = function(app) {
 	app.put("/api/pack/:pack", MW.canEditPack, (req, res, next) => {
 		var newVals = req.body;
 
-		// fields that cannot be changed
-		delete newVals._id; //can't modify id
-		delete newVals._user; // can't change user for now
-		delete newVals.created;
-
-		newVals.updated = Date.now();
-
 		// validate exists
 		if(newVals.seed){
 			BuiltPack.findOrBuild(req.pack)
@@ -119,6 +119,7 @@ module.exports = function(app) {
 		else save();
 
 		function save(){
+			// fields that cannot be changed
 			req.pack.set(newVals);
 			req.pack.save().then((updatedPack)=>{
 				res.json(updatedPack);
@@ -154,24 +155,4 @@ module.exports = function(app) {
 		);
 	});
 
-	
-	app.put("/api/pack/:pack/legacyPackUpload/", MW.isAdmin, (req, res) => {
-		var legacyThings = req.body.things;
-		var generators = [];
-
-		//todo: check pack exists
-
-		//format
-		for (var name in legacyThings) {
-			var old = legacyThings[name];
-
-			var newGen = {
-				pack_id: req.params.pack,
-				isa: old.name,
-				extends: old.isa
-			};
-		}
-
-		return res.json(generators);
-	});
 };

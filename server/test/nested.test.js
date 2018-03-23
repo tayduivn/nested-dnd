@@ -4,7 +4,6 @@ const Universe = require('../app/models/universe.js');
 const assert = require('assert');
 const should = chai.should();
 
-require('../server');
 
 var sampleNode = {
 	name: 'foofoo',

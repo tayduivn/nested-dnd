@@ -47,6 +47,10 @@ describe('Universe', ()=>{
 			});
 		});
 
+		sinon.stub(Universe,'find').callsFake((query)=>{
+			return [];
+		})
+
 	})
 
 	after(()=>{
@@ -123,4 +127,12 @@ describe('Universe', ()=>{
 		})
 
 	})
+
+	describe('getTemp()',()=>{
+
+		it('returns a node', ()=>{
+			return Universe.getTemp('ljkflskjdf', pack, 0)
+		})
+
+	});
 })

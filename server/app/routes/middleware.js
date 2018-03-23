@@ -1,6 +1,7 @@
 
 const Pack = require("../models/pack");
 const BuiltPack = require("../models/builtpack");
+const Util = require("../models/utils");
 
 module.exports = {
 
@@ -53,7 +54,40 @@ module.exports = {
 				return res.status(401).json({error: "You do not have permission to edit this pack"})
 			}
 		});
+	},
+
+	errorHandler: function (err, req, res, next) {
+
+		// headers already sent, continue
+		if (res.headersSent) {
+			return next(err);
+		}
+		
+		if(err.status) // user error
+			res.status(err.status);
+		else{
+			res.status(500);
+			console.error(err); // internal error
+			console.error(err.fileName+" | col:"+err.columnNumber+" | line:"+err.lineNumber); // internal error
+			console.error(err.stack);
+		}
+		
+		return res.json({ error: Util.toJSON(err) });
+	},
+
+	getLoggedInUser(req, res, next){
+		req.sessionStore.get(req.sessionID, function(err, mySession) {
+			if (mySession && mySession.passport && mySession.passport.user) {
+				db.users.find(mySession.passport.user, function(err, user) {
+					req.user = user;
+					next();
+				});
+			} else {
+				next();
+			}
+		});
 	}
+	
 }
 
 /** 

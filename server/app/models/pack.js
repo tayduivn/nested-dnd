@@ -57,6 +57,17 @@ packSchema.post('remove', function(pack){
 	]);
 })
 
+
+packSchema.pre('save', ()=>{
+	this.updated = Date.now();
+});
+
+packSchema.pre('validate', function(next) {
+	if (self.isModified('created')) {
+		self.invalidate('created');
+	}
+});
+
 /** 
  * @return Array of Generator isa's representing the seed
  */
