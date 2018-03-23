@@ -18,7 +18,7 @@
 							"client/public/**",
 							"client/src/registerServiceWorker.js",
 							"client/src/index.js",
-							"client/.testSetup.js",
+							".testSetup.js",
 							"**/*.test.js",
 							"coverage/**"
 						]
