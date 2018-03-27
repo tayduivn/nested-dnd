@@ -37,23 +37,23 @@ describe('/api/packs', ()=>{
 	
 	describe('GET',()=>{
 
-		it('returns ok signed out',(done)=>{
+		it('returns ok signed out',()=>{
 			PackMock.expects('find')
 				.chain('exec')
 				.resolves([{},{}]);
 
-			request.get('/api/packs')
+			return request.get('/api/packs')
 				.set('Accept', 'application/json')
 				.expect('Content-Type', /json/)
 				.expect(({body})=>{
 					body.should.have.property('publicPacks');
 					body.should.not.have.property('myPacks');
 				})
-				.expect(200, done)
+				.expect(200)
 
 		});
 
-		it('returns ok signed in',(done)=>{
+		it('returns ok signed in',()=>{
 			PackMock.expects('find')
 				.chain('exec')
 				.resolves([{},{}]);
@@ -64,14 +64,14 @@ describe('/api/packs', ()=>{
 
 			user = new User({ _id: USER_ID });
 
-			request.get('/api/packs')
+			return request.get('/api/packs')
 				.set('Accept', 'application/json')
 				.expect('Content-Type', /json/)
 				.expect(({body})=>{
 					body.should.have.property('publicPacks').with.lengthOf(2);
 					body.should.have.property('myPacks').with.lengthOf(2);
 				})
-				.expect(200, done)
+				.expect(200)
 		});
 	})
 

@@ -37,7 +37,16 @@ describe('/api/pack/:pack/generator',()=>{
 		});
 		builtpack = new BuiltPack({ //findOrBuild
 			_id: pack._id
-		}); 
+		});
+
+		pack._user = user;
+
+		//canEditPack
+		PackMock.expects('findOne')
+			.chain('populate')
+			.chain('exec')
+			.resolves(pack)
+
 	})
 
 	after(()=>{
@@ -67,12 +76,6 @@ describe('/api/pack/:pack/generator',()=>{
 		it('creates correctly',()=>{
 			pack._user = user;
 
-			//canEditPack
-			PackMock.expects('findOne')
-				.chain('populate')
-				.chain('exec')
-				.resolves(pack)
-
 			BPMock.expects('findById') //findOrBuild
 				.chain('exec')
 				.resolves(builtpack);
@@ -92,7 +95,6 @@ describe('/api/pack/:pack/generator',()=>{
 		});
 
 		it('throws 412 if contains unknown generator',()=>{
-			pack._user = user;
 
 			var petstoreData = {
 				"isa": "pet ztore",
@@ -108,12 +110,6 @@ describe('/api/pack/:pack/generator',()=>{
 				]
 			};
 
-			//canEditPack
-			PackMock.expects('findOne')
-				.chain('populate')
-				.chain('exec')
-				.resolves(pack)
-
 			BPMock.expects('findById') //findOrBuild
 				.chain('exec')
 				.resolves(builtpack);
@@ -125,7 +121,6 @@ describe('/api/pack/:pack/generator',()=>{
 		})
 
 		it('creates complex generator correctly',()=>{
-			pack._user = user;
 
 			var petstoreData = {
 				"isa": "pet ztore",
@@ -161,12 +156,6 @@ describe('/api/pack/:pack/generator',()=>{
 				"doge": (new Generator(dogeData))._doc
 			}
 
-			//canEditPack
-			PackMock.expects('findOne')
-				.chain('populate')
-				.chain('exec')
-				.resolves(pack)
-
 			BPMock.expects('findById') //findOrBuild
 				.chain('exec')
 				.resolves(builtpack);
@@ -201,19 +190,24 @@ describe('/api/pack/:pack/generator',()=>{
 					isa: 'test',
 					pack_id: pack._id
 				})
-				GenMock.expects('findById').chain('exec').resolves(generator);
+				GenMock.expects('findById').chain('exec').resolves(generator._doc);
 
-				request.get('/api/pack/'+pack.id+'/generator'+generator.id)
-					.expect('Content-Type', /json/)
+				return request.get('/api/pack/'+pack.id+'/generator/'+generator.id)
 					.expect(({body})=>{
 						body.should.have.property('isa','test');
 					})
+					.expect('Content-Type', /json/)
 					.expect(200);
 			})
 
 			it('should return 404',()=>{
+				generator = new Generator({
+					isa: 'test',
+					pack_id: pack._id
+				})
 				GenMock.expects('findById').chain('exec').resolves(undefined);
-				request.get('/api/pack/'+pack.id+'/generator/fake')
+
+				return request.get('/api/pack/'+pack.id+'/generator/'+generator.id)
 					.expect('Content-Type', /json/)
 					.expect(404);
 			})

@@ -109,6 +109,10 @@ require("./server/app/routes/packs.js")(app);
 require("./server/app/routes/generators.js")(app);
 require("./server/app/routes/tables.js")(app);
 app.use(MW.errorHandler)
+app.use("/api", function(req, res, next){
+	res.status(404).json({error: { message: "404 Not Found"}});
+	return;
+});
 global.app = app;
 
 // stubs 

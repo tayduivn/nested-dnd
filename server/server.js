@@ -88,7 +88,7 @@ require("./app/routes/tables.js")(app, mongoose);
 
 // 404 error handler returns json
 app.use("/api", function(req, res, next){
-	res.status(404).send("");
+	res.status(404).json({error: { message: "404 Not Found"}});
 	return;
 });
 
