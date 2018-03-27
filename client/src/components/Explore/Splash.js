@@ -4,36 +4,41 @@ import WebFont from 'webfontloader';
 
 import "./Splash.css"
 
-const nestedLink = {
-	pathname: "/explore/nested",
-	state: {
-		fromSplash: true,
-		current: {
-			in: true,
-			cssClass: 'black stardust',
-			name: 'Nested'
-		}
-	}
+const nested = {
+	url: 'nested',
+	in: true,
+	cssClass: 'black stardust',
+	name: 'Nested',
+	font: 'Press Start 2P'
 }
 
-const dndLink = {
-	pathname: "/explore/dnd",
-	state: {
-		fromSplash: true,
-		current: {
-			in: true,
-			cssClass: 'burlywood purty-wood',
-			name: 'Dungeons & Dragons',
-			font: 'IM Fell English SC'
-		}
-	}
+const dnd = {
+	url: 'dnd',
+	in: true,
+	cssClass: 'burlywood purty-wood',
+	name: 'Dungeons & Dragons',
+	font: 'IM Fell English SC'
 }
+
+const Pack = ({pack}) => (
+	<Link to={{
+		pathname: "/explore/"+pack.url,
+		state:{
+			fromSplash:true,
+			current: pack
+		}
+	}} className={`col-lg ${pack.cssClass} ${pack.url}`}>
+		<div>
+			<p className="webfont">{pack.name}</p>
+		</div>
+	</Link>
+)
 
 class Splash extends React.Component {
 	componentWillMount(){
 		WebFont.load({
 			google: {
-				families: ['IM Fell English SC','Press Start 2P']
+				families: [nested.font, dnd.font]
 			}
 		})
 	}
@@ -41,16 +46,8 @@ class Splash extends React.Component {
 		return (
 			<div className="container-fluid">
 				<div className="row fullscreen">
-					<Link to={nestedLink} className="nested black stardust col-lg">
-						<div>
-							<p className="webfont">Nested</p>
-						</div>
-					</Link>
-					<Link to={dndLink} className="dnd purty-wood burlywood col-lg">
-						<div>
-							<p className="webfont">Dungeons & Dragons</p>
-						</div>
-					</Link>
+					<Pack pack={nested} />
+					<Pack pack={dnd} />
 				</div>
 			</div>
 		)
