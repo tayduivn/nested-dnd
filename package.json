@@ -13,13 +13,13 @@
     "build-css": "node-sass-chokidar client/src/ -o client/src/",
     "dev-client": "concurrently --kill-others-on-fail \"yarn _watch-css\" \"yarn _start-js\"",
     "dev-server": "concurrently --kill-others-on-fail \"mongod --dbpath ./server/data\" \"nodemon --inspect server/server.js\"",
-    "dev-test": "cls && cross-env NODE_ENV=test  mocha --require ./.testSetup.js server/**/*.test.js client/**/*.test.js",
+    "dev-test": "cls && cross-env NODE_ENV=test mocha --exit --require ./.testSetup.js 'server/**/*.test.js' 'client/**/*.test.js'",
     "dev-test-debug": "yarn dev-test --inspect-brk",
     "eject": "react-scripts eject --dir client",
     "heroku-postbuild": "yarn build",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "start": "node server/server.js",
-    "test": "yarn build-css && cross-env NODE_ENV=test nyc mocha --timeout=3000 --recursive \"server/**/*.test.js\" \"client/**/*.test.js\""
+    "test": "yarn build-css && cross-env NODE_ENV=test nyc mocha --exit --timeout=3000 \"server/**/*.test.js\" \"client/**/*.test.js\""
   },
   "dependencies": {
     "animate.css": "^3.5.2",
@@ -52,7 +52,8 @@
     "react-select": "^1.0.0-rc.5",
     "react-transition-group": "^2.2.1",
     "react-virtualized-select": "^3.1.0",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "^1.6.28",
+    "why-is-node-running": "^2.0.2"
   },
   "devDependencies": {
     "babel-eslint": "7.2.3",
