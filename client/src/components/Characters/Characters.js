@@ -6,6 +6,46 @@ import Cards from "./Cards/Cards";
 
 import "./Characters.css";
 
+const CharactersDisplay = ({characters, selected,selectDeselect}) =>(
+	<div className="container-fluid">
+		<div className="row">
+			<div className="col-sm-3 col-md-2 sidebar">
+				<ul className="list-group characterList">
+					{characters.map((c, i) =>
+						<SidebarItem
+							key={i}
+							character={c}
+							selected={selected.includes(c)}
+							handleClick={selectDeselect}
+						/>
+					)}
+				</ul>
+			</div>
+			<div className="col-sm-9 col-md-9 offset-sm-3 offset-md-2 main">
+				<ul id="characterInfo" className="nav nav-tabs">
+					<li className="nav-item" eventkey={2} title="Sheet" />
+					<li className="nav-item" eventkey={3} title="Print Sheet">
+						<div className="printme" id="charsheets">
+							{selected.map((c, i) =>
+								<CharacterSheet key={i} character={c} />
+							)}
+						</div>
+					</li>
+					<li eventkey={4} title="Print Cards">
+						<div className="printme" id="cardSheets">
+							{selected.map((c, i) =>
+								<Cards key={i} character={c} />
+							)}
+						</div>
+						<Cards />
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+);
+
+
 export default class Characters extends React.Component {
 	constructor(props) {
 		super(props);
@@ -36,44 +76,7 @@ export default class Characters extends React.Component {
 		}
 	}
 	render() {
-		return (
-			<div className="container-fluid">
-				<div className="row">
-					<div className="col-sm-3 col-md-2 sidebar">
-						<ul className="list-group characterList">
-							{this.state.characters.map((c, i) =>
-								<SidebarItem
-									key={i}
-									character={c}
-									selected={this.state.selected.includes(c)}
-									handleClick={this.selectDeselect}
-								/>
-							)}
-						</ul>
-					</div>
-					<div className="col-sm-9 col-md-9 offset-sm-3 offset-md-2 main">
-						<ul id="characterInfo" className="nav nav-tabs">
-							<li className="nav-item" eventkey={2} title="Sheet" />
-							<li className="nav-item" eventkey={3} title="Print Sheet">
-								<div className="printme" id="charsheets">
-									{this.state.selected.map((c, i) =>
-										<CharacterSheet key={i} character={c} />
-									)}
-								</div>
-							</li>
-							<li eventkey={4} title="Print Cards">
-								<div className="printme" id="cardSheets">
-									{this.state.selected.map((c, i) =>
-										<Cards key={i} character={c} />
-									)}
-								</div>
-								<Cards />
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		);
+		return  <CharactersDisplay {...this.state} selectDeselect={this.selectDeselect} />
 	}
 }
 

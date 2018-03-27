@@ -3,6 +3,30 @@ import PropTypes from "prop-types";
 
 import './Login.css'
 
+const DisplayLogin = ({title, handleSubmit, emailVaidation, handleChange, email, passwordValidation, password, passwordError}) => (
+	<div className="main mt-5 container-fluid loginForm">
+		<h1>{title}</h1>
+		<form onSubmit={handleSubmit}>
+			<div className="form-group" name="email" validationstate={emailVaidation}>
+				<label>Email</label>
+				<input type="email" placeholder="email" value={email} onChange={handleChange} required></input>
+				<small>{emailError}</small>
+			</div>
+			<div className="form-group" name="password" validationstate={passwordValidation}>
+				<label>Password</label>
+				<input type="password" placeholder="password" 
+					autoComplete="new-password" 
+					value={password} 
+					onChange={handleChange} 
+					minLength="8"
+					required></input>
+				<small>{passwordError}</small>
+			</div>
+			<button type="submit" bsStyle="primary">Submit</button>
+		</form>
+	</div>
+);
+
 export default class Login extends Component {
 	state = {
 		email: "",
@@ -56,28 +80,6 @@ export default class Login extends Component {
 		}
 
 
-		return (
-			<div className="main mt-5 container-fluid loginForm">
-				<h1>{this.props.title}</h1>
-				<form onSubmit={this.handleSubmit}>
-					<div className="form-group" name="email" validationstate={this.state.emailVaidation}>
-						<label>Email</label>
-						<input type="email" placeholder="email" value={this.state.email} onChange={this.handleChange} required></input>
-						<small>{this.state.emailError}</small>
-					</div>
-					<div className="form-group" name="password" validationstate={this.state.passwordValidation}>
-						<label>Password</label>
-						<input type="password" placeholder="password" 
-							autoComplete="new-password" 
-							value={this.state.password} 
-							onChange={this.handleChange} 
-							minLength="8"
-							required></input>
-						<small>{this.state.passwordError}</small>
-					</div>
-					<button type="submit" bsStyle="primary">Submit</button>
-				</form>
-			</div>
-		);
+		return <DisplayLogin {...this.props} {...this.state} handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
 	}
 }

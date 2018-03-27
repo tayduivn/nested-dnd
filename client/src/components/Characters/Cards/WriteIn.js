@@ -2,53 +2,46 @@ import React from "react";
 
 import { getDamageTypeIcon, getDamageTypeName } from './CardsUtil';
 
-export default class WriteIn extends React.Component {
-	render() {
-		let writein = (
-			<div className="write-in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-		);
 
-		let damageDice = false;
-		if (this.props.progression && this.props.level === 0) {
-			damageDice = writein;
-		} else if (
-			this.props.dice &&
-			this.props.dice.includes &&
-			this.props.dice.includes("0.49")
-		) {
-			damageDice = (
-				<p>
-					{this.props.dice
-						.replace("0.49", "1")
-						.replace("level", "2 levels")}
-				</p>
-			);
-		} else if (
-			this.props.dice &&
-			(!this.props.progression || this.props.level > 0)
-		) {
-			damageDice = (
-				<p>
-					{this.props.dice}
-				</p>
-			);
-		}
+const WRITEIN = (
+	<div className="write-in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+);
 
-		return (
-			<div className={this.props.className}>
-				<label>
-					{this.props.label}
-				</label>
-				{damageDice}
-				{this.props.writein ? writein : ""}
-				<p className="damageType">
-					<i className={getDamageTypeIcon(this.props.dmgType)} />{" "}
-					{getDamageTypeName(this.props.dmgType)}
-				</p>
-				<p>
-					{this.props.save}
-				</p>
-			</div>
-		);
+const DamageDice = ({dice}) => (
+	<p>
+		{dice.replace("0.49", "1").replace("level", "2 levels")}
+	</p>
+);
+
+const WriteIn = ({level, dice, progression, className, label, writein, dmgType, save}) => (
+	<div className={className}>
+		<label>
+			{label}
+		</label>
+		{processDice(dice, progression, level)}
+		{writein ? writein : ""}
+		<p className="damageType">
+			<i className={getDamageTypeIcon(dmgType)} />{" "}
+			{getDamageTypeName(dmgType)}
+		</p>
+		<p>
+			{save}
+		</p>
+	</div>
+)
+
+function processDice(dice, progression, level){
+	let damageDice = false;
+	if (progression && level === 0) {
+		damageDice = WRITEIN;
 	}
+	else if (typeof dice === 'string' && dice.includes("0.49")) {
+		damageDice = <DamageDice dice={dice} />;
+	} 
+	else if (dice && (!progression || level > 0)) {
+		damageDice = <p>{dice}</p>;
+	}
+	return damageDice;
 }
+
+export default WriteIn;

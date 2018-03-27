@@ -129,16 +129,17 @@ class ContainsList extends React.Component {
 		if(DEBUG) console.log("\t----- ContainsList RENDER: "+this.props.list.join(", "));
 
 		const list = this.props.list.map((item, i) => {
+			
 			try{
 				item = JSON.parse(item);
 			}catch(e){}
 
-			var type = (item === "") ? "" 
+			let type = (item === "") ? "" 
 				: (item.roll) ? "Table" 
 				: (typeof item !== "string") ? "embedded thing"
 				: (true) ? "thing" : "text"; //thingStore.exists(item)
 
-			var value = (typeof item === "string") ? item : JSON.stringify(item);
+			let value = (typeof item === "string") ? item : JSON.stringify(item);
 
 			return <ListItem item={item} type={type} value={value} index={i} {...this} {...this.props} />
 		});

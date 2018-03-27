@@ -14,17 +14,12 @@ export default class Cards extends React.Component {
 		}
 	}
 	render() {
-		if (!this.props.character || !this.props.character.cards)
-			return <div />;
+		if (!this.props.character || !this.props.character.cards) return <div />;
 
-		var pages = [];
-		const ALL_CARDS = this.props.character.cards.get();
+		var pages = [], cards = [];
 		let c = this.props.character;
-		const LVL = c.getTotalLevel();
-		let name = (c.name) ? c.name+" "+LVL: c.classes[0].name+" "+LVL;
-		pages.push();
-
-		var cards = [];
+		const ALL_CARDS = c.cards.get();
+		const name = (c.name) ? c.name+" "+LVL: c.classes[0].name+" "+c.getTotalLevel();
 
 		for (var i = 0; i < ALL_CARDS.length; i++) {
 			cards.push(ALL_CARDS[i]);
@@ -38,10 +33,6 @@ export default class Cards extends React.Component {
 				cards = [];
 			}
 		}
-		return (
-			<div>
-				{pages}
-			</div>
-		);
+		return <div>{pages}</div>;
 	}
 }

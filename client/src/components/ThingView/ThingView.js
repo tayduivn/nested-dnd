@@ -242,12 +242,12 @@ export default class ThingView extends React.Component{
 	render(){
 		if(!this.props.thingID)
 			return <p></p>;
-
-		const isUpdated = Object.keys(this.validation).length > 0;
-		const isaStatus = this.getStatus("isa");
-		const nameUpdated = this.getStatus("name").isUpdated
-
-		return <ThingViewDisplay {...this} {...this.props} {...this.state} />
+		
+		return <ThingViewDisplay {...this} {...this.props} {...this.state} 
+			isisUpdated={Object.keys(this.validation).length > 0}
+			isaStatus={this.getStatus("isa")}
+			nameUpdated={this.getStatus("name").isUpdated}
+		/>
 	}
 }
 

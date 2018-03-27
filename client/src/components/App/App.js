@@ -66,37 +66,14 @@ class App extends Component {
 				<div className="App">
 					<Nav handleLogout={this.handleLogout} />
 					<Switch>
-						<Route
-							exact
-							path="/"
-							component={Splash}
-						/>
-						<Route
-							path="/things"
-							component={ThingExplorer}
-						/>
-						<Route
-							path="/characters"
-							component={Characters}
-						/>
-						<PropsRoute
-							path="/login"
-							component={Login}
-							title="Login"
-							handleLogin={this.handleLogin}
-						/>} />
-						<PropsRoute
-							path="/signup"
-							component={Login}
-							title="Signup"
-							handleLogin={this.handleLogin}
-						/>}
-
+						<Route exact path="/" component={Splash} />
+						<Route path="/things" component={ThingExplorer} />
+						<Route path="/characters" component={Characters} />
+						<PropsRoute path="/login" component={Login} title="Login" handleLogin={this.handleLogin} />
+						<PropsRoute path="/signup" component={Login} title="Signup" handleLogin={this.handleLogin} />
 						<PropsRoute path="/packs" component={Packs} />
-						
 						<Route path="/explore/:packurl" component={Explore} />
 						<Route component={NotFound} />
-
 					</Switch>
 				</div>
 			</Router>

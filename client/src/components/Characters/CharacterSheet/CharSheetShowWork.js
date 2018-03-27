@@ -1,15 +1,11 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-
-import { Background } from "../../../stores/CharRolePlay"
-
+import React from "react";
 
 function makeList(map){
 	var arr = [];
 	for (var name in map) {
 		var list = map[name];
 		if (list.join) list = list.join(", ");
-		arr.push(<ListItem name={name} list={list} />);
+		arr.push(<ListItem key={name} name={name} list={list} />);
 	}
 	return arr;
 }

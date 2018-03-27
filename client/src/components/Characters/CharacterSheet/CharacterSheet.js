@@ -198,7 +198,7 @@ class SpellbookAllClasses extends Component {
 								`}
 			>
 				{this.props.spellcasting.list.map((a, i) =>
-					<Spells key={i} {...a} count={COUNT} />
+					(a.spellcasting.totalSpells === 0 ? null : <Spells key={i} {...a} count={COUNT} />) 
 				)}
 			</div>
 		);

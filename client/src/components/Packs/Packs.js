@@ -25,45 +25,42 @@ const MyPacks = ({myPacks}) => (
 	</div>
 );
 
+const Display = ({loggedIn, error, data, publicPacks}) => (
+	<div className="container">
+		<h1>Packs</h1>
+
+		{ loggedIn ? <MyPacks myPacks={data ? data.myPacks : null} /> : null }
+
+		<h2>Public Packs</h2>
+
+		{data === null ? LOADING_GIF : ""}
+		<div className={error ? "alert alert-danger" : ""}>{error}</div>
+
+		{publicPacks && publicPacks.length === 0 ? <p>There are no public packs to display</p> : null}
+		<ul>
+			{(publicPacks) ? publicPacks.map((p)=>PackLink) : null}
+		</ul>
+	</div>
+)
+
 class PackList extends Component{
 	state = {
 			data: null,
 			error: null
 	}
-
 	static contextTypes = {
 		loggedIn: PropTypes.bool
 	}
-
-	//fetch data
-	componentDidMount(){
+	componentDidMount(){ //fetch data
 		const _t = this;
 		DB.fetch("packs").then(result=>{
 			_t.setState(result);
 		});
 	}
-
 	render(){
-		const data = this.state.data;
-		const publicPacks = data ? data.publicPacks : [];
-
-		return (
-			<div className="container">
-				<h1>Packs {this.context.loggedIn}</h1>
-
-				{ this.context.loggedIn ? <MyPacks myPacks={data ? data.myPacks : null} /> : null }
-
-				<h2>Public Packs</h2>
-
-				{data === null ? LOADING_GIF : ""}
-				<div className={this.state.error ? "alert alert-danger" : ""}>{this.state.error}</div>
-
-				{publicPacks && publicPacks.length === 0 ? <p>There are no public packs to display</p> : null}
-				<ul>
-					{(publicPacks) ? publicPacks.map((p)=>PackLink) : null}
-				</ul>
-			</div>
-		);
+		return <Display {...this.state} 
+			loggedIn={this.context.loggedIn}
+			publicPacks={this.state.data ? this.state.data.publicPacks : []} />;
 	}
 }
 
