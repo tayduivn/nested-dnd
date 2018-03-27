@@ -2,14 +2,20 @@ const Schema = require("mongoose").Schema;
 
 const Maker = require('./make');
 
-function validateMixedThing(input){
-	if(input.type === 'table' && typeof input.value === 'string')
-		input.type = 'string'
-	if(input.type === 'string' && typeof input.value !== 'string'){
-		if(input.value.rows) input.type = 'table'
-		else throw Error("cannot set name to value "+input.value)
-	}
-	return input;
+const colorConvert = {
+	tan: 'khaki',
+	silvery: 'silver',
+	red: 'darkred',
+	shady: "grey",
+	blue: "darkblue",
+	multicolored: "rainbow",
+	golden: "gold",
+	shimmering: "glow",
+	glowing: "glow",
+	luminous: "glow",
+	faint: "white",
+	pale: "white",
+	opaline: "floralwhite"
 }
 
 var mixedTypeSchema = Schema({
@@ -56,43 +62,28 @@ var styleSchema = Schema({
 styleSchema.path('icon').set(validateMixedThing);
 
 styleSchema.methods.makeTextColor = async function(){
-	return Maker.makeMixedThing(this.txt, this.parent().model('Table'))
+	return makeIt.call(this, this.txt);
 };
 
 styleSchema.methods.makeBackgroundColor = async function(){
-	return Maker.makeMixedThing(this.bg, this.parent().model('Table'))
+	return makeIt.call(this, this.bg);
 };
 
 styleSchema.methods.makeIcon = async function(){
-	return Maker.makeMixedThing(this.icon, this.parent().model('Table'))
+	return makeIt.call(this, this.icon);
 };
 
 styleSchema.methods.makeImage = async function(){
-	return Maker.makeMixedThing(this.img, this.parent().model('Table'))
+	return makeIt.call(this, this.img);
 };
 
 styleSchema.methods.makePattern = async function(){
-	return Maker.makeMixedThing(this.pattern, this.parent().model('Table'))
+	return makeIt.call(this, this.pattern);
 };
 
-const colorConvert = {
-	tan: 'khaki',
-	silvery: 'silver',
-	red: 'darkred',
-	shady: "grey",
-	blue: "darkblue",
-	multicolored: "rainbow",
-	golden: "gold",
-	shimmering: "glow",
-	glowing: "glow",
-	luminous: "glow",
-	faint: "white",
-	pale: "white",
-	opaline: "floralwhite"
-}
-
 styleSchema.methods.strToColor = function(str) {
-	if(typeof str !== 'string') return '';
+	if(typeof str !== 'string')
+		return this.makeBackgroundColor();
 
 	var colors = "multicolored|opaline|rainbow|red|magenta|orange|yellow|teal|green|blue|turquoise|purple|gold|golden|glowing|shimmering|luminous|faint|white|black|brown|pale|silver|silvery|gray|tan|grey|pink|shady|sharkverse|baconverse|doughnutverse|lasagnaverse";
 
@@ -111,7 +102,24 @@ styleSchema.methods.strToColor = function(str) {
 			str = colorConvert[oldColor];
 	}
 
-	return str;
+	return str.length ? str : this.makeBackgroundColor();
+}
+
+function makeIt(value){
+	return Maker.makeMixedThing(value, this.parent().model('Table'));
+}
+
+function validateMixedThing(input){
+	var { type, value } = input;
+
+	if(type === 'table' && typeof value === 'string')
+		input.type = 'string'
+	if(type === 'string' && typeof value !== 'string'){
+		if(value.rows) input.type = 'table'
+		else throw Error("cannot set name to value "+value)
+	}
+	return input;
 }
 
 module.exports = styleSchema;
+module.exports.validateMixedThing = validateMixedThing;

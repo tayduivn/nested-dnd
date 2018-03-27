@@ -9,16 +9,6 @@ const Nested = require('../routes/packs/nested');
 
 const SEED_DELIM = ">";
 
-function validateType(input){
-	if(input.type === 'table' && typeof input.value === 'string')
-		input.type = 'string'
-	if(input.type === 'string' && typeof input.value !== 'string'){
-		if(input.value.rows) input.type = 'table'
-		else throw Error("cannot set name to value "+input.value)
-	}
-	return input;
-}
-
 var generatorSchema = Schema({
 	pack_id: {
 		type: Schema.Types.ObjectId,
@@ -35,7 +25,7 @@ var generatorSchema = Schema({
 	},
 	name: {
 		type: Schema.Types.Mixed, // todo: handle tables and such
-		set: validateType
+		set: styleSchema.validateMixedThing
 	},
 	desc: {
 	 type: [String],
@@ -43,7 +33,7 @@ var generatorSchema = Schema({
 	},
 	in: {
 	 type: [childSchema],
-	 set: validateType,
+	 set: styleSchema.validateMixedThing,
 	 default: void 0	
 	},
 	data: Object,
@@ -55,36 +45,17 @@ generatorSchema.post('remove', Maintainer.cleanAfterRemove);
 // ----------------------- VIRTUALS
 
 generatorSchema.methods.makeStyle = async function(name){
-	var style = {
-		cssClass: []
-	};
-
-
-	if(!this.style) return style;
+	if(!this.style) return {};
 
 	var arr = await Promise.all([
 		this.style.makeTextColor(),
-		this.style.makeBackgroundColor(),
+		this.style.noAutoColor ? this.style.makeBackgroundColor() : this.style.strToColor(name),
 		this.style.makeImage(),
 		this.style.makeIcon(),
 		this.style.makePattern()
 	]);
 
-	if(arr[0]) style.txt = arr[0];
-	if(arr[1]) style.cssClass.push(arr[1]);
-	if(arr[2]) style.img = arr[2];
-	if(arr[3]) style.icon = arr[3];
-	if(arr[4]) style.cssClass.push(arr[4]);
-
-	if(!this.style.noAutoColor){
-		var autoColor = this.style.strToColor(name);
-		if(autoColor) style.txt = undefined;
-		style.cssClass.push(autoColor);
-	}
-
-	style.cssClass = style.cssClass.join(" ");
-
-	return style;
+	return mergeStyle(arr, ['txt','cssClass','img','icon','cssClass']);
 }
 
 generatorSchema.virtual('makeName').get(function(){
@@ -115,37 +86,27 @@ generatorSchema.statics.insertNew = async function(data, pack){
 generatorSchema.statics.makeAsRoot = async function(seedArray, builtpack){
 	var seed = seedArray.shift();
 
-	if(seedArray.length === 0){
+	if(seedArray.length === 0)
 		return await Maker.make(seed, 1, builtpack);
+
+	// generate the next seed in the array and push to in
+	var node = await Maker.make(seed, 1, builtpack);
+	var generatedChild = await this.makeAsRoot(seedArray, builtpack); 
+
+	if(!node.in) node.in = [];
+
+	// if node has a similar child, replace it
+	for(var i = 0; i < node.in.length; i++){
+		if(node.in[i].isa === generatedChild.isa){
+			node.in[i] = generatedChild;
+			break;
+		}
 	}
-	else{
-		var node = await Maker.make(seed, 1, builtpack);
 
-		//generate the next seed in the array and push to in
-		//TODO: replace child
-		var generatedChild = await this.makeAsRoot(seedArray, builtpack);
+	if(i === node.in.length) 
+		node.in.push(generatedChild);
 
-		// no children, append and continue
-		if(!node.in) {
-			node.in = [generatedChild];
-			return node;
-		}
-
-		// if node has a similar child, replace it
-		var found = false;
-		for(var i = 0; i < node.in.length; i++){
-			if(node.in[i].isa === generatedChild.isa){
-				node.in[i] = generatedChild;
-				found = true;
-				break;
-			}
-		}
-		if(!found){ // push to end if not found.
-			node.in.push(generatedChild);
-		}
-
-		return node;
-	}
+	return node;
 };
 
 
@@ -222,6 +183,26 @@ generatorSchema.methods.extend = function(builtpack){
 	return extendsGen;
 }
 
+
+/**
+ * Takes an array of attributes and their labels and merges them into a single style object
+ * @param  {string[]} arr    The values
+ * @param  {string[]} labels The attribute names
+ * @return {Object}        The unified style object
+ */
+function mergeStyle(arr, labels){
+	var style = {
+		cssClass: []
+	}
+	arr.forEach((val, i)=>{
+		if(labels[i] === 'cssClass')
+			style.cssClass.push(val);
+		else
+			style[labels[i]] = val;
+	})
+	style.cssClass = style.cssClass.join(" ");
+	return style;
+}
 
 module.exports = mongoose.model('Generator', generatorSchema);
 

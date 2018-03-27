@@ -237,7 +237,6 @@ describe('/api/pack/:pack/generator',()=>{
 				return request.put('/api/pack/'+pack.id+'/generator/'+generator.id)
 					.send(newData)
 					.expect(({body})=>{
-						console.log(body);
 						body.should.have.property('isa','test2');
 					})
 					.expect('Content-Type', /json/)

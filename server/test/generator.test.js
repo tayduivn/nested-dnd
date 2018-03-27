@@ -125,8 +125,8 @@ describe('Generator', ()=>{
 
 	describe('makeStyle()', function(){
 
-		it('shuold return', ()=>{
-			return generator.makeStyle().should.eventually.have.property('txt');
+		it('should return', ()=>{
+			return generator.makeStyle("blue universe").should.eventually.have.property('cssClass', 'darkblue purty-wood');
 		})
 	})
 
