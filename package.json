@@ -19,7 +19,7 @@
     "heroku-postbuild": "yarn build",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "start": "node server/server.js",
-    "test": "yarn build-css && cross-env NODE_ENV=test nyc mocha --timeout=3000 server/**/*.test.js client/**/*.test.js"
+    "test": "yarn build-css && cross-env NODE_ENV=test nyc mocha --timeout=3000 --recursive \"server/**/*.test.js\" \"client/**/*.test.js\""
   },
   "dependencies": {
     "animate.css": "^3.5.2",
