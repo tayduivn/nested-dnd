@@ -141,13 +141,10 @@ var Maintainer = {
 		var isaNew = generator.isa;
 		var Generator = generator.model('Generator');
 		var BuiltPack = generator.model('BuiltPack');
-		
-		var result = await Promise.all([
+		let result = await Promise.all([
 			// find generators in this pack that contain in or extend with isaOld
 			Generator.find({ pack_id: pack._id }).exec(),
-
 			BuiltPack.findOrBuild(pack),
-
 			// set seed ----------------------------
 			pack.renameSeed(isaOld, isaNew) 
 		]);
@@ -158,7 +155,6 @@ var Maintainer = {
 		delete builtpack.generators[isaOld];
 		builtpack.markModified('generators.'+isaOld)
 		builtpack.pushGenerator(generator);
-
 		
 		if(!gens || !gens.length) {
 			builtpack.save();
@@ -166,32 +162,7 @@ var Maintainer = {
 		}
 
 		gens.forEach((gen)=>{
-			var changed = false;
-			var newGen = this.renameChildren(gen, isaOld, isaNew);
-			var builtGen = builtpack.getGen(gen.isa);
-
-			if(!builtGen){
-				throw new Error("Could not find build for "+gen.isa+" in pack "+gen.pack_id);
-			}
-
-			if(newGen){
-				changed = true;
-				gen = newGen;
-				builtGen.in = newGen.in;
-				builtpack.markModified('generators.'+newGen.isa+".in");
-			}
-
-			// just rename extends -- the build should get it out of the buildpack, not precompile
-			if(gen.extends === isaOld){
-				changed = true;
-				gen.extends = isaNew;
-				builtGen.extends = gen.extends;
-				builtpack.markModified('generators.'+gen.isa+".extends");
-			}
-
-			// do the save
-			// this must happen after pack save, so child name exists in pack
-			if(changed) gen.save();
+			renameWithinGen(gen, builtpack, isaOld, isaNew);
 		});
 
 		// push in and extends changes to buildpack. no need to rebuild
@@ -199,7 +170,40 @@ var Maintainer = {
 	}
 }
 
+/**
+ * [renameWithinGen description]
+ * @param  {[type]} gen       [description]
+ * @param  {[type]} builtpack [description]
+ * @return {[type]}           [description]
+ */
+function renameWithinGen(gen, builtpack, isaOld, isaNew){
+	var changed = false;
+	var newGen = Maintainer.renameChildren(gen, isaOld, isaNew);
+	var builtGen = builtpack.getGen(gen.isa);
 
+	if(!builtGen){
+		throw new Error("Could not find build for "+gen.isa+" in pack "+gen.pack_id);
+	}
+
+	if(newGen){
+		changed = true;
+		gen = newGen;
+		builtGen.in = newGen.in;
+		builtpack.markModified('generators.'+newGen.isa+".in");
+	}
+
+	// just rename extends -- the build should get it out of the buildpack, not precompile
+	if(gen.extends === isaOld){
+		changed = true;
+		gen.extends = isaNew;
+		builtGen.extends = gen.extends;
+		builtpack.markModified('generators.'+gen.isa+".extends");
+	}
+
+	// do the save
+	// this must happen after pack save, so child name exists in pack
+	if(changed) gen.save();
+}
 
 
 module.exports = Maintainer;
