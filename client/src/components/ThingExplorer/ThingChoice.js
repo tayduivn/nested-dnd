@@ -34,36 +34,27 @@ class NewThingForm extends React.Component {
 	}
 }
 
-function ThingChoices(props) {
-	if (!props.things || !props.things.length) {
-		return <div />;
-	}
-	if (DEBUG)
-		console.log("----- ThingChoices RENDER : " + props.things.length);
-	const things = props.things.map(name =>
-		<ThingChoice
-			key={name}
-			name={name}
-			selected={name === props.currentThingName}
-			currentIsa={
-				name === props.currentThingName ? props.currentThing.isa : null
-			}
-			currentIcon={
-				name === props.currentThingName ? props.currentThing.icon : null
-			}
-			selectFunc={props.selectFunc}
-		/>
-	);
-
-	return (
-		<div>
-			<ul className="list-group">
-				{things}
-			</ul>
-			<NewThingForm addThing={props.saveThing} />
-		</div>
-	);
-}
+const ThingChoices = ({things, currentThingName, currentThing, selectFunc, saveThing}) => (
+	<div>
+		<ul className="list-group">
+			{things.map(name =>
+				<ThingChoice
+					key={name}
+					name={name}
+					selected={name === currentThingName}
+					currentIsa={
+						name === currentThingName ? currentThing.isa : null
+					}
+					currentIcon={
+						name === currentThingName ? currentThing.icon : null
+					}
+					selectFunc={selectFunc}
+				/>
+			)}
+		</ul>
+		<NewThingForm addThing={saveThing} />
+	</div>
+);
 
 class ThingChoice extends React.Component {
 	constructor() {

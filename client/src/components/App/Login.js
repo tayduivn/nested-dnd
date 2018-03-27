@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import './Login.css'
 
-const DisplayLogin = ({title, handleSubmit, emailVaidation, handleChange, email, passwordValidation, password, passwordError}) => (
+const DisplayLogin = ({title, handleSubmit, emailVaidation, handleChange, email, emailError, passwordValidation, password, passwordError}) => (
 	<div className="main mt-5 container-fluid loginForm">
 		<h1>{title}</h1>
 		<form onSubmit={handleSubmit}>

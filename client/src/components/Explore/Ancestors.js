@@ -51,7 +51,7 @@ export default class Ancestors extends Component {
 	render(){
 		const a = this.props.ancestors;
 		return (!a || !a.length) ? null 
-				: (a.length > 1) ? <SplitButton parentInst={a[0]} style={{color:parentInst.txt}} ancestors={a} /> 
+				: (a.length > 1) ? <SplitButton parentInst={a[0]} style={{color:a[0].txt}} ancestors={a} /> 
 				: <OneButton parentInst={a[0]} onClick={this.onClick} />;
 	}
 }

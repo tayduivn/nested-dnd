@@ -19,7 +19,8 @@ export default class Cards extends React.Component {
 		var pages = [], cards = [];
 		let c = this.props.character;
 		const ALL_CARDS = c.cards.get();
-		const name = (c.name) ? c.name+" "+LVL: c.classes[0].name+" "+c.getTotalLevel();
+		var name = (c.name) ? c.name : c.classes[0].name;
+		name += " "+c.getTotalLevel();
 
 		for (var i = 0; i < ALL_CARDS.length; i++) {
 			cards.push(ALL_CARDS[i]);

@@ -9,7 +9,6 @@ export default class ItemBack extends React.Component {
 	 */
 	render() {
 		var item = this.props.item;
-
 		var props = [];
 
 		// for potions of healing and special consumables

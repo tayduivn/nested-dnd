@@ -5,8 +5,6 @@ import IsASelect from './IsASelect'
 import CategoryTabs from './CategoryTabs'
 
 
-const DEBUG = false;
-
 const ThingViewDisplay = ({thing, nameUpdated, updateThing, validate, isaStatus, handleSave, getStatus, setPreview, isValid, isUpdated, handleDelete, instance}) => (
 	<div className="thingView row">
 		<div className="col-lg-10 col-xs col-sm-8 col-md-9 properties">
@@ -61,8 +59,6 @@ export default class ThingView extends React.Component{
 	}
 
 	componentWillReceiveProps(nextProps){
-		if(DEBUG) console.log("\t ThingView.componentWillReceiveProps")
-
 		var instance;
 
 		//if displaying a thing
@@ -97,7 +93,6 @@ export default class ThingView extends React.Component{
 	}
 	//need to clean up invalid stuff
 	componentWillUnmount(){
-		if(DEBUG) console.log("ThingView.componentWillUnmount -- isValid: "+this.state.isValid)
 		if(!this.state.isValid){
 			this._revertToValid();
 		}
@@ -129,7 +124,6 @@ export default class ThingView extends React.Component{
 		for(var property in this.validation){
 			//if invalid, reset the value to default
 			if(!this.validation[property]){
-				if(DEBUG) console.log("\t\t ThingView._revertToValid -- reverting "+property)
 				delete this.validation[property];
 				this.props.updateThing(property, undefined, true);
 			}
@@ -138,7 +132,6 @@ export default class ThingView extends React.Component{
 
 	_setStateIsValid(){
 		var isValid = Object.keys(this.validation).length && Object.values(this.validation).filter(val=>!val).length === 0
-		if(DEBUG) console.log("\t\t isValid: "+isValid);
 
 		if(isValid !== this.state.isValid){
 			this.setState({ 
@@ -149,7 +142,6 @@ export default class ThingView extends React.Component{
 
 
 	validate(property, validationState){
-		if(DEBUG) console.log("ThingView.validate: "+property+": "+validationState);
 
 		if(validationState == null){
 			delete this.validation[property];
@@ -168,10 +160,6 @@ export default class ThingView extends React.Component{
 	}
 
 	handleSave(thingName){
-		if(DEBUG) {
-			console.log("\t ThingView.handleSave "+thingName);
-		}
-
 		//adding a new thing
 		if(thingName && typeof thingName === "string" && thingName !== this.props.thingName){
 			return this.props.saveThing(thingName);
@@ -194,7 +182,6 @@ export default class ThingView extends React.Component{
 	}
 
 	handleDelete(){
-		if(DEBUG) console.log("ThingView.handleDelete");
 		this.props.saveThing(this.props.thingID, true);
 	}
 	
