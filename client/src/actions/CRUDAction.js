@@ -40,24 +40,14 @@ var DB = {
 	}
 }
 
-/*
-function printError(status, error){
-	console.error(error);
-	var elemDiv = document.createElement('div');
-	elemDiv.innerHTML = status+": "+error; 
-	window.document.body.insertBefore(elemDiv, window.document.body.firstChild);
-}*/
 
 function setHeader(method, headers){
 	if(!headers && !method) return HEADERS;
 
 	if(headers){
-		if(headers.body instanceof FormData){
-			headers.body = formDataTOJson(headers.body);
-		}
-		if(headers.body instanceof Object){ // no else!
-			headers.body = JSON.stringify(headers.body);
-		}
+		headers.body = (headers.body instanceof FormData) ? headers.body = formDataTOJson(headers.body) 
+				: (headers.body instanceof Object) ? JSON.stringify(headers.body) 
+				: headers.body;
 	}
 
 	return Object.assign({}, HEADERS, {method: method || "GET"}, headers);
@@ -83,19 +73,7 @@ function handleError(error){
 
 async function getResponse(response){
 
-	if(!response){
-		return { error: "No response from server" }
-	}
-
-	var data, error, contentType = response.headers.get("content-type");
-
-	if(contentType && contentType.includes("json"))
-		data = await response.json()
-	else{
-		error = {
-			message: await response.text()
-		}
-	}
+	var { data, error } = parseResponse(response);
 
 	if(response.status === 404){
 		error = "Not found";
@@ -106,7 +84,6 @@ async function getResponse(response){
 				data.error.message = "500 Server Error: "+data.error.message
 				console.error(data.error);
 			}
-			console.log(data.error); 
 			error = data.error;
 			delete data.error; // remove error from the return object
 		}
@@ -115,11 +92,24 @@ async function getResponse(response){
 		}
 	}
 
-	if(!data) data = {};
-	if(error)
-		error.display = <ErrorDisplay {...error} />
+	if(error) error.display = <ErrorDisplay {...error} />
 
 	return { error, data }
 }
 
+async function parseResponse(response){
+	if(!response) return { error: "No response from server", data: {} }
+
+	var data = {}, error;
+	var contentType = response.headers.get("content-type");
+
+	if(contentType && contentType.includes("json"))
+		data = await response.json()
+	else{
+		error = {
+			message: await response.text()
+		}
+	}
+	return { data , error };
+}
 export default DB;
