@@ -2,6 +2,31 @@ import React from "react";
 
 const DEBUG = false;
 
+const Display = ({rows, value, label, property, status, helpText, showHelp, validationState, handleChange, handleClear, onFocus, onBlur}) => (
+	<div className={`form-group ${status.isClearable ? "clearable" : "not-clearable"}`}
+		validationstate={validationState}>
+		<label>{label}</label>
+		<div className={`input-group no-input-addons ${status.isEnabled ? "" : "fake-disabled"}`}>
+			<div
+				componentclass="textarea"
+				value={value}
+				rows={rows}
+				name={property}
+				onChange={handleChange}
+				onFocus={onFocus}
+				onBlur={onBlur}
+			/>
+			<div className="feedback" onClick={handleClear}>
+				<i className="fa fa-" />
+			</div>
+		</div>
+		<small className={showHelp ? "" : "hidden"}>
+			{helpText}
+		</small>
+	</div>
+);
+
+
 class EditableInput extends React.Component {
 	constructor(props) {
 		super(props);
@@ -114,46 +139,7 @@ class EditableInput extends React.Component {
 	}
 
 	render() {
-		if (DEBUG) console.log("---- EditableInput.RENDER");
-		const value = this.props.value;
-		const rows = value.split(/\r\n|\r|\n/).length;
-
-		return (
-			<div
-				validationstate={this.validationState}
-				className={`form-group ${
-													this.props.status.isClearable
-														? "clearable"
-														: "not-clearable"
-												}`}
-			>
-				<label>
-					{this.props.label}
-				</label>
-				<div
-					className={
-						"input-group no-input-addons " +
-						(this.props.status.isEnabled ? "" : "fake-disabled")
-					}
-				>
-					<div
-						componentclass="textarea"
-						value={value}
-						rows={rows}
-						name={this.props.property}
-						onChange={this.handleChange}
-						onFocus={this.onFocus}
-						onBlur={this.onBlur}
-					/>
-					<div className="feedback" onClick={this.handleClear}>
-						<i className="fa fa-" />
-					</div>
-				</div>
-				<small className={this.state.showHelp ? "" : "hidden"}>
-					{this.helpText}
-				</small>
-			</div>
-		);
+		return <Display {...this} {...this.props} {...this.state} rows={this.props.value.split(/\r\n|\r|\n/).length} />;
 	}
 }
 
