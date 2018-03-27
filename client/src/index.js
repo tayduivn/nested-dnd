@@ -5,7 +5,7 @@ import registerServiceWorker from "./registerServiceWorker";
 
 import "animate.css";
 import "font-awesome/css/font-awesome.min.css";
-import "game-icons-font/src/gameiconsfont/css/game-icons-font.min.css";
+import "./assets/font/game-icons.css";
 import "./assets/font/flaticon.css";
 import "react-select/dist/react-select.css";
 

@@ -42,10 +42,12 @@ module.exports = {
 	},
 
 	canEditPack: function(req, res, next){
+
 		if (!req.isAuthenticated())
 			res.status(401).json({error:"You need to be logged in to edit packs."})
 
 		getPack(req, res, ()=>{
+
 			if(!req.pack)  return;
 
 			if(req.pack._user.id === req.user.id) {
@@ -103,13 +105,8 @@ function getPack(req, res, next){
 		packGetter = Pack.findOne({ url: req.params.url }).populate('_user')
 	else return res.status(412).json({"error": "Missing pack id"});
 
-	packGetter.exec((err, pack)=>{
-		if (err) {
-			if(!res.headersSent) {
-				res.status(500).json(err);
-			}
-			return next(error);
-		};
+	packGetter.exec().then(pack=>{
+
 		if(!pack){
 			var error = {"error": "Couldn't find pack? "+req.params.pack+req.params.url};
 			if(!res.headersSent) {
@@ -123,8 +120,7 @@ function getPack(req, res, next){
 		if(next){
 			next();
 		}
-
 		return;
 			
-	})
+	}).catch(next)
 };

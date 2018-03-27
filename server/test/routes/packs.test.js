@@ -12,7 +12,7 @@ const Pack = require('../../app/models/pack');
 const User = require('../../app/models/user');
 
 
-describe('Routes: packs', ()=>{
+describe('/api/packs', ()=>{
 
 	var user, pack, packs, PackMock;
 
@@ -35,7 +35,7 @@ describe('Routes: packs', ()=>{
 	})
 
 	
-	describe('/api/packs',()=>{
+	describe('GET',()=>{
 
 		it('returns ok signed out',(done)=>{
 			PackMock.expects('find')
@@ -75,7 +75,7 @@ describe('Routes: packs', ()=>{
 		});
 	})
 
-	describe('/api/pack',()=>{
+	describe('POST',()=>{
 
 		before(()=>{
 			user = new User({ _id: USER_ID, name: 'testing testing' });
