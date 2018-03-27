@@ -7,6 +7,34 @@ import CategoryTabs from './CategoryTabs'
 
 const DEBUG = false;
 
+const ThingViewDisplay = ({thing, nameUpdated, updateThing, validate, isaStatus, handleSave, getStatus, setPreview, isValid, isUpdated, handleDelete, instance}) => (
+	<div className="thingView row">
+		<div className="col-lg-10 col-xs col-sm-8 col-md-9 properties">
+
+			<NameInput value={thing.name} originalValue={thing.originalOptions.name} isUpdated={nameUpdated} 
+				handleChange={updateThing} validate={validate}  />
+
+			<IsASelect value={thing.isa} status={isaStatus} thingName={thing.name}
+				addThing={handleSave} handleChange={updateThing} validate={validate} />
+			
+			<CategoryTabs thing={thing} 
+				handleChange={updateThing} getStatus={getStatus} validate={validate} setPreview={setPreview} />
+
+			<SubmitButton name={thing.name} isValid={isValid} isUpdated={isUpdated}
+				handleSave={handleSave} handleDelete={handleDelete} />
+
+		</div>
+		<div className="col-xs col-sm-4 col-md-3 col-lg-2">
+			<Preview {...instance} />
+
+			<button onClick={handleDelete}
+				className={`delete-btn ${thing.name && thing.name.length ? "default" : "danger"}`} >
+				<i className="fa fa-trash"></i> Delete
+			</button>
+		</div>
+	</div>
+)
+
 export default class ThingView extends React.Component{
 	constructor(props){
 		super(props);
@@ -218,40 +246,13 @@ export default class ThingView extends React.Component{
 		const isUpdated = Object.keys(this.validation).length > 0;
 		const isaStatus = this.getStatus("isa");
 		const nameUpdated = this.getStatus("name").isUpdated
-		const originalName = this.props.thing.originalOptions.name;
 
 		if(DEBUG) {
 			console.log("ThingView RENDER");
 			console.log("\t validation: "+JSON.stringify(this.validation));
 		}
 
-		return (
-			<div className="thingView row">
-				<div className="col-lg-10 col-xs col-sm-8 col-md-9 properties">
-
-					<NameInput value={this.props.thing.name} originalValue={originalName} isUpdated={nameUpdated} 
-						handleChange={this.props.updateThing} validate={this.validate}  />
-
-					<IsASelect value={this.props.thing.isa} status={isaStatus} thingName={this.props.thing.name}
-						addThing={this.handleSave} handleChange={this.props.updateThing} validate={this.validate} />
-					
-					<CategoryTabs thing={this.props.thing} 
-						handleChange={this.props.updateThing} getStatus={this.getStatus} validate={this.validate} setPreview={this.setPreview} />
-
-					<SubmitButton name={this.props.thing.name} isValid={this.state.isValid} isUpdated={isUpdated}
-						handleSave={this.handleSave} handleDelete={this.handleDelete} />
-
-				</div>
-				<div className="col-xs col-sm-4 col-md-3 col-lg-2">
-					<Preview {...this.state.instance} />
-
-					<button onClick={this.handleDelete}
-						className={`delete-btn ${this.props.thing.name && this.props.thing.name.length ? "default" : "danger"}`} >
-						<i className="fa fa-trash"></i> Delete
-					</button>
-				</div>
-			</div>
-		)
+		return <ThingViewDisplay {...this} {...this.props} {...this.state} />
 	}
 }
 

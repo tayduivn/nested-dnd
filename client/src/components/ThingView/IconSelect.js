@@ -11,6 +11,43 @@ const animations = ["spin","spinReverse","pulse","flash","headShake","swing","ta
 const animationOptions = [<option key="placeholder" value=""></option>]
 	.concat(animations.map((anim) => <option value={anim} key={anim}>{anim}</option>))
 
+const IconSelectDisplay = ({status, validationState, iconArr, virtualSelect, handleChange, handleChangeAnim, handleClickChosen, animArr, renderIcon}) => (
+	<div className={status.isEnabled ? "" : "fake-disabled"}>
+		<div className="form-group m-0" validationstate={validationState}>
+			<label>Icon</label>
+		</div>
+		<div className="row">
+			<div className="col-md">
+				<div validationstate={validationState} className="form-group">
+					<VirtualizedSelect name="icon" value={iconArr} simpleValue
+						onChange={handleChange}
+						clearable={status.isClearable} 
+						clearAllText="Clear changes" clearRenderer={Styler.selectClear} resetValue={null}
+						ref={(select) => virtualSelect = select }
+						optionRenderer={renderIcon} options={ iconStore.iconOptions }
+						onValueClick={handleClickChosen}
+						multi={true} matchProp="label" ignoreCase={false} searchable={true}  />
+				</div>
+			</div>
+			<div id="icons-preview" className="col-md row">
+				{iconArr.map((icon, index) => (
+				<div className="col-sm-4 icon-wrap" key={index} >
+					<div className="form-group icon" name={"icon"+index}>
+						<label>
+							<i className={icon+" "+animArr[index]+" animated infinite"} title={icon} />
+						</label>
+						<select onChange={handleChangeAnim}
+							value={animArr[index]} data-index={index} data-icon={icon}>
+							{animationOptions}
+						</select>
+					</div>
+				</div>
+				) )}
+			</div>
+		</div>
+	</div>
+);
+
 class IconSelect extends React.Component{
 	constructor(){
 		super();
@@ -99,40 +136,7 @@ class IconSelect extends React.Component{
 		this._parseIconArr(this.props.value);
 		const validationState = this.props.status.isUpdated ? "success" : null;
 
-		return (<div className={this.props.status.isEnabled ? "" : "fake-disabled"}>
-			<div className="form-group m-0" validationstate={validationState}>
-				<label>Icon</label>
-			</div>
-			<div className="row">
-				<div className="col-md">
-					<div validationstate={validationState} className="form-group">
-						<VirtualizedSelect name="icon" value={this.iconArr} simpleValue
-							onChange={this.handleChange}
-							clearable={this.props.status.isClearable} 
-							clearAllText="Clear changes" clearRenderer={Styler.selectClear} resetValue={null}
-							ref={(select) => this.virtualSelect = select }
-							optionRenderer={renderIcon} options={ iconStore.iconOptions }
-							onValueClick={this.handleClickChosen}
-							multi={true} matchProp="label" ignoreCase={false} searchable={true}  />
-					</div>
-				</div>
-				<div id="icons-preview" className="col-md row">
-					{this.iconArr.map((icon, index) => (
-					<div className="col-sm-4 icon-wrap" key={index} >
-						<div className="form-group icon" name={"icon"+index}>
-							<label>
-								<i className={icon+" "+this.animArr[index]+" animated infinite"} title={icon} />
-							</label>
-							<select onChange={this.handleChangeAnim}
-								value={this.animArr[index]} data-index={index} data-icon={icon}>
-								{animationOptions}
-							</select>
-						</div>
-					</div>
-					) )}
-				</div>
-			</div>
-		</div>)
+		return <IconSelectDisplay  {...this}  {...this.props} validationState={validationState} />
 	}
 }
 

@@ -1,6 +1,38 @@
 import React from 'react'; 
 const DEBUG = false;
 
+const ListItem = ({ type, value, index, status, validationState, handleChange, handleClickThing, handleRemove, helpText}) => (
+	<div className="form-group" key={index} validationstate={validationState[index]}>
+		<div className={`input-group ${value ? "":"no-input-addons"}`}>
+			
+			<input onChange={handleChange} value={value} type="text" data-index={index}
+				className={ (status.isEditable ?"":"fake-disabled")}
+				componentclass="textarea" rows={(value) ? Math.ceil(value.length/50) : 1} />
+			<div className={`input-group-addon ${value ? ("type "+type ): ("type hidden "+type)}`} 
+				data-thing={item} data-type={type} onClick={handleClickThing} >
+				{type}
+			</div>
+		</div>
+		<button className="btn delete-btn" data-index={index} data-value={value}  onClick={handleRemove}>
+			<span><i className="fa fa-trash" /></span>
+		</button>
+		<small>{helpText[index]}</small>
+	</div>
+);
+
+const ContainsListDisplay = ({list, status, handleAdd, handleClear}) => (
+	<div id="containsList">
+			{list}
+			<br/>
+			<div className="btn-group">
+				<button onClick={handleAdd}><i className="fa fa-plus"></i> Add</button>
+				<button className={"clear-button "+(status.isClearable ? "": "hidden")} onClick={handleClear}>
+					<i className="glyphicon glyphicon-remove"></i> Clear all changes
+				</button>
+			</div>
+	</div>
+);
+
 class ContainsList extends React.Component {
 	constructor(props){
 		super(props);
@@ -96,7 +128,7 @@ class ContainsList extends React.Component {
 	render(){
 		if(DEBUG) console.log("\t----- ContainsList RENDER: "+this.props.list.join(", "));
 
-		const list = this.props.list.map((item, index) => {
+		const list = this.props.list.map((item, i) => {
 			try{
 				item = JSON.parse(item);
 			}catch(e){}
@@ -108,38 +140,11 @@ class ContainsList extends React.Component {
 
 			var value = (typeof item === "string") ? item : JSON.stringify(item);
 
-			return (
-			<div className="form-group" key={index} validationstate={this.validationState[index]}>
-				<div className={`input-group ${value ? "":"no-input-addons"}`}>
-					
-					<input onChange={this.handleChange} value={value} type="text" data-index={index}
-						className={ (this.props.status.isEditable ?"":"fake-disabled")}
-						componentclass="textarea" rows={(value) ? Math.ceil(value.length/50) : 1} />
-					<div className={`input-group-addon ${value ? ("type "+type ): ("type hidden "+type)}`} 
-						data-thing={item} data-type={type} onClick={this.handleClickThing} >
-						{type}
-					</div>
-				</div>
-				<button className="btn delete-btn" data-index={index} data-value={value}  onClick={this.handleRemove}>
-					<span><i className="fa fa-trash" /></span>
-				</button>
-				<small>{this.helpText[index]}</small>
-			</div>
-			)
+			return <ListItem type={type} value={value} index={i} {...this} {...this.props} />
 		});
 
 
-		return(
-		<div id="containsList">
-				{list}
-				<br/>
-				<div className="btn-group">
-					<button onClick={this.handleAdd}><i className="fa fa-plus"></i> Add</button>
-					<button className={"clear-button "+(this.props.status.isClearable ? "": "hidden")} onClick={this.handleClear}>
-						<i className="glyphicon glyphicon-remove"></i> Clear all changes
-					</button>
-				</div>
-		</div>)
+		return <ContainsListDisplay list={list} status={this.props.status} handleClear={this.handleClear} handleAdd={this.handleAdd} />
 	}
 }
 

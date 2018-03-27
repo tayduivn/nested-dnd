@@ -2,6 +2,16 @@ import React from "react";
 
 const DEBUG = false;
 
+const NameInputDisplay = ({state, value, originalValue, helpText, handleChange, handleClear}) => (
+	<div className="form-group-large form-group title clearable" name="thing-name" validationstate={state}>
+		<input type="text" value={value} onChange={handleChange} />
+		<small>{helpText}</small>
+		<div className={`valid-feedback ${value === originalValue ? "hidden": ""}`} onClick={handleClear}>
+			<i className="fa fa-cross" />
+		</div>
+	</div>
+)
+
 export default class NameInput extends React.Component {
 	constructor() {
 		super();
@@ -59,31 +69,9 @@ export default class NameInput extends React.Component {
 		}
 	}
 	render() {
-		return (
-			<div
-				className="form-group title clearable"
-				bssize="large"
-				name="thing-name"
-				validationstate={this.validationState}
-			>
-				<input
-					type="text"
-					value={this.props.value}
-					onChange={this.handleChange}
-				/>
-				<small>
-					{this.helpText}
-				</small>
-				<div className={`valid-feedback ${
-														this.props.value === this.props.originalValue
-															? "hidden"
-															: ""
-													}`}
-					onClick={this.handleClear}
-				>
-					<i className="fa fa-cross" />
-				</div>
-			</div>
-		);
+		return <NameInputDisplay state={this.validationState} value={this.props.value} helpText={this.helpText}
+			originalValue={this.props.originalValue}
+			handleChange={this.handleChange}
+			handleClear={this.handleClear} />;
 	}
 }
