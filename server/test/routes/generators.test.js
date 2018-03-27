@@ -190,7 +190,7 @@ describe('/api/pack/:pack/generator',()=>{
 					isa: 'test',
 					pack_id: pack._id
 				})
-				GenMock.expects('findById').chain('exec').resolves(generator._doc);
+				GenMock.expects('findById').chain('exec').resolves(generator);
 
 				return request.get('/api/pack/'+pack.id+'/generator/'+generator.id)
 					.expect(({body})=>{
@@ -213,6 +213,38 @@ describe('/api/pack/:pack/generator',()=>{
 			})
 			
 		});
+
+		describe('PUT', ()=>{
+
+			it('should rename the gen',()=>{
+				generator = new Generator({
+					isa: 'test',
+					pack_id: pack._id
+				})
+				GenMock.expects('findById').chain('exec').resolves(generator);
+
+				BPMock.expects('findById') //findOrBuild
+					.chain('exec')
+					.resolves(builtpack);
+
+				var newData = Object.assign({},generator._doc);
+				newData.isa = 'test2';
+
+				GenMock.expects('find')
+					.chain('exec')
+					.resolves([new Generator(newData)]);
+
+				return request.put('/api/pack/'+pack.id+'/generator/'+generator.id)
+					.send(newData)
+					.expect(({body})=>{
+						console.log(body);
+						body.should.have.property('isa','test2');
+					})
+					.expect('Content-Type', /json/)
+					.expect(200);
+			})
+
+		})
 
 	})
 
