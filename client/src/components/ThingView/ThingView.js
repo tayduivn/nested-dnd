@@ -247,38 +247,37 @@ export default class ThingView extends React.Component{
 		const isaStatus = this.getStatus("isa");
 		const nameUpdated = this.getStatus("name").isUpdated
 
-		if(DEBUG) {
-			console.log("ThingView RENDER");
-			console.log("\t validation: "+JSON.stringify(this.validation));
-		}
-
 		return <ThingViewDisplay {...this} {...this.props} {...this.state} />
 	}
 }
 
+const PrevChild = ({child, index}) => (
+	<li key={index}>
+		{(typeof child === "string") ? child : (child instanceof Array ) ? child.join(", ") : child.name }
+	</li>
+)
+
+const PreviewDisplay = ({children, cssClass, textColor, icon, name}) => (
+	<div id="preview">
+		<h5>PREVIEW</h5>
+		<div className={ children && children.length ? "child link" : "child"}>
+			<div className={"child-inner "+cssClass} style={{color:textColor}}>
+				<i className={icon}></i>
+				<h1>{name}</h1>
+			</div>
+		</div>
+		<ul>
+			{children}
+		</ul>
+	</div>
+)
+
 class Preview extends React.Component{
 	render(){
-		const t = this.props;
+		const contains = (this.props.thing) ? this.props.thing.getContains() : [];
+		const children = (contains) ? contains.map((c, i) =><PrevChild child={c} index={i} />) : [];
 
-		const contains = (t.thing) ? t.thing.getContains() : [];
-
-		const children = (contains) ? contains.map((child, i) => (<li key={i}>
-			{(typeof child === "string") ? child : (child instanceof Array ) ? child.join(", ") : child.name }
-		</li>)) : [];
-		
-		return (
-		<div id="preview">
-			<h5>PREVIEW</h5>
-			<div className={ children && children.length ? "child link" : "child"}>
-				<div className={"child-inner "+t.cssClass} style={{color:t.textColor}}>
-					<i className={t.icon}></i>
-					<h1>{t.name}</h1>
-				</div>
-			</div>
-			<ul>
-				{children}
-			</ul>
-		</div>);
+		return <PreviewDisplay {...this.props} children={children} />;
 	}
 }
 

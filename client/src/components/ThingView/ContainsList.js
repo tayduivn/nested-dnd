@@ -1,7 +1,7 @@
 import React from 'react'; 
 const DEBUG = false;
 
-const ListItem = ({ type, value, index, status, validationState, handleChange, handleClickThing, handleRemove, helpText}) => (
+const ListItem = ({ item, type, value, index, status, validationState, handleChange, handleClickThing, handleRemove, helpText}) => (
 	<div className="form-group" key={index} validationstate={validationState[index]}>
 		<div className={`input-group ${value ? "":"no-input-addons"}`}>
 			
@@ -140,7 +140,7 @@ class ContainsList extends React.Component {
 
 			var value = (typeof item === "string") ? item : JSON.stringify(item);
 
-			return <ListItem type={type} value={value} index={i} {...this} {...this.props} />
+			return <ListItem item={item} type={type} value={value} index={i} {...this} {...this.props} />
 		});
 
 

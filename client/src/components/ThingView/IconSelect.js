@@ -11,7 +11,7 @@ const animations = ["spin","spinReverse","pulse","flash","headShake","swing","ta
 const animationOptions = [<option key="placeholder" value=""></option>]
 	.concat(animations.map((anim) => <option value={anim} key={anim}>{anim}</option>))
 
-const IconSelectDisplay = ({status, validationState, iconArr, virtualSelect, handleChange, handleChangeAnim, handleClickChosen, animArr, renderIcon}) => (
+const IconSelectDisplay = ({status, validationState, iconArr, virtualSelect, handleChange, handleChangeAnim, handleClickChosen, animArr}) => (
 	<div className={status.isEnabled ? "" : "fake-disabled"}>
 		<div className="form-group m-0" validationstate={validationState}>
 			<label>Icon</label>
@@ -159,6 +159,8 @@ function replaceAnim(value, anim){
 	if(DEBUG && anim) console.log("\t\t IconSelect.replaceAnim -- "+value+": "+str)
 	return str;
 }
+
+
 
 function renderIcon({ focusedOption, focusedOptionIndex, focusOption, key, labelKey, option, options, optionIndex, selectValue, style, valueArray }) {
 	return (

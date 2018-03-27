@@ -30,7 +30,7 @@ export default class Page extends React.Component {
 			else if (card.category === "Spells") {
 				return <Spell index={index} card={card} />;
 			}
-			else if (card.category === "Items") {
+			else {
 				return <Item index={index} card={card} />
 			}
 		});
