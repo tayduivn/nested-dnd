@@ -36,15 +36,14 @@ describe('auth', ()=>{
 				.set('Accept', 'application/json')
 				.send( { email: TEST_USER, password: TEST_PASS } )
 				.expect('Content-Type', /json/)
-				.expect((res)=>{
-					console.log(res.body);
-					var user = res.body.user;
+				.expect(({body})=>{
+					var user = body.user;
 
 					user.should.have.property('_id')
 					user.should.have.property('local').with.property('email', TEST_USER)
 					user.should.have.property('name', 'test')
 					user.local.should.not.have.property('password');
-					res.body.should.have.property('loggedIn').that.is.true;
+					body.should.have.property('loggedIn').that.is.true;
 
 				})
 				.expect(200, done)

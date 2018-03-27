@@ -250,7 +250,7 @@ var char2 = {
       }
     }
 describe('Character',()=>{
-
+	
 	it('should load',()=>{
 		var v = new Character(char);
 		var v2 = new Character(char2);

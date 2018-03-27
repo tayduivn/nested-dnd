@@ -90,7 +90,6 @@ describe('/api/packs', ()=>{
 				.expect('Content-Type', /json/)
 				.expect(200)
 				.expect(({body})=>{
-					console.log(body);
 					body.should.have.property('name', 'animals');
 					body.should.have.property('_user', USER_ID);
 				});

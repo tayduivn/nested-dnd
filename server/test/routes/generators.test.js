@@ -15,54 +15,54 @@ const BuiltPack = require('../../app/models/builtpack');
 
 describe('/api/pack/:pack/generator',()=>{
 
-	var PackMock, BPMock, GenMock;
+	var PackMock, BPMock, GenMock, user, pack, builtpack;
 
 	before(()=>{
 		PackMock = sinon.mock(Pack);
 		BPMock = sinon.mock(BuiltPack);
 		GenMock = sinon.mock(Generator);
+
+		//canEditPack
+		sinon.stub(MW, 'getLoggedInUser').callsFake((req, res, next)=>{
+			req.user = user;
+			next();
+		});
+	})
+
+	beforeEach(()=>{
+		user = new User();
+		pack = new Pack({
+			title: 'Test Pack',
+			_user: user.id
+		});
+		builtpack = new BuiltPack({ //findOrBuild
+			_id: pack._id
+		}); 
 	})
 
 	after(()=>{
+		
 		Pack.findOne.restore(); //canEditPack
 		MW.getLoggedInUser.restore(); //canEditPack
 		BuiltPack.findById.restore();
 		Generator.find.restore();
+		Generator.findById.restore();
 	})
 
 	describe('POST', ()=>{
 
-		var dogeData, pack, user, builtpack;
-
-		before(()=>{
-			//canEditPack
-			sinon.stub(MW, 'getLoggedInUser').callsFake((req, res, next)=>{
-				req.user = user;
-				next();
-			});
-		})
-
-		beforeEach(()=>{
-			user = new User(); //canEditPack
-			pack = new Pack({
-				title: 'Test Pack',
-				_user: user.id
-			});
-			builtpack = new BuiltPack({ //findOrBuild
-				_id: pack._id
-			}); 
-
-			dogeData = {
-				"pack_id": pack.id,
-				"isa": "doge",
-				"style": {
-					"icon":{
-						"value": "dog"
-					}
+		var dogeData = {
+			"isa": "doge",
+			"style": {
+				"icon":{
+					"value": "dog"
 				}
 			}
+		}
 
-		})
+		beforeEach(()=>{
+			dogeData.pack_id = pack.id;
+		});
 
 		it('creates correctly',()=>{
 			pack._user = user;
@@ -189,5 +189,39 @@ describe('/api/pack/:pack/generator',()=>{
 		});
 
 	});
+
+	describe('/:id', ()=> {
+
+		var generator;
+
+		describe('GET', ()=>{
+
+			it('should get the gen',()=>{
+				generator = new Generator({
+					isa: 'test',
+					pack_id: pack._id
+				})
+				GenMock.expects('findById').chain('exec').resolves(generator);
+
+				request.get('/api/pack/'+pack.id+'/generator'+generator.id)
+					.expect('Content-Type', /json/)
+					.expect(({body})=>{
+						body.should.have.property('isa','test');
+					})
+					.expect(200);
+			})
+
+			it('should return 404',()=>{
+				GenMock.expects('findById').chain('exec').resolves(undefined);
+				request.get('/api/pack/'+pack.id+'/generator/fake')
+					.expect('Content-Type', /json/)
+					.expect(404);
+			})
+			
+		});
+
+	})
+
+
 
 });

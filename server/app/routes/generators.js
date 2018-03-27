@@ -12,8 +12,6 @@ module.exports = function(app) {
 		var newGenerator = req.body;
 		newGenerator.pack_id = req.pack._id;
 
-		// TODO: Check that in with generator type provide a valid ID
-
 		Generator.insertNew(newGenerator, req.pack).then((newGenerator)=>{
 			return res.json(newGenerator);
 		}).catch(next);
@@ -21,24 +19,16 @@ module.exports = function(app) {
 
 	// Read Generator
 	// ---------------------------------
-	app.get("/api/pack/:pack/generator/:id", utils.canViewPack, (req, res) => {
-		Generator.findById(req.params.id).exec((err, generator) => {
-			if (err) return res.status(404).json(err);
-			if(!generator) return res.status(404).json({ "error": "Couldn't find generator "+req.params.id });
-
+	app.get("/api/pack/:pack/generator/:id", utils.canViewPack, (req, res, next) => {
+		getById(req.params.id).then(generator => {
 			return res.json(generator);
-		});
+		}).catch(next);
 	});
 
 	app.get("/api/pack/:pack/generate/:isa", utils.canViewPack, (req, res, next) => {
-
-		BuiltPack.findOrBuild(req.pack).then((builtpack)=> {
-			var gen = builtpack.getGen(req.params.isa);
-			if(!gen) 
-				return res.status(404).json("Can't find a generator that is a "+req.params.isa);
-
-			Generator.make(gen, builtpack).then(result=>res.json(result));
-
+		getByIsa(req.pack).then(async (builtpack)=> {
+			var newGen = await Generator.make(gen, builtpack)
+			res.json(newGen);
 		}).catch(next)
 	});
 
@@ -55,9 +45,7 @@ module.exports = function(app) {
 
 		newVals.updated = Date.now();
 
-		Generator.findById(req.params.id).exec().then(async (generator)=> {
-			if(!generator) return res.status(404).json(err);
-			
+		getById(req.params.id).then(async (generator) => {
 			var oldVals = Object.assign({},generator._doc);
 			generator.set(newVals);
 
@@ -88,3 +76,35 @@ module.exports = function(app) {
 	});
 
 };
+
+/**
+ * Gets a generator by ID
+ * @param  {string} id the id
+ * @return {Generator}   the generator
+ */
+async function getById(id){
+	var gen = await Generator.findById(id).exec();
+	if(!gen) {
+		var err = new Error("Couldn't find generator "+id)
+		err.status = 404;
+		throw err;
+	}
+	return gen;
+}
+
+/**
+ * Gets a generator by isa
+ * @param  {string} isa  the isa name
+ * @param  {Pack} the current pack
+ * @return {Generator}   the generator
+ */
+async function getByIsa(isa, pack){
+	var builtpack = await BuiltPack.findOrBuild(pack);
+	var gen = builtpack.getGen(isa);
+	if(!gen) {
+		var err = new Error("Can't find a generator that is a "+isa)
+		err.status = 404;
+		throw err;
+	}
+	return gen;
+}
