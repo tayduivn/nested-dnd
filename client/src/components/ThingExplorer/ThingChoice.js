@@ -1,7 +1,5 @@
 import React from "react";
 
-const DEBUG = false;
-
 class NewThingForm extends React.Component {
 	constructor() {
 		super();

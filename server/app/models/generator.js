@@ -200,7 +200,7 @@ function mergeStyle(arr, labels){
 		else
 			style[labels[i]] = val;
 	})
-	style.cssClass = style.cssClass.join(" ");
+	style.cssClass = style.cssClass.join(" ").trim();
 	return style;
 }
 

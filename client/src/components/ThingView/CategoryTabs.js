@@ -27,8 +27,8 @@ const ThingFunc = ({func, label, str, rows}) => (
 	</div>
 );
 
-const Display = ({props, key, handleSelect}) => (
-	<div className="nav nav-tabs" activekey={key} onSelect={handleSelect} id="controlled-tab-example"
+const Display = ({props, activekey, handleSelect}) => (
+	<div className="nav nav-tabs" activekey={activekey} onSelect={handleSelect} id="controlled-tab-example"
 		mountonenter="true">
 		<div className="nav-item" eventkey={1} title="Style">
 			<StyleTab {...props} />
@@ -86,6 +86,6 @@ export default class CategoryTabs extends React.Component{
 	}
 
 	render() {
-		return <Display props={this.props} key={this.state.key} handleSelect={this.handleSelect} />
+		return <Display props={this.props} activekey={this.state.key} handleSelect={this.handleSelect} />
 	}
 };

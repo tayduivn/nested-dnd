@@ -7,7 +7,7 @@ require('sinon-mongoose');
 require('babel-register')();
 require('ignore-styles');
 require('es6-promise').polyfill();
-require('isomorphic-fetch');
+//require('isomorphic-fetch');
 
 enzyme.configure({ adapter: new Adapter() });
 
@@ -114,6 +114,19 @@ app.use("/api", function(req, res, next){
 	return;
 });
 global.app = app;
+
+global.fetchReturn = {};
+
+global.fetch = window.fetch = function(){
+	return Promise.resolve({
+		body: {},
+		status: 200,
+    headers: {
+      get: ()=>{return 'application/json'}
+    },
+    json: ()=>Promise.resolve(global.fetchReturn)
+	});
+};
 
 // stubs 
 // 

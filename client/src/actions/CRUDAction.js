@@ -19,7 +19,7 @@ const URL_PREFIX = "/api/";
 /**
  * Always returns a promise, which returns { err, data }
  */
-var DB = {
+const DB = {
 	fetch: (url, method, headers)=>{
 		headers = setHeader(method, headers);
 		url = url.replace(/^\//, ''); // get rid of extra slash
@@ -73,7 +73,7 @@ function handleError(error){
 
 async function getResponse(response){
 
-	var { data, error } = parseResponse(response);
+	var { data, error } = await parseResponse(response);
 
 	if(response.status === 404){
 		error = "Not found";
@@ -110,6 +110,6 @@ async function parseResponse(response){
 			message: await response.text()
 		}
 	}
-	return { data , error };
+	return { data, error };
 }
 export default DB;

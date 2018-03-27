@@ -82,8 +82,10 @@ styleSchema.methods.makePattern = async function(){
 };
 
 styleSchema.methods.strToColor = function(str) {
+	var bgColor = this.makeBackgroundColor();
+
 	if(typeof str !== 'string')
-		return this.makeBackgroundColor();
+		return bgColor;
 
 	var colors = "multicolored|opaline|rainbow|red|magenta|orange|yellow|teal|green|blue|turquoise|purple|gold|golden|glowing|shimmering|luminous|faint|white|black|brown|pale|silver|silvery|gray|tan|grey|pink|shady|sharkverse|baconverse|doughnutverse|lasagnaverse";
 
@@ -93,7 +95,7 @@ styleSchema.methods.strToColor = function(str) {
 	if(matches && matches[1])
 		str = matches[1];
 	else
-		return "";
+		return bgColor;
 
 	str = str.trim();
 
@@ -102,7 +104,7 @@ styleSchema.methods.strToColor = function(str) {
 			str = colorConvert[oldColor];
 	}
 
-	return str.length ? str : this.makeBackgroundColor();
+	return str.length ? str : bgColor;
 }
 
 function makeIt(value){

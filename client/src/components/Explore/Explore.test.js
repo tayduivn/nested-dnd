@@ -6,6 +6,7 @@ import sinon, { spy } from 'sinon';
 
 import Explore from './Explore';
 import ExplorePage from './ExplorePage';
+import Ancestors from './Ancestors';
 import Splash from './Splash';
 import { createMemoryHistory } from 'history';
 
@@ -28,25 +29,46 @@ const current = {
 	]
 };
 
-sinon.stub(DB, "get").callsFake(()=>{
-	return Promise.resolve({error: null, data: current})
-})
-
 spy(Explore.prototype, 'componentDidMount');
 
 describe('<Explore />', () => {
 
-  it('calls componentDidMount', () => {
-  	const history = createMemoryHistory();
-  	history.location.state = current;
-    var wrap = mount(
-    	<Router history={history}>
-    		<Route path='/' component={Explore} />
-    	</Router>
-    );
-    wrap.update();
-    expect(Explore.prototype.componentDidMount.calledOnce).to.equal(true);
-  });
+	var wrap; 
+
+	before(()=>{
+		const history = createMemoryHistory();
+		history.location.state = current;
+		wrap = mount(
+			<Router history={history}>
+				<Route path='/' component={Explore} />
+			</Router>
+		);
+
+		global.fetchReturn = current;
+
+	});
+
+	after(()=>{
+		global.fetchReturn = {};
+	})
+
+	it('calls componentDidMount', () => {
+		wrap.update();
+		expect(Explore.prototype.componentDidMount.calledOnce).to.equal(true);
+	});
+
+	it('sets current',(done)=>{
+		
+		var explore = wrap.find(Explore).instance();
+		setImmediate(()=>{
+			var current = explore.state.current;
+			explore.state.should.have.property('error',null);
+			current.should.have.property('isa','test');
+			done();
+		})
+
+		
+	})
 
 });
 
@@ -63,14 +85,37 @@ describe('<ExplorePage />', () =>{
 describe('<Splash />', () =>{
 
 	it('calls componentDidMount', () => {
-  	const history = createMemoryHistory();
-  	history.location.state = current;
-    mount(
-    	<Router history={history}>
-    		<Route path='/' component={Splash} />
-    	</Router>
-    );
-    expect(Explore.prototype.componentDidMount.calledOnce).to.equal(true);
-  });
+		const history = createMemoryHistory();
+		history.location.state = current;
+		mount(
+			<Router history={history}>
+				<Route path='/' component={Splash} />
+			</Router>
+		);
+		expect(Explore.prototype.componentDidMount.calledOnce).to.equal(true);
+	});
+
+});
+
+
+describe('<Ancestors />', () =>{
+
+	it('renders single button', (done) => {
+		var wrapper = mount(<Ancestors handleClick={()=>{}} ancestors={[{name: 'test', index: 0}]} />)
+		setImmediate(()=>{
+			expect(wrapper.find('button')).to.have.lengthOf(1);
+			done();
+		})
+		
+	});
+
+	it('renders split button', (done) => {
+		var wrapper = mount(<Ancestors handleClick={()=>{}} ancestors={[{name: 'test', index: 0}, {name: 'hello',index:1}]} />)
+		setImmediate(()=>{
+			expect(wrapper.find('button')).to.have.lengthOf(3);
+			done();
+		})
+		
+	});
 
 });

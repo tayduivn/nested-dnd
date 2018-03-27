@@ -48,8 +48,11 @@ var Maker = {
 		gen = cleanGen(gen, builtpack);
 
 		// make a new node if doesn't exist yet
-		if(!node)
-			node = new Nested(await gen.makeName, gen, await gen.makeStyle(name));
+		if(!node){
+			let name = await gen.makeName;
+			let style = await gen.makeStyle(name);
+			node = new Nested(name, gen, style);
+		}
 
 		if(!generations || !gen.in || !gen.in.length) 
 			return node;
@@ -93,7 +96,7 @@ var Maker = {
 		var amount = child.makeAmount;
 
 		var {gen,table} = await checkTypes(child, Table, builtpack)
-				.catch(()=>{ amount = 0; return {} });
+			.catch(()=>{ amount = 0; return {} });
 
 		if(!amount || !child.isIncluded) return [];
 

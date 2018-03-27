@@ -131,6 +131,7 @@ i.gi{
 			.wrap h1, .wrap i{
 				display: inline;
 				font-size: 1.7em;
+				font-weight: normal;
 				margin: 0 0.25em;
 			}
 		}
@@ -144,6 +145,10 @@ i.gi{
 		&.empty{ // so they don't look clickable
 			background: transparent !important;
 			color: inherit !important;
+
+			i{
+				vertical-align: sub;
+			}
 		}
 
 		

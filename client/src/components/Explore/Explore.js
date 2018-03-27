@@ -35,14 +35,14 @@ export default class TreeManager extends Component {
 		var index = this.getIndexFromHash(this.props);
 		var _this = this;
 
-		DB.get(this.props.location.pathname, index)
+		return DB.get(this.props.location.pathname, index)
 			.then(({ error, data: current })=>{
 
 				if(error){
 					_this.setState({ error: error.display });
 				}
 
-				else{
+				else if(current){
 					var lookup = this.state.lookup;
 					lookup[current.index] = current;
 					_this.setCurrent({ current , lookup, error });
