@@ -27,6 +27,7 @@ var packSchema = Schema({
 	url: {
 		type: String
 	},
+	font: String,
 	desc: String,
 	seed: {
 		type: String,
@@ -46,7 +47,7 @@ var packSchema = Schema({
 	dependencies: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Pack'
-	}], // packs
+	}] // packs
 });
 
 // remove related data on delete

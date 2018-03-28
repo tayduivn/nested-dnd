@@ -18,14 +18,16 @@ const LOADING = (
 	</div>);
 
 const ExplorePage = ({ name, isa, cssClass, in: inArr, txt, up, icon, font, handleClick, handleRestart }) => (
-	<div className={`main pt-5 container-fluid ${cssClass}`} style={{color:txt}}>
-		<h1 id="title">
+	<div className={`main container-fluid ${cssClass}`} style={{color:txt}}>
+		<h1 id="title" className="mt-3">
 			<Ancestors ancestors={up ? up : []} handleClick={handleClick} pageClass={cssClass} />{"  "}
-			<i className={icon}></i>{" "}
-			<span className="webfont" style={(font) ? {fontFamily:font+', sans-serif'} : {}}>
-				{name ? name : isa}
-			</span>
-			<button className="btn btn-lg pull-right" onClick={handleRestart}>Restart</button>
+			<div className="name">
+				<i className={icon}></i>{" "}
+				<span className="webfont" style={(font) ? {fontFamily: `'${font}', sans-serif`} : {}}>
+					{name ? name : isa}
+				</span>
+			</div>
+			<button className="resetBtn btn btn-lg" onClick={handleRestart}>Restart</button>
 		</h1>
 		{ 
 			inArr === true ? LOADING : 

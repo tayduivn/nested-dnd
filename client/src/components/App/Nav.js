@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import './Nav.css';
 
 const NavRender = ({loggedIn, handleLogout}) => (
-	<nav className="navbar navbar-dark fixed-top navbar-expand-lg">
+	<nav className="navbar navbar-dark navbar-expand-lg">
 		<Link className="navbar-brand" to="/">Nested D&D</Link>
 		<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
 			<span className="navbar-toggler-icon"></span>
@@ -28,9 +28,9 @@ const NavRender = ({loggedIn, handleLogout}) => (
 					</li>
 				) : (
 					<li className="nav-item">
-						<Link className="nav-link" onClick={handleLogout}>
+						<a className="nav-link" href="#" onClick={handleLogout}>
 							Logout
-						</Link>
+						</a>
 					</li>
 				)}
 			</ul>

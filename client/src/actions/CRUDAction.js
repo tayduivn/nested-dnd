@@ -45,9 +45,9 @@ function setHeader(method, headers){
 	if(!headers && !method) return HEADERS;
 
 	if(headers){
-		headers.body = (headers.body instanceof FormData) ? headers.body = formDataTOJson(headers.body) 
-				: (headers.body instanceof Object) ? JSON.stringify(headers.body) 
-				: headers.body;
+		if(headers.body instanceof FormData) 
+			headers.body = formDataTOJson(headers.body);
+		headers.body = (headers.body instanceof Object) ? JSON.stringify(headers.body) : headers.body;
 	}
 
 	return Object.assign({}, HEADERS, {method: method || "GET"}, headers);

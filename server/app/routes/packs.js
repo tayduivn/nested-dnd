@@ -61,9 +61,9 @@ module.exports = function(app) {
 	// Read Pack
 	// ---------------------------------
 	app.get("/api/pack/:pack", MW.canViewPack, (req, res, next) => {
-		Generator.find({pack_id: req.pack.id}).then((gens)=>{
+		Generator.find({pack_id: req.pack.id}).select('isa extends id').then((gens)=>{
 			req.pack.generators = gens;
-			return res.json(Object.assign({},req.pack._doc,{ generators: gens }));
+			return res.json(Object.assign({},req.pack._doc,{ generators: gens, isOwner: req.pack._user.id === req.user.id }));
 		}).catch(next);
 	});
 

@@ -6,36 +6,30 @@ const renderMergedProps = (component, ...rest) => {
 	return React.createElement(component, finalProps);
 };
 
-const PrivateRoute = ({ component, redirectTo, ...rest }) => {
-	return (
-		<Route
-			{...rest}
-			render={routeProps => {
-				return this.props.loggedIn ? (
-					renderMergedProps(component, routeProps, rest)
-				) : (
-					<Redirect
-						to={{
-							pathname: redirectTo,
-							state: { from: routeProps.location }
-						}}
-					/>
-				);
-			}}
-		/>
-	);
-};
+const PrivateRoute = ({ component, redirectTo, ...rest, loggedIn }) => (
+	<Route
+		{...rest}
+		render={routeProps => {
+			return loggedIn ? (
+				renderMergedProps(component, routeProps, rest)
+			) : (
+				<Redirect
+					to={{
+						pathname: redirectTo,
+						state: { from: routeProps.location }
+					}}
+				/>
+			);
+		}}
+	/>
+);
 
-const PropsRoute = ({ component, ...rest }) => {
-	return (
-		<Route
-			{...rest}
-			render={routeProps => {
-				return renderMergedProps(component, routeProps, rest);
-			}}
-		/>
-	);
-};
+const PropsRoute = ({ component, ...rest }) => (
+	<Route {...rest} render={routeProps => {
+			return renderMergedProps(component, routeProps, rest);
+		}}
+	/>
+);
 
 
 

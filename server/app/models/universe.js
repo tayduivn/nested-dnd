@@ -92,22 +92,31 @@ universeSchema.statics.getTemp = async function(session_id, pack, index){
 		universe.expires = Date.now();
 		universe.lastSaw = nested.index;
 		universe.save();
-		return nested;
+
+		return addPackInfo(nested, pack);
 	}
 
 	// pack doesn't exist, build it and return the root
-	else{
-		var { universe, nested } = await this.build(pack);
-		var nestedSeed = pack.getSeedFromTree(nested);
+	var { universe, nested } = await this.build(pack);
+	var nestedSeed = pack.getSeedFromTree(nested);
 
-		universe.session_id = session_id;
-		universe.expires = Date.now();
-		universe.lastSaw = nestedSeed.index;
-		universe.save();
-		
-		return nestedSeed;
-	}
+	universe.session_id = session_id;
+	universe.expires = Date.now();
+	universe.lastSaw = nestedSeed.index;
+	universe.save();
+	
+	return addPackInfo(nestedSeed, pack);
+
 }
 
+/**
+ * Adds the pack information to the root node that you are returning
+ * @param {Nested} nested The node
+ * @param {Pack} pack   the pack
+ */
+function addPackInfo(nested, pack){
+	nested.font = pack.font;
+	return nested;
+}
 
 module.exports = mongoose.model('Universe', universeSchema);

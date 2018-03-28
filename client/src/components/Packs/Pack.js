@@ -14,32 +14,35 @@ const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
 /**
  * View a Pack
  */
-const ViewPack = ({name, _id, user_id: user, url, defaultSeed, isOwner, public: isPublic, loggedIn, generators}) => (
+const ViewPack = ({name, _id, _user: user, url, defaultSeed, isOwner, public: isPublic, loggedIn, generators, font}) => (
 	<div className="container">
 		{/* --------- Name ------------ */}
 		<h1>{name}</h1>
 		
 		{/* --------- Edit Button ------------ */}
-		{loggedIn ? (
+		{!isOwner ? null : (
 			<Link to={"/packs/" + _id + "/edit"}>
 				<button className="btn btn-primary">
 					Edit Pack
 				</button>
 			</Link>
-		) : null}
+		)}
 
 		<ul>
 			{/* --------- Author ------------ */}
-			{ !isOwner ? (
+			{ isOwner ? null : (
 				<li>
 					<strong>Author: </strong>
 					<Link to={"/user/" + user._id}>{user.name}</Link>
 				</li>
-			) : null}
+			)}
 
 			{/* --------- Public ------------ */}
 			<li>{isPublic ? "Public" : "Private"}</li>
 			{url ? <li><Link to={"/explore/"+url}>Explore</Link></li> : null}
+
+			{/* --------- Font ------------ */}
+			<li>Font: {font}</li>
 
 			{/* --------- Default Seed ------------ */}
 			{defaultSeed ? (
@@ -55,17 +58,18 @@ const ViewPack = ({name, _id, user_id: user, url, defaultSeed, isOwner, public: 
 		{/* --------- Generators ------------ */}
 		<div>
 			<h2>Generators</h2>
+			{ !isOwner ? null :
+				<Link to={"/packs/" + _id + "/generator/create"}>
+					<button className="btn btn-primary">
+						Add Generator
+					</button>
+				</Link>
+			}
 			<ul>
 				{generators.map((gen, i) =>{
 					return <li key={i}><Link to={'/packs/'+_id+"/generator/"+gen._id}>{gen.isa} {gen.extends ? '  ('+gen.extends+')' : ""}</Link></li>
 				})}
 			</ul>
-
-			<Link to={"/packs/" + _id + "/generator/create"}>
-				<button className="btn btn-primary">
-					Add Generator
-				</button>
-			</Link>
 		</div>
 
 	</div>
@@ -89,9 +93,8 @@ export default class Pack extends Component {
 		var params = this.props.match.params;
 		if (params.pack && !params.gen) {
 			DB.get("pack", params.pack).then(({error, data}) =>{
-					this.setState({ pack: data, error: error })
-				}
-			);
+				this.setState({ pack: data, error: error })
+			});
 		}
 	}
 	render() {
@@ -102,9 +105,9 @@ export default class Pack extends Component {
 		if (!this.state.pack && !showGen) return LOADING_GIF;
 
 		return (
-			<div>
+			<div  className="mt-5">
 				<PropsRoute exact path={`${match}`} component={ViewPack} {...this.state.pack} loggedIn={this.context.loggedIn} />
-				<PrivateRoute path={`${match}/edit`} component={EditPack} pack={this.state.pack}  />
+				<PrivateRoute path={`${match}/edit`} component={EditPack} pack={this.state.pack} redirectTo="/login" loggedIn={this.context.loggedIn} />
 				<PropsRoute path={`${match}/generator/create`} component={EditGenerator} pack_id={this.props.match.params.pack} />
 				<PropsRoute path={`${match}/generator/:gen`} component={Generator} pack_id={this.props.match.params.pack} />
 			</div>

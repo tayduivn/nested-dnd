@@ -49,13 +49,14 @@ generatorSchema.methods.makeStyle = async function(name){
 
 	var arr = await Promise.all([
 		this.style.makeTextColor(),
-		this.style.noAutoColor ? this.style.makeBackgroundColor() : this.style.strToColor(name),
+		this.style.makeBackgroundColor(),
+		this.style.noAutoColor ? false : this.style.strToColor(name),
 		this.style.makeImage(),
 		this.style.makeIcon(),
 		this.style.makePattern()
 	]);
 
-	return mergeStyle(arr, ['txt','cssClass','img','icon','cssClass']);
+	return mergeStyle(arr, ['txt','bg', 'autoBG', 'img','icon','cssClass']);
 }
 
 generatorSchema.virtual('makeName').get(function(){
@@ -194,12 +195,23 @@ function mergeStyle(arr, labels){
 	var style = {
 		cssClass: []
 	}
+	var bg, autoBG;
 	arr.forEach((val, i)=>{
 		if(labels[i] === 'cssClass')
 			style.cssClass.push(val);
+		else if(labels[i] === 'bg')
+			bg = val;
+		else if(labels[i] === 'autoBG')
+			autoBG = val;
 		else
 			style[labels[i]] = val;
 	})
+	if(autoBG){
+		style.cssClass.unshift(autoBG);
+		style.txt = undefined;
+	}else if(bg){
+		style.cssClass.unshift(bg);
+	}
 	style.cssClass = style.cssClass.join(" ").trim();
 	return style;
 }

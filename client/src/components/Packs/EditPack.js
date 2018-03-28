@@ -4,12 +4,55 @@ import PropTypes from "prop-types";
 import DB from '../../actions/CRUDAction';
 
 
+const Form = ({isCreate, name, public: isPublic, url, seed, font, handleSubmit, handleDelete}) => (
+	<div className="container loginForm">
+		<h1>{ !isCreate ? "Create" : "Edit"} Pack</h1>
+		<form onSubmit={handleSubmit}>
+
+			{/* --------- Name ------------ */}
+			<div className="form-group">
+				<label>Name</label>
+				<input defaultValue={name} required name="name" className="form-control" />
+			</div>
+
+			{/* --------- Public ------------ */}
+			<div className="form-check">
+				<label className="form-check-label">
+					<input type="checkbox" defaultChecked={isPublic} name="public" className="form-check-input"/>
+					Make Public
+				</label>
+			</div>
+			<div className="form-group">
+				<label>URL</label>
+				<input defaultValue={url} name="url" className="form-control" />
+			</div>
+
+			{/* --------- Font ------------ */}
+			<div className="form-group">
+				<label>Font</label>
+				<input defaultValue={font} name="font" className="form-control" />
+			</div>
+
+			{/* --------- Default Seed ------------ */}
+			<div className="form-group">
+				<label>Default Seed</label>
+				<input defaultValue={seed} name="seed" className="form-control" />
+			</div>
+
+			{/* --------- Dependencies: TODO ------------ */}
+			<button type="submit" className="btn btn-primary">Save</button>
+			&nbsp;&nbsp;
+			{!isCreate ? null : (<button type="button" className="btn btn-outline-danger" onClick={ handleDelete }>
+				<i className="fa fa-trash" /> Delete Pack
+			</button>)}
+		</form>
+	</div>
+);
+
 export default class EditPack extends Component {
-	static get propTypes(){
-		return {
-			"pack": PropTypes.object,
-			"history": PropTypes.object.isRequired
-		}
+	static propTypes ={
+		"pack": PropTypes.object,
+		"history": PropTypes.object.isRequired
 	}
 	constructor(){
 		super();
@@ -29,57 +72,26 @@ export default class EditPack extends Component {
 		}
 
 		if(isCreate){
-			DB.create("pack", formData, function(updatedPack){
+			DB.create("pack", formData).then(({data: updatedPack, error})=>{
 				history.push('/packs/'+updatedPack._id);
 			});
 		}
 		else{
-			DB.set("pack", this.props.pack._id, formData, (updatedPack) => {
+			DB.set("pack", this.props.pack._id, formData).then(({data: updatedPack, error})=>{
 				history.push('/packs/'+updatedPack._id);
 			})
 		}
 	}
 	handleDelete(){
+		var confirmed = window.confirm("Are you sure you want to delete this pack?");
+		if(!confirmed) return;
+
 		DB.delete("pack", this.props.pack._id, () => {
 			this.props.history.push('/packs');
 		});
 	}
 	render() {
-		const isCreate = !this.props.pack;
-		const pack = this.props.pack || {};
-
-		return (
-			<div className="container">
-				<h1>{ isCreate ? "Create" : "Edit"} Pack</h1>
-				<form onSubmit={this.handleSubmit}>
-
-					{/* --------- Name ------------ */}
-					<div className="form-group">
-						<label>Name</label>
-						<input value={pack.name} required name="name" />
-					</div>
-
-					{/* --------- Public ------------ */}
-					<input type="checkbox" checked={pack.public} name="public">Make Public</input>
-					<div className="form-group">
-						<label>URL</label>
-						<input vlue={pack.url} name="url" />
-					</div>
-
-					{/* --------- Default Seed ------------ */}
-					<div className="form-group">
-						<label>Default Seed</label>
-						<input value={pack.defaultSeed} name="defaultSeed" />
-					</div>
-
-					{/* --------- Dependencies: TODO ------------ */}
-
-					<button type="submit" className="btn btn-primary">Save</button>
-
-
-					<button className="btn btn-danger" onClick={ this.handleDelete }>Delete Pack</button>
-				</form>
-			</div>
-		);
+		return <Form {...this.props.pack} isCreate={!!this.props.pack} 
+			handleSubmit={this.handleSubmit} handleDelete={this.handleDelete} />;
 	}
 }

@@ -159,9 +159,11 @@ export default class TreeManager extends Component {
 	handleClick(child){
 		var lookup = this.state.lookup;
 
-		if(child.in === true){
+		if(child.in === true){ // opening for the first time
 			if(lookup[child.index])
 				child = lookup[child.index];
+			else
+				child.font = this.state.current.font;
 		}else{
 			lookup[child.index] = child;
 		}
@@ -185,7 +187,7 @@ export default class TreeManager extends Component {
 			return <div className="main">{this.state.error}</div>;
 
 		if(!this.state.current) 
-			return <div className="main mt-5">{LOADING}</div>
+			return <div className="main pt-5">{LOADING}</div>
 
 		return (
 			<ExplorePage {...this.state.current} 

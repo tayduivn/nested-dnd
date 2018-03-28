@@ -12,10 +12,12 @@ h1,h2,h3,h4,h5{
 html, body {
 	margin: 0;
 	height: 100%;
+
 }
 
 #root, .App{
 	height:100%;
+	position:relative;
 }
 
 
@@ -205,6 +207,17 @@ html, body {
 .main {
 	padding-top: ($navbar-brand-height+$navbar-brand-padding-y*2)+($navbar-padding-y*2);
   min-height: 100%;
+
+  &.whiteBG:before{
+  	content: '';
+  	width:100%;
+  	height: $totalNavHeight;
+  	background-color: white;
+  	position: fixed;
+  	top:0;
+  	left:0;
+  	display:block;
+  }
 }
 
 // end main---------------------------------------

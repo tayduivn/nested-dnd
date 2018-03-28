@@ -11,7 +11,7 @@ import EditPack from "./EditPack";
 
 const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
 
-const PackLink = ({_id, name}) => <li key={_id} ><Link to={"/packs/"+_id}>{name}</Link></li>
+const PackLink = ({_id, name}) => <li><Link to={"/packs/"+_id}>{name}</Link></li>
 
 const MyPacks = ({myPacks}) => (
 	<div>
@@ -19,14 +19,14 @@ const MyPacks = ({myPacks}) => (
 		{myPacks === null ? LOADING_GIF : ""}
 		{myPacks && myPacks.length === 0 ? <p>You have not created any packs yet</p>: ""}
 		<ul>
-			{(myPacks) ? myPacks.map((p)=>PackLink) : null}
+			{(myPacks) ? myPacks.map((p)=><PackLink key={p._id} {...p} />) : null}
 		</ul>
 		<button className="btn btn-primary" href="/packs/create">Create a New Pack</button>
 	</div>
 );
 
 const Display = ({loggedIn, error, data, publicPacks}) => (
-	<div className="container">
+	<div className="container mt-5">
 		<h1>Packs</h1>
 
 		{ loggedIn ? <MyPacks myPacks={data ? data.myPacks : null} /> : null }
@@ -38,7 +38,7 @@ const Display = ({loggedIn, error, data, publicPacks}) => (
 
 		{publicPacks && publicPacks.length === 0 ? <p>There are no public packs to display</p> : null}
 		<ul>
-			{(publicPacks) ? publicPacks.map((p)=>PackLink) : null}
+			{(publicPacks) ? publicPacks.map(p=><PackLink key={p._id} {...p} />) : null}
 		</ul>
 	</div>
 )
@@ -65,7 +65,7 @@ class PackList extends Component{
 }
 
 const Packs = ({ match }) => (
-	<div className="main mt-5">
+	<div className="main">
 		<Route exact path={match.url} component={PackList} />
 		<PrivateRoute path={`${match.url}/create`} component={EditPack}  />
 		<Route path={`${match.url}/:pack`} component={Pack}  />

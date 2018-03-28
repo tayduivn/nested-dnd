@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Route } from 'react-router-dom';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import sinon, { spy } from 'sinon';
+import { spy } from 'sinon';
 
 import Explore from './Explore';
 import ExplorePage from './ExplorePage';

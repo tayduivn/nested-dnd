@@ -100,9 +100,9 @@ function getPack(req, res, next){
 	var packGetter;
 
 	if(req.params.pack)
-		packGetter = Pack.findOne({ _id: req.params.pack }).populate('_user')
+		packGetter = Pack.findOne({ _id: req.params.pack }).populate('_user', "name id")
 	else if(req.params.url)
-		packGetter = Pack.findOne({ url: req.params.url }).populate('_user')
+		packGetter = Pack.findOne({ url: req.params.url }).populate('_user', "name id")
 	else return res.status(412).json({"error": "Missing pack id"});
 
 	packGetter.exec().then(pack=>{

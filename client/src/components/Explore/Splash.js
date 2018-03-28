@@ -17,7 +17,8 @@ const dnd = {
 	in: true,
 	cssClass: 'burlywood purty-wood',
 	name: 'Dungeons & Dragons',
-	font: 'IM Fell English SC'
+	font: 'IM Fell English SC',
+	txt: 'brown'
 }
 
 const Pack = ({pack}) => (

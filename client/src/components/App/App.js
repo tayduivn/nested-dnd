@@ -44,7 +44,7 @@ class App extends Component {
 	componentDidMount(){
 		DB.fetch("loggedIn").then((result) => {
 			if(result.data)
-				this.setState({ loggedIn: result.data.loggedIn })
+				this.setState({ loggedIn: !!result.data.loggedIn })
 		})
 	}
 	handleLogin(url, payload){

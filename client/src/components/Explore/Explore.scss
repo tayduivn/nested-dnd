@@ -10,7 +10,30 @@
 #title{
 	padding: 30px 15px 15px 15px;
 	margin: 0;
+	font-size: 2rem;
+	font-size: 2.3vw;
+
+	.name{
+		display: inline-block;
+	}
+
+	.resetBtn{
+		float: right;
+	}
+
+	@media (max-width: map-get($grid-breakpoints, "lg")) {
+		font-size: 4vw;
+
+		.name{
+			display: block;
+		}
+
+		.resetBtn{
+			float: none;
+		}
+	}
 }
+
 
 .dropdown-menu {
 		height: auto;
