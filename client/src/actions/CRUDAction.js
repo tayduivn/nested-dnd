@@ -88,11 +88,15 @@ async function getResponse(response){
 			delete data.error; // remove error from the return object
 		}
 		else if(!error){
-			error = true;
+			error = { success: false };
 		}
 	}
 
-	if(error) error.display = <ErrorDisplay {...error} />
+	if(error){
+		if(!(error instanceof Object))
+			error = { value: error }
+		error.display = <ErrorDisplay {...error} />
+	}
 
 	return { error, data }
 }

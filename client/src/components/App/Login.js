@@ -3,27 +3,42 @@ import PropTypes from "prop-types";
 
 import './Login.css'
 
-const DisplayLogin = ({title, handleSubmit, emailVaidation, handleChange, email, emailError, passwordValidation, password, passwordError}) => (
+const DisplayLogin = ({title, handleSubmit, emailValid, handleChange, email, emailError, passwordValid, password, passwordError, password2, password2Valid, password2Error}) => (
 	<div className="main container-fluid loginForm whiteBG">
-		<h1 className="mt-5">{title}</h1>
+		<h1 className="mt-5 mb-1">{title}</h1>
 		<form onSubmit={handleSubmit}>
-			<div className="form-group" name="email" validationstate={emailVaidation}>
-				<label htmlFor="email">Email</label>
-				<input id="email" className="form-control" 
+			<div className="form-group" name="email">
+				<label htmlFor="login_email">Email</label>
+				<input id="login_email" name="email"
+					className={`form-control ${emailValid === false ? 'is-invalid' : ''}`}
 					type="email" aria-describedby="emailHelp" placeholder="email" 
 					value={email} onChange={handleChange} required />
-				<small id="emailHelp">{emailError}</small>
+				<small id="emailHelp" className="invalid-feedback">{emailError}</small>
 			</div>
-			<div className="form-group" name="password" validationstate={passwordValidation}>
-				<label htmlFor="password">Password</label>
-				<input id="password" type="password" placeholder="password" className="form-control"
+			<div className="form-group" name="password">
+				<label htmlFor="first_password">Password</label>
+				<input id="first_password" type="password" placeholder="password" name="password"
+					className={`form-control ${passwordValid === false ? 'is-invalid' : ''}`}
 					autoComplete="new-password" aria-describedby="pwHelp"
 					value={password} 
 					onChange={handleChange} 
 					minLength="8"
 					required />
-				<small id="pwHelp">{passwordError}</small>
+				<small id="pwHelp" className="invalid-feedback">{passwordError}</small>
 			</div>
+			{ title === "Login" ? null :
+				<div className="form-group" name="confim_password">
+					<label htmlFor="confim">Confim password</label>
+					<input id="confim" type="password" placeholder="password" name="password2"
+						className={`form-control ${password2Valid === false ? 'is-invalid' : ''}`}
+						autoComplete="new-password" aria-describedby="pwHelp"
+						value={password2} 
+						onChange={handleChange} 
+						minLength="8"
+						required />
+					<small id="pwHelp" className="invalid-feedback">{password2Error}</small>
+				</div>
+			}
 			<button type="submit" className="btn btn-primary">Submit</button>
 		</form>
 	</div>
@@ -32,30 +47,46 @@ const DisplayLogin = ({title, handleSubmit, emailVaidation, handleChange, email,
 export default class Login extends Component {
 	state = {
 		email: "",
-		emailVaidation: null,
+		emailValid: null,
 		emailError: null,
 		password: "",
-		passwordValidation: null,
+		passwordValid: null,
 		passwordError: null,
+		password2: "",
+		password2Valid: null,
+		password2Error: null,
 		submitted: false
 	};
 
-	static get propTypes() {
-		return {
-			title: PropTypes.string,
-			handleLogin: PropTypes.func
-		};
-	}
+	static propTypes = {
+		title: PropTypes.string,
+		handleLogin: PropTypes.func
+	};
+
 	constructor(props){
 		super(props);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
 	handleChange(e){
-		this.setState({ [e.target.id]: e.target.value });
+		this.setState({ 
+			[e.target.name]: e.target.value, 
+			[e.target.name+"Valid"]: null,
+			[e.target.name+"Error"]: null,
+			submitted: false
+		});
 	}
 	handleSubmit(e){
 		e.preventDefault();
+
+		if(this.props.title !== "Login" && this.state.password !== this.state.password2){
+			this.setState({
+				password2Valid: false,
+				password2Error: "Passwords do not match"
+			})
+			return;
+		}
+
 		const payload = {
 			email: this.state.email,
 			password: this.state.password
@@ -63,12 +94,11 @@ export default class Login extends Component {
 		
 		this.props.handleLogin(this.props.location.pathname, payload)
 			.then(({ error, data: json })=>{
-				//only here if errors
 				let newState = {
-					emailVaidation: (json.emailError) ? "error" : null,
-					emailError: json.emailError,
-					passwordValidation: (json.passwordError) ? "error" : null,
-					passwordError: json.passwordError,
+					emailValid: (json && json.emailError) ? false : null,
+					emailError: json && json.emailError,
+					passwordValid: (json && json.passwordError) ? false : null,
+					passwordError: json && json.passwordError,
 					submitted: true
 				};
 				this.setState(newState);

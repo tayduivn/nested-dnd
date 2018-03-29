@@ -70,7 +70,7 @@ class App extends Component {
 						<Route path="/things" component={ThingExplorer} />
 						<Route path="/characters" component={Characters} />
 						<PropsRoute path="/login" component={Login} title="Login" handleLogin={this.handleLogin} />
-						<PropsRoute path="/signup" component={Login} title="Signup" handleLogin={this.handleLogin} />
+						<PropsRoute path="/signup" component={Login} title="Sign up" handleLogin={this.handleLogin} />
 						<PropsRoute path="/packs" component={Packs} />
 						<Route path="/explore/:packurl" component={Explore} />
 						<Route component={NotFound} />
