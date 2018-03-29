@@ -25,7 +25,7 @@ module.exports = function(app) {
 		}).catch(next);
 	});
 
-	app.get("/api/packs/:pack/make/:isa", utils.canViewPack, (req, res, next) => {
+	app.get("/api/packs/:pack/instances/:isa", utils.canViewPack, (req, res, next) => {
 		getByIsa(req.pack).then(async (builtpack)=> {
 			var newGen = await Generator.make(gen, builtpack)
 			res.json(newGen);

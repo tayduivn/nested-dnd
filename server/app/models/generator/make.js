@@ -113,8 +113,7 @@ var Maker = {
 			else if(child.value){
 				arr.push({ 
 					name: child.value,
-					up: [],
-					in: false
+					up: []
 				});
 			}
 		}

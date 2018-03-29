@@ -13,7 +13,12 @@ const flatInstanceSchema = Schema({
 	todo: Boolean,
 	in: {
 		type: [Number],
-	 	default: void 0
+	 	default: void 0,
+	 	set: (value)=>{
+	 		if(!value)
+	 			value = undefined;
+	 		return value;
+	 	}
 	}
 }, { _id: false });
 
@@ -30,7 +35,7 @@ flatInstanceSchema.methods.expand = function(generations){
 	node.up = expandUp.call(this);
 	
 	if(!generations || generations < 1){
-		node.in = !!(inArr && inArr.length) || this.todo;
+		node.in = ((inArr && inArr.length) ? true : undefined) || this.todo;
 		return node;
 	}
 
