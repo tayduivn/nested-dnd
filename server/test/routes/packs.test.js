@@ -9,12 +9,13 @@ require('sinon-mongoose');
 
 const MW = require('../../app/routes/middleware');
 const Pack = require('../../app/models/pack');
+const Generator = require('../../app/models/generator')
 const User = require('../../app/models/user');
 
 
 describe('/api/packs', ()=>{
 
-	var user, pack, packs, PackMock;
+	var user, pack, packs, PackMock, GenMock;
 
 	const USER_ID = '5ab53068b647d20b0c7b308a';
 
@@ -26,12 +27,15 @@ describe('/api/packs', ()=>{
 		});
 
 		PackMock = sinon.mock(Pack);
+		GenMock = sinon.mock(Generator);
 
 	})
 
 	after(()=>{
 		MW.getLoggedInUser.restore();
 		Pack.find.restore();
+		Pack.findOne.restore();
+		Generator.find.restore();
 	})
 
 	
@@ -82,7 +86,7 @@ describe('/api/packs', ()=>{
 		})
 
 		it('creates correctly', ()=>{
-			return request.post('/api/pack')
+			return request.post('/api/packs')
 				.set('Accept', 'application/json')
 				.send({
 					"name": "animals"
@@ -95,4 +99,38 @@ describe('/api/packs', ()=>{
 				});
 		});
 	})
+
+	describe('/:pack', ()=>{
+
+		before(()=>{
+			pack = new Pack({
+				_user:  123231,
+				title: 'test',
+				public: true
+			})
+			pack._user = new User();
+
+			GenMock.expects('find')
+				.chain('select')
+				.resolves([]);
+
+			PackMock.expects('findOne')
+				.chain('populate')
+				.chain('exec')
+				.resolves(pack)
+		});
+
+		describe('GET',()=>{
+
+			it('returns when not logged in',()=>{
+				//logged Out
+				user = undefined;
+
+				return request.get('/api/packs/123124')
+					.expect(200)
+			})
+		
+		})
+	})
+
 })

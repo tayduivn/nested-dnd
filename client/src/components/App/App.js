@@ -39,7 +39,7 @@ class App extends Component {
 		}
 	}
 	getChildContext(){
-		return { loggedIn: this.state.loggedIn };
+		return { loggedIn: !!this.state.loggedIn };
 	}
 	componentDidMount(){
 		DB.fetch("loggedIn").then((result) => {
@@ -50,13 +50,13 @@ class App extends Component {
 	handleLogin(url, payload){
 		return DB.create(url, payload).then((result) => {
 			var loggedIn = !result.error && result.data;
-			this.setState({ loggedIn: loggedIn });
+			this.setState({ loggedIn: !!loggedIn });
 			return result;
 		});
 	}
 	handleLogout(){
 		return DB.fetch('logout', "POST").then((result) => {
-			this.setState({ loggedIn: result.data.loggedIn })
+			this.setState({ loggedIn: !!result.data.loggedIn })
 			return result;
 		});
 	}

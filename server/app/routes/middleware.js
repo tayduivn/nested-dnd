@@ -32,7 +32,7 @@ module.exports = {
 		getPack(req, res, ()=>{
 			if(!req.pack)  return;
 
-			if(req.pack.public || req.pack._user.id === req.user.id) {
+			if(req.pack.public || (req.user && req.pack._user.id === req.user.id)) {
 				return next();
 			}
 			else {
@@ -50,7 +50,7 @@ module.exports = {
 
 			if(!req.pack)  return;
 
-			if(req.pack._user.id === req.user.id) {
+			if(req.user && req.pack._user.id === req.user.id) {
 				return next();
 			}
 			else {

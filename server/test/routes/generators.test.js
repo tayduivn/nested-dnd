@@ -13,7 +13,7 @@ const User = require('../../app/models/user');
 const Generator = require('../../app/models/generator');
 const BuiltPack = require('../../app/models/builtpack');
 
-describe('/api/pack/:pack/generator',()=>{
+describe('/api/packs/:pack/generator',()=>{
 
 	var PackMock, BPMock, GenMock, user, pack, builtpack;
 
@@ -84,7 +84,7 @@ describe('/api/pack/:pack/generator',()=>{
 				.chain('exec')
 				.resolves([new Generator(dogeData)]);
 
-			return request.post('/api/pack/'+pack.id+'/generator')
+			return request.post('/api/packs/'+pack.id+'/generators')
 				.send(dogeData)
 				.expect('Content-Type', /json/)
 				.expect(200)
@@ -114,7 +114,7 @@ describe('/api/pack/:pack/generator',()=>{
 				.chain('exec')
 				.resolves(builtpack);
 
-			return request.post('/api/pack/'+pack.id+'/generator')
+			return request.post('/api/packs/'+pack.id+'/generators')
 				.send(petstoreData)
 				.expect('Content-Type', /json/)
 				.expect(412)
@@ -164,7 +164,7 @@ describe('/api/pack/:pack/generator',()=>{
 				.chain('exec')
 				.resolves([new Generator(petstoreData)]);
 
-			return request.post('/api/pack/'+pack.id+'/generator')
+			return request.post('/api/packs/'+pack.id+'/generators')
 				.send(petstoreData)
 				.expect('Content-Type', /json/)
 				.expect(({body})=>{
@@ -192,7 +192,7 @@ describe('/api/pack/:pack/generator',()=>{
 				})
 				GenMock.expects('findById').chain('exec').resolves(generator);
 
-				return request.get('/api/pack/'+pack.id+'/generator/'+generator.id)
+				return request.get('/api/packs/'+pack.id+'/generators/'+generator.id)
 					.expect(({body})=>{
 						body.should.have.property('isa','test');
 					})
@@ -207,7 +207,7 @@ describe('/api/pack/:pack/generator',()=>{
 				})
 				GenMock.expects('findById').chain('exec').resolves(undefined);
 
-				return request.get('/api/pack/'+pack.id+'/generator/'+generator.id)
+				return request.get('/api/packs/'+pack.id+'/generators/'+generator.id)
 					.expect('Content-Type', /json/)
 					.expect(404);
 			})
@@ -234,7 +234,7 @@ describe('/api/pack/:pack/generator',()=>{
 					.chain('exec')
 					.resolves([new Generator(newData)]);
 
-				return request.put('/api/pack/'+pack.id+'/generator/'+generator.id)
+				return request.put('/api/packs/'+pack.id+'/generators/'+generator.id)
 					.send(newData)
 					.expect(({body})=>{
 						body.should.have.property('isa','test2');

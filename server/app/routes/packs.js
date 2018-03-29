@@ -60,10 +60,11 @@ module.exports = function(app) {
 
 	// Read Pack
 	// ---------------------------------
-	app.get("/api/pack/:pack", MW.canViewPack, (req, res, next) => {
+	app.get("/api/packs/:pack", MW.canViewPack, (req, res, next) => {
 		Generator.find({pack_id: req.pack.id}).select('isa extends id').then((gens)=>{
 			req.pack.generators = gens;
-			return res.json(Object.assign({},req.pack._doc,{ generators: gens, isOwner: req.pack._user.id === req.user.id }));
+			var isOwner = req.user && req.pack._user.id === req.user.id;
+			return res.json(Object.assign({}, req.pack._doc, { generators: gens, isOwner: isOwner }));
 		}).catch(next);
 	});
 
@@ -80,7 +81,7 @@ module.exports = function(app) {
 	// ---------------------------------
 
 	//TODO: Check public packs have unique names
-	app.post("/api/pack", MW.isLoggedIn, (req, res, next) => {
+	app.post("/api/packs", MW.isLoggedIn, (req, res, next) => {
 		var newPack = req.body;
 		newPack._user = req.user._id;
 		delete newPack.seed; //can't set, don't have any generators yet
@@ -92,7 +93,7 @@ module.exports = function(app) {
 
 	// Update Pack
 	// ---------------------------------
-	app.put("/api/pack/:pack", MW.canEditPack, (req, res, next) => {
+	app.put("/api/packs/:pack", MW.canEditPack, (req, res, next) => {
 		var newVals = req.body;
 
 		// validate exists
@@ -121,7 +122,7 @@ module.exports = function(app) {
 	// ---------------------------------
 
 	//TODO: Delete all the things and tables that belong to that pack
-	app.delete("/api/pack/:pack", MW.isLoggedIn, (req, res) => {
+	app.delete("/api/packs/:pack", MW.isLoggedIn, (req, res) => {
 		Pack.findOneAndRemove(
 			{ _id: req.params.pack, _user: req.user.id },
 			(err, doc) => {

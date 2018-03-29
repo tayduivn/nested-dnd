@@ -59,7 +59,7 @@ const ViewPack = ({name, _id, _user: user, url, defaultSeed, isOwner, public: is
 		<div>
 			<h2>Generators</h2>
 			{ !isOwner ? null :
-				<Link to={"/packs/" + _id + "/generator/create"}>
+				<Link to={"/packs/" + _id + "/generators/create"}>
 					<button className="btn btn-primary">
 						Add Generator
 					</button>
@@ -67,7 +67,7 @@ const ViewPack = ({name, _id, _user: user, url, defaultSeed, isOwner, public: is
 			}
 			<ul>
 				{generators.map((gen, i) =>{
-					return <li key={i}><Link to={'/packs/'+_id+"/generator/"+gen._id}>{gen.isa} {gen.extends ? '  ('+gen.extends+')' : ""}</Link></li>
+					return <li key={i}><Link to={'/packs/'+_id+"/generators/"+gen._id}>{gen.isa} {gen.extends ? '  ('+gen.extends+')' : ""}</Link></li>
 				})}
 			</ul>
 		</div>
@@ -92,7 +92,7 @@ export default class Pack extends Component {
 	componentDidMount() {
 		var params = this.props.match.params;
 		if (params.pack && !params.gen) {
-			DB.get("pack", params.pack).then(({error, data}) =>{
+			DB.get("packs", params.pack).then(({error, data}) =>{
 				this.setState({ pack: data, error: error })
 			});
 		}
@@ -101,15 +101,15 @@ export default class Pack extends Component {
 		var match = this.props.match.url;
 		var showGen = this.props.match.params.gen;
 
-		if(this.state.error) return <div className="alert alert-danger">{this.state.error}</div>
+		if(this.state.error) return this.state.error.display
 		if (!this.state.pack && !showGen) return LOADING_GIF;
 
 		return (
 			<div  className="mt-5">
 				<PropsRoute exact path={`${match}`} component={ViewPack} {...this.state.pack} loggedIn={this.context.loggedIn} />
 				<PrivateRoute path={`${match}/edit`} component={EditPack} pack={this.state.pack} redirectTo="/login" loggedIn={this.context.loggedIn} />
-				<PropsRoute path={`${match}/generator/create`} component={EditGenerator} pack_id={this.props.match.params.pack} />
-				<PropsRoute path={`${match}/generator/:gen`} component={Generator} pack_id={this.props.match.params.pack} />
+				<PropsRoute path={`${match}/generators/create`} component={EditGenerator} pack_id={this.props.match.params.pack} />
+				<PropsRoute path={`${match}/generators/:gen`} component={Generator} pack_id={this.props.match.params.pack} />
 			</div>
 		)
 		

@@ -20,7 +20,7 @@ export default class EditGenerator extends Component {
 		const isCreate = !this.props.generator;
 		var formData = new FormData(e.target);
 		const history = this.props.history;
-		const url = "pack/"+this.props.packid+"/generator"
+		const url = "packs/"+this.props.packid+"/generators"
 
 		if(isCreate){
 			DB.create(url, formData, function(updatedGen){

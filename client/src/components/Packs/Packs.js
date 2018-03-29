@@ -34,7 +34,7 @@ const Display = ({loggedIn, error, data, publicPacks}) => (
 		<h2>Public Packs</h2>
 
 		{data === null ? LOADING_GIF : ""}
-		<div className={error ? "alert alert-danger" : ""}>{error}</div>
+		{error ? error.display : null}
 
 		{publicPacks && publicPacks.length === 0 ? <p>There are no public packs to display</p> : null}
 		<ul>

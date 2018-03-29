@@ -8,7 +8,7 @@ module.exports = function(app) {
 
 	// Create Generator
 	// ---------------------------------
-	app.post("/api/pack/:pack/generator", utils.canEditPack, (req, res, next) => {
+	app.post("/api/packs/:pack/generators", utils.canEditPack, (req, res, next) => {
 		var newGenerator = req.body;
 		newGenerator.pack_id = req.pack._id;
 
@@ -19,13 +19,13 @@ module.exports = function(app) {
 
 	// Read Generator
 	// ---------------------------------
-	app.get("/api/pack/:pack/generator/:id", utils.canViewPack, (req, res, next) => {
+	app.get("/api/packs/:pack/generators/:id", utils.canViewPack, (req, res, next) => {
 		getById(req.params.id).then(generator => {
 			return res.json(generator);
 		}).catch(next);
 	});
 
-	app.get("/api/pack/:pack/generate/:isa", utils.canViewPack, (req, res, next) => {
+	app.get("/api/packs/:pack/make/:isa", utils.canViewPack, (req, res, next) => {
 		getByIsa(req.pack).then(async (builtpack)=> {
 			var newGen = await Generator.make(gen, builtpack)
 			res.json(newGen);
@@ -36,7 +36,7 @@ module.exports = function(app) {
 	// ---------------------------------
 
 	// TODO: When renaming, fix references in all generator in, as well as seed
-	app.put("/api/pack/:pack/generator/:id", utils.canEditPack, (req, res, next) => {
+	app.put("/api/packs/:pack/generators/:id", utils.canEditPack, (req, res, next) => {
 		var newVals = req.body;
 
 		// fields that cannot be changed
@@ -63,7 +63,7 @@ module.exports = function(app) {
 	// Delete Generator
 	// ---------------------------------
 
-	app.delete("/api/pack/:pack/generator/:id", utils.canEditPack, (req, res,next) => {
+	app.delete("/api/packs/:pack/generators/:id", utils.canEditPack, (req, res,next) => {
 
 		Generator.findOneAndRemove({ _id: req.params.id}).exec()
 			.then(function(gen){

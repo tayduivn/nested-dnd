@@ -31,7 +31,7 @@ class ViewGenerator extends Component {
 
 				{/* --------- Edit Button ------------ */}
 				{this.context.loggedIn ? (
-					<Link to={"/packs/" + gen.pack_id + "/generator/"+ gen._id +"/edit"}>
+					<Link to={"/packs/" + gen.pack_id + "/generators/"+ gen._id +"/edit"}>
 						<button className="btn btn-primary">
 							Edit Generator
 						</button>
@@ -53,7 +53,7 @@ export default class Generator extends Component {
 	}
 	componentDidMount() {
 		if (this.props.match.params.gen) {
-			DB.get("/pack/"+this.props.pack_id+"/generator", this.props.match.params.gen)
+			DB.get("/packs/"+this.props.pack_id+"/generators", this.props.match.params.gen)
 				.then(({ error, data })=>{
 					this.setState({ generator: data, error: error })
 				});

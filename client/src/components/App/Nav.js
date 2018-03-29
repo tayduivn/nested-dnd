@@ -28,9 +28,9 @@ const NavRender = ({loggedIn, handleLogout}) => (
 					</li>
 				) : (
 					<li className="nav-item">
-						<a className="nav-link" href="#" onClick={handleLogout}>
+						<button className="nav-link" onClick={handleLogout}>
 							Logout
-						</a>
+						</button>
 					</li>
 				)}
 			</ul>

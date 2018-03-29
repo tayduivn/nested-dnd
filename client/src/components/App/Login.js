@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import './Login.css'
 
 const DisplayLogin = ({title, handleSubmit, emailVaidation, handleChange, email, emailError, passwordValidation, password, passwordError}) => (
-	<div className="main pt-5 container-fluid loginForm whiteBG">
-		<h1>{title}</h1>
+	<div className="main container-fluid loginForm whiteBG">
+		<h1 className="mt-5">{title}</h1>
 		<form onSubmit={handleSubmit}>
 			<div className="form-group" name="email" validationstate={emailVaidation}>
 				<label htmlFor="email">Email</label>

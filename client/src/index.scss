@@ -17,6 +17,11 @@
 	border-color: currentColor;
 }
 
-.dropdown-menu button, .form-check-label, .form-check-input{
+.dropdown-menu button, .form-check-label, .form-check-input, .nav-link{
 	cursor: pointer;
+}
+
+button.nav-link{
+	background-color: transparent;
+	border:0;
 }
