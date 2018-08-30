@@ -1,6 +1,7 @@
 import React from "react";
 
 import { getDamageTypeIcon, getDamageTypeName } from './CardsUtil';
+import { Icon } from '../../Explore/ExplorePage'
 
 
 const WRITEIN = (
@@ -19,10 +20,10 @@ const WriteIn = ({level, dice, progression, className, label, writein, dmgType, 
 			{label}
 		</label>
 		{processDice(dice, progression, level)}
-		{writein ? writein : ""}
+		{writein ? WRITEIN : null}
 		<p className="damageType">
-			<i className={getDamageTypeIcon(dmgType)} />{" "}
-			{getDamageTypeName(dmgType)}
+			<Icon name={getDamageTypeIcon(dmgType)} />{" "}
+			<span>{getDamageTypeName(dmgType)}</span>
 		</p>
 		<p>
 			{save}

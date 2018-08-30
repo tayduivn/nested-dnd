@@ -1,10 +1,13 @@
 import React from "react";
 
+import { Icon } from '../../Explore/ExplorePage'
 
 function getSpellSlots(slots = []) {
-	return slots.map(function(slots, level) {
+	return slots.map(function(slots, i) {
+		var level = i+1;
+
 		if (!slots || slots === 0 || level === 0) {
-			return <span key={level} />;
+			return null;
 		}
 		var circ = "❍".repeat(slots);
 		return (
@@ -22,18 +25,27 @@ function renderDC(list){
 		<div id="dc" className="icon-container">
 			<label>DC</label>
 			<h1>
-				{list[0].spellcasting.dc}
+				{list[0].dc}
 			</h1>
 		</div>
 	);
 };
+
+function getSorcPoints(list){
+	var sorc = list.find(s=>s.name === 'Sorcerer');
+	if(!sorc) return null;
+	return (
+		<p>Sorcery Points <span className="circles">{"❍".repeat(sorc.level)}</span></p>
+	)
+}
 
 const SpellSlots = ({spellcasting}) => (
 	<div>
 		<p className="title">Spell Slots</p>
 		{renderDC(spellcasting.list)}
 		<div id="spell-slots">
-			{getSpellSlots(spellcasting.getSlots())}
+			{getSorcPoints(spellcasting.list)}
+			{getSpellSlots(spellcasting.slots)}
 		</div>
 	</div>
 );
@@ -51,36 +63,39 @@ const Ki = ({dc, count}) => (
 	</div>
 );
 
-const SpellSlotsAndMoney = ({char, monk}) => (
+const SpellSlotsAndMoney = ({spellcasting = { list: [] }, proficiencyBonus, abilities = {}, classes = [], monk}) => (
 	<div id="spellsAndMoney" className="pin-bottom">
-		{ char.spellcasting.list.length ? <SpellSlots spellcasting={char.spellcasting} /> : null }
-		{ ( (monk = char.getClass("Monk")) && monk.level >= 2) ? 
-			<Ki count={monk.level} dc={8+char.getProficiencyBonus()+char.abilities.Wisdom.getMod()} /> : ""}
+		{ spellcasting && spellcasting.list && spellcasting.list.length ? 
+		<SpellSlots spellcasting={spellcasting} /> 
+		: null }
+		{ ( (monk = classes.find(c=>c.name==="Monk")) && monk.level >= 2) ? 
+			<Ki count={monk.level} dc={8+proficiencyBonus+abilities.wis.mod} /> : ""}
 		<div id="money" className="row">
-			<div className="col-xs-3">
+			<div className="col">
 				<label>platium</label>
 			</div>
-			<div className="col-xs-3">
+			<div className="col">
 				<label>galleon</label>
 			</div>
-			<div className="col-xs-3">
+			<div className="col">
 				<label>sickle</label>
 			</div>
-			<div className="col-xs-3">
+			<div className="col">
 				<label>knut</label>
 			</div>
 		</div>
 	</div>
 );
 
-function spellbook(spellsByLevel, prepares, canCastUnpreppedRituals) {
+function spellbook(spellsByLevel = [], prepares, canCastUnpreppedRituals) {
 	return spellsByLevel.map(function(spellArr, i) {
-		spellArr = spellArr.map(function(spell, index) {
+		spellArr = spellArr.map(function(spell = {}, index) {
+			if(!spell) return null;
 			return (
 				<li key={"spell" + index}>
-					{spell.getData().namegen}
-					{spell.getData().ritual && canCastUnpreppedRituals
-						? <i className="i-ritual" />
+					{spell.name}
+					{spell.ritual && canCastUnpreppedRituals
+						?	<Icon name="svg ritual" />
 						: ""}{" "}
 					{spell.note}
 					{prepares && spell.prepared ? "●" : ""}
@@ -100,43 +115,45 @@ function spellbook(spellsByLevel, prepares, canCastUnpreppedRituals) {
 	});
 };
 
-const Spells = ({prepares, spellcasting, title, numPrepared}) => (
+const Spells = ({name, prepares, ritualCast, printAbility, dc, spells, numPrepared}) => (
 	<div className="row push-top">
-		<div className={`title-tag left ${prepares ? 6 : 8}`}>
+		<div className={`title-tag left col-${prepares ? 6 : 8}`}>
 			<p className="title">
-				{title}
+				{name+" Spells"}
 			</p>
 			<label>
-				{spellcasting.ritual_cast
+				{ritualCast
 					? <span>
-							<i className="i-ritual" />Ritual Casting
+							<Icon name="svg ritual" /> Ritual Casting
 						</span>
 					: ""}
 			</label>
 		</div>
 		<div className="col-2 title-tag">
 			<p>
-				{spellcasting.printAbility()}
+				{printAbility}
 			</p>
 			<label>Ability</label>
 		</div>
 		<div className="col-2 title-tag">
 			<p className="num">
-				{spellcasting.dc}
+				{dc}
 			</p>
 			<label>DC</label>
 		</div>
-		<div className={`col-2 title-tag ${prepares ? "" : "hidden"}`}>
-			<p className="num">
-				{numPrepared}
-			</p>
-			<label>Prep ●</label>
-		</div>
+		{prepares ?
+			<div className={`col-2 title-tag`}>
+				<p className="num">
+					{numPrepared}
+				</p>
+				<label>Prep ●</label>
+			</div>
+		: null}
 		<div className="spellbook">
 			{spellbook(
-				spellcasting.spellsByLevel(),
+				spells,
 				prepares,
-				spellcasting.source === "Wizard"
+				name === "Wizard"
 			)}
 		</div>
 	</div>

@@ -1,24 +1,40 @@
 import React, { Component } from "react";
-import DB from "../../actions/CRUDAction";
 import PropType from "prop-types";
-import { Link } from "react-router-dom";
-import { PrivateRoute, PropsRoute } from '../Routes';
+import { Link, Switch } from "react-router-dom";
+import async from 'async';
+import debounce from 'debounce';
 
-import EditGenerator from "./EditGenerator";
-
-const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
+import DB from "../../actions/CRUDAction";
+import { RouteWithSubRoutes, PropsRoute } from '../Routes';
+import { LOADING_GIF } from '../App/App';
 
 class ViewGenerator extends Component {
+	static contextTypes = {
+		loggedIn: PropType.bool
+	}
+	
 	render(){
-		const gen = this.props.generator;
+		const gen = this.props.built;
+		const unbuilt = this.props.unbuilt || {};
+		const { pack: packid, generator: isa } = this.props.match.params
 
 		if(!gen) return null;
 
 		return (
-			<div className="container">
+			<div>
 			
-				<Link to={"/packs/"+gen.pack_id}>⬑ Pack</Link>
-				<h1>{gen.isa}</h1>
+				<Link to={"/packs/"+packid }>⬑ Pack</Link>
+				<h1>{isa}</h1>
+
+				{/* --------- Edit Button ------------ */}
+				{this.context.loggedIn ? (
+					<Link to={"/packs/" + packid + "/generators/"+ isa +"/edit"}>
+						<button className="btn btn-primary">
+							Edit Generator
+						</button>
+					</Link>
+				) : null}
+
 				<ul>
 					{Object.keys(gen).map((k,i)=>{
 							return (
@@ -29,47 +45,127 @@ class ViewGenerator extends Component {
 					}
 				</ul>
 
-				{/* --------- Edit Button ------------ */}
-				{this.context.loggedIn ? (
-					<Link to={"/packs/" + gen.pack_id + "/generators/"+ gen._id +"/edit"}>
-						<button className="btn btn-primary">
-							Edit Generator
-						</button>
-					</Link>
-				) : null}
-
 			</div>
 		);
 	}
 }
 
 export default class Generator extends Component {
+	
 	static propTypes = {
-		mode: PropType.oneOf(["view", "edit", "create"])
+		match: PropType.object,
+		pack: PropType.object,
+		handleRenameGen: PropType.func,
+		tables: PropType.array
 	}
+
+	static defaultProps = {
+		handleRenameGen: ()=>{}
+	}
+
 	state = {
 		generator: null,
 		error: null
 	}
+
+	constructor(props){
+		super(props);
+		this.debouncedChange = debounce(this.debouncedChange.bind(this), 1000);
+	}
+
+	saver = async.cargo((tasks,callback)=>{
+		//combine tasks
+		var newValues = {};
+		const { pack } = this.props.match.params;
+		const { built = {}, unbuilt = {}} = this.state.generator || {};
+		const _id = built._id || unbuilt._id
+
+		tasks.forEach(t=>{
+			if(!t.property) return;
+			newValues[t.property] = t.value
+		});
+
+		DB.set('packs/'+pack+"/generators", _id, newValues).then(({error, data})=>{
+			if(error) this.setState({generator: data, error});
+			callback();
+		});
+	})
+
 	componentDidMount() {
-		if (this.props.match.params.gen) {
-			DB.get("/packs/"+this.props.pack_id+"/generators", this.props.match.params.gen)
+		const { pack: packid, generator: isa } = this.props.match.params;
+
+		if(isa) {
+			DB.get('packs/'+packid+'/generators', isa)
 				.then(({ error, data })=>{
 					this.setState({ generator: data, error: error })
 				});
 		}
 	}
+
+	componentDidUpdate(prevProps, prevState, snapshot){
+		var { generator = { built: {} } } = this.state; 
+		if(!generator) generator = { built: {} };
+		if(!generator.built) generator.built = {};
+
+		const urlChanged = this.props.match.params.generator !== prevProps.match.params.generator;
+		const isaDifferentThanSaved = this.props.match.params.generator !== generator.built.isa
+		if(urlChanged && isaDifferentThanSaved){
+			console.log('test');
+		}
+	}
+
+	handleDelete = () => {
+		const { pack, generator } = this.props.match.params;
+
+		DB.delete('packs/'+pack+'/generators', this.state.generator.unbuilt._id)
+			.then(({error, data}) =>{
+				if(error) return this.setState({error});
+				this.props.handleRenameGen(generator, null)
+				this.props.history.push('/packs/'+pack);
+			})
+	}
+	
+	debouncedChange = (property, value) => {
+		this.handleChange(property, value);
+	}
+
+	handleChange = (property, value) => {
+		this.saver.push({ 
+			property: property,
+			value: value
+		}, ()=>{
+				if(property === 'isa'){
+					const { pack, generator } = this.props.match.params;
+					var newUrl = this.props.match.path.replace(':pack',pack).replace(':generator',value)+'/edit';
+					this.props.history.replace(newUrl);
+					this.props.handleRenameGen(generator, value);
+				}
+			})
+	} 
+
 	render() {
-		var match = this.props.match.url;
 
-		if(this.state.error) return <div className="alert alert-danger">{this.state.error}</div>
+		const { match, pack, routes } = this.props;
+		const { generator, error } = this.state;
+		const { handleChange, handleDelete } = this;
 
-		if (!this.state.generator) return LOADING_GIF;
+		var content;
+		if(error) content = error.display;
+		else if(!generator && match.params.generator) content = LOADING_GIF;
+		else {
+			content = (
+				<Switch>
+					{routes.map((route, i) => 
+						<RouteWithSubRoutes key={i} {...route} path={match.path+route.path}
+							{...{pack, handleChange, handleDelete}} {...generator} id={generator._id} />)}
+					<PropsRoute exact path={match.path} component={ViewGenerator} {...generator} />
+				</Switch>
+			);
+		}
 
 		return (
-			<div>
-				<PropsRoute exact path={`${match}`} component={ViewGenerator} generator={this.state.generator} />
-				<PrivateRoute path={`${match}/edit`} component={EditGenerator} generator={this.state.generator}  />
+			<div id="Generator">
+				{content}
 			</div>
 		)
 	}

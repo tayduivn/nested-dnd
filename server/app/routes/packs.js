@@ -1,14 +1,13 @@
-const assert = require('assert');
-
 const MW = require("./middleware.js");
 const Pack = require("../models/pack");
 const Generator = require("../models/generator");
 const BuiltPack = require("../models/builtpack");
 const Universe = require("../models/universe");
 const Nested = require('./packs/nested');
-
+const Table = require("../models/table");
 
 module.exports = function(app) {
+	
 	// Get All Packs
 	// ---------------------------------
 	app.get("/api/packs", (req, res, next) => {
@@ -43,7 +42,7 @@ module.exports = function(app) {
 	app.get("/api/explore/:url/:index?", MW.canViewPack, (req, res, next) =>{
 
 		Universe.getTemp(req.sessionID, req.pack, req.params.index)
-			.then(nested=>res.json(nested))
+			.then(nested=>res.json({ current: nested, pack: req.pack }))
 			.catch(next);
 
 	})
@@ -54,27 +53,67 @@ module.exports = function(app) {
 			session_id: req.sessionID,
 			expires: { $exists: true }
 		}
-		Universe.remove(query).then(o=>res.json(o)).catch(next);
-	})
-
+		Universe.deleteOne(query).then(o=>res.json(o)).catch(next);
+	});
 
 	// Read Pack
 	// ---------------------------------
 	app.get("/api/packs/:pack", MW.canViewPack, (req, res, next) => {
-		Generator.find({pack_id: req.pack.id}).select('isa extends id').then((gens)=>{
-			req.pack.generators = gens;
+
+		BuiltPack.findOrBuild(req.pack).then(async (builtpack)=>{
+			console.log('after BuiltPack.findOrBuild')	
 			var isOwner = req.user && req.pack._user.id === req.user.id;
-			return res.json(Object.assign({}, req.pack._doc, { generators: gens, isOwner: isOwner }));
+
+			// run getGen so correct format
+			var generators = {};
+			for(var isa in builtpack.generators){
+				generators[isa] = builtpack.getGen(isa);
+			}
+
+			// get tables
+			var tables = await Table.find({ pack: req.pack.id }).select('id title returns').exec()
+			tables.sort((a,b)=>a.title.localeCompare(b.title));
+			
+			return res.json(Object.assign({}, req.pack.toJSON(), { 
+				generators: generators,
+				tables: tables,
+				isOwner: isOwner 
+			}));
+		}).catch(next);
+	});
+
+	app.get("/api/packs/:pack/tables", MW.canViewPack, (req, res, next) => {
+		Table.find({ pack: req.pack.id }).exec().then(async (tables)=>{
+			tables.sort((a,b)=>a.title.localeCompare(b.title));
+			return res.json(tables);
 		}).catch(next);
 	});
 
 	app.get("/api/builtpack/:pack", MW.canViewPack, (req, res, next) => {
-
 		BuiltPack.findOrBuild(req.pack).then(builtpack=>{
 			if(!builtpack) 
 				res.status(404).json({"error": "Cannot find pack with id "+req.params.pack})
 			return res.json(builtpack);
 		}).catch(next)
+	});
+
+	app.put("/api/builtpacks/:pack/rebuild", MW.canEditPack, (req, res, next) => {
+		BuiltPack.rebuild(req.pack).then(builtpack=>{
+			if(!builtpack) 
+				res.status(404).json({"error": "Cannot find pack with id "+req.params.pack})
+			return res.json(builtpack);
+		}).catch(next)
+	});
+
+	
+	// Get generator names
+	// ---------------------------------
+	app.get("/api/builtpacks/:pack/generators", MW.canViewPack, (req, res, next) => {
+		BuiltPack.findOrBuild(req.pack).then(builtpack=>{
+			if(typeof builtpack === 'object')
+				res.json(Object.keys(builtpack.generators).sort((a,b)=>a.localeCompare(b)))
+			res.status(404);
+		}).catch(next);
 	});
 
 	// Create Pack
@@ -122,28 +161,21 @@ module.exports = function(app) {
 	// ---------------------------------
 
 	//TODO: Delete all the things and tables that belong to that pack
-	app.delete("/api/packs/:pack", MW.isLoggedIn, (req, res) => {
-		Pack.findOneAndRemove(
-			{ _id: req.params.pack, _user: req.user.id },
-			(err, doc) => {
-				if (err) {
-					return res.status(404).json(err);
-				}
-
-				if (!doc){
-					return res
-						.status(404)
-						.json({
-							errors:
-								"Could not find pack with id " +
-								req.params.pack +
-								" that is owned by user " +
-								req.user.id
-						});
-				}
-				return res.json(doc);
+	app.delete("/api/packs/:pack", MW.isLoggedIn, (req, res, next) => {
+		Pack.findOneAndRemove({ _id: req.params.pack, _user: req.user.id }).then((doc) => {
+			if (!doc){
+				return res
+					.status(404)
+					.json({
+						errors:
+							"Could not find pack with id " +
+							req.params.pack +
+							" that is owned by user " +
+							req.user.id
+					});
 			}
-		);
+			return res.json(doc);
+		}).catch(next);
 	});
 
 };

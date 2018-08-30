@@ -1,31 +1,32 @@
 @import "../../variables.scss";
 
-.parent{
-	border-radius: $border-radius-lg;
+#title .parent{
+	border-color: currentColor;
 
 	.btn{
-		color:inherit;
+		border-color: inherit;
+
+		&.btn.transparent{
+
+			&:not(:hover){
+				background: transparent;
+				border-color: transparent !important;
+			}
+		}
 	}
-	.btn-group{
-		border-radius: $border-radius-lg;
+
+	.immediate {
+		width: 100%;
+		text-align: left;
 	}
 
 	.fa-caret-left{
 		font-size: $font-size-base;
 	}
 
-	.dropdown-menu{
-		background-color: inherit;
-		background-color: var(--slightlyOff);
-		color: inherit;
-
-		.dropdown-item {
-			color: inherit;
-
-			&:hover{
-				background-color: inherit;
-				background-color: var(--theme);
-			}
-		}
+	&.btn{
+		text-align: left;
+		padding-left: 1em;
+		padding-right: 1em;
 	}
 }

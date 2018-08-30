@@ -164,29 +164,4 @@ export class Health {
 		});
 		return hitDice;
 	}
-	getHP(classes, CON) {
-		if (this.hp !== false) return this.hp;
-
-		//level 1
-		var maxHP = classes[0].classData.hitDice + CON.getModAtLevel(1);
-
-		var lvl = 2;
-		classes.forEach(c => {
-			//add for each level
-			for (var i = lvl === 2 ? 1 : 0; i < c.level; i++) {
-				// constitution modifier plus average hit dice roll
-				maxHP +=
-					CON.getModAtLevel(lvl) +
-					Math.ceil((c.classData.hitDice + 1) / 2);
-				lvl++;
-			}
-
-			//hp exceptions
-			if (c.subclasses["Sorcerous Origin"] === "Draconic Bloodline") {
-				maxHP += c.level;
-			}
-		});
-
-		return maxHP;
-	}
 }

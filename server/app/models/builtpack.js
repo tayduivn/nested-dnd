@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const Generator = require('./generator')
+
 var schema = Schema({
 	_id: {
 		type: Schema.Types.ObjectId
@@ -19,26 +21,56 @@ schema.path('generators').get(function(value){
 	return (!value) ? {} : value;
 });
 
+schema.statics.rebuild = async function(pack){
+	var id = (typeof pack === 'string') ? pack : pack._id;
+	console.log('BuiltPack.findById 26');
+	var builtpack = await this.findById(id).exec();
+	return await this.build(pack, builtpack);
+}
+
+schema.statics.findOrBuild = async function(pack){
+	var id = (typeof pack === 'string') ? pack : pack._id;
+	console.log('BuiltPack.findById 33');
+	var builtpack = await this.findById(id).exec();
+	console.log('after BuiltPack.findById');
+	if( builtpack ) return builtpack;
+
+	return await this.build(pack, builtpack);
+}
+
 /**
  * Compiles all of the dependencies of a pack into a built version
  * @param  {Pack} pack the pack to build
  * @return {Promise<BuiltPack>}      the built pack
  * @async
  */
-schema.statics.findOrBuild = async function(pack){
-	var builtpack = await this.findById(pack._id).exec();
-	if( builtpack ) return builtpack;
-	
+schema.statics.build = async function(pack, builtpack){
+	console.log('BuiltPack.build');
+	var id = (typeof pack === 'string') ? pack : pack._id;
+
+	if(typeof pack === 'string'){
+		console.log('Pack.findById');
+		pack = await this.model('Pack').findById(id);
+	}
+
+	if(!pack.dependencies) pack.dependencies = [];
+
 	const allPackIds = pack.dependencies.concat([pack.id]);
-	var newBuiltPack = { _id: pack.id };
+	console.log('Generator.find 57');
+	const gens = await this.model('Generator').find({ pack: { $in: allPackIds} }).exec();
+	const isNew = !builtpack;
 	var map = {};
 
-	var gens = await this.model('Generator').find({ pack_id: { $in: allPackIds} }).exec();
+	if(isNew){
+		const BuiltPack = this.db.models.BuiltPack;
+		builtpack = new BuiltPack({ _id: pack.id });
 
-	// no generators, create pack
-	if(!gens || !gens.length){
-		return await this.create(newBuiltPack);
+		// no generators, create pack
+		if(!gens || !gens.length){
+			return await this.create(builtpack);
+		}
 	}
+	
 
 	// map array of generators to their unique names and sort by dependency order
 	sortGensByPack(gens, allPackIds);
@@ -53,8 +85,58 @@ schema.statics.findOrBuild = async function(pack){
 		map[isa] = combineGenerators(map[isa])
 	}
 
-	newBuiltPack.generators = map;
-	return await this.create(newBuiltPack);
+	builtpack.generators = map;
+	builtpack.RAW_GENS = gens; // shouldn't save to the DB
+
+	//process extends
+	for(var isa in map){
+		this.extend(isa, builtpack)
+	}
+
+	return (isNew) ? await this.create(builtpack) : builtpack.save();
+}
+
+schema.statics.extend = function(isa, builtpack, extendsThis = []){
+	var genData = builtpack.getGen(isa);
+	if(!genData) return [];
+	
+	// already extended
+	if(genData.extendsPath !== undefined){
+		genData.extendsThis = (genData.extendsThis || []).concat(extendsThis);
+		builtpack.setGen(genData);
+		return genData.extendsPath.concat([]); // send back a copy so not modified
+	}
+
+	const Generator = this.db.models.Generator;
+	var generator = new Generator(genData);
+
+	var extendsPath = [];
+
+	if(generator.extends 
+		&& !extendsThis.includes(generator.extends) 
+		&& !extendsThis.includes(generator.isa) // prevent infinite looping
+	){ 
+		// extend parent
+		extendsPath = this.extend(generator.extends, builtpack, [isa]);
+
+		// trying to extend something that extends this
+		if(extendsPath.includes(generator.extends)){
+			generator.extends = undefined;
+		}
+		else{ // it's all good, do the extend
+			extendsPath.push(generator.extends);
+			generator = generator.extend(builtpack);
+		}
+	}
+
+	generator = Object.assign({},generator.toJSON());
+	generator.extendsPath = extendsPath;
+	generator.extendsThis = (genData.extendsThis || []).concat(extendsThis);
+	generator._id = genData._id;
+	generator.gen_ids = genData.gen_ids;
+	builtpack.setGen(generator);
+
+	return extendsPath.concat([]); // send back a copy so not modified
 }
 
 /**
@@ -66,8 +148,16 @@ schema.methods.pushGenerator = function(gen){
 		throw new Error("Cannot auto push new generator that has dependencies");
 	}
 
-	this.setGen(combineGenerators([gen]));
-	this.markModified('generators.'+gen.isa)
+	var BuiltPack = this.model('BuiltPack');
+	
+	const ISA = gen.isa;
+	gen = combineGenerators([gen]);
+	this.setGen(gen);
+	BuiltPack.extend(ISA,this);
+
+	var final = this.getGen(ISA);
+
+	this.markModified('generators.'+ISA)
 }
 
 /**
@@ -79,6 +169,18 @@ schema.methods.getGen = function(isa){
 	var gen = this.generators[isa];
 	if(!gen) return undefined;
 
+	// prevent extending itself
+	if(gen.extendsPath && gen.extendsPath.includes(gen.isa))
+		gen.extends = undefined;
+
+	// TODO: temporary cleanup
+	if(!gen.gen_ids) 
+		gen.gen_ids = [gen._id]
+
+	if(gen.toJSON || gen.model){
+		throw new Error("generator was not stored properly");
+	}
+
 	gen.isa = isa;
 	return gen;
 }
@@ -88,9 +190,15 @@ schema.methods.getGen = function(isa){
  * @param  {Generator} the generator to push
  */
 schema.methods.setGen = function(generator){
-	var isa = generator.isa;
-	delete generator.isa;
-	this.generators[isa] = generator;
+	if(generator.toJSON)
+		throw new Error("Cannot put raw generator object into builtpack");
+	if(!generator.gen_ids)
+		throw new Error("Must have gen_ids");
+
+	var gen = Object.assign({},generator);
+	var isa = gen.isa;
+	delete gen.isa;
+	this.generators[isa] = gen;
 }
 
 /**
@@ -99,24 +207,45 @@ schema.methods.setGen = function(generator){
  * @param  {Pack} pack the pack it belongs to
  */
 schema.methods.rebuildGenerator = async function(isa, pack){
+	const { Pack, Generator, BuiltPack } = this.db.models;
+
 	if(!isa) throw new Error("isa is undefined");
-	if(!pack) throw new Error("pack is undefined");
+	if(!pack) {
+		console.log('Pack.findById');
+		pack = await Pack.findById(this._id);
+	};
 
 	var allPacks = pack.dependencies.concat([pack.id]);
 	var query = {
-		pack_id: { $in: allPacks}, 
+		pack: { $in: allPacks}, 
 		isa: isa
 	};
-	var gens = await this.model('Generator').find(query).exec();
+	console.log('Generator.find 221');
+	var gens;
+	if(this.RAW_GENS){
+		gens = this.RAW_GENS.filter(g=>g.isa === isa);
+	}
+	else gens = await Generator.find(query).exec();
 
 	sortGensByPack(gens, allPacks);
 
 	if(!this.generators)
 		this.generators = {};
 
-	this.setGen(combineGenerators(gens));
+	var combined = combineGenerators(gens);
+	const oldGen = this.getGen(isa);
+	combined.isa = isa;
+	combined.extendsThis = (oldGen) ? oldGen.extendsThis || [] : [];
+	this.setGen(combined);
+
+	BuiltPack.extend(isa, this);
+
 	this.markModified('generators.'+isa)
-	await this.save();
+	
+	// recurse to build things that extend this
+	combined.extendsThis.forEach(e=>{
+		this.rebuildGenerator(e, pack);
+	})
 }
 
 /**
@@ -149,7 +278,7 @@ schema.methods.growFromSeed = function(pack){
  */
 function sortGensByPack(gens, packIds){
 	gens.sort(function(a, b){
-		return packIds.indexOf(a.pack_id) - packIds.indexOf(b.pack_id);
+		return packIds.indexOf(a.pack) - packIds.indexOf(b.pack);
 	});
 }
 
@@ -159,12 +288,12 @@ function sortGensByPack(gens, packIds){
  * @return {Object}              a built version of the generators
  */
 function combineGenerators(generators){
-	var generator = null;
+	var generator = new Generator();
 	var gen_ids = [];
 
 	//loop dependencies and overwrite
 	generators.forEach((d)=>{
-		gen_ids.push(d._id);
+		gen_ids.unshift(d._id);
 
 		if(!generator) // first
 			generator = d;
@@ -173,10 +302,10 @@ function combineGenerators(generators){
 	});
 
 	//save to map
-	generator = Object.assign({},generator._doc);
+	generator = Object.assign({},generator.toJSON());
 	generator.gen_ids = gen_ids;
 	delete generator._id;
-	delete generator.pack_id; 
+	delete generator.pack; 
 
 	return generator;
 }

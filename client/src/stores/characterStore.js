@@ -17,7 +17,7 @@ class CharacterStore{
 			let playerComp = a.player.localeCompare(b.player);
 			if(playerComp)
 				return playerComp;
-			return a.getTotalLevel() - b.getTotalLevel();
+			return a.level - b.level;
 		});
 	}
 	getRaw(index){

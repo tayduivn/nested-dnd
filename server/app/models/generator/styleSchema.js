@@ -1,30 +1,32 @@
 const Schema = require("mongoose").Schema;
+var colorConvert = require('../../util/colorConvert');
 
 const Maker = require('./make');
+const Table = require("../table");
 
-const colorConvert = {
-	tan: 'khaki',
-	silvery: 'silver',
-	red: 'darkred',
-	shady: "grey",
-	blue: "darkblue",
-	multicolored: "rainbow",
-	golden: "gold",
-	shimmering: "glow",
-	glowing: "glow",
-	luminous: "glow",
-	faint: "white",
-	pale: "white",
-	opaline: "floralwhite"
-}
+colorConvert = Object.assign({}, colorConvert, {
+	tan: colorConvert['khaki'],
+	silvery: colorConvert['silver'],
+	red: colorConvert['darkred'],
+	shady: colorConvert["grey"],
+	blue: colorConvert["darkblue"],
+	multicolored: "grey-100 ptn-rainbow",
+	golden: colorConvert["gold"],
+	shimmering: "grey-1000 ptn-glow",
+	glowing: "grey-1000 ptn-glow",
+	luminous: "grey-1000 ptn-glow",
+	faint: colorConvert["white"],
+	pale: colorConvert["white"],
+	opaline: "amber-50"
+});
 
 var mixedTypeSchema = Schema({
 	type: {
 		$type: String,
-		enum: ['table_id', 'string', 'table'] // if no type, it's a string
+		enum: ['table_id', 'string', 'table','data'] // if no type, it's a string
 	}, 
 	value: Schema.Types.Mixed
-}, { typeKey: '$type' })
+}, { typeKey: '$type', _id: false })
 
 var styleSchema = Schema({
 	icon: {
@@ -35,7 +37,9 @@ var styleSchema = Schema({
 	img: {
 		type: mixedTypeSchema,
 		set: validateMixedThing
-	}, 
+	},
+
+	useImg: Boolean,
 
 	// todo: check hex or valid color name
 	txt: {
@@ -85,7 +89,7 @@ styleSchema.methods.strToColor = function(str) {
 	if(typeof str !== 'string')
 		return false;
 
-	var colors = "multicolored|opaline|rainbow|red|magenta|orange|yellow|teal|green|blue|turquoise|purple|gold|golden|glowing|shimmering|luminous|faint|white|black|brown|pale|silver|silvery|gray|tan|grey|pink|shady|sharkverse|baconverse|doughnutverse|lasagnaverse";
+	var colors = "multicolored|opaline|rainbow|red|magenta|orange|yellow|teal|green|blue|turquoise|purple|gold|golden|glowing|shimmering|luminous|faint|white|black|brown|pale|silver|silvery|gray|tan|grey|pink|shady|sharkverse|baconverse|doughnutverse|lasagnaverse|"+Object.keys(colorConvert).join("|");
 
 	str = " "+str.replace(/-/g," ")+" ";
 	var matches = str.match("^.*\\s("+colors+")\\s.*$");
@@ -109,13 +113,41 @@ function makeIt(value){
 	return Maker.makeMixedThing(value, this.parent().model('Table'));
 }
 
+// this is a setter, not a validator
 function validateMixedThing(input){
-	var { type, value } = input;
+	if(input === null) {
+		return undefined;
+	}
+	if(input.value === null){
+		input.value = undefined;
+		return input;
+	}
 
-	if(type === 'table' && typeof value === 'string')
-		input.type = 'string'
-	if(type === 'string' && typeof value !== 'string'){
-		if(value.rows) input.type = 'table'
+	if(typeof input === 'string'){
+		return { type: 'string', value: input }
+	}
+
+	if(input.type === 'table'){
+		if(typeof input.value === 'string'){
+			input.type = 'string'
+		}
+		else if(input.rows && input.rows.length === 1 && typeof input.rows[0] === 'string'){
+			input = {type:string, value: input.rows[0]};
+		}
+		else{ // validate against table schema
+			var t = new Table(input.value);
+			input.value = t.toJSON();
+			delete input.value._id;
+			delete input.value.pack;
+			delete input.value.public;
+		}
+		
+	}
+	else if(input.type === 'string' 
+		&& typeof input.value !== 'string' 
+		&& input.value !== undefined){
+
+		if(input.value && input.value.rows) input.type = 'table'
 		else throw Error("cannot set name to value "+value)
 	}
 	return input;
@@ -123,3 +155,4 @@ function validateMixedThing(input){
 
 module.exports = styleSchema;
 module.exports.validateMixedThing = validateMixedThing;
+module.exports.mixedTypeSchema = mixedTypeSchema;

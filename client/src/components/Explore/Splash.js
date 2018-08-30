@@ -1,13 +1,13 @@
 import React from "react";
 import { Link } from 'react-router-dom';
-import WebFont from 'webfontloader';
+import PropTypes from 'prop-types';
 
 import "./Splash.css"
 
 const nested = {
 	url: 'nested',
 	in: true,
-	cssClass: 'black stardust',
+	cssClass: 'bg-grey-1000 ptn-stardust',
 	name: 'Nested',
 	font: 'Press Start 2P'
 }
@@ -15,7 +15,7 @@ const nested = {
 const dnd = {
 	url: 'dnd',
 	in: true,
-	cssClass: 'burlywood purty-wood',
+	cssClass: 'bg-wood-200 ptn-purty-wood',
 	name: 'Dungeons & Dragons',
 	font: 'IM Fell English SC',
 	txt: 'brown'
@@ -26,7 +26,10 @@ const Pack = ({pack}) => (
 		pathname: "/explore/"+pack.url,
 		state:{
 			fromSplash:true,
-			current: pack
+			current: pack,
+			pack: {
+				font: pack.font
+			}
 		}
 	}} className={`col-lg ${pack.cssClass} ${pack.url}`}>
 		<div>
@@ -36,12 +39,12 @@ const Pack = ({pack}) => (
 )
 
 class Splash extends React.Component {
+	static contextTypes = {
+		loadFonts: PropTypes.func
+	}
 	componentWillMount(){
-		WebFont.load({
-			google: {
-				families: [nested.font, dnd.font]
-			}
-		})
+		if(this.context.loadFonts)
+			this.context.loadFonts([nested.font, dnd.font])
 	}
 	render(){
 		return (

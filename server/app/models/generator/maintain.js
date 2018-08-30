@@ -102,14 +102,15 @@ var Maintainer = {
 		}
 
 		// put pack id
-		data.pack_id = pack._id;
+		data.pack = pack._id;
 
 		var gen = await pack.model('Generator').create(data)
 
 		//add to builtpack
 		await builtpack.rebuildGenerator(gen.isa, pack)
+		await builtpack.save();
 
-		return gen;
+		return { unbuilt: gen, built: builtpack.getGen(gen.isa) };
 	},
 
 	/**
@@ -118,7 +119,7 @@ var Maintainer = {
 	 * @this {Generator}
 	 */
 	cleanAfterRemove: async function(){
-		var builtpack = await this.model('BuiltPack').findById(this.pack_id).exec();
+		var builtpack = await this.model('BuiltPack').findById(this.pack).exec();
 
 		// clean up from build pack
 		delete builtpack.generators[this.isa];
@@ -135,43 +136,53 @@ var Maintainer = {
 	 * @param  {string} isaOld   the older name of the generator
 	 * @async
 	 */
-	rename: async function(generator, pack, isaOld){
+	rename: async function(generator, pack, isaOld, builtpack){
 		if(!generator || !pack || !isaOld) return;
+		if(builtpack && !builtpack.markModified){
+			throw new Error('builtpack argument is invalid format '+builtpack);
+		}
 
 		var isaNew = generator.isa;
 		var Generator = generator.model('Generator');
 		var BuiltPack = generator.model('BuiltPack');
+
+		console.log('Generator.find rename');
 		let result = await Promise.all([
 			// find generators in this pack that contain in or extend with isaOld
-			Generator.find({ pack_id: pack._id }).exec(),
-			BuiltPack.findOrBuild(pack),
+			(builtpack && builtpack.RAW_GENS) || Generator.find({ pack: pack._id }).exec(),
 			// set seed ----------------------------
 			pack.renameSeed(isaOld, isaNew) 
 		]);
 		var gens = result[0];
-		var builtpack = result[1];
-
-		//move in builtpack
-		delete builtpack.generators[isaOld];
-		builtpack.markModified('generators.'+isaOld)
-		builtpack.pushGenerator(generator);
 		
+		//move in builtpack
+		if(builtpack){
+			builtpack.RAW_GENS = gens;
+			if(builtpack.generators[isaOld])
+				delete builtpack.generators[isaOld];
+			builtpack.markModified('generators.'+isaOld)
+			builtpack.pushGenerator(generator);
+		}
+		
+
 		if(!gens || !gens.length) {
-			builtpack.save();
+			if(builtpack) builtpack.save();
 			return;
 		}
-
+		
 		gens.forEach((gen)=>{
+			gen.pack = pack._id;
 			renameWithinGen(gen, builtpack, isaOld, isaNew);
 		});
 
 		// push in and extends changes to buildpack. no need to rebuild
-		await builtpack.save();
+		if(builtpack) 
+			await builtpack.save();
 	}
 }
 
 /**
- * [renameWithinGen description]
+ * Renaming all references to this generator within another generator
  * @param  {[type]} gen       [description]
  * @param  {[type]} builtpack [description]
  * @return {[type]}           [description]
@@ -179,25 +190,29 @@ var Maintainer = {
 function renameWithinGen(gen, builtpack, isaOld, isaNew){
 	var changed = false;
 	var newGen = Maintainer.renameChildren(gen, isaOld, isaNew);
-	var builtGen = builtpack.getGen(gen.isa);
+	var builtGen = (builtpack) ? builtpack.getGen(gen.isa) : false;
 
-	if(!builtGen){
-		throw new Error("Could not find build for "+gen.isa+" in pack "+gen.pack_id);
+	if(builtpack && !builtGen){
+		throw new Error("Could not find build for "+gen.isa+" in pack "+gen.pack);
 	}
 
 	if(newGen){
 		changed = true;
 		gen = newGen;
-		builtGen.in = newGen.in;
-		builtpack.markModified('generators.'+newGen.isa+".in");
+		if(builtpack){
+			builtGen.in = newGen.in;
+			builtpack.markModified('generators.'+newGen.isa+".in");
+		}
 	}
 
 	// just rename extends -- the build should get it out of the buildpack, not precompile
 	if(gen.extends === isaOld){
 		changed = true;
 		gen.extends = isaNew;
-		builtGen.extends = gen.extends;
-		builtpack.markModified('generators.'+gen.isa+".extends");
+		if(builtpack){
+			builtGen.extends = gen.extends;
+			builtpack.markModified('generators.'+gen.isa+".extends");
+		}
 	}
 
 	// do the save

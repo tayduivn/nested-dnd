@@ -21,8 +21,10 @@ class Parent extends Ancestor {
 // TODO validate that undefined aren't added to flat array or returned to user
 class Nested {
 
-	constructor(name, gen, style){
+	constructor(name, gen, style, desc, data){
 		this.name = name;
+		this.desc = desc;
+		this.data = data;
 
 		if(gen){
 			this.isa = gen.isa;
@@ -50,6 +52,8 @@ class Nested {
 		_t.icon = inst.icon;
 		_t.up =  inst.up;
 		_t.in = (inst.todo) ? true : (inst.in && !inst.in.length  && inst.in !== true) ? undefined : inst.in;
+		_t.desc = inst.desc;
+		_t.data = inst.data;
 
 		// not added in constructor, added by .expand;
 		_t.index = inst.index;
@@ -60,8 +64,17 @@ class Nested {
 		return (isParent) ? new Parent(ref) : new Ancestor(ref);
 	}
 
-	setIndex(index){
-		this.index = index ? index : 0;
+	setIndex(universe){
+		const emptyIndexes = universe.emptyIndexes || [];
+		const length = universe.array ? universe.array.length : 0;
+
+		if(emptyIndexes.length){
+			this.index = (!universe.array[emptyIndexes[0]]) ? emptyIndexes.shift()  : length;
+		}
+		else{
+			this.index = length;
+		}
+		
 		return this;
 	}
 
@@ -69,11 +82,12 @@ class Nested {
 		this.up = up;
 
 		// copy parent's style
+		/*
 		if(!this.cssClass && up && up instanceof Array && up[0]){
 			this.cssClass = up[0].cssClass;
 			if(!this.txt)
 				this.txt = up[0].txt;
-		}
+		}*/
 
 		return this;
 	}
@@ -106,10 +120,13 @@ class Nested {
 
 		this.in.forEach((n,i)=>{
 			
-			n = Nested.copy(n).setUp(up).setIndex(universe.array.length);
+			var ch = Nested.copy(n).setUp(up).setIndex(universe);
+
+			// mark the first loaded node in a new universe
+			if(n.isNestedSeed) universe.lastSaw = ch.index;
 
 			// recurse
-			var nestedChild = n.flatten(universe, generations-1);
+			var nestedChild = ch.flatten(universe, generations-1);
 			this.in[i] = nestedChild;
 		});
 

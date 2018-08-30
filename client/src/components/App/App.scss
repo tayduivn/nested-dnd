@@ -9,15 +9,32 @@ h1,h2,h3,h4,h5{
   text-align:left;
 }
 
-html, body {
-	margin: 0;
+html {
 	height: 100%;
-
 }
 
-#root, .App{
-	height:100%;
-	position:relative;
+body {
+	min-height: 100%;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+
+	@media print {
+		font-size: 13pt;
+		padding:0!important;
+    margin: 0 !important;
+    background: none !important;
+    min-width:1px !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+
+	}
+}
+
+#root, .app, .main{
+	min-height: 100vh;
+	background: none;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 }
 
 
@@ -25,8 +42,14 @@ html, body {
   .navbar-nav, .status-bar, .sidebar, .nav-tabs {
     display:none!important;
   }
-  body{
+  #root, .app, .main, .container-fluid{
     padding:0!important;
+    margin: 0 !important;
+    background: none !important;
+    width: 100vw;
+  }
+  .tab-pane:not('.active'){
+  	position:absolute;
   }
 }
 
@@ -95,26 +118,9 @@ html, body {
   cursor: default;
 }
 
-.form-inline .Select{
-  display: inline-table;
-  .Select-input {
-      position: absolute;
-      top: 0
-  }
-  .Select-value-label {
-      display: block;
-  }
-  .Select-value {
-      position: relative;
-      white-space: normal;
-  }
-}
-
 [class^="flaticon-"]:before, [class*=" flaticon-"]:before, [class^="flaticon-"]:after, [class*=" flaticon-"]:after{
   font-size: inherit;
 }
-
-
 
 .status-bar{
   border-radius:0;
@@ -206,7 +212,12 @@ html, body {
 
 .main {
 	padding-top: ($navbar-brand-height+$navbar-brand-padding-y*2)+($navbar-padding-y*2);
-  min-height: 100%;
+
+  .container, &.container, .container-fluid{
+  	background-color: rgba(255,255,255,0.9);
+  	color: $body-bg;
+  	padding: 2rem;
+  }
 
   &.whiteBG:before{
   	content: '';
@@ -237,4 +248,26 @@ html, body {
 .loading {
 	font-size: 3em;
 	margin:1em;
+}
+
+.icon {
+	display: inline-block;
+	svg{
+		fill: currentColor;
+		vertical-align: top;
+		height: 1em;
+		min-width: 1em;
+	}
+}
+
+// forms ---------------------------------------
+
+.input-title {
+	width: 100%;
+	font-size: 2rem;
+}
+
+.input-transparent {
+	background-color: transparent;
+	border: 0;
 }

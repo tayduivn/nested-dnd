@@ -1,77 +1,75 @@
 import React from "react";
 
-function getSkillList(arr) {
+function getSkillList(arr = []) {
+	if(!arr.map) return null;
+	
 	return arr.map(function(skill) {
 		return (
 			<tr key={skill.name}>
 				<td>
-					{skill.getMod()}
+					{skill.printMod}
 				</td>
 				<td>
-					{skill.name} {skill.proficient ? "   ●" : ""}
+					{skill.name} {skill.proficient ? "   ●" : ""}{skill.double ? "●" : ""}
 				</td>
 			</tr>
 		);
 	});
 }
 
-const Skills = ({skills}) => (
+const Skills = ({skills, initiative}) => (
 	<div className="">
 		<div className="passives">
 			<div className="item">
-				{skills.getInitiative()}
+				{initiative}
 				<label>Initiative</label>
 			</div>
 		</div>
 		<table id="abilityScores">
 			<tbody>
-				{getSkillList(skills.getList())}
+				{getSkillList(skills)}
 			</tbody>
 		</table>
 	</div>
 );
 
-const Abilities = ({ abilities: a }) => (
-	<div className="row" id="stats">
-		<div className="col no-padding">
-			<Ability ability={a.Strength} label="Strength" />
-			<Ability ability={a.Dexterity} label="Dexterity" />
-			<Ability className="constitution" ability={a.Constitution} label="Constitution" />
-		</div>
-		<div className="col no-padding">
-			<Ability ability={a.Intelligence} label="Intelligence" />
-			<Ability ability={a.Wisdom} label="Wisdom" />
-			<Ability ability={a.Charisma} label="Charisma" />
-		</div>
+const Abilities = ({ abilities: a = {} }) => (
+	<div className="row no-padding" id="stats">
+		<Ability {...a.str} label="Strength" />
+		<Ability {...a.dex} label="Dexterity" />
+		<Ability {...a.con} className="constitution"  label="Constitution" />
+		<Ability {...a.int} label="Intelligence" />
+		<Ability {...a.wis} label="Wisdom" />
+		<Ability {...a.cha} label="Charisma" />
 	</div>
 );
 
 
-const Ability = ({ability: a, className, label}) => (
-	<div className={"col-4 stat-wrap "+className}>
+const Ability = ({printMod, saveProficient, printSave, className, label}) => (
+	<div className={"col stat-wrap "+className}>
 		<div className="stat">
 			<label>{label}</label>
 			<h1>
-				{a.printMod()}
+				{printMod}
 			</h1>
 			<p>
-				{a.save.proficient ? "save " + a.printSave() : <br />}
+				{saveProficient ? "save " + printSave : <br />}
 			</p>
 		</div>
 	</div>
 );
 
-const HitDice = ({dice, level}) => (
+const HitDice = ({value, count}) => (
 	<div>
 		<label>hit dice </label>&nbsp;&nbsp;
-		<strong>d{dice}</strong>
+		<strong>d{value}</strong>
 		<span className="circles">
-			&nbsp;{"❍".repeat(level)}
+			&nbsp;{"❍".repeat(count)}
 		</span>
 	</div>
 );
 
-const Health = ({hitDice, hp}) => (
+const Health = ({hitDice = [], hp}) => (
 	<div className="row" id="health">
 		<div className="col-8">
 			<div className="row" id="hp">
@@ -88,8 +86,8 @@ const Health = ({hitDice, hp}) => (
 				</div>
 			</div>
 			<div id="hit-dice">
-				{hitDice.map(({ dice, level }, i) =>
-					<HitDice key={i} dice={dice} level={level} />
+				{hitDice.map((hd, i) =>
+					<HitDice key={i} {...hd} />
 				)}
 			</div>
 		</div>

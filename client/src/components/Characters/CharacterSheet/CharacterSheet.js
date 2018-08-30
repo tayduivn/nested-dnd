@@ -7,9 +7,6 @@ import { AdvResist, Equipment } from "./CharSheetDesc.js";
 import { RolePlay } from "./CharSheetData.js";
 import ShowWork from './CharSheetShowWork';
 
-import Character from "../../../stores/Character";
-import SpellcastingList from "../../../stores/Spellcasting";
-
 import "./CharacterSheet.css";
 
 const BREAK_TO_2COL = 18;
@@ -18,12 +15,12 @@ const BREAK_TO_2PAGE = 40;
 export default class CharacterSheet extends Component {
 	static get propTypes() {
 		return {
-			character: PropTypes.instanceOf(Character)
+			character: PropTypes.object
 		};
 	}
 	static get defaultProps() {
 		return {
-			character: new Character()
+			character: {}
 		};
 	}
 	render() {
@@ -43,7 +40,7 @@ const TopHalf = ({char}) => (
 				classes={char.classes}
 				player={char.player}
 			/>
-			<Skills skills={char.getSkills()} />
+			<Skills skills={char.skills} initiative={char.initiative} />
 		</div>
 		<div className="col-8 full-height">
 			<Abilities abilities={char.abilities} />
@@ -51,8 +48,8 @@ const TopHalf = ({char}) => (
 				<div className="col">
 					<Health
 						char={char}
-						hitDice={char.getHitDice()}
-						hp={char.getHP()}
+						hitDice={char.hitDice}
+						hp={char.hp}
 					/>
 					<AdvResist
 						{...char.advResist}
@@ -66,8 +63,8 @@ const TopHalf = ({char}) => (
 					/>
 				</div>
 				<div className="col top-col">
-					<Equipment equipment={char.equipment} />
-					<SpellSlotsAndMoney char={char} />
+					<Equipment {...char.equipment} />
+					<SpellSlotsAndMoney {...char} />
 				</div>
 			</div>
 		</div>
@@ -82,7 +79,7 @@ const BottomHalf = ({char, spellcasting, twoPages}) =>(
 			body={char.body}
 			abilities={char.abilities}
 			background={char.background}
-			profBonus={char.printProficiencyBonus()}
+			profBonus={char.printProficiencyBonus}
 			proficiencies={char.proficiencies}
 		/>
 		<ShowWork
@@ -95,7 +92,7 @@ const BottomHalf = ({char, spellcasting, twoPages}) =>(
 		{spellcasting && !twoPages
 			? <SpellbookAllClasses
 					col={5}
-					spellcasting={char.getSpellcasting()}
+					spellcasting={spellcasting}
 				/>
 			: ""}
 	</div>
@@ -104,13 +101,13 @@ const BottomHalf = ({char, spellcasting, twoPages}) =>(
 class SinglePage extends Component {
 	static get propTypes() {
 		return {
-			character: PropTypes.instanceOf(Character)
+			character: PropTypes.object
 		};
 	}
 	render() {
 		let char = this.props.character;
-		let spellcasting = char.getSpellcasting();
-		if(spellcasting.totalSpells === 0)
+		let spellcasting = char.spellcasting;
+		if(!spellcasting || spellcasting.totalSpells === 0)
 			spellcasting = false;
 
 		let twoPages =
@@ -125,7 +122,7 @@ class SinglePage extends Component {
 					? <div className="paper">
 							<div className="row halfpage">
 								<SpellbookAllClasses
-									spellcasting={char.getSpellcasting()}
+									spellcasting={char.spellcasting}
 								/>
 							</div>
 						</div>
@@ -154,9 +151,9 @@ class BasicInfo extends Component {
 		return (
 			<div>
 				<h1 id="name">
-					{this.props.name.length
-						? this.props.name
-						: "_______________________"}
+					{this.props.name.trim().length
+						? this.props.name.trim()
+						: "_____________________"}
 				</h1>
 				<h2 id="classLevel">
 					{this.props.classes.map(
@@ -164,7 +161,7 @@ class BasicInfo extends Component {
 							"Level " +
 							c.level +
 							" " +
-							(c.label ? c.label : c.classData.name)
+							(c.label ? c.label : c.name)
 					)}
 				</h2>
 				{this.props.player.length
@@ -182,13 +179,14 @@ class BasicInfo extends Component {
 class SpellbookAllClasses extends Component {
 	static get propTypes() {
 		return {
-			spellcasting: PropTypes.instanceOf(SpellcastingList).isRequired,
+			spellcasting: PropTypes.object.isRequired,
 			col: PropTypes.number
 		};
 	}
 	render() {
-		if (!this.props.spellcasting.list.length) return null;
-		const COUNT = this.props.spellcasting.totalSpells;
+		var spellcasting = this.props.spellcasting || {list:[]}
+		if (!spellcasting.list.length) return null;
+		const COUNT = spellcasting.totalSpells;
 
 		return (
 			<div className={`close-col col-${this.props.col} 
@@ -197,8 +195,8 @@ class SpellbookAllClasses extends Component {
 																			: COUNT > BREAK_TO_2COL ? "long" : ""}
 								`}
 			>
-				{this.props.spellcasting.list.map((a, i) =>
-					(a.spellcasting.totalSpells === 0 ? null : <Spells key={i} {...a} count={COUNT} />) 
+				{spellcasting.list.map((a, i) =>
+					(a.spells.length === 0 ? null : <Spells key={i} {...a} count={COUNT} />) 
 				)}
 			</div>
 		);

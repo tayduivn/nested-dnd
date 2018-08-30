@@ -20,23 +20,25 @@ const URL_PREFIX = "/api/";
  * Always returns a promise, which returns { err, data }
  */
 const DB = {
-	fetch: (url, method, headers)=>{
+	fetch: (url, method, headers, abortController)=>{
 		headers = setHeader(method, headers);
 		url = url.replace(/^\//, ''); // get rid of extra slash
-		return fetch(URL_PREFIX+url, headers).then(getResponse).catch(handleError);
+		if(url && !url.startsWith('http'))
+			url = URL_PREFIX+url;
+		return fetch(url, headers).then(getResponse).catch(handleError);
 	},
-	create: function(url, payload){
-		return this.fetch(url, "POST", {body: payload});
+	create: function(url, payload, abortController){
+		return this.fetch(url, "POST", {body: payload}, abortController);
 	},
-	get: function(url, id){
+	get: function(url, id, abortController){
 		if(id !== undefined) return this.fetch(url+"/"+id)
-		else return this.fetch(url)
+		else return this.fetch(url, undefined, undefined, abortController)
 	},
-	set: function(url, id, payload){
-		return this.fetch(url+"/"+id, "PUT",{body: payload});
+	set: function(url, id, payload, abortController){
+		return this.fetch(url+"/"+id, "PUT",{body: payload}, abortController);
 	},
-	delete: function(url, id){
-		return this.fetch(url+"/"+id, "DELETE");
+	delete: function(url, id, abortController){
+		return this.fetch(url+"/"+id, "DELETE", undefined, abortController);
 	}
 }
 
@@ -63,6 +65,10 @@ function formDataTOJson(formData){
 }
 
 function handleError(error){
+	// Component unmounted
+	if(error.name === 'AbortError')
+		return;
+
 	// ERR_CONNECTION_REFUSED
 	if(error.message === "Failed to fetch"){
 		error.message = "We're having trouble communicating with the server right now. Please check your internet connection."

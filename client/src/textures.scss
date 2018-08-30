@@ -1,38 +1,78 @@
+@import "./variables.scss";
 
-$textures: ["3px-tile",
-"45-degree-fabric-dark",
-"45-degree-fabric-light",
-"60-lines",
-"absurdity",
-"ag-square",
-"always-grey",
-"arabesque",
-"dimension",
-"food",
-"nestedBaconverse",
-"nestedDoughnutverse",
-"nestedLasagnaverse",
-"nestedSharkverse",
-"pineapple-cut",
-"purty-wood",
-"random-grey-variations",
-"robots",
-"shattered-dark",
-"stardust",
-"white-diamond-dark"];
+$textures: ["3px-tile","45-degree-fabric-dark","45-degree-fabric-light","60-lines","ag-square","always-grey","arabesque","arches","black-scales","bright-squares","dark-mosaic","dark-wood","diagonal-striped-brick","diamond-upholstery","dimension","egg-shell","flowers","foggy-birds","food","football-no-lines","gradient-squares","gravel","gray-floral","grid-me","grunge-wall","hexellence","honey-im-subtle","inspiration-geometry","leather","light-gray","light-grey-floral-motif","light-paper-fibers","maze-black","maze-white","nestedBaconverse","nestedDoughnutverse","nestedLasagnaverse","nestedSharkverse","padded-light","pineapple-cut","pixel-weave","polaroid","purty-wood","random-grey-variations","retina-wood","robots","rocky-wall","scribble-light","shattered-dark","shley-tree-1","shley-tree-2","skulls","stardust","subtle-white-feathers","tileable-wood-colored","tileable-wood","tree-bark","type","washi","white-diamond-dark","woven-light","woven","xv"];
 
+@each $name in $textures {
 
-
-@for $i from 1 through length($textures) {
-
-	$name: nth($textures, $i);
-
-	.#{$name} {
+	.ptn-#{$name}, .ptn-#{$name}.btn:not(:disabled):not(.disabled):active, .ptn-#{$name}.btn:not(:disabled):not(.disabled).active {
 		background-image: url('./assets/patterns/#{$name}.png');
-	} 
+	}
 }
 
-.purty-wood, .shattered-dark{
+.ptn-purty-wood, .ptn-absurdity, .ptn-white-diamond-dark, .ptn-60-lines, .ptn-45-degree-fabric-dark{
 	background-blend-mode: color-burn;
 }
 
+.ptn-stardust, .ptn-rocky-wall {
+	background-blend-mode: exclusion;
+}
+
+.ptn-shattered-dark{
+	background-blend-mode: multiply;
+}
+
+.ptn-rainbow, .child-inner.ptn-rainbow{
+
+	$rainbow: linear-gradient(to right bottom, magenta, orange, yellow, SpringGreen, cyan);
+
+	&.fa, &.gi, svg {
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		fill: $rainbow;
+	}
+
+	&.btn{
+		$btnBG: #00ff7f;
+		@include button-variant($btnBG, $btnBG)
+	}
+
+	color:black;
+	background-image: $rainbow;
+}
+
+
+.ptn-ocean{
+	$ocean: linear-gradient(transparent,#0057BE);
+
+	background-image: $ocean;
+}
+
+
+@keyframes colorchange
+{
+	0%   {background: red;}
+	25%  {background: yellow;}
+	50%  {background: blue;}
+	75%  {background: green;}
+	100% {background: red;}
+}
+
+@-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
+{
+	0%   {background: red;}
+	25%  {background: yellow;}
+	50%  {background: blue;}
+	75%  {background: green;}
+	100% {background: red;}
+}
+
+.ptn-colorchange {
+	animation: colorchange 10s infinite;
+	-webkit-animation: colorchange 10s infinite;
+	color:black;
+
+	&.icon, &.icon svg{
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+}

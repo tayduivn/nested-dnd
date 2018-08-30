@@ -1,0 +1,41 @@
+@import "../../variables.scss";
+
+.colorPicker {
+	z-index: 5;
+
+	.row {
+		flex-wrap: nowrap;
+	}
+	.sample {
+		$size: 1.5rem;
+
+		border: 0;
+		height: $size;
+		min-width: $size;
+		width: $size;
+		max-width: $size;
+		cursor: pointer;
+		border: 1px solid transparent;
+		transition: border-radius 100ms ease-out;
+
+		&:hover{
+			border-radius: 0.5em;
+			border-color: white;
+		}
+
+		&.selected{
+			border-radius: 1em;
+			border-color: white;
+		}
+	}
+
+	&.github-picker{
+		left:-258px;
+		top: 44px;
+		position: absolute !important;
+
+		> div {
+			right: 105px !important;
+		}
+	}
+}

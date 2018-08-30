@@ -3,7 +3,21 @@ import Color from 'color-js';
 
 var Styler = {};
 
-var html5colors = [];
+var html5colors = [
+	"black","dimgray","gray","darkgray","silver","lightgray","gainsboro","whitesmoke","white",
+	"slategray","lightslategray","lightsteelblue","lightblue","powderblue","paleturquoise","lightcyan","azure","mintcream","peachpuff",
+	"bisque","blanchedalmond","papayawhip","antiquewhite","linen","oldlace","cornsilk","khaki","palegoldenrod","beige",
+	"lemonchiffon","lightgoldenrodyellow","lightyellow","rosybrown","thistle","lavender","aliceblue","ghostwhite","snow","tan","burlywood",
+	"wheat","navajowhite","moccasin","indianred","palevioletred","lightpink","pink","mistyrose","lavenderblush","seashell","floralwhite",
+	"ivory","darkviolet","blueviolet","darkorchid","mediumorchid","orchid","violet","plum","mediumpurple","mediumslateblue","slateblue",
+	"darkslateblue","darkslategray","teal","darkcyan","lightseagreen","darkturquoise","mediumturquoise","turquoise","cyan","aquamarine","palegreen",
+	"lightgreen","mediumaquamarine","darkseagreen","darkkhaki","goldenrod","peru","chocolate","sienna","saddlebrown","maroon","darkred","brown",
+	"firebrick","crimson","red","orangered","tomato","coral","lightcoral","salmon","darksalmon","sandybrown","lightsalmon","darkorange","orange",
+	"gold","yellow","greenyellow","chartreuse","lawngreen","mediumspringgreen","springgreen","lime","limegreen","mediumseagreen","seagreen","forestgreen",
+	"green","darkgreen","darkolivegreen","olive","olivedrab","yellowgreen","skyblue","lightskyblue","deepskyblue","dodgerblue","cornflowerblue",
+	"royalblue","cadetblue","steelblue","blue","mediumblue","darkblue","navy","midnightblue","indigo","purple","darkmagenta","mediumvioletred",
+	"deeppink","magenta","ocean"
+];
 var customClasses = ["rainbow","ocean","glow", "colorchange"];
 
 var colorOptions = null;
@@ -29,6 +43,14 @@ function getColorOptions(){
 		colorOptions = colors.map((color) => { return { value: color, label: color } });
 	}
 	return colorOptions;
+}
+
+Styler.getColorSwatches = ()=>{
+	var colors = ([]).concat(html5colors);
+	colors.sort(function(a,b){
+		return Color(a).getHue() - Color(b).getHue();
+	});
+	return colors;
 }
 
 Styler.getBackgroundOptions = function(originalOption){

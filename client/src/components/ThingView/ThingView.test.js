@@ -6,7 +6,7 @@ import sinon, { spy } from 'sinon';
 import ThingView from './ThingView';
 import CategoryTabs from './CategoryTabs';
 import NameInput from './NameInput';
-import IsASelect from './IsASelect';
+import IsASelect from '../Form/IsASelect';
 
 describe('<ThingView />',()=>{
 

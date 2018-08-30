@@ -20,7 +20,7 @@ describe('auth', ()=>{
 
 	});
 
-	describe('sign on', ()=>{
+	describe('/signup', ()=>{
 
 		before(()=>{
 
@@ -55,7 +55,7 @@ describe('auth', ()=>{
 
 	})
 
-	describe('sign out',()=>{
+	describe('/logout',()=>{
 
 		it('returns ok', (done)=>{
 			request(app)

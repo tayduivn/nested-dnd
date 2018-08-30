@@ -1,27 +1,52 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
+const fng = require('fantasy-names');
+
 const Maker = require('./generator/make');
 const Util = require('./utils');
+const sourceSchema = require('./source');
+const validateMixedThing = require('./generator/styleSchema').validateMixedThing
 
 var rowSchema = Schema({
-	type: String,
+	type: {
+		$type: String,
+		enum: ['string','generator','table','embed','table_id','data','dice'],
+		default: 'string'
+	},
 	value: Schema.Types.Mixed,
 	weight: Number
-}, { typeKey: '$type'})
+}, { typeKey: '$type', _id: false})
 
 var tableSchema = Schema({
-	pack_id: {
+	user: {
 		type: Schema.Types.ObjectId,
-		ref: 'Pack',
-		required: true
+		ref: 'User'
+	},
+	pack: { //pack that this table is contained within
+		type: Schema.Types.ObjectId,
+		ref: 'Pack'
 	},
 	title: String,
+	desc: String,
+	returns: {
+		type: String,
+		enum: ['generator','text','fng'],
+		default: 'text'
+	},
 	rows: {
-		type:[rowSchema]
+		type: [rowSchema],
+		set: input => input.map((row)=>{
+			return (typeof row === 'string') ? {value:row} : row;
+		})
 	},
 	concat: Boolean,
 	rowWeights: Boolean,
-	tableWeight: Number
+	tableWeight: Number,
+	public: {
+		type: Boolean,
+		default: false
+	},
+	source: sourceSchema
 });
 
 /**
@@ -38,10 +63,24 @@ tableSchema.path('rows').set((arr)=>{
 });
 
 //returns a Promise<String>
-tableSchema.methods.roll = function(){
+tableSchema.methods.roll = async function(data){
+
+	if(this.returns === 'fng'){
+		try{
+			var result = fng(this.rows[0] && this.rows[0].value, this.rows[1] && this.rows[1].value, 
+				1, // quantity
+				(this.rows[2] !== undefined && this.rows[2] !== null && !isNaN(this.rows[2].value) && this.rows[2].value) || undefined )[0];
+			if(this.rows[3] && this.rows[3].value){
+				return result.split(' ').map(s=>s.charAt(0).toUpperCase()+s.substr(1)).join(' ');
+			}
+			return result;
+		}catch(e){
+			return null;
+		}
+	}
 
 	if(this.concat){
-		return this.concatenate();
+		return this.concatenate(data);
 	}
 
 	var row;
@@ -55,16 +94,16 @@ tableSchema.methods.roll = function(){
 	if(typeof row === 'string')
 		return row;
 
-	return Maker.makeMixedThing(row, this.model('Table'));
+	return await Maker.makeMixedThing(row, this.model('Table'), data);
 }
 
-tableSchema.methods.concatenate = async function(){
+tableSchema.methods.concatenate = async function(data){
 	var result = "";
 	var Table = this.model('Table');
 
 	//for loop always results in a string
 	for(var i = 0; i < this.rows.length; i++){
-		var rowResult = await Maker.makeMixedThing(this.rows[i], Table);
+		var rowResult = await Maker.makeMixedThing(this.rows[i], Table, data);
 		result += rowResult;
 	};
 
@@ -130,3 +169,4 @@ function weightedDiceChoose(arr){
 }
 
 module.exports = mongoose.model('Table', tableSchema);
+module.exports.rowSchema = rowSchema;

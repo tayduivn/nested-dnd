@@ -1,6 +1,8 @@
 {
   "characters": [
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "name": "",
       "player": "Katie",
       "classes": [
@@ -25,22 +27,22 @@
         }
       ],
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 10
         },
-        "Constitution": {
+        "con": {
           "base": 8
         },
-        "Dexterity": {
+        "dex": {
           "base": 12
         },
-        "Intelligence": {
+        "int": {
           "base": 16
         },
-        "Strength": {
+        "str": {
           "base": 8
         },
-        "Wisdom": {
+        "wis": {
           "base": 17
         }
       },
@@ -124,25 +126,27 @@
       }
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "name": "Crescende Wine-Spiller",
       "player": "Stuart",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 15
         },
-        "Constitution": {
+        "con": {
           "base": 13
         },
-        "Dexterity": {
+        "dex": {
           "base": 14
         },
-        "Intelligence": {
+        "int": {
           "base": 8
         },
-        "Strength": {
+        "str": {
           "base": 10
         },
-        "Wisdom": {
+        "wis": {
           "base": 12
         }
       },
@@ -257,23 +261,25 @@
       }
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 15
         },
-        "Constitution": {
+        "con": {
           "base": 14
         },
-        "Dexterity": {
+        "dex": {
           "base": 12
         },
-        "Intelligence": {
+        "int": {
           "base": 13
         },
-        "Strength": {
+        "str": {
           "base": 10
         },
-        "Wisdom": {
+        "wis": {
           "base": 8
         }
       },
@@ -377,23 +383,25 @@
       "shield": false
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 15
         },
-        "Constitution": {
+        "con": {
           "base": 14
         },
-        "Dexterity": {
+        "dex": {
           "base": 12
         },
-        "Intelligence": {
+        "int": {
           "base": 13
         },
-        "Strength": {
+        "str": {
           "base": 10
         },
-        "Wisdom": {
+        "wis": {
           "base": 8
         }
       },
@@ -499,23 +507,25 @@
       "shield": false
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 15
         },
-        "Constitution": {
+        "con": {
           "base": 14
         },
-        "Dexterity": {
+        "dex": {
           "base": 12
         },
-        "Intelligence": {
+        "int": {
           "base": 13
         },
-        "Strength": {
+        "str": {
           "base": 10
         },
-        "Wisdom": {
+        "wis": {
           "base": 8
         }
       },
@@ -626,25 +636,27 @@
       "shield": false
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "name": "Locke",
       "player": "Mark",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 10
         },
-        "Constitution": {
+        "con": {
           "base": 13
         },
-        "Dexterity": {
+        "dex": {
           "base": 14
         },
-        "Intelligence": {
+        "int": {
           "base": 12
         },
-        "Strength": {
+        "str": {
           "base": 8
         },
-        "Wisdom": {
+        "wis": {
           "base": 15
         }
       },
@@ -750,25 +762,27 @@
       "shield": true
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "name": "Locke",
       "player": "Mark",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 10
         },
-        "Constitution": {
+        "con": {
           "base": 13
         },
-        "Dexterity": {
+        "dex": {
           "base": 14
         },
-        "Intelligence": {
+        "int": {
           "base": 12
         },
-        "Strength": {
+        "str": {
           "base": 8
         },
-        "Wisdom": {
+        "wis": {
           "base": 15
         }
       },
@@ -879,25 +893,27 @@
       "shield": true
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "name": "Locke",
       "player": "Mark",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 10
         },
-        "Constitution": {
+        "con": {
           "base": 13
         },
-        "Dexterity": {
+        "dex": {
           "base": 14
         },
-        "Intelligence": {
+        "int": {
           "base": 12
         },
-        "Strength": {
+        "str": {
           "base": 8
         },
-        "Wisdom": {
+        "wis": {
           "base": 15
         }
       },
@@ -1017,25 +1033,27 @@
       "shield": true
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "name": "Neville Longbottom",
       "player": "Chris",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 15
         },
-        "Constitution": {
+        "con": {
           "base": 14
         },
-        "Dexterity": {
+        "dex": {
           "base": 12
         },
-        "Intelligence": {
+        "int": {
           "base": 13
         },
-        "Strength": {
+        "str": {
           "base": 10
         },
-        "Wisdom": {
+        "wis": {
           "base": 8
         }
       },
@@ -1134,25 +1152,27 @@
       "shield": false
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "name": "Neville Longbottom",
       "player": "Chris",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 15
         },
-        "Constitution": {
+        "con": {
           "base": 14
         },
-        "Dexterity": {
+        "dex": {
           "base": 12
         },
-        "Intelligence": {
+        "int": {
           "base": 13
         },
-        "Strength": {
+        "str": {
           "base": 10
         },
-        "Wisdom": {
+        "wis": {
           "base": 8
         }
       },
@@ -1252,25 +1272,27 @@
       "shield": false
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "name": "Neville Longbottom",
       "player": "Chris",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 15
         },
-        "Constitution": {
+        "con": {
           "base": 14
         },
-        "Dexterity": {
+        "dex": {
           "base": 13
         },
-        "Intelligence": {
+        "int": {
           "base": 8
         },
-        "Strength": {
+        "str": {
           "base": 10
         },
-        "Wisdom": {
+        "wis": {
           "base": 12
         }
       },
@@ -1373,25 +1395,27 @@
       "shield": false
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "name": "The Watcher",
       "player":"Tony",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 10
         },
-        "Constitution": {
+        "con": {
           "base": 12
         },
-        "Dexterity": {
+        "dex": {
           "base": 8
         },
-        "Intelligence": {
+        "int": {
           "base": 15
         },
-        "Strength": {
+        "str": {
           "base": 13
         },
-        "Wisdom": {
+        "wis": {
           "base": 14
         }
       },
@@ -1494,25 +1518,27 @@
       }
     },
     {
+    	"user": "5aa2f8a31e0a791ed4d0a546",
+    	"universe": "5ac64c5656a5222484f34fe0",
       "name": "The Watcher",
       "player":"Tony",
       "abilities": {
-        "Charisma": {
+        "cha": {
           "base": 10
         },
-        "Constitution": {
+        "con": {
           "base": 12
         },
-        "Dexterity": {
+        "dex": {
           "base": 8
         },
-        "Intelligence": {
+        "int": {
           "base": 15
         },
-        "Strength": {
+        "str": {
           "base": 13
         },
-        "Wisdom": {
+        "wis": {
           "base": 14
         }
       },

@@ -126,7 +126,7 @@ describe('Generator', ()=>{
 	describe('makeStyle()', function(){
 
 		it('should return', ()=>{
-			return generator.makeStyle("blue universe").should.eventually.have.property('cssClass', 'darkblue purty-wood');
+			return generator.makeStyle("blue universe").should.eventually.have.property('cssClass', 'bg-blue-900 ptn-purty-wood');
 		})
 	})
 
@@ -141,7 +141,7 @@ describe('Generator', ()=>{
 	describe('insertNew()', ()=>{
 
 		it('should return generator', ()=>{
-			return Generator.insertNew({ isa: 'test' }, pack).should.eventually.be.instanceOf(Generator);
+			return Generator.insertNew({ isa: 'test' }, pack).should.eventually.have.property('unbuilt').that.is.instanceOf(Generator);
 		})
 		
 	})

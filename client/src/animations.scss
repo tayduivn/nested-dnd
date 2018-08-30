@@ -50,33 +50,3 @@ i.pulse{
     transform: rotate(-359deg);
   }
 }
-
-
-@keyframes colorchange
-{
-	0%   {background: red;}
-	25%  {background: yellow;}
-	50%  {background: blue;}
-	75%  {background: green;}
-	100% {background: red;}
-}
-
-@-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
-{
-	0%   {background: red;}
-	25%  {background: yellow;}
-	50%  {background: blue;}
-	75%  {background: green;}
-	100% {background: red;}
-}
-
-.colorchange {
-	animation: colorchange 10s infinite;
-	-webkit-animation: colorchange 10s infinite;
-	color:black;
-
-	&.fa, &.gi, &.glyphicon{
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-	}
-}

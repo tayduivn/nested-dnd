@@ -3,6 +3,9 @@ const Pack = require("../models/pack");
 const BuiltPack = require("../models/builtpack");
 const Util = require("../models/utils");
 const User = require("../models/user");
+const Universe = require("../models/universe");
+const Table = require("../models/table");
+const Character = require("../models/character");
 
 module.exports = {
 
@@ -28,9 +31,34 @@ module.exports = {
 		res.status(401).json({error:"You need to be an administrator to do that"})
 	},
 
+	canViewTable: function(req, res, next){
+		return Table.findById(req.params.table).exec().then(table=>{
+			if(!table) return res.status(404);
+
+			if(!table.public && (!req.user || table.user.toString() !== req.user.id))
+				return res.status(401).json({error: "You do not have permission to view this table"})
+
+			req.table = table;
+			next();
+		}).catch(next)
+	},
+
+	canEditTable: function(req, res, next){
+		return Table.findById(req.params.table).exec().then(table=>{
+			if(!table) return res.status(404);
+
+			if(!req.user || table.user.toString() !== req.user.id)
+				return res.status(401).json({error: "You do not have permission to edit this table"})
+
+			req.table = table;
+			next();
+		}).catch(next)
+	},
+
 	canViewPack: function(req, res, next){
-		getPack(req, res, ()=>{
-			if(!req.pack)  return;
+		console.log('canViewPack');
+		return getPack(req, res, ()=>{
+			if(!req.pack) return;
 
 			if(req.pack.public || (req.user && req.pack._user.id === req.user.id)) {
 				return next();
@@ -41,12 +69,35 @@ module.exports = {
 		});
 	},
 
+	ownsUniverse: function(req, res, next){
+		var getProperties = (req.params.index !== undefined || req.url.includes('/explore')) ? undefined : 'title user_id pack favorites array';
+		
+		Universe.findById(req.params.universe, getProperties).populate('pack').then(async (universe)=>{
+			if(!universe) return res.status(404).send();
+			if(!req.user || universe.user_id.toString() !== req.user.id) 
+				return res.status(401).json({error: "You do not have permission to view this universe"})
+			req.universe = universe;
+			req.universe.pack = universe.pack;
+			next();
+		}).catch(next);
+	},
+
+	ownsCharacter: function(req, res, next){
+		Character.findById(req.params.character).populate('universe','_id pack').then(async (char)=>{
+			if(!char) return res.status(404).send();
+			if(!req.user || char.user.toString() !== req.user.id) 
+				return res.status(401).json({error: "You do not have permission to view this character"})
+			req.character = char;
+			next();
+		}).catch(next);
+	},
+
 	canEditPack: function(req, res, next){
 
 		if (!req.isAuthenticated())
 			res.status(401).json({error:"You need to be logged in to edit packs."})
 
-		getPack(req, res, ()=>{
+		return getPack(req, res, ()=>{
 
 			if(!req.pack)  return;
 
@@ -74,8 +125,18 @@ module.exports = {
 			console.error(err.fileName+" | col:"+err.columnNumber+" | line:"+err.lineNumber); // internal error
 			console.error(err.stack);
 		}
+
+		var errJSON = Util.toJSON(err);
+
+		if(errJSON.errmsg){
+			errJSON.message = err.errmsg;
+			delete errJSON.errmsg;
+		}
 		
-		return res.json({ error: Util.toJSON(err) });
+		return res.json({ error: {
+			message: err.message,
+			stack: err.stack
+		}  });
 	},
 
 	getLoggedInUser(req, res, next){
@@ -97,6 +158,7 @@ module.exports = {
 	 * Puts the pack in the req object
 	 */  
 function getPack(req, res, next){
+	console.log('getPack');
 	var packGetter;
 
 	if(req.params.pack)
@@ -105,15 +167,19 @@ function getPack(req, res, next){
 		packGetter = Pack.findOne({ url: req.params.url }).populate('_user', "name id")
 	else return res.status(412).json({"error": "Missing pack id"});
 
-	packGetter.exec().then(pack=>{
+	console.log('packGetter.exec()');
+	return packGetter.exec().then(pack=>{
+		console.log('then(pack=>');
 
 		if(!pack){
+			console.log('COULDNT FIND PACK')
 			var error = {"error": "Couldn't find pack? "+req.params.pack+req.params.url};
 			if(!res.headersSent) {
 				res.status(404).json(error)
 			}
 			return next(error);
 		}
+		console.log('FOUND PACK')
 
 		req.pack = pack;
 

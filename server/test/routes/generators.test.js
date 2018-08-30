@@ -3,7 +3,6 @@ const chaiAsPromised = require("chai-as-promised");
 const should = chai.should();
 const sinon = require('sinon');
 const request = require('supertest')(app);
-const express = require('express');
 chai.use(chaiAsPromised);
 require('sinon-mongoose');
 
@@ -13,7 +12,7 @@ const User = require('../../app/models/user');
 const Generator = require('../../app/models/generator');
 const BuiltPack = require('../../app/models/builtpack');
 
-describe('/api/packs/:pack/generator',()=>{
+describe('/packs/:pack/generator',()=>{
 
 	var PackMock, BPMock, GenMock, user, pack, builtpack;
 
@@ -36,7 +35,8 @@ describe('/api/packs/:pack/generator',()=>{
 			_user: user.id
 		});
 		builtpack = new BuiltPack({ //findOrBuild
-			_id: pack._id
+			_id: pack._id,
+			generators: {}
 		});
 
 		pack._user = user;
@@ -70,7 +70,7 @@ describe('/api/packs/:pack/generator',()=>{
 		}
 
 		beforeEach(()=>{
-			dogeData.pack_id = pack.id;
+			dogeData.pack = pack.id;
 		});
 
 		it('creates correctly',()=>{
@@ -89,8 +89,9 @@ describe('/api/packs/:pack/generator',()=>{
 				.expect('Content-Type', /json/)
 				.expect(200)
 				.expect(({body})=>{
-					body.should.have.property('isa','doge');
-					body.should.have.property('pack_id', pack.id);
+					body.should.have.property('unbuilt')
+					body.unbuilt.should.have.property('isa','doge');
+					body.unbuilt.should.have.property('pack', pack.id);
 				});
 		});
 
@@ -168,11 +169,13 @@ describe('/api/packs/:pack/generator',()=>{
 				.send(petstoreData)
 				.expect('Content-Type', /json/)
 				.expect(({body})=>{
-					body.should.have.property('isa','pet ztore');
-					body.should.have.property('pack_id', pack.id);
-					body.should.have.property('in').with.lengthOf(2);
-					body.style.should.have.property('txt').with.property('value',"red");
-					body.style.should.have.property('bg').with.property('value',"white");
+					body.should.have.property('unbuilt');
+					var gen = body.unbuilt;
+					gen.should.have.property('isa','pet ztore');
+					gen.should.have.property('pack', pack.id);
+					gen.should.have.property('in').with.lengthOf(2);
+					gen.style.should.have.property('txt').with.property('value',"red");
+					gen.style.should.have.property('bg').with.property('value',"white");
 				})
 				.expect(200);
 		});
@@ -185,16 +188,25 @@ describe('/api/packs/:pack/generator',()=>{
 
 		describe('GET', ()=>{
 
+			beforeEach(()=>{
+				BPMock.expects('findById').chain('exec').resolves(undefined);
+				PackMock.expects('findById').chain('exec').resolves(pack);
+			})
+
 			it('should get the gen',()=>{
+
 				generator = new Generator({
 					isa: 'test',
-					pack_id: pack._id
+					pack: pack._id
 				})
+				
 				GenMock.expects('findById').chain('exec').resolves(generator);
+				GenMock.expects('find').chain('exec').resolves([generator]);
 
-				return request.get('/api/packs/'+pack.id+'/generators/'+generator.id)
+				return request.get('/api/packs/'+pack._id+'/generators/'+generator.isa)
 					.expect(({body})=>{
-						body.should.have.property('isa','test');
+						body.should.have.property('unbuilt')
+						body.unbuilt.should.have.property('isa','test');
 					})
 					.expect('Content-Type', /json/)
 					.expect(200);
@@ -203,9 +215,10 @@ describe('/api/packs/:pack/generator',()=>{
 			it('should return 404',()=>{
 				generator = new Generator({
 					isa: 'test',
-					pack_id: pack._id
+					pack: pack._id
 				})
-				GenMock.expects('findById').chain('exec').resolves(undefined);
+				
+				GenMock.expects('find').chain('exec').resolves([]);
 
 				return request.get('/api/packs/'+pack.id+'/generators/'+generator.id)
 					.expect('Content-Type', /json/)
@@ -217,27 +230,23 @@ describe('/api/packs/:pack/generator',()=>{
 		describe('PUT', ()=>{
 
 			it('should rename the gen',()=>{
+
 				generator = new Generator({
 					isa: 'test',
-					pack_id: pack._id
+					pack: pack._id
 				})
-				GenMock.expects('findById').chain('exec').resolves(generator);
-
-				BPMock.expects('findById') //findOrBuild
-					.chain('exec')
-					.resolves(builtpack);
-
 				var newData = Object.assign({},generator._doc);
 				newData.isa = 'test2';
 
-				GenMock.expects('find')
-					.chain('exec')
-					.resolves([new Generator(newData)]);
+				GenMock.expects('findById').chain('exec').resolves(generator);
+				BPMock.expects('findById').chain('exec').resolves(builtpack); //findOrBuild
+				GenMock.expects('find').chain('exec').resolves([new Generator(newData)]);
 
-				return request.put('/api/packs/'+pack.id+'/generators/'+generator.id)
+				return request.put('/api/packs/'+pack.id+'/generators/'+generator._id)
 					.send(newData)
 					.expect(({body})=>{
-						body.should.have.property('isa','test2');
+						console.log(JSON.stringify(body, null, 2));
+						body.unbuilt.should.have.property('isa','test2');
 					})
 					.expect('Content-Type', /json/)
 					.expect(200);

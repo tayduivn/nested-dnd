@@ -2,7 +2,7 @@ import React from "react";
 
 import { Item } from './CharSheetShowWork';
 
-export const RolePlay = ({race, body, abilities, background, profBonus, proficiencies, col}) => (
+export const RolePlay = ({race = {}, body = {}, abilities, background = {}, profBonus, proficiencies, col}) => (
 	<div className={`close-col col-${col}`}>
 		<div className="row">
 			<Item
@@ -15,26 +15,25 @@ export const RolePlay = ({race, body, abilities, background, profBonus, proficie
 				}
 			/>
 			<Item
-				xs={12}
+				xs={8}
 				label="Background"
 				value={
 					background.name +
-					" " +
-					background.specialty
+					(background.specialty ? " " +background.specialty : '')
 				}
 			/>
 			<Item
-				xs={8}
-				label="Start Coin"
+				xs={4}
+				label="Coin"
 				value={background.startingCoin}
 			/>
-			<Item label="Speed" value={body.speed+" ft."} />
+			<Item xs={4} label="Speed" value={(body.speeds && body.speeds.walk+" ft." || "")} />
+			<Item xs={4} label="Size" value={race.size.charAt(0)} />
 			<Item
-				xs={8}
-				label="Proficiency Bonus"
+				xs={4}
+				label="Proficient"
 				value={profBonus}
 			/>
-			<Item label="Size" value={race.size} />
 		</div>
 		<div className="row">
 			<Item label="Eyes" value={body.eyes} />
@@ -46,58 +45,54 @@ export const RolePlay = ({race, body, abilities, background, profBonus, proficie
 			<Item label="Height" value={body.height} />
 			<Item label="Weight" value={body.weight} />
 		</div>
-		<BaseAbilityScores {...abilities} />
-		<p>&nbsp;</p>
-		<div className="row">
-			<ProficienciesList {...proficiencies} profBonus={profBonus} />
-		</div>
+		<ProficienciesList {...proficiencies} profBonus={profBonus} />
 	</div>
 );
 
 // abilties are Abilities
-const Ability = ({label, score}) => <Item label={label} value={score.getScore()} />;
+const Ability = ({label, score}) => <Item label={label} value={score} />;
 
-const BaseAbilityScores = ({Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma}) => (
+const BaseAbilityScores = ({str, dex, con, int, wis, cha}) => (
 	<div className="row">
-		<div xs={6} className="col no-padding">
-			<Ability label="STR" score={Strength} />
-			<Ability label="DEX" score={Dexterity} />
-			<Ability label="CON" score={Constitution} />
-			<Ability label="INT" score={Intelligence} />
-			<Ability label="WIS" score={Wisdom} />
-			<Ability label="CHA" score={Charisma} />
-		</div>
+		<Ability label="STR" score={str.score} />
+		<Ability label="DEX" score={dex.score} />
+		<Ability label="CON" score={con.score} />
+		<Ability label="INT" score={int.score} />
+		<Ability label="WIS" score={wis.score} />
+		<Ability label="CHA" score={cha.score} />
 	</div>
 );
 
 const ProfParagraph = ({list, label}) => (
 	<p>
 		<em>{list.length ? label : ''} </em>
-		{list}
+		{(typeof list === 'object') ? list.toString() : list}
 	</p>
 )
 
-const ProficienciesList = ({ languages, armor, weapons, tools, profBonus }) => (
+const ProficienciesList = ({ languages = [], armor = [], weapons = [], tools = [], profBonus, doubleTools = []  }) => (
 	<div className="description">
 		<p className="title-sm">Proficiencies</p>
-		<ProfParagraph label="Languages" list={languages.list.join(", ")} />
-		<ProfParagraph label="Armor" list={armor.list.join(", ")} />
-		<ProfParagraph label="Weapons" list={weapons.list.join(", ")} />
-		<ProfParagraph label="Tools" list={toolsToString(tools, profBonus)} />
+		<ProfParagraph label="Languages" list={languages.join ? languages.join(", ") : languages} />
+		<ProfParagraph label="Armor" list={armor.join ? armor.join(", ") : armor} />
+		<ProfParagraph label="Weapons" list={weapons.join ?  weapons.join(", ") :  weapons} />
+		<ProfParagraph label="Tools" list={toolsToString(tools, doubleTools, profBonus)} />
 	</div>
 );
 
-function toolsToString(tools, profBonus){
+function toolsToString(tools = [], doubleTools = [], profBonus){
+	if(!tools.forEach) return tools.toString();
+
 	let toolsStr = "";
-	tools.list.forEach((tool, i) => {
+	tools.forEach((tool, i) => {
 		if(!tool.length) return;
 		
 		toolsStr+= tool+" ";
-		if(tools.double_proficiency.includes(tool))
+		if(doubleTools.includes(tool))
 			toolsStr += "+"+parseInt(profBonus,10)*2;
 		else
 			toolsStr += profBonus;
-		if(i !== tools.list.length-1) toolsStr+=", ";
+		if(i !== tools.length-1) toolsStr+=", ";
 	});
 	return toolsStr;
 }

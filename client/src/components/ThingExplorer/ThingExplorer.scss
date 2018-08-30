@@ -47,48 +47,56 @@
   padding-top:20px;
 }
 
+#icons-preview{
+  $gutter: 5px;
+  font-size: 0.85em;
+  margin-left: -$gutter;
+  margin-right: -$gutter;
+
+  .icon-wrap{
+    padding: 0 5px 10px 5px;
+  }
+
+  .form-group.icon { 
+  	width: 6em;
+    $padding: 0px;
+    text-align: center;
+    padding: 7px $padding 1.5em $padding;
+    position:relative;
+    border-radius:5px;
+    margin: 0;
+
+    &.undefined{
+    	background-color: #eee;
+    }
+
+    label{
+      font-weight: normal;
+      font-size: 5em;
+
+      margin: 0 0 .1em 0;
+      line-height: 1em;
+    }
+    select{
+      border:0;
+      padding: 5px 3px;
+      height: auto;
+      font-size: 0.75em;
+      line-height: 1em;
+      -webkit-appearance: none; /*removes original arrow*/
+      width:100%;
+      position: absolute;
+      bottom: 0.5em;
+      right: 0;
+    }
+  }
+}
+
 #thingView{
   padding:0px;
 
   .properties{
     max-width:600px;
-  }
-
-  #icons-preview{
-    $gutter: 5px;
-    font-size: 0.85em;
-    margin-left: -$gutter;
-    margin-right: -$gutter;
-
-    .icon-wrap{
-      padding: 0 5px 10px 5px;
-    }
-
-    .icon{
-      $padding: 0px;
-      text-align: center;
-      padding: 7px $padding 3px $padding;
-      position:relative;
-      border-radius:5px;
-      margin:0;
-      background-color: #eee;
-
-      .control-label{
-        font-weight: normal;
-        font-size:40px;
-        margin: 0 0 5px 0;
-        line-height: 1em;
-        height:45px;
-      }
-      select{
-        border:0;
-        padding: 5px 3px;
-        height: auto;
-        font-size:0.95em;
-        line-height: 1em;
-        -webkit-appearance: none; /*removes original arrow*/
-      }
-    }
   }
 
   .submit-buttons{
@@ -162,11 +170,6 @@
   } 
 }
 
-.Select-option i{
-  vertical-align:middle;
-  font-size:2em;
-}
-
 .icon-option{
   padding:5px;
   line-height: 1em;
@@ -179,9 +182,12 @@
     cursor: pointer;
   }
 
-  i{
+  .icon{
     vertical-align:middle;
-    font-size:2em;
+    font-size: 2em;
+    svg {
+    	height: 1em;
+    }
   }
 }
 
@@ -193,15 +199,7 @@
   }
 }
 
-.Select-menu-outer {
-  z-index: 999 !important;
-}
-.Select.is-open { 
-  position: relative  !important; z-index: 1000 !important; 
-}
+
 .feedback-group{
   position:relative;
-}
-.has-success > .Select .Select-control{
-  border-color: theme-color("success");
 }

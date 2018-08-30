@@ -151,7 +151,7 @@ class Skill {
 		}
 
 		if (this.proficient) {
-			let profBonus = this.character.getProficiencyBonus();
+			let profBonus = this.character.proficiencyBonus;
 			mod += profBonus;
 
 			if(this.doubleProficient) mod += profBonus;

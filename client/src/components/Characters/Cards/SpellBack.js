@@ -2,18 +2,7 @@ import React from "react";
 
 import InfoPanel from './InfoPanel';
 import { SPELL_LVL_ICONS } from './CardsUtil';
-
-function getClassName(level, cast_time, consumable){
-	var className = parseInt(level, 10) > 0 ? " purple" : "";
-	className += cast_time === "1 bonus action"
-				? " bonus"
-				: cast_time === "Modifier" ||
-					cast_time === "1 reaction"
-					? " bonus modifier"
-					: "";
-		if (consumable) className += " red";
-	return className;
-}
+import { getClassName } from './SpellFront';
 
 function getDesc(description){
 	let desc = "";
@@ -33,11 +22,11 @@ function getDesc(description){
 	return desc;
 }
 
-const SpellBack = ({description, namegen, ritual, consumable, isFeature, level, cast_time, range, duration, concentration, components, school}) => (
-	<div className={"card spell " + getClassName(level, cast_time, consumable)}>
+const SpellBack = ({description, name, ritual, consumable, isFeature, level, castTime, range, duration, concentration, components = {}, school, uses}) => (
+	<div className={"card spell " + getClassName(level, castTime, uses, consumable)}>
 		<div className="card-inner back">
 			<h2>
-				{namegen}
+				{name}
 				{ritual ? <i className="i-ritual" /> : ""}
 				<span className="lvl">
 					{consumable || isFeature
@@ -47,7 +36,7 @@ const SpellBack = ({description, namegen, ritual, consumable, isFeature, level, 
 			</h2>
 			<div className="castTime">
 				<em>
-					{cast_time}
+					{castTime}
 				</em>
 			</div>
 			<InfoPanel
@@ -60,7 +49,7 @@ const SpellBack = ({description, namegen, ritual, consumable, isFeature, level, 
 			</div>
 			<div className="pin-bottom">
 				<strong>
-					{components.types.replace("M", "").trim()}
+					{components.types}
 				</strong>{" "}
 				<span className="material">{components.materials}</span>
 				<span className="school">{school}</span>

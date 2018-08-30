@@ -1,11 +1,12 @@
 import React from 'react'
-import Select from 'react-select'
+import { Creatable } from 'react-select'
 
 import Styler from '../../util/Styler';
-import IconSelect from './IconSelect';
+import IconSelect from '../Form/IconSelect';
 
 const RESET_VALUE = ",,"
 const DEBUG = false;
+
 
 const StyleTab = (props) => (
 	<div>
@@ -18,13 +19,6 @@ const StyleTab = (props) => (
 	</div>
 )
 export default StyleTab;
-
-const Dropdown = ({label, name, thing, status, handleChange, setPreview}) => (
-	<div className="col-md">
-		<ColorDropdown label={label} name={name} value={thing[name]} status={status}
-			saveProperty={handleChange} setPreview={setPreview} />
-	</div>
-);
 
 class ColorDropdown extends React.Component {
 	constructor(){
@@ -60,15 +54,17 @@ class ColorDropdown extends React.Component {
 		const options = (this.props.name === "background") ? Styler.getBackgroundOptions(this.props.value)
 			: Styler.getColorOptions(this.props.value);
 		const value = (this.props.value) ? this.props.value : [];
+
 		if(DEBUG){
 			console.log("\t ColorDropdown.RENDER -- \""+value+"\"");
 			console.log("\t\t "+this.props.name+" isUpdated:"+this.props.status.isUpdated+" isEnabled:"+this.props.status.isEnabled+" isClearable:"+this.props.status.isClearable);
 		} 
 
-		return (<div className={`form-group ${this.props.status.isEnabled ? "" : "fake-disabled"}`} 
+		return (
+			<div className={`form-group ${this.props.status.isEnabled ? "" : "fake-disabled"}`} 
 					validationstate={this.props.status.isUpdated ? "success" : null}>
 				<label>{this.props.label}</label> 
-				<Select.Creatable value={value} multi={true} 
+				<Creatable value={value} multi={true} 
 					clearable={this.props.status.isClearable}
 					clearValueText="Clear changes" clearRenderer={Styler.selectClear} resetValue={["","",""]} 
 					simpleValue
@@ -78,3 +74,10 @@ class ColorDropdown extends React.Component {
 			</div>);
 	}
 }
+
+const Dropdown = ({label = "", name = "", thing = {}, status = "", handleChange = ()=>{}, setPreview = ()=>{} }) => (
+	<div className="col-md">
+		<ColorDropdown label={label} name={name} value={thing[name]} status={status}
+			saveProperty={handleChange} setPreview={setPreview} />
+	</div>
+);

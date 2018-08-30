@@ -5,12 +5,21 @@ const Nested = require('../routes/packs/nested');
 const flatInstanceSchema = Schema({
 	name: String,
 	isa: String,
-	txt: String,
-	cssClass: String,
+	txt: {
+		type: String,
+		set: (v)=>!v ? undefined: v,
+		get: (v)=>!v ? undefined: v
+	},
+	cssClass: {
+		type: String,
+		set: (v)=>!v ? undefined: v,
+		get: (v)=>!v ? undefined: v
+	},
 	img: String,
 	icon: String,
 	up: Number,
 	todo: Boolean,
+	desc: [String],
 	in: {
 		type: [Number],
 	 	default: void 0,
@@ -19,8 +28,11 @@ const flatInstanceSchema = Schema({
 	 			value = undefined;
 	 		return value;
 	 	}
-	}
+	},
+	isNestedSeed: Boolean,
+	data: Schema.Types.Mixed
 }, { _id: false });
+
 
 /**
  * Should return a Nested
@@ -33,6 +45,12 @@ flatInstanceSchema.methods.expand = function(generations){
 
 	var node = Nested.copy(this);
 	node.up = expandUp.call(this);
+
+	// copy style from parent if it is the currently displayed node
+	if(generations > 0 && !node.cssClass && node.up){
+		node.cssClass = node.up[0].cssClass;
+		node.txt = node.up[0].txt;
+	}
 	
 	if(!generations || generations < 1){
 		node.in = ((inArr && inArr.length) ? true : undefined) || this.todo;
@@ -44,8 +62,9 @@ flatInstanceSchema.methods.expand = function(generations){
 		c = parseInt(c,10);
 
 		var cInst = arr[c];
+		if(!cInst) return;
 		
-		cTree = cInst.expand(--generations);
+		cTree = cInst.expand(generations-1);
 		cTree.index = c;
 		cTree.up = expandUp.call(cInst);
 		
@@ -93,7 +112,9 @@ function expandUp(){
 
 		var ref = arr[upIndex];
 		if(!ref){
-			throw new Error();
+			console.log('broken up path '+this.up);
+			upIndex = undefined;
+			continue;
 		}
 
 		var ancestor = Nested.getAncestor(ref, isParent);
@@ -101,7 +122,19 @@ function expandUp(){
 		isParent = false;
 		upIndex = ref.up;
 
-		up.push(ancestor);
+		if(up.find((a)=>(a.index === upIndex))){
+			// infinite loop
+			upIndex = ref.up = undefined;
+		}
+		else {
+			up.push(ancestor);
+
+			// set cssClass and txt
+			if(!up[0].cssClass){
+				up[0].cssClass = ref.cssClass;
+				up[0].txt = ref.txt;
+			}
+		}
 	}
 
 	return up;

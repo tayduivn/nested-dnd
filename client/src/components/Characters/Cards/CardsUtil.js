@@ -16,19 +16,19 @@ const MARTIAL_WEAPONS = "Battleaxe, Flail, Glaive, Greataxe, Greatsword, Halberd
 const SPELL_LVL_ICONS = ["⓪", "❶", "❷", "❸", "❹", "❺", "❻", "❼", "❽", "❾", "❿"];
 
 const DMG_ICONS = {
-	piercing: "gi gi-broadhead-arrow", // // fa-magic  // fa-superpowers
-	slashing: "gi gi-quick-slash", //fa-tint
+	piercing: "svg game-icons/lorc/broadhead-arrow", // // fa-magic  // fa-superpowers
+	slashing: "svg game-icons/lorc/serrated-slash", //fa-tint
 	bludgeoning: "fa fa-gavel",
-	fire: "glyphicon glyphicon-fire",
-	cold: "fa fa-snowflake-o",
-	poison: "gi gi-poison-gas",
-	acid: "fa fa-radioactive", //fa-flask
-	psychic: "gi gi-brain",
-	necrotic: "gi gi-raise-zombie",
-	radiant: "gi gi-sundial",
+	fire: "svg game-icons/sbed/flamer",
+	cold: "fa fa-snowflake",
+	poison: "svg game-icons/lorc/poison-bottle",
+	acid: "svg game-icons/lorc/biohazard", //fa-flask
+	psychic: "svg game-icons/lorc/psychic-waves",
+	necrotic: "svg game-icons/skoll/raise-zombie",
+	radiant: "svg game-icons/lorc/sundial",
 	lightning: "fa fa-bolt",
-	thunder: "gi gi-ultrasound",
-	force: "gi gi-windy-stripes"
+	thunder: "svg game-icons/lorc/sonic-boom",
+	force: "svg game-icons/lorc/corner-explosion"
 };
 
 const DMG_NAME = {

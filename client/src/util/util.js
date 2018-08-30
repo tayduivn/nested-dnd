@@ -99,6 +99,14 @@ function binaryFind(arr, searchElement) {
 	};
 }
 
+function getQueryParams(location){
+	const params = {};
+	location.search.substr(1).split('&').map(p=>p.split('=')).forEach(p=>params[p[0]] = p[1]);
+	return params;
+}
 
+function toUpper(str){
+	return str.split(' ').map(s=>s.charAt(0).toUpperCase()+s.substr(1)).join(' ');
+}
 
-export {uniq,copyToClipboard,binaryFind,clean,valueIsUndefined,downloadJSON}
+export {uniq,copyToClipboard,binaryFind,clean,valueIsUndefined,downloadJSON, getQueryParams, toUpper}

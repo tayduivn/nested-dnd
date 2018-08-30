@@ -7,8 +7,8 @@ import SpellBack from './SpellBack';
 
 const Spell = ({index, card})  => (
 	<div className="card-wrap" key={index}>
-		<SpellFront spell={card} />
-		<SpellBack spell={card} />
+		<SpellFront {...card} />
+		<SpellBack {...card} />
 		<br />
 	</div>
 )
@@ -27,17 +27,19 @@ export default class Page extends React.Component {
 			if (!card) {
 				return <div className="card blank" key={index} />;
 			}
-			else if (card.category === "Spells") {
-				return <Spell index={index} card={card} />;
+			else if (card.category === "spell") {
+				return <Spell index={index} card={card} key={index} />;
 			}
 			else {
-				return <Item index={index} card={card} />
+				return <Item index={index} card={card} key={index} />
 			}
 		});
 		return (
 			<div className="paper landscape">
-				<div className="cardsName">{this.props.name}</div>	
-				{cards}
+				<div className="landscapeWrap">
+					<div className="cardsName">{this.props.name}</div>	
+					{cards}
+				</div>
 			</div>
 		);
 	}

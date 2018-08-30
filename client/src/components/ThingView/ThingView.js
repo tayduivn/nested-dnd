@@ -1,9 +1,8 @@
 import React from 'react';
 
 import NameInput from './NameInput'
-import IsASelect from './IsASelect'
+import IsASelect from '../Form/IsASelect'
 import CategoryTabs from './CategoryTabs'
-
 
 const ThingViewDisplay = ({thing, nameUpdated, updateThing, validate, isaStatus, handleSave, getStatus, setPreview, isValid, isUpdated, handleDelete, instance}) => (
 	<div className="thingView row">

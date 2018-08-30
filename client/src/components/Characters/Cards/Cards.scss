@@ -35,9 +35,16 @@
 
 	/* business card size 
 	 * 3.5 x 2
+	 * width: 192px; // 2 in
 	*/
 	.card.red{
-		width: 192px; // 2 in
+		width: 43mm;
+		height: 65mm;
+
+		.front h1{
+			font-size: 10mm;
+			height: auto;
+		}
 	}
 
 	.card.blank{
@@ -120,7 +127,7 @@
 		padding: 0 10px;
 	}
 
-	.card .pin-bottom span{
+	.card .pin-bottom span.right{
 		float:right;
 	}
 
@@ -143,7 +150,7 @@
 		padding: 0 10px;
 	}
 
-	.card .front img{
+	.card .front .img{
 		width: 75%;
 
 	}
@@ -294,7 +301,6 @@
 	}
 
 	.i-ritual{
-		background-image: url('../img/ritual.svg');
 		background-repeat: no-repeat;
 		width:1em;
 		display: inline-block;
@@ -304,7 +310,6 @@
 		margin: 0 .2em;
 
 		@media print {
-			background-image: url('../img/ritual.svg') !important;
 		}
 	}
 

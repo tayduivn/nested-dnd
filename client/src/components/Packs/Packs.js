@@ -1,34 +1,120 @@
 import React, { Component } from "react";
-import { Link, Route } from "react-router-dom";
+import { Link, Switch, Route } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import DB from '../../actions/CRUDAction';
-import { PrivateRoute } from '../Routes';
-import Pack from './Pack';
+import { LOADING_GIF } from '../App/App'; 
+import { RouteWithSubRoutes } from '../Routes';
+
+import './Packs.css';
+
+const PackLink = ({_id, name, title, txt, font, cssClass, description, isUniverse, dependencies, lastSaw, ...pack}) => (
+	<li className={`col`}>
+		<div className="btn-group">
+			<Link to={(isUniverse) ? "/universes/"+_id+"/explore" : "/packs/"+_id}  className={`btn col ${cssClass}`} style={{color: txt}}>
+				<h1 style={{fontFamily: (font) ? `'${font}', serif` : 'inherit'}}>
+					{title || name}
+				</h1>
+				{description ? <p>{description}</p> : null}
+				{isUniverse && dependencies && dependencies.length ? <p><strong>Packs</strong>: {dependencies.join(", ")}</p> : null}
+				{lastSaw ? <p><strong>Currently viewing:</strong> {lastSaw}</p> : null}
+			</Link>
+			<Link to={((isUniverse) ? "/universes/" : "/packs/")+_id+'/edit'} 
+				className={`edit btn col-xs-auto d-flex align-items-center justify-content-center ${cssClass}`}  style={{color: txt}}>
+				<h2><i className="fas fa-pen-square"/><small>Edit</small></h2>
+			</Link>
+		</div>
+	</li>
+)
 
 
-import EditPack from "./EditPack";
+const PackInput = ({_id, name, txt, font, cssClass, description, selected, onSelect, url, ...pack}) => (
+	<li className={`col`}>
+		<div className="btn-group">
+			<button onClick={onSelect} id={_id} className={`btn col ${cssClass}`} style={{color: txt}}>
+				<h1 className="webfont" style={{fontFamily: (font) ? `'${font}', serif` : 'inherit'}}>
+					<span className={`fa-stack ${selected ? 'selected': ''}`}>
+						<i className="fas fa-circle fa-2x" />
+						<i className="fa fa-check fa-stack-1x"/>
+					</span>
+					{name}
+				</h1>
+				{description ? <p>{description}</p> : null}
+			</button>
+			{url ?
+				<Link to={'/explore/'+url} className={`explore btn col-xs-auto ${cssClass}`} style={{color: txt}}>
+					<h2><i className="fas fa-eye"/><small>preview</small></h2>
+				</Link>
+				: null}
+		</div>
+	</li>
+)
 
-const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
+class PackUL extends Component {
+	static contextTypes = { loadFonts: PropTypes.func };
 
-const PackLink = ({_id, name}) => <li><Link to={"/packs/"+_id}>{name}</Link></li>
+	componentDidMount(){
+		if(this.props.list) 
+			this.loadFonts(this.props.list);
+	}
+
+	componentWillReceiveProps(nextProps){
+		if(nextProps.list)
+			this.loadFonts(nextProps.list);
+	}
+
+	loadFonts(list){
+		var fonts = [];
+		list.forEach(pack=>{
+			if(!pack.font) return;
+			if(!fonts.includes(pack.font))
+				fonts.push(pack.font);
+		});
+
+		if(fonts.length)
+			this.context.loadFonts(fonts);
+	}
+	render(){
+		const list = this.props.list
+			,	selectable = this.props.selectable
+			, selected = this.props.selected
+			, onSelect = this.props.onSelect
+			, addButton = this.props.addButton
+			, isUniverse = this.props.isUniverse;
+
+		return (
+			<ul className="row packs">
+				{(list) ? list.map((p)=>{
+					return (selectable) 
+						? <PackInput key={p._id} {...p} selected={selected === p._id} onSelect={onSelect} /> 
+						: <PackLink key={p._id} {...p.pack} {...p} isUniverse={isUniverse} />
+				}) : null}
+				{ addButton ? 
+					<li className="col">
+						<Link to={`${isUniverse?'/universes':'/packs'}/create`}
+							className="create col btn btn-outline-primary d-flex align-items-center justify-content-center" >
+							<span><i className="fas fa-plus"/> Create new</span>
+						</Link>
+					</li>
+				: null}
+				
+				
+			</ul>
+		)
+	}
+}
 
 const MyPacks = ({myPacks}) => (
 	<div>
 		<h2>My Packs</h2>
 		{myPacks === null ? LOADING_GIF : ""}
 		{myPacks && myPacks.length === 0 ? <p>You have not created any packs yet</p>: ""}
-		<ul>
-			{(myPacks) ? myPacks.map((p)=><PackLink key={p._id} {...p} />) : null}
-		</ul>
-		<button className="btn btn-primary" href="/packs/create">Create a New Pack</button>
+		{(myPacks) ? <PackUL list={myPacks} addButton={true} /> : null}
 	</div>
 );
 
 const Display = ({loggedIn, error, data, publicPacks}) => (
-	<div className="container mt-5">
-		<h1>Packs</h1>
-
+	<div id="Packs > Display">
 		{ loggedIn ? <MyPacks myPacks={data ? data.myPacks : null} /> : null }
 
 		<h2>Public Packs</h2>
@@ -37,20 +123,33 @@ const Display = ({loggedIn, error, data, publicPacks}) => (
 		{error ? error.display : null}
 
 		{publicPacks && publicPacks.length === 0 ? <p>There are no public packs to display</p> : null}
-		<ul>
-			{(publicPacks) ? publicPacks.map(p=><PackLink key={p._id} {...p} />) : null}
-		</ul>
+		{(publicPacks) ? <PackUL list={publicPacks} /> : null}
 	</div>
 )
 
-class PackList extends Component{
+const PacksPageWrap = () => (
+	<div className="main">
+		<div className="container mt-5">
+			<Packs />
+		</div>
+	</div>
+);
+
+const PacksPage = ({ routes, match = {} }) => (
+	<div id="Packs">
+		<Switch>
+			{routes.map((route, i) => <RouteWithSubRoutes key={i} {...route} path={match.path+route.path} />)}
+			<Route exact path={match.path} component={PacksPageWrap} />
+		</Switch>
+	</div>
+)
+
+export default class Packs extends Component{
 	state = {
 			data: null,
 			error: null
 	}
-	static contextTypes = {
-		loggedIn: PropTypes.bool
-	}
+	static contextTypes = { loggedIn: PropTypes.bool }
 	componentDidMount(){ //fetch data
 		const _t = this;
 		DB.fetch("packs").then(result=>{
@@ -64,12 +163,4 @@ class PackList extends Component{
 	}
 }
 
-const Packs = ({ match }) => (
-	<div className="main">
-		<Route exact path={match.url} component={PackList} />
-		<PrivateRoute path={`${match.url}/create`} component={EditPack}  />
-		<Route path={`${match.url}/:pack`} component={Pack}  />
-	</div>
-)
-
-export default Packs;
+export { PackUL, PacksPage };

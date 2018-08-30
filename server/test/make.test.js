@@ -113,7 +113,7 @@ describe('Maker',()=>{
 		it('should return a node',()=>{
 			return Maker.make(generator, undefined, builtpack).then((node)=>{
 				node.should.be.an.instanceOf(Nested).and.have.property('name','blue banana');
-				node.should.have.property('cssClass', 'darkblue')
+				node.should.have.property('cssClass', 'bg-blue-900')
 			});
 		})
 

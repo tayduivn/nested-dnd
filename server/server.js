@@ -14,11 +14,16 @@ const morgan = require("morgan");
 
 const app = express();
 const port = process.env.PORT || 3001;
+const server = require('http').createServer(app)
+const io = require('socket.io')(server);
 
 const Util = require('./app/models/utils');
 const MW = require('./app/routes/middleware');
 
 let db;
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useNewUrlParser', true);
 
 // serve static files in production
 if (process.env.NODE_ENV === "production") {
@@ -36,11 +41,10 @@ if (process.env.NODE_ENV !== "test") {
 			}
 			else{
 				// launch ======================================================================
-				app.listen(port, () => console.log(`Listening on port ${port}`));
+				server.listen(port, () => console.log(`Listening on port ${port}`));
 			}
 		});
 }
-
 
 require("./config/passport")(passport); // pass passport for configuration
 
@@ -84,6 +88,9 @@ require("./app/routes/auth.js")(app, passport);
 require("./app/routes/packs.js")(app, mongoose);
 require("./app/routes/generators.js")(app, mongoose);
 require("./app/routes/tables.js")(app, mongoose);
+require("./app/routes/universes.js")(app, mongoose);
+require("./app/routes/characters.js")(app, mongoose);
+require("./app/routes/players-preview.js")(app, io);
 
 
 // 404 error handler returns json

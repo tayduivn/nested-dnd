@@ -5,7 +5,7 @@ import SpellcastingList from "./Spellcasting";
 import { ClassInfo, Background, Body } from './CharRolePlay'
 import { Health, Proficiencies, AdvResist, Feature } from './CharMiddleCol'
 import Equipment from './Equipment';
-import Cards, { proficiencyBonuses, appendPlus } from './Cards';
+import Cards, { appendPlus } from './Cards';
 
 export default class Character {
 	constructor(
@@ -101,7 +101,7 @@ export default class Character {
 
 		this.abilities.setSaveProficiencies(
 			this.proficiencies.saves.list,
-			this.getProficiencyBonus()
+			this.proficiencyBonus
 		);
 	}
 	_raceFeatures(newAdvantages, newFeatures){
@@ -196,8 +196,9 @@ export default class Character {
 			}
 		});
 	}
+	/*
 	getSpellcasting() {
-		let profBonus = this.getProficiencyBonus();
+		let profBonus = this.proficiencyBonus;
 
 		if (this.spellcasting) return this.spellcasting;
 
@@ -213,37 +214,24 @@ export default class Character {
 		);
 
 		return this.spellcasting;
-	}
-	getTotalLevel() {
-		var level = 0;
-		this.classes.forEach(c => {
-			level += c.level;
-		});
-		return level;
-	}
-	getProficiencyBonus() {
-		return proficiencyBonuses[this.getTotalLevel()];
-	}
+	}*/
 	printProficiencyBonus() {
-		return appendPlus(this.getProficiencyBonus());
+		return appendPlus(this.proficiencyBonus);
 	}
 	getHitDice() {
 		return this.health.getHitDice(this.classes);
-	}
-	getHP() {
-		return this.health.getHP(this.classes, this.abilities.Constitution);
 	}
 	/**
 	 * @param {Feature} feature
 	 */
 	getFeatureUses(feature) {
-		return feature.getUses(this.abilities, this.getTotalLevel());
+		return feature.getUses(this.abilities, this.level);
 	}
 	/**
 	 * @param {Feature} feature
 	 */
 	getFeatureDesc(feature) {
-		return feature.getDesc(this.getTotalLevel(), this.abilities);
+		return feature.getDesc(this.level, this.abilities);
 	}
 	getClassLevel(name) {
 		for (var i = 0; i < this.classes.length; i++) {

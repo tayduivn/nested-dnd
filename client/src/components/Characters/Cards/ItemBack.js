@@ -12,7 +12,7 @@ export default class ItemBack extends React.Component {
 		var props = [];
 
 		// for potions of healing and special consumables
-		if (item.description && !item.properties) {
+		if (item.description && !item.properties.length) {
 			item.description.forEach(function(desc, index) {
 				props.push(
 					<p key={"desc" + index}>
@@ -23,10 +23,10 @@ export default class ItemBack extends React.Component {
 		}
 		if(item.properties){
 			item.properties.forEach(function(prop, index) {
-				if (prop === "Range") return;
+				if (prop.name === "Range") return;
 				props.push(
 					<p key={"prop" + index}>
-						<strong>{prop}</strong> {PROP_DESC[prop]}
+						<strong>{prop.name}</strong> {prop.description}
 					</p>
 				);
 			});
@@ -37,11 +37,11 @@ export default class ItemBack extends React.Component {
 			? "martial"
 			: item.consumable ? "consumable" : "simple";
 
-		return <Back {...item} />;
+		return <Back {...item} props={props} />;
 	}
 }
 
-const Back = ({ consumable, charges, name, cast_time, range, duration, concentration, props, weight, item_type, type }) => (
+const Back = ({ consumable, charges, name, castTime = "1 action", range, longRange, duration, concentration, props, weight, itemType, type }) => (
 	<div className={"card weapon" + (consumable ? " red" : charges ? " purple": "")}>
 		<div className="card-inner">
 			<h2>
@@ -49,27 +49,26 @@ const Back = ({ consumable, charges, name, cast_time, range, duration, concentra
 			</h2>
 			<div className="castTime">
 				<em>
-					{cast_time
-						? cast_time
-						: "1 action"}
+					{castTime}
 				</em>
 			</div>
 			<InfoPanel
 				range={range}
+				longRange={longRange}
 				duration={duration}
 				concentration={concentration}
 			/>
 			<div className="desc">
-				<p className={item_type === "Wand" ? "hidden": ""}>
+				<p className={itemType === "Wand" ? "hidden": ""}>
 					<strong>
-						{item_type}
+						{itemType}
 					</strong>
 				</p>
 				{props}
 			</div>
 			<div className="pin-bottom">
 				{weight ? weight+" lb." : ""} 
-				<span>{type}</span>
+				<span className="right">{type}</span>
 			</div>
 		</div>
 	</div>

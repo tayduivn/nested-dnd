@@ -1,0 +1,168 @@
+{
+	"licenses":{
+		"CC BY 3.0": {
+			"title": "Creative Commons Attribution 3.0 Unported",
+			"url": "https://creativecommons.org/licenses/by/3.0/"
+		},
+		"CC BY-SA 3.0": {
+			"title": "Creative Commons Attribution-ShareAlike 3.0 Unported",
+			"url": "https://creativecommons.org/licenses/by-sa/3.0/"
+		}
+	},
+	"icons": {
+		"flaticons": {
+			"_url": "https://www.flaticon.com",
+			"_license": "CC BY 3.0",
+			"110899-countricons":{
+				"title": "Countricons Icon Pack",
+				"author": "Freepik",
+				"source": "https://www.flaticon.com/packs/countricons",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"188615-fantasy":{
+				"title": "Fantasy Icon Pack",
+				"author": "Zlatko Najdenovski",
+				"source": "https://www.flaticon.com/packs/fantasy",
+				"author_url": "https://www.flaticon.com/authors/zlatko-najdenovski"
+			},
+			"248319-astronauts-and-space":{
+				"title": "Astronauts and Space Icons",
+				"author": "Eucalyp",
+				"source": "https://www.flaticon.com/packs/astronauts-and-space",
+				"author_url": "https://www.flaticon.com/authors/eucalyp"
+			},
+			"500440-future-technology":{
+				"title":"Future Technology Icons",
+				"author": "Eucalyp",
+				"source": "https://www.flaticon.com/packs/future-technology-10",
+				"author_url": "https://www.flaticon.com/authors/eucalyp"
+			},
+			"571131-fantasy-character":{
+				"title": "Fantasy Character Icons",
+				"source": "https://www.flaticon.com/packs/fantasy-character-4",
+				"author": "Eucalyp",
+				"author_url": "https://www.flaticon.com/authors/eucalyp"
+			},
+			"784400-prehistoric":{
+				"title": "Prehistoric Icons",
+				"source": "https://www.flaticon.com/packs/prehistoric-6",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepi"
+			},
+			"188395-pirates":{
+				"title": "Pirates Icon Pack",
+				"source": "https://www.flaticon.com/packs/pirates-2",
+				"author": "Zlatko Najdenovski",
+				"author_url": "https://www.flaticon.com/authors/zlatko-najdenovski"
+			},
+			"804590-in-the-village":{
+				"title": "In the Village Icons Pack",
+				"source": "https://www.flaticon.com/packs/in-the-village-5",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"182526-space": {
+				"title": "Space Icons",
+				"source": "https://www.flaticon.com/packs/space-7",
+				"author": "Zlatko Najdenovski",
+				"author_url": "https://www.flaticon.com/authors/zlatko-najdenovski"
+			},
+			"182067-royalty": {
+				"title": "Royalty Icon Pack",
+				"source": "https://www.flaticon.com/packs/royalty",
+				"author": "Zlatko Najdenovski",
+				"author_url": "https://www.flaticon.com/authors/zlatko-najdenovski"
+			},
+			"182505-nature": {
+				"title": "Nature Icon Pack",
+				"source": "https://www.flaticon.com/packs/nature",
+				"author": "Zlatko Najdenovski",
+				"author_url": "https://www.flaticon.com/authors/zlatko-najdenovski"
+			},
+			"188374-city": {
+				"title": "City Icons",
+				"source": "https://www.flaticon.com/packs/city",
+				"author": "Zlatko Najdenovski",
+				"author_url": "https://www.flaticon.com/authors/zlatko-najdenovski"
+			},
+			"571038-fantasy-character": {
+				"title": "Fantasy character icons",
+				"source": "https://www.flaticon.com/packs/fantasy-character",
+				"author": "Eucalyp",
+				"author_url": "https://www.flaticon.com/authors/eucalyp"
+			},
+			"477050-fantastic-characters": {
+				"title": "Fantastic characters icons",
+				"source": "https://www.flaticon.com/packs/fantastic-characters",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"499010-viking": {
+				"title": "Viking Icon Pack",
+				"source": "https://www.flaticon.com/packs/viking-2",
+				"author": "Eucalyp",
+				"author_url": "https://www.flaticon.com/authors/eucalyp"
+			},
+			"111988-lineal-landscapes": {
+				"title": "Lineal Landscapes Icon Pack",
+				"source": "https://www.flaticon.com/packs/lineal-landscapes",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"lineal-landscapes-1": {
+				"title": "Lineal Landscapes Icon Pack",
+				"source": "https://www.flaticon.com/packs/lineal-landscapes-1",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"433766-universe": {
+				"source": "https://www.flaticon.com/packs/universe-22",
+				"title": "Universe",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"speech-bubbles-line-craft": {
+				"title": "Speech Bubbles Line Craft Icons",
+				"source": "https://www.flaticon.com/packs/speech-bubbles-line-craft",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"111595-space": {
+				"title": "Space Icons",
+				"source": "https://www.flaticon.com/packs/space",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"travelling": {
+				"title": "Travelling Icons",
+				"source": "https://www.flaticon.com/packs/travelling",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"earth-icons": {
+				"title": "Earth Icons",
+				"source": "https://www.flaticon.com/packs/earth-icons/3",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"112709-scientific-study": {
+				"title": "Scientific Study Icons",
+				"source": "https://www.flaticon.com/packs/scientific-study",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"309855-landscapes": {
+				"title": "Landscapes",
+				"source": "https://www.flaticon.com/packs/landscapes-20",
+				"author": "Freepik",
+				"author_url": "https://www.flaticon.com/authors/freepik"
+			},
+			"654740-game-elements": {
+				"title": "Game Elements Icon Pack",
+				"source": "https://www.flaticon.com/packs/game-elements-2",
+				"author": "Eucalyp",
+				"author_url": "https://www.flaticon.com/authors/eucalyp"
+			}
+		}
+	}
+}

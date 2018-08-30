@@ -1,15 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import Character from "../../../stores/Character";
-import { Feature } from '../../../stores/CharMiddleCol'
-
 export class AdvResist extends Component {
 	static get propTypes() {
 		return {
 			advantages: PropTypes.arrayOf(PropTypes.string),
 			resistances: PropTypes.arrayOf(PropTypes.string),
-			other: PropTypes.arrayOf(PropTypes.instanceOf(Feature)),
+			other: PropTypes.arrayOf(PropTypes.object),
 			label: PropTypes.string
 		};
 	}
@@ -33,12 +30,12 @@ export class AdvResist extends Component {
 				<p className="title">
 					{this.props.label}
 				</p>
-				<p className={adv.length ? "" : "hidden"}>
-					<strong>Advantage on</strong> {adv.join(", ")}
-				</p>
-				<p className={res.length ? "" : "hidden"}>
-					<strong>Resistance to</strong> {res.join(", ")}
-				</p>
+				{adv.length ?
+					<p><strong>Advantage on</strong> {adv.join(", ")}</p>
+				: null }
+				{res.length ?
+					<p><strong>Resistance on</strong> {res.join(", ")}</p>
+				: null }
 				{features.map((f, i) =>
 					<RenderFeature feature={f} key={i} char={this.props.char} />
 				)}
@@ -50,8 +47,7 @@ export class AdvResist extends Component {
 class RenderFeature extends Component {
 	static get propTypes() {
 		return {
-			feature: PropTypes.instanceOf(Feature).isRequired,
-			char: PropTypes.instanceOf(Character).isRequired
+			feature: PropTypes.object.isRequired
 		};
 	}
 	render() {
@@ -63,51 +59,46 @@ class RenderFeature extends Component {
 				</strong>
 				<span className="circles">
 					{"❍".repeat(
-						this.props.char.getFeatureUses(this.props.feature)
+						this.props.feature.uses
 					)}
 				</span>
-				{this.props.char.getFeatureDesc(this.props.feature)}
+				{this.props.feature.desc}
 			</p>
 		);
 	}
 }
 
-export class Equipment extends Component {
-	render() {
-		var e = this.props.equipment;
-		return (
-			<div id="equipment" className="description">
-				<div id="ac" className="icon-container">
-					<label>Armor</label>
-					<h1>
-						{e.getAC()}
-					</h1>
-					<h2>
-						{e.hasShield ? e.getUnshieldedAC() : ""}
-					</h2>
-				</div>
-				<p className="title">Equipment</p>
-				<p>
-					{e.armor ? e.armor.namegen : ''}
-					{e.hasShield ? ", Shield" : ""}
-				</p>
-				<p>
-					{e.weapons}
-				</p>
-				{e.containers.map((c, i) =>
-					<Container key={i} container={c} />
-				)}
-			</div>
-		);
-	}
-}
+ const Equipment = ({ ac, hasShield, unshieldedAC, armor = {}, weapons, containers = [] }) => (
+	<div id="equipment" className="description">
+		<div id="ac" className="icon-container">
+			<label>Armor</label>
+			<h1>
+				{ac}
+			</h1>
+			<h2>
+				{hasShield ? unshieldedAC : ""}
+			</h2>
+		</div>
+		<p className="title">Equipment</p>
+		<p>
+			{armor && armor.name ? armor.name+' Armor' : ''}
+			{hasShield ? ", Shield" : ""}
+		</p>
+		<p>
+			{weapons}
+		</p>
+		{containers.map((c, i) =>
+			<Container key={i} container={c} />
+		)}
+	</div>
+);
 
 class Container extends Component {
 	render() {
-		if (typeof this.props.container === "string") {
+		if (!this.props.container.name) {
 			return (
 				<p>
-					{this.props.container}
+					{this.props.container.content.join(", ")}
 				</p>
 			);
 		}
@@ -121,3 +112,7 @@ class Container extends Component {
 		);
 	}
 }
+
+
+export { Equipment };
+

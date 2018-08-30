@@ -2,18 +2,28 @@
 	font-family: 'HocusPocus';
 	src: url('../fonts/HOCUS POCUS MAGICBOLT.eot');
 	src: url('../fonts/HOCUS POCUS MAGICBOLT.eot?#iefix') format('embedded-opentype'),
-	     url('../fonts/HOCUS POCUS MAGICBOLT.woff') format('woff'),
-	     url('../fonts/HOCUS POCUS MAGICBOLT.ttf') format('truetype'),
-	     url('../fonts/HOCUS POCUS MAGICBOLT.svg#webfont') format('svg');
+			 url('../fonts/HOCUS POCUS MAGICBOLT.woff') format('woff'),
+			 url('../fonts/HOCUS POCUS MAGICBOLT.ttf') format('truetype'),
+			 url('../fonts/HOCUS POCUS MAGICBOLT.svg#webfont') format('svg');
 }
 
 @font-face{ 
 	font-family: 'Lumos';
 	src: url('../fonts/LUMOS.eot');
 	src: url('../fonts/LUMOS.eot?#iefix') format('embedded-opentype'),
-	     url('../fonts/LUMOS.woff') format('woff'),
-	     url('../fonts/LUMOS.ttf') format('truetype'),
-	     url('../fonts/LUMOS.svg#webfont') format('svg');
+			 url('../fonts/LUMOS.woff') format('woff'),
+			 url('../fonts/LUMOS.ttf') format('truetype'),
+			 url('../fonts/LUMOS.svg#webfont') format('svg');
+}
+
+@page { //marks, bleed
+	size: A4;
+	margin: 0.5cm;
+}
+
+.circles{
+	font-size: 23px;
+	vertical-align: sub;
 }
 
 #characterInfo{
@@ -33,7 +43,6 @@
 	}
 
 	.i-ritual{
-		background: url('../img/ritual.svg') no-repeat center;
 		width:0.8em;
 		display: inline-block;
 		height: 1em;
@@ -43,7 +52,6 @@
 		@media print {
 			visibility: visible;
 			color: #000 !important;
-			background: url('../img/ritual.svg') no-repeat center !important;
 		}
 	}
 }
@@ -98,18 +106,45 @@
 	height: 1056px;
 	*/
 	#paper, .paper{
-		width: 816px;
-		height: 1056px;
+		$padding: 0.5cm;
+		$A4long: 29.7cm - $padding*2;
+		$A4short: 21cm - $padding*2;
+
+		width: $A4short;
+		height: $A4long;
 		background:white;
-		padding:30px;
+		padding: $padding*2;
 		page-break-after: always;
 		margin: 0 auto 0 auto;
 		page-break-inside: avoid;
 
 		&.landscape{
-			height: 816px;
-			width: 1056px;
-			padding: 40px;
+			width: $A4long;
+			height: $A4short;
+
+			.landscapeWrap{
+				width: $A4long;
+				height: $A4short;
+			}
+
+			@media print {
+				width: $A4short;
+				height: $A4long;
+
+				.landscapeWrap{
+					position: relative;
+					left: -4.35cm;
+					top: 4cm;
+					transform: rotate(-90deg); 
+					-moz-transform:rotate(-90deg);
+					filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+				}
+			}
+		}
+
+		@media print{
+			margin:0 !important;
+			padding: $padding !important;
 		}
 	}
 
@@ -166,6 +201,11 @@
 		}
 	}
 
+
+	@media print {
+		background: none;
+		padding: 0 !important;
+	}
 }
 
 #charsheets{
@@ -204,18 +244,19 @@
 	#stats{
 		background:#bfbfbf !important;
 		margin-right:0;
-		padding-top:5px;
-		padding-bottom: 5px;
-	}
 
-	#stats .col-xs-6{
-		padding-right: 0;
-	}
+		.stat-wrap{
+			$gutter: 3px;
+			padding: $gutter*2 $gutter;
 
-	#stats .stat-wrap{
-		padding-left:5px;
-		padding-right:5px;
+			&:first-child{
+				padding-left: $gutter*2;
+			}
+			&:last-child{
+				padding-right: $gutter*2;
+			}
 
+		}
 	}
 
 	.stat{
@@ -232,9 +273,9 @@
 
 	.stat h1{
 		margin: 0 0 -5px 0;
-	    font-family: serif;
-	    font-size: 25px;
-	    text-align:center;
+			font-family: serif;
+			font-size: 25px;
+			text-align:center;
 	}
 
 	.stat p{
@@ -277,9 +318,9 @@
 	}
 	#death-saves .fa{
 		font-size: 18px;
-	    top: -1px;
-	    position: relative;
-	    left: 1px;
+			top: -1px;
+			position: relative;
+			left: 1px;
 	}
 	.top-col{
 		height:450px;
@@ -333,19 +374,19 @@
 		text-align: center;
 		padding-right:15px;
 	}
-	#money div[class^="col-"]{
+	#money div[class^="col"]{
 		padding: 0;
 	}
-	#money div[class^="col-"]:after{
+	#money div[class^="col"]:after{
 	 content: "❍";
-	  font-style: normal;
-	  font-weight: normal;
-	  text-decoration: inherit;
-	  position: absolute;
-	  font-size: 82px;
-	  top: -30px;
-	  left: 5%;
-	  z-index: 1;
+		font-style: normal;
+		font-weight: normal;
+		text-decoration: inherit;
+		position: absolute;
+		font-size: 82px;
+		top: -30px;
+		left: 5%;
+		z-index: 1;
 	}
 
 	#money div:nth-child(1):after{
@@ -369,7 +410,7 @@
 
 	.stats-raw{
 		padding: 0 10px;
-		div[class*=col-]{
+		div[class*=col]{
 			padding: 0 5px;
 		}
 	}
@@ -394,7 +435,7 @@
 			margin: 0 -5px;
 		}
 	}
-	.close-col div[class*=col-]{
+	.close-col div[class*=col]{
 		padding:0 5px;
 	}
 
@@ -442,11 +483,6 @@
 		margin:-15px 0 0 0;
 	}
 
-	.circles{
-		font-size:23px;
-		vertical-align: sub;
-	}
-
 	.num{
 		font-family: serif;
 	}
@@ -491,8 +527,8 @@
 
 		ul{
 		-webkit-column-break-inside: avoid; /* Chrome, Safari */
-	    page-break-inside: avoid;           /* Theoretically FF 20+ */
-	    break-inside: avoid-column;         /* IE 11 */
+			page-break-inside: avoid;           /* Theoretically FF 20+ */
+			break-inside: avoid-column;         /* IE 11 */
 		}	
 	}
 	.long .spellbook{
@@ -507,8 +543,8 @@
 	.spellbook li{
 		padding: 0.25em 0;
 		-webkit-column-break-inside: avoid; /* Chrome, Safari */
-	    page-break-inside: avoid;           /* Theoretically FF 20+ */
-	    break-inside: avoid-column;         /* IE 11 */
+			page-break-inside: avoid;           /* Theoretically FF 20+ */
+			break-inside: avoid-column;         /* IE 11 */
 	}
 	.spellbook strong{
 		text-transform: uppercase;

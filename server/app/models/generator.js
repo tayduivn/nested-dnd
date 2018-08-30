@@ -3,14 +3,17 @@ const Schema = mongoose.Schema;
 
 const childSchema = require('./generator/childSchema');
 const styleSchema = require('./generator/styleSchema');
+const sourceSchema = require('./source');
+
 const Maintainer = require('./generator/maintain')
 const Maker = require('./generator/make');
 const Nested = require('../routes/packs/nested');
+const Universe = require('./universe')
 
 const SEED_DELIM = ">";
 
-var generatorSchema = Schema({
-	pack_id: {
+var schema = Schema({
+	pack: {
 		type: Schema.Types.ObjectId,
 		ref: 'Pack',
 		required: true
@@ -21,14 +24,24 @@ var generatorSchema = Schema({
 		trim: true
 	},
 	extends: { // needs to exist in this pack or it's dependencies. todo: check
-		type: String
+		type: String,
+		validate: {
+			validator: (v)=> {
+				if(this)
+					return v !== this.isa
+				return true
+			},
+			message: props => `${props.value} cannot extend itself`
+		}
 	},
 	name: {
-		type: Schema.Types.Mixed, // todo: handle tables and such
-		set: styleSchema.validateMixedThing
+		type: styleSchema.mixedTypeSchema,
+		set: styleSchema.validateMixedThing,
+		default: void 0
 	},
 	desc: {
-	 type: [String],
+	 type: [styleSchema.mixedTypeSchema],
+	 set: styleSchema.validateMixedThing,
 	 default: void 0
 	},
 	in: {
@@ -37,31 +50,36 @@ var generatorSchema = Schema({
 	 default: void 0	
 	},
 	data: Object,
-	style: styleSchema
+	style: styleSchema,
+	isUnique: Boolean,
+	chooseRandom: {
+		type: Boolean,
+		default: false
+	},
+	source: sourceSchema
 });
 
-generatorSchema.post('remove', Maintainer.cleanAfterRemove);
+schema.post('remove', Maintainer.cleanAfterRemove);
 
 // ----------------------- VIRTUALS
 
-generatorSchema.methods.makeStyle = async function(name){
+schema.methods.makeStyle = async function(name){
 	if(!this.style) return {};
 
 	var arr = await Promise.all([
 		this.style.makeTextColor(),
 		this.style.makeBackgroundColor(),
 		this.style.noAutoColor ? false : this.style.strToColor(name),
-		this.style.makeImage(),
-		this.style.makeIcon(),
+		this.style.useImg ? this.style.makeImage() : this.style.makeIcon(),
 		this.style.makePattern()
 	]);
 
-	return mergeStyle(arr, ['txt','bg', 'autoBG', 'img','icon','cssClass']);
+	return mergeStyle(arr, ['txt','bg', 'autoBG', 'icon','pattern']);
 }
 
-generatorSchema.virtual('makeName').get(function(){
-	return (this.name) ? Maker.makeMixedThing(this.name, this.model('Table')) : undefined;
-})
+schema.methods.makeName = async function(data = {}){
+	return (this.name) ? Maker.makeMixedThing(this.name, this.model('Table'), data) : undefined;
+}
 
 // ----------------------- STATICS
 
@@ -72,7 +90,7 @@ generatorSchema.virtual('makeName').get(function(){
  * @return {Promise<Generator>}      the added generator
  * @async
  */
-generatorSchema.statics.insertNew = async function(data, pack){
+schema.statics.insertNew = async function(data, pack){
 	var builtpack = await this.model('BuiltPack').findOrBuild(pack)
 
 	return Maintainer.insertNew(data, pack, builtpack);
@@ -84,11 +102,15 @@ generatorSchema.statics.insertNew = async function(data, pack){
  * @param  {BuiltPack} builtpack 
  * @return {Promise<Nested>}           the root node of the tree
  */
-generatorSchema.statics.makeAsRoot = async function(seedArray, builtpack){
+schema.statics.makeAsRoot = async function(seedArray, builtpack){
 	var seed = seedArray.shift();
+	var childSeed = seedArray[0];
 
-	if(seedArray.length === 0)
-		return await Maker.make(seed, 1, builtpack);
+	if(seedArray.length === 0){
+		let nestedSeed = await Maker.make(seed, 1, builtpack);
+		nestedSeed.isNestedSeed = true; // this will be our starting point when we generate the world
+		return nestedSeed;
+	}
 
 	// generate the next seed in the array and push to in
 	var node = await Maker.make(seed, 1, builtpack);
@@ -118,20 +140,22 @@ generatorSchema.statics.makeAsRoot = async function(seedArray, builtpack){
  * @param  {BuiltPack} builtpack 
  * @return {Promise<Nested>}           the root node of the tree
  */
-generatorSchema.statics.makeAsNode = async function(tree, universe, builtpack){
+schema.statics.makeAsNode = async function(tree, universe, builtpack){
 	// has no children to generate, return
 	if(typeof tree !== 'object') 
 		return tree;
 
 	if(!(tree instanceof Nested))
 		tree = Nested.copy(tree)
+	if(!universe.model) // make into object
+		universe = new Universe(universe);
 
 	// has children, but they are not generated yet.
 	// TODO: check if deeply nested embeds are being generated correctly
 	if(builtpack && tree.in === true){
 		var generator = builtpack.getGen(tree.isa);
 		if(generator){
-			tree = await Maker.make(generator, 1, builtpack, tree);
+			tree = await Maker.make(generator, 1, builtpack, tree, universe.getAncestorData(tree.index));
 		}
 	}
 
@@ -149,7 +173,7 @@ generatorSchema.statics.makeAsNode = async function(tree, universe, builtpack){
  * @param  {BuiltPack} builtpack
  * @return {Promise<Nested>}           the random thing
  */
-generatorSchema.statics.make = function(generator, builtpack){
+schema.statics.make = function(generator, builtpack){
 	return Maker.make(generator, 1, builtpack);
 };
 
@@ -161,26 +185,38 @@ generatorSchema.statics.make = function(generator, builtpack){
  * @param  {Pack} pack    the pack that this is in
  * @return {Promise}        
  */
-generatorSchema.methods.rename = function(isaOld, pack){
-	return Maintainer.rename(this, pack, isaOld, this.model('Generator'))
+schema.methods.rename = function(isaOld, pack, builtpack){
+	return Maintainer.rename(this, pack, isaOld, builtpack)
 }
 
 /**
  * Extends this generator with another one
+ * Even if the thing it extends has chooseRandom, the extend will work
+ * SHOULD NOT EXTEND ON THE FLY. Only when save. Dependent packs will update when the 
+ *    builtpack expires 
  * @param  {BuiltPack} builtpack the builtpack to get the extendgen out of
+ * @param {[String]} extended prevents looping infinitely
  * @return {Generator}              the new Generator
  */
-generatorSchema.methods.extend = function(builtpack){
-	if(!this.extends) return this;
+schema.methods.extend = function(builtpack, extended = []){
+	if(!this.extends || extended.includes(this.isa)) return this;
+	
 	const Generator = this.model('Generator');
-
 	var extendsGen = new Generator(builtpack.getGen(this.extends));
+	const thisMinusStyle = Object.assign({}, this.toJSON());
+	delete thisMinusStyle.style;
+	extended.push(this.isa);
+
+	extendsGen = extendsGen.extend(builtpack, extended); // recurse
+	extendsGen.set(thisMinusStyle); // this overwrites the extends. style is done below
+
+	//style
 	var extendsStyle = (new Generator({style: extendsGen.style})).style;
-	extendsGen.set(this); // this overwrites the extends
-	if(extendsStyle && this.style) { // if they both have style, combine them
-		extendsStyle.set(this.style);
+	if(this.style) { // if this has a style, override
+		(extendsStyle) ? extendsStyle.set(this.style) : extendsStyle = this.style;
 		extendsGen.set({style: extendsStyle}); 
 	}
+
 	return extendsGen;
 }
 
@@ -200,9 +236,15 @@ function mergeStyle(arr, labels){
 		if(labels[i] === 'cssClass')
 			style.cssClass.push(val);
 		else if(labels[i] === 'bg')
-			bg = val;
+			bg = (val) ? "bg-"+val : undefined;
 		else if(labels[i] === 'autoBG')
-			autoBG = val;
+			autoBG = (val) ? "bg-"+val : undefined;
+		else if(labels[i] === 'pattern'){
+			if(val && !bg && !autoBG) 
+				style.cssClass.push("bg-grey-50") // default bg if none supplied
+			if(val) 
+				style.cssClass.push('ptn-'+val);
+		}
 		else
 			style[labels[i]] = val;
 	})
@@ -213,9 +255,11 @@ function mergeStyle(arr, labels){
 		style.cssClass.unshift(bg);
 	}
 	style.cssClass = style.cssClass.join(" ").trim();
+	if(!style.cssClass.length)
+		style.cssClass = undefined;
 	return style;
 }
 
-module.exports = mongoose.model('Generator', generatorSchema);
+module.exports = mongoose.model('Generator', schema);
 
-module.exports.generatorSchema = generatorSchema;
+module.exports.generatorSchema = schema;

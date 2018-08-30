@@ -2,6 +2,7 @@ import React from "react";
 
 import WriteIn from './WriteIn';
 import { SPELL_LVL_ICONS } from './CardsUtil';
+import { Icon } from '../../Explore/ExplorePage'
 
 /* TODO: where was this used?
 // damage modifier for consumables
@@ -13,7 +14,7 @@ import { SPELL_LVL_ICONS } from './CardsUtil';
 	}
  */
 
-const Desc = ({shortDesc, save, dice, consumable, level}) => (
+const Desc = ({shortDesc, saveData: save = {}, damage = {}, range, healing, consumable, level, uses}) => (
 	<div className="roll-values pin-bottom">
 		{shortDesc
 			? <p className="shortDesc">
@@ -32,81 +33,86 @@ const Desc = ({shortDesc, save, dice, consumable, level}) => (
 					{save.success}
 				</div>
 			: null}
-		{dice && dice.attack
+		{damage.attack
 			? <WriteIn 
 				label="Attack" 
-				dmgType={dice.attack}
+				dmgType={damage.attack}
 				writein={true} />
 			: null}
-		{dice && dice.roll && dice.type !== "Healing"
+		{damage.diceString
 			? <WriteIn
-					label={dice.type === "Effect" ? "Roll" : "Damage"}
-					dice={dice.roll}
-					dmgType={dice.type === "Effect" ? null : dice.type}
-					writein={dice.add_modifier && !consumable}
-					progression={dice.progression}
-					level={ dice.roll === true ? 0 : level}
+					label={damage.type === "Effect" ? "Roll" : "Damage"}
+					dice={damage.diceString}
+					dmgType={damage.type === "Effect" ? null : damage.type}
+					writein={damage.addModifier && !consumable}
+					progression={damage.progression}
+					level={ damage.roll === true ? 0 : level}
 				/>
 			: null}
-		{dice && dice.type === "Healing"
+		{healing
 			? <WriteIn
 					label="Heal"
-					dice={dice.roll}
-					writein={dice.add_modifier && !consumable}
+					dice={healing.diceString}
+					writein={healing.addModifier && !consumable}
 				/>
 			: null}
-		{dice && dice.progression && level !== 0 && (typeof dice.progression === "string")
+		{damage.progression && level !== 0 && (typeof damage.progression === "string")
 			? <WriteIn
 					className="higherLevelDmg"
 					label="&emsp;↑ Levels"
 					dice={
-						"+" + dice.progression + " per slot level"
+						"+" + damage.progression + " per slot level"
 					}
 					writein={false}
 				/>
 			: null}
+		{uses && uses.reset
+			? <div>
+					<WriteIn
+						label="Uses reset"
+						dice={uses.reset}
+					/>
+				</div>
+			: null}
 	</div>
 );
 
-function getClassName(spell){
-	var className = parseInt(spell.level, 10) > 0 ? " purple" : "";
+function getClassName(level, castTime, uses, consumable){
+	var className = (parseInt(level, 10) > 0 || (uses && uses.count)) ? " purple" : "";
 	className +=
-		spell.cast_time === "1 bonus action"
+		castTime === "1 bonus action"
 			? " bonus"
-			: spell.cast_time === "Modifier" ||
-				spell.cast_time === "1 reaction"
+			: castTime === "Modifier" ||
+				castTime === "1 reaction"
 				? " bonus modifier"
 				: "";
-	if (spell.consumable) className += " red";
+	if (consumable) className += " red";
 	return className
 }
 
-const SpellFront = ({spell}) => (
-	<div className={"card spell " + getClassName(spell)}>
+const SpellFront = ({name, ritual, subtitle, icon, isFeature, level, ...rest}) => (
+	<div className={"card spell " + getClassName(level, rest.castTime, rest.uses, rest.consumable)}>
 		<div className="card-inner front">
 			<h1>
-				{spell.namegen}{" "}
-				{spell.ritual ? <i className="i-ritual" /> : ""}
-				<p className="shortDesc">{spell.subtitle}</p>
+				{name}{" "}
+				{ritual ? <i className="i-ritual" /> : ""}
+				<p className="shortDesc">{subtitle}</p>
 			</h1>
 
-			<i
-				className={
-					spell.icon ? "img gi gi-" + spell.icon : "hidden"
-				}
-			/>
+			<Icon name={icon+' img'} />
 			<div
 				className={
-					spell.icon || spell.isFeature === true
+					icon || isFeature === true
 						? "lvl hidden"
 						: "lvl"
 				}
 			>
-				{SPELL_LVL_ICONS[spell.level]}
+				{SPELL_LVL_ICONS[level]}
 			</div>
-			<Desc {...spell} />
+			<Desc {...rest} />
 		</div>
 	</div>
 );
 
 export default SpellFront;
+export { getClassName };

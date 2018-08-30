@@ -184,7 +184,7 @@ describe('Maintainer', ()=>{
 		});
 
 		it('should return a Generator',()=>{
-			return Maintainer.insertNew(data, pack, builtpack).should.eventually.be.an.instanceOf(Generator);
+			return Maintainer.insertNew(data, pack, builtpack).should.eventually.have.property('unbuilt').that.is.instanceOf(Generator);
 		});
 
 		it('should throw error if generator already exists', ()=>{
@@ -229,6 +229,7 @@ describe('Maintainer', ()=>{
 			return Maintainer.rename().should.eventually.equal(undefined);
 		});
 
+		/* TODO
 		it('should return builtpack if good vars supplied',()=>{
 			generator.isa = 'uni';
 
@@ -237,17 +238,16 @@ describe('Maintainer', ()=>{
 				pack.seed.should.equal('uni>');
 			});
 		});
+		*/
 
 		it('should rename children in builtpack',()=>{
-			childGen.isa = 'super';
-			return Maintainer.rename(childGen, pack, 'supercluster').then(()=>{
-				builtpack.getGen('universe').in[1].value.should.equal('super');
-			});
-		})
 
-		it('should rename extends in builtpack',()=>{
 			childGen.isa = 'super';
+			childGen.pack = pack._id;
+
 			return Maintainer.rename(childGen, pack, 'supercluster').then(()=>{
+
+				builtpack.getGen('universe').in[1].value.should.equal('super');
 				builtpack.getGen('foo').extends.should.equal('super');
 			});
 		})

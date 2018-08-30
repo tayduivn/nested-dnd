@@ -1,5 +1,5 @@
 import React from 'react';
-import Select from 'react-select';
+import { Async } from 'react-select';
 
 const DEBUG = false;
 const localStorage = window.localStorage;
@@ -53,7 +53,7 @@ class PackSelect extends React.Component {
 				<div className="form-group">
 					<label>export pack:</label>
 					{' '}
-					<Select.Async clearable={false}
+					<Async clearable={false}
 						loadOptions={this.loadOptions}
 						name="form-field-name"
 						value={this.state.selectedPack}

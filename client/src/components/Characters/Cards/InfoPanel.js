@@ -1,13 +1,23 @@
 import React from "react";
 
-const InfoPanel = ({ range, duration, concentration }) => (
+const InfoPanel = ({ range, longRange, duration, concentration }) => (
 	<div className="info-panel">
-		<i className={`fa fa-long-arrow-up ${range ? "" : "hidden"}`}/>{" "}
-		{range}
-		{range ? <span>{"   "}</span> : ""}
-		<i className={`fa fa-clock-o ${duration ? "" : "hidden"}`} />{" "}
-		{duration}
-		{concentration === "Yes" ? " Concentration" : ""}
+		{range ? 
+			<span>
+				<i className="fas fa-long-arrow-alt-up" />{" "}
+				{range}{longRange && range !== longRange ? '/'+longRange : ''}
+				{range ? <span>{"   "}</span> : ""}
+			</span>
+		: null}
+
+		{duration ? 
+			<span>
+				<i className="far fa-clock" />{" "}
+				{duration}
+				{concentration ? " Concentration" : ""}
+			</span>
+		: null}
+		
 	</div>
 );
 

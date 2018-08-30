@@ -34,7 +34,8 @@ describe('Universe', ()=>{
 		});
 
 		pack = new Pack({
-			seed: 'universe'
+			seed: 'universe',
+			name: 'HELLO'
 		});
 
 

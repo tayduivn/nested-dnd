@@ -11,11 +11,12 @@ const MW = require('../../app/routes/middleware');
 const Pack = require('../../app/models/pack');
 const Generator = require('../../app/models/generator')
 const User = require('../../app/models/user');
+const BuiltPack = require('../../app/models/builtpack')
+const Table = require('../../app/models/table')
 
+describe('/packs', ()=>{
 
-describe('/api/packs', ()=>{
-
-	var user, pack, packs, PackMock, GenMock;
+	var user, pack, packs, PackMock, GenMock, BuiltPackMock, TableMock;
 
 	const USER_ID = '5ab53068b647d20b0c7b308a';
 
@@ -28,14 +29,15 @@ describe('/api/packs', ()=>{
 
 		PackMock = sinon.mock(Pack);
 		GenMock = sinon.mock(Generator);
-
+		BuiltPackMock = sinon.mock(BuiltPack)
+		TableMock = sinon.mock(Table);
 	})
 
 	after(()=>{
 		MW.getLoggedInUser.restore();
-		Pack.find.restore();
-		Pack.findOne.restore();
 		Generator.find.restore();
+		BuiltPack.findById.restore();
+		Table.find.restore();
 	})
 
 	
@@ -118,6 +120,9 @@ describe('/api/packs', ()=>{
 				.chain('populate')
 				.chain('exec')
 				.resolves(pack)
+
+			TableMock.expects('find').chain('select').chain('exec').resolves([]);
+			BuiltPackMock.expects('findById').chain('exec').resolves(new BuiltPack(pack));
 		});
 
 		describe('GET',()=>{

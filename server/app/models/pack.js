@@ -28,6 +28,8 @@ var packSchema = Schema({
 		type: String
 	},
 	font: String,
+	cssClass: String,
+	txt: String,
 	desc: String,
 	seed: {
 		type: String,
@@ -53,11 +55,10 @@ var packSchema = Schema({
 // remove related data on delete
 packSchema.post('remove', function(pack){
 	return Promise.all([ 
-		pack.model('Generator').remove({ pack_id: pack._id }),
-		pack.model('BuiltPack').remove({ _id: pack._id })
+		pack.model('Generator').deleteMany({ pack: pack._id }),
+		pack.model('BuiltPack').deleteMany({ _id: pack._id })
 	]);
 })
-
 
 packSchema.pre('save', ()=>{
 	this.updated = Date.now();
@@ -84,30 +85,45 @@ packSchema.virtual('seedArray').get(function() {
  */
 packSchema.methods.getSeedFromTree = function(tree){
 	var seed = this.seedArray;
+	var foundNode = tree;
 
 	// if the seed doesn't match, just return the tree
-	if(tree.isa !== seed[0]) return tree;
+	if(tree.isa !== seed[0])
+		foundNode = tree;
 
-	var currentNode = tree;
-	for (var i = 1; i < seed.length; i++) {
-		
-		// node had no children, can't finish finding
-		if(!currentNode.in) return currentNode;
-
-		// search in children for next seed
-		var found = false;
-		for (var j = 0; j < currentNode.in.length; j++) {
-			if(currentNode.in[j].isa === seed[i]){
-				currentNode = currentNode.in[j];
-				found = true;
+	else {
+		var currentNode = tree;
+		for (var i = 1; i < seed.length; i++) {
+			
+			// node had no children, can't finish finding
+			if(!currentNode.in) {
+				foundNode = currentNode;
 				break;
 			}
-		}
-		// can't find it, return what we have so far without going to next seed.
-		if(!found) return currentNode;
-	}// loop seed;
 
-	return currentNode;
+			// search in children for next seed
+			var found = false;
+			for (var j = 0; j < currentNode.in.length; j++) {
+				if(currentNode.in[j].isa === seed[i]){
+					currentNode = currentNode.in[j];
+					foundNode = currentNode;
+					found = true;
+					break;
+				}
+			}
+			// can't find it, return what we have so far without going to next seed.
+			if(!found) {
+				foundNode = currentNode;
+				break;
+			}
+		}// loop seed;
+	}
+	
+	// save the style of the seed
+	this.txt = foundNode.txt;
+	this.cssClass = foundNode.cssClass;
+
+	return foundNode;
 }
 
 /**
@@ -135,12 +151,16 @@ packSchema.methods.seedIsValid = function(seed, builtpack){
  */
 packSchema.methods.renameSeed = async function(isaOld, isaNew){
 	if(this.seed){
-		var newSeed = this.seed.replace(new RegExp(isaOld+SEED_DELIM, "g"), isaNew+SEED_DELIM);
+		var newSeed = this.seed.replace(new RegExp(escapeRegExp(isaOld)+SEED_DELIM, "g"), escapeRegExp(isaNew)+SEED_DELIM);
 		if(newSeed !== this.seed){
 			this.seed = newSeed;
 			await this.save();
 		}
 	}
+}
+
+function escapeRegExp(str) {
+ 	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
 /**

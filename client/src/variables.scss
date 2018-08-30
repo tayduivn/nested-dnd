@@ -1,11 +1,64 @@
 
-// Bootstrap variable overrides
+// 3rd party variable overrides
 // ----------------------------------------
-
-
+$fa-font-path:   "../../node_modules/@fortawesome/fontawesome-free-webfonts/webfonts";
 
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/mixins";
+@import '../../node_modules/sass-material-colors/sass/_sass-material-colors';
 
 $totalNavHeight: ($navbar-brand-height+$navbar-brand-padding-y*2)+($navbar-padding-y*2);
+
+$body-bg: material-color('grey','900');
+$body-color: #fff;
+$yiq-text-dark: #000000;
+
+$theme-colors: (
+	"primary":  material-color('grey'),
+	"secondary": material-color('blue-grey'),
+	"success": material-color('green'),
+	"danger": material-color('red'),
+	"warning": material-color('amber'),
+	"info": material-color('cyan'),
+	"light": material-color('grey','100'),
+	"dark": material-color('grey','900')
+);
+
+$more-colors: (
+	'wood': (
+		'50': #f6ede0,
+		'100': #e9d2b3,
+		'200': #dbb480,
+		'300': #cd964d,
+		'400': #c28026,
+		'500': #b76900,
+		'600': #b06100,
+		'700': #a75600,
+		'800': #9f4c00,
+		'900': #903b00,
+		'a100': #ffd2bc,
+		'a200': #ffb089,
+		'a400': #ff8d56,
+		'a700': #ff7c3c
+	)
+);
+
+$material-colors: map-merge($more-colors, $material-colors);
+
+
+@each $name, $map in $material-colors {
+
+	$primary-color: map-get($map, '900');
+
+	$newMap: ( 
+		'1000': darken($primary-color, 15%)
+	);
+	$map: map-merge($map, $newMap);
+
+	$newNewMap: (
+		#{$name}: $map
+	);
+
+	$material-colors: map-merge($material-colors, $newNewMap);
+}

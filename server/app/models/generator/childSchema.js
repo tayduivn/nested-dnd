@@ -6,7 +6,7 @@ var childSchema = Schema({
 	type: {
 		$type: String, 
 		require: true,
-		enum: ['string','generator','table','embed','table_id'], //if no type, string
+		enum: ['string','generator','table','embed','table_id','data'], //if no type, string
 		default: "string"
 	}, 
 	value: { 

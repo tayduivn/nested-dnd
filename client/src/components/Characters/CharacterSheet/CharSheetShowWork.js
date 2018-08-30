@@ -21,18 +21,18 @@ const ListItem = ({name, list}) =>(
 	</span>
 )
 
-const Item = ({ xs, label, value}) => (
-	<div className={"col-"+(xs ? xs : 4)}>
+const Item = ({ xs, label, value = {} }) => (
+	<div className={"col"+(xs ? '-'+xs : '')}>
 		<p className="title-sm">
 			{label}
 		</p>
 		<div className="item-entry">
-			{value}
+			{JSON.stringify(value)}
 		</div>
 	</div>
 );
 
-const ShowWork = ({col, background, classes}) => (
+const ShowWork = ({col, background = {}, classes = []}) => (
 	<div className={`close-col col-${col}`}>
 		<p className="title-sm">Personality Trait</p>
 		<p>
@@ -50,13 +50,12 @@ const ShowWork = ({col, background, classes}) => (
 		<p>
 			{background.flaw}
 		</p>
-		<Item
-			className={classes.map(c => makeList(c.subclasses)).length ? "" : "hidden"}
-			label="Subclasses"
-			value={classes.map((c,i) =>
+		<p className="title-sm">Subclasses</p>
+		<div className={classes.map(c => makeList(c.subclasses)).length ? "" : "hidden"}>
+			{classes.map((c,i) =>
 				<Subclass subclasses={c.subclasses} key={i} />
 			)}
-		/>
+		</div>
 	</div>
 );
 

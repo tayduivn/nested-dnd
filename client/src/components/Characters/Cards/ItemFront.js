@@ -1,94 +1,94 @@
 import React from "react";
 
 import WriteIn from './WriteIn';
+import { Icon } from '../../Explore/ExplorePage'
 
 const ItemFront = ({item}) => (
-	<div className={"card weapon" + (item.consumable ? " red" : item.charges ? " purple": "")}>
+	<div className={"card weapon" + (item.consumable ? " red" : item.uses ? " purple": "")}>
 		<div className="card-inner front">
 			<h1>
 				{item.name.trim().length
 					? item.name
 					: "________________"}
 			</h1>
-			<i className={"img gi gi-" + item.thing.getIcon()} />
-			{(item.dice || item.charges || item.shortDesc || item.save) ? 
+			<Icon name={item.icon+' img'} />
+			{(item.damage || item.healing || item.uses || item.shortDesc || item.saveData) ? 
 				<RollValues {...item} /> : <p />}
 		</div>
 	</div>
 );
 export default ItemFront;
 
-const RollValues = ({shortDesc, charges, dice, item_type, save, consumable, level}) => (
+const RollValues = ({shortDesc, uses, damage, attackType, healing, saveData, consumable, level}) => (
 	<div className="roll-values pin-bottom">
 		<p className="shortDesc">
 			{shortDesc}
 		</p>
-		{charges
+		{uses
 			? <div>
 					<WriteIn
 						label="Charges"
-						dice={"❍".repeat(charges.count)}
+						dice={"❍".repeat(uses.count)}
 					/>
 					<WriteIn
 						className="higherLevelDmg"
-						label="&nbsp;&nbsp;&nbsp;&nbsp; Regain Daily"
-						dice={charges.daily_regain}
+						label="&nbsp;&nbsp;&nbsp;&nbsp; Resets"
+						dice={uses.reset}
 					/>
 				</div>
-			: ""}
-		{dice && dice.attack
+			: null}
+		{attackType
 			? <WriteIn
 					label="Attack"
-					dice={dice.attack}
-					dmgType={item_type.replace(" Weapon","")}
+					dmgType={attackType}
 					writein={true}
 				/>
-			: ""}
-		{save
+			: null}
+		{saveData
 			? <WriteIn
 					label="Save"
-					save={save.throw}
+					save={saveData.throw}
 					writein={false}
 				/>
-			: ""}
+			: null}
 		
-		{save && save.success
+		{saveData && saveData.success
 			? <div className="save-success">
-					{(save.dc ? "DC"+save.dc+" " : "")+save.success}
+					{(saveData.dc ? "DC"+saveData.dc+" " : "")+saveData.success}
 				</div>
-			: ""}
-			{dice && dice.roll && dice.type !== "Healing"
+			: null}
+		{damage 
 			? <WriteIn
 					label="Damage"
-					dice={dice ? dice.roll : ""}
-					dmgType={dice.type}
-					writein={dice.add_modifier === true}
+					dice={damage.diceString}
+					dmgType={damage.damageType}
+					writein={damage.addModifier === true}
 				/>
 			: ""}
-		{dice && dice.type === "Healing"
+		{healing
 			? <WriteIn
 					label="Heal"
-					dice={dice.roll}
+					dice={healing.diceString}
 					writein={
-						dice.add_modifier && !consumable
+						healing.addModifier && !consumable
 					}
 				/>
-			: ""}
-		{dice && dice.roll_2hand
+			: null}
+		{damage && damage.twoHandDice
 			? <WriteIn
 					label="&nbsp;&nbsp;2-hand"
-					dice={dice.roll_2hand}
+					dice={damage.twoHandDice}
 				/>
-			: ""}
-		{dice && dice.progression && level !== 0  && (typeof dice.progression === "string")
+			: null}
+		{damage && damage.progression && level !== 0  && (typeof damage.progression === "string")
 		? <WriteIn
 				className="higherLevelDmg"
-				label={"	↑"+ (charges ? "Charges" : "Levels")}
+				label={"	↑"+ (uses ? "Charges" : "Levels")}
 				dice={
-					"+" + dice.progression + " per "+(charges ? "charge" : "slot level")
+					"+" + damage.progression + " per "+(uses ? "charge" : "slot level")
 				}
 				writein={false}
 			/>
-		: ""}
+		: null}
 	</div>
 )

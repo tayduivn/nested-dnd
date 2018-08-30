@@ -5,22 +5,37 @@ import Page from './Page';
 
 import "./Cards.css";
 
+if(!window.$){
+	window.$ = require('jquery');
+	require('bootstrap');
+}
+
+function fixFontSize(){
+	var arr = document.getElementsByClassName("desc");
+	for (var i = 0; i < arr.length; i++) {
+		arr[i].style.fontSize = "14px";
+		recalcFontSize(arr[i]);
+	}
+}
+
+
 export default class Cards extends React.Component {
+	componentDidMount(){
+		window.$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+			fixFontSize();
+		})
+	}
 	componentDidUpdate() {
-		var arr = document.getElementsByClassName("desc");
-		for (var i = 0; i < arr.length; i++) {
-			arr[i].style.fontSize = "14px";
-			recalcFontSize(arr[i]);
-		}
+		fixFontSize()
 	}
 	render() {
 		if (!this.props.character || !this.props.character.cards) return <div />;
 
 		var pages = [], cards = [];
 		let c = this.props.character;
-		const ALL_CARDS = c.cards.get();
+		const ALL_CARDS = c.cards;
 		var name = (c.name) ? c.name : c.classes[0].name;
-		name += " "+c.getTotalLevel();
+		name += " "+c.level;
 
 		for (var i = 0; i < ALL_CARDS.length; i++) {
 			cards.push(ALL_CARDS[i]);
@@ -34,6 +49,6 @@ export default class Cards extends React.Component {
 				cards = [];
 			}
 		}
-		return <div>{pages}</div>;
+		return <div id="cardSheets" className="printme py-4">{pages}</div>;
 	}
 }
