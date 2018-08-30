@@ -146,7 +146,6 @@ var Maintainer = {
 		var Generator = generator.model('Generator');
 		var BuiltPack = generator.model('BuiltPack');
 
-		console.log('Generator.find rename');
 		let result = await Promise.all([
 			// find generators in this pack that contain in or extend with isaOld
 			(builtpack && builtpack.RAW_GENS) || Generator.find({ pack: pack._id }).exec(),

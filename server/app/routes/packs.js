@@ -61,7 +61,6 @@ module.exports = function(app) {
 	app.get("/api/packs/:pack", MW.canViewPack, (req, res, next) => {
 
 		BuiltPack.findOrBuild(req.pack).then(async (builtpack)=>{
-			console.log('after BuiltPack.findOrBuild')	
 			var isOwner = req.user && req.pack._user.id === req.user.id;
 
 			// run getGen so correct format

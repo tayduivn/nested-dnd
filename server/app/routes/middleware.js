@@ -56,7 +56,6 @@ module.exports = {
 	},
 
 	canViewPack: function(req, res, next){
-		console.log('canViewPack');
 		return getPack(req, res, ()=>{
 			if(!req.pack) return;
 
@@ -158,7 +157,6 @@ module.exports = {
 	 * Puts the pack in the req object
 	 */  
 function getPack(req, res, next){
-	console.log('getPack');
 	var packGetter;
 
 	if(req.params.pack)
@@ -167,19 +165,15 @@ function getPack(req, res, next){
 		packGetter = Pack.findOne({ url: req.params.url }).populate('_user', "name id")
 	else return res.status(412).json({"error": "Missing pack id"});
 
-	console.log('packGetter.exec()');
 	return packGetter.exec().then(pack=>{
-		console.log('then(pack=>');
 
 		if(!pack){
-			console.log('COULDNT FIND PACK')
 			var error = {"error": "Couldn't find pack? "+req.params.pack+req.params.url};
 			if(!res.headersSent) {
 				res.status(404).json(error)
 			}
 			return next(error);
 		}
-		console.log('FOUND PACK')
 
 		req.pack = pack;
 

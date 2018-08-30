@@ -23,16 +23,13 @@ schema.path('generators').get(function(value){
 
 schema.statics.rebuild = async function(pack){
 	var id = (typeof pack === 'string') ? pack : pack._id;
-	console.log('BuiltPack.findById 26');
 	var builtpack = await this.findById(id).exec();
 	return await this.build(pack, builtpack);
 }
 
 schema.statics.findOrBuild = async function(pack){
 	var id = (typeof pack === 'string') ? pack : pack._id;
-	console.log('BuiltPack.findById 33');
 	var builtpack = await this.findById(id).exec();
-	console.log('after BuiltPack.findById');
 	if( builtpack ) return builtpack;
 
 	return await this.build(pack, builtpack);
@@ -45,18 +42,15 @@ schema.statics.findOrBuild = async function(pack){
  * @async
  */
 schema.statics.build = async function(pack, builtpack){
-	console.log('BuiltPack.build');
 	var id = (typeof pack === 'string') ? pack : pack._id;
 
 	if(typeof pack === 'string'){
-		console.log('Pack.findById');
 		pack = await this.model('Pack').findById(id);
 	}
 
 	if(!pack.dependencies) pack.dependencies = [];
 
 	const allPackIds = pack.dependencies.concat([pack.id]);
-	console.log('Generator.find 57');
 	const gens = await this.model('Generator').find({ pack: { $in: allPackIds} }).exec();
 	const isNew = !builtpack;
 	var map = {};
@@ -211,7 +205,6 @@ schema.methods.rebuildGenerator = async function(isa, pack){
 
 	if(!isa) throw new Error("isa is undefined");
 	if(!pack) {
-		console.log('Pack.findById');
 		pack = await Pack.findById(this._id);
 	};
 
@@ -220,7 +213,6 @@ schema.methods.rebuildGenerator = async function(isa, pack){
 		pack: { $in: allPacks}, 
 		isa: isa
 	};
-	console.log('Generator.find 221');
 	var gens;
 	if(this.RAW_GENS){
 		gens = this.RAW_GENS.filter(g=>g.isa === isa);
