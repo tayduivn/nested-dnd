@@ -234,7 +234,7 @@ universeSchema.statics.getTemp = async function(session_id, pack, index){
 	var universe;
 
 	for(var i = 0, u; u = universes[i]; i++){
-		var found = u.pack.toString() === pack.id;
+		var found = (u.pack && u.pack.toString() === pack.id);
 		if(found){
 			universe = u;
 			universes.splice(i, 1);

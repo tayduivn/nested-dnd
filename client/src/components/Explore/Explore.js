@@ -48,6 +48,10 @@ export default class TreeManager extends Component {
 		pack: (this.props.universe && this.props.universe.pack) || {},
 		showData: false
 	}
+	static contextTypes = {
+		loadFonts: PropTypes.func
+	}
+	
 
 	constructor(props){
 		super(props);
@@ -98,9 +102,12 @@ export default class TreeManager extends Component {
 		return this.getCurrent(this.props, index);
 	}
 
-	componentDidUpdate(prevProps){
-		//  console.log('test');
+	componentDidUpdate(prevProps, prevState){
+		if(this.state.pack.font !== prevState.pack.font && this.context.loadFonts){
+			this.context.loadFonts([this.state.pack.font]);
+		}
 	}
+
 
 	// location has changed
 	componentWillReceiveProps(nextProps){
@@ -199,6 +206,8 @@ export default class TreeManager extends Component {
 					newState = { lookup };
 				}
 
+				if(data.pack) 
+					newState.pack = data.pack;
 				
 				_this.setState(newState);
 			}

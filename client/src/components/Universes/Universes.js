@@ -3,19 +3,16 @@ import { Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import DB from '../../actions/CRUDAction';
-import CreateUniverse from './CreateUniverse';
-import EditUniverse from './EditUniverse';
-import Explore from '../Explore/Explore'
 import { LOADING_GIF } from '../App/App';
 import Packs, { PackUL } from '../Packs/Packs';
 import { PropsRoute, RouteWithSubRoutes } from '../Routes';
 
-const UniverseListDisplay = ({list}) => (
+const UniverseListDisplay = ({universes}) => (
 	<div className="main">
 		<div className="container mt-5">
 			<div className="universes">
 				<h1>Universes</h1>
-				<PackUL list={list} isUniverse={true} addButton={true} />
+				<PackUL list={universes} isUniverse={true} addButton={true} />
 			</div>
 			<Packs />
 		</div>
@@ -58,7 +55,7 @@ class Universes extends Component {
 		if(!props) props = this.props;
 		if(!this.props.match.params) return;
 
-		const universe = (props.match && props.match.params && props.match.params.universe) || {};
+		const universe = (props.match && props.match.params && props.match.params.universe) || false;
 		if(!this.state.loading) 
 			this.setState({loading: true})
 
@@ -83,7 +80,7 @@ class Universes extends Component {
 			DB.get('packs').then(({error, data:packs})=>this.setState({error, packs, loading: false}));
 		}
 		else
-			DB.get('universes').then(({error, data})=>this.setState({error, data, loading: false}));
+			DB.get('universes').then(({error, data: universes})=>this.setState({error, universes, loading: false}));
 	}
 
 	handleSave = (e) => {
@@ -157,27 +154,15 @@ class Universes extends Component {
 			: (this.state.loading) ? <div className="main">{LOADING_GIF}</div>
 			: (<div id="Universes">
 					<Switch>
-						{routes.map((route, i) => <RouteWithSubRoutes key={i} {...route} path={match.path+route.path} />)}
-						<PropsRoute component={UniverseListDisplay} />
+						{routes.map((route, i) => 
+							<RouteWithSubRoutes key={i} {...route} {...this.state} path={match.path+route.path}
+								 {...{handleSortGens, handleRefresh}} />)}
+						<PropsRoute {...this.state} component={UniverseListDisplay} />
 					</Switch>
 				</div>)
 
 		return content;
 	}
 }
-
-
-const Routes = ({ match, data, universe= {}, packs, generators, tables, handleDelete, handleSave, handleAdd, handleSortGens, handleRenameGen, handleRefresh }) => (
-	<Switch>
-		<PropsRoute exact path={`/universes/create`} component={CreateUniverse} handleAdd={handleAdd} data={packs} />
-		<PropsRoute path={`/universes/:universe/explore`} component={Explore} 
-			{...{universe, generators, tables, handleSortGens, handleRefresh}} />
-		<PropsRoute path={`/universes/:universe/edit`} component={EditUniverse} {...universe} 
-			handleDelete={handleDelete} handleSave={handleSave}/>
-		{/*<PropsRoute path={`/universes/:universe/generators/:isa?`} component={Generator} {...universe} 
-			handleDelete={handleDelete} handleSave={handleSave} packid={(universe && universe.pack) ? universe.pack._id : ''} handleRenameGen={handleRenameGen} generators={generators} tables={tables} />*/}
-		<PropsRoute component={UniverseListDisplay} list={data} />
-	</Switch>
-)
 
 export default Universes;

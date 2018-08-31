@@ -106,6 +106,8 @@ styleSchema.methods.strToColor = function(str) {
 			str = colorConvert[oldColor];
 	}
 
+	if(!str) return false;
+
 	return str.length ? str : false;
 }
 

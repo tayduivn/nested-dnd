@@ -42,7 +42,7 @@ class Splash extends React.Component {
 	static contextTypes = {
 		loadFonts: PropTypes.func
 	}
-	componentWillMount(){
+	componentDidMount(){
 		if(this.context.loadFonts)
 			this.context.loadFonts([nested.font, dnd.font])
 	}
