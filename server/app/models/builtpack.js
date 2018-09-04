@@ -65,7 +65,6 @@ schema.statics.build = async function(pack, builtpack){
 		}
 	}
 	
-
 	// map array of generators to their unique names and sort by dependency order
 	sortGensByPack(gens, allPackIds);
 	gens.forEach((g) => {

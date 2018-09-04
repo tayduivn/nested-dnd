@@ -9,7 +9,8 @@ const nested = {
 	in: true,
 	cssClass: 'bg-grey-1000 ptn-stardust',
 	name: 'Nested',
-	font: 'Press Start 2P'
+	font: 'Press Start 2P',
+	inArr: true
 }
 
 const dnd = {
@@ -18,7 +19,8 @@ const dnd = {
 	cssClass: 'bg-wood-200 ptn-purty-wood',
 	name: 'Dungeons & Dragons',
 	font: 'IM Fell English SC',
-	txt: 'brown'
+	txt: 'brown',
+	inArr: true
 }
 
 const Pack = ({pack}) => (

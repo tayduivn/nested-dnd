@@ -6,7 +6,6 @@ import ReactSortable from 'react-sortablejs';
 import PropTypes from "prop-types";
 
 import Ancestors from './Ancestors';
-import { LOADING_GIF } from '../App/App';
 import IconSelect from '../Form/IconSelect';
 import { ColorPicker, HexColorPicker } from '../Form/ColorPicker';
 import Child from './Child'
@@ -27,8 +26,8 @@ const TRANSITION_OPTIONS = {
 };
 const LOADING = (
 	<div className="child col">
-		<div className="child-inner loader fadeIn animated">
-			{LOADING_GIF}
+		<div className="child-inner loader">
+			<i className="loading fa fa-spinner fa-spin"></i>
 		</div>
 	</div>);
 
