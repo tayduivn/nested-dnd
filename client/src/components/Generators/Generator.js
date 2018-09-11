@@ -15,7 +15,6 @@ class ViewGenerator extends Component {
 	
 	render(){
 		const gen = this.props.built;
-		const unbuilt = this.props.unbuilt || {};
 		const { pack: packid, generator: isa } = this.props.match.params
 
 		if(!gen) return null;

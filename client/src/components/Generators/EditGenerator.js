@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import Sortable from 'react-sortablejs';
 
 import { getQueryParams } from '../../util/util';
 import IconSelect from '../Form/IconSelect';
@@ -65,28 +64,6 @@ function handleNestedPropertyValue(property, value, state){
 
 	return {property, value};
 }
-
-const ContainsList = ({inArr = [], handleChange, ...rest}) => {
-	if(!inArr.length) return null;
-
-	const listItems = inArr.map((c,i)=><MixedThing options={{
-		sortable: true,
-		types: ['generator', 'string', 'embed'],
-		property: ['in', i],
-		showAmount: true
-	}} {...c} key={i} array={inArr} {...{i, handleChange}} {...rest} />);
-
-	return (
-		<ul className="p-0">
-			<Sortable options={{handle: '.handle'}} 
-				onChange={(order, sortable, {oldIndex, newIndex}) => {
-					handleChange(['in',oldIndex,'sort'], newIndex)
-				}}>
-				{listItems}
-			</Sortable>
-		</ul>
-	)
-}		
 
 const Data = ({data = {}, tables, generators, handleChange}) => (
 	<div className="form-group">

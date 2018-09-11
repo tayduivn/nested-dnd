@@ -2,7 +2,6 @@ import React from 'react';
 import Select from 'react-select';
 import PropTypes from 'prop-types'
 
-import Styler from '../../util/Styler';
 import { Icon } from '../Explore/ExplorePage'
 import iconOptions from '../../assets/icons.js'
 import { MenuList } from './IsASelect';
@@ -182,25 +181,5 @@ function replaceAnim(value, anim){
 	return str;
 }
 
-
-
-function renderIcon({ focusedOption, focusedOptionIndex, focusOption, key, labelKey, option, options, optionIndex, selectValue, style, valueArray }) {
-	return (
-		<div id={"icon-option-"+optionIndex} className={"VirtualizedSelectOption icon-option "+((focusedOption.value === option.value) ? "is-focused" : "")} key={key}
-			onClick={() => selectValue(option)}
-			onMouseOver={() => focusOption(option)}
-			style={style}
-		><Icon name={option.value} /> {option.label}</div>
-	)
-}
-
-/*
-const spinCheckBox = (<Checkbox data-index={index} data-icon={icon} checked={this.animArr[index]} 
-							onChange={this.handleChangeSpin} inline>
-							<i className={icon + (this.animArr[index] ? " fa-spin" : "") } />
-							<br />
-							<span>spin</span>
-						</Checkbox>)
-*/
 export default IconSelect;
 export { IconSelectDisplay };

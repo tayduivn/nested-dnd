@@ -10,30 +10,16 @@ import { PropsRoute } from '../Routes';
 
 const fng = require('fantasy-names');
 var arrayOptions = []
-var nestedOptions = {}
 
 for(var section in fng.generators){
-	fng.generators[section].map(p=>
+	var s = fng.generators[section];
+	for(var i = 0; i < s.length; i++){
 		arrayOptions.push({
-			label: toLabel(section+' > '+p),
-			value: [section, p]
+			label: toLabel(section+' > '+s[i]),
+			value: [section, s[i]]
 		})
-	)
-}
-
-const fngSectionOptions = Object.keys(fng.generators).map(s=>{
-
-	nestedOptions[s] = fng.generators[s].map(p=>{
-		return {
-			label: toLabel(p),
-			value: p
-		}
-	})
-	return {
-		label: toLabel(s),
-		value: s
 	}
-})
+}
 
 function wrapOption(section = '', p = ''){
 	return {label: toLabel(section+' > '+p), value: [section, p]}

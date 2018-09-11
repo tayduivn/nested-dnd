@@ -27,7 +27,7 @@ export const RolePlay = ({race = {}, body = {}, abilities, background = {}, prof
 				label="Coin"
 				value={background.startingCoin}
 			/>
-			<Item xs={4} label="Speed" value={(body.speeds && body.speeds.walk+" ft." || "")} />
+			<Item xs={4} label="Speed" value={((body.speeds && body.speeds.walk+" ft.") || "")} />
 			<Item xs={4} label="Size" value={race.size.charAt(0)} />
 			<Item
 				xs={4}
@@ -50,18 +50,6 @@ export const RolePlay = ({race = {}, body = {}, abilities, background = {}, prof
 );
 
 // abilties are Abilities
-const Ability = ({label, score}) => <Item label={label} value={score} />;
-
-const BaseAbilityScores = ({str, dex, con, int, wis, cha}) => (
-	<div className="row">
-		<Ability label="STR" score={str.score} />
-		<Ability label="DEX" score={dex.score} />
-		<Ability label="CON" score={con.score} />
-		<Ability label="INT" score={int.score} />
-		<Ability label="WIS" score={wis.score} />
-		<Ability label="CHA" score={cha.score} />
-	</div>
-);
 
 const ProfParagraph = ({list, label}) => (
 	<p>

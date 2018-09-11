@@ -8,7 +8,6 @@ import PropTypes from "prop-types";
 import WebFont from 'webfontloader';
 
 import { PropsRoute, RouteWithSubRoutes } from '../Routes';
-import ThingExplorer from "../ThingExplorer/ThingExplorer.js";
 import Characters from "../Characters/Characters.js";
 import Character from "../Characters/Character.js";
 import Login from "./Login.js";
@@ -146,10 +145,6 @@ const routes = [
 	{
 		path: '/players-preview',
 		component: PlayersPreview
-	},
-	{
-		path: '/things',
-		component: ThingExplorer
 	},
 	{
 		path: '/explore/:packurl',

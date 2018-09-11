@@ -1,7 +1,7 @@
 import React from "react";
 
 import InfoPanel from './InfoPanel';
-import { PROP_DESC, MARTIAL_WEAPONS } from './CardsUtil';
+import { MARTIAL_WEAPONS } from './CardsUtil';
 
 export default class ItemBack extends React.Component {
 	/**

@@ -156,7 +156,7 @@ class Universes extends Component {
 					<Switch>
 						{routes.map((route, i) => 
 							<RouteWithSubRoutes key={i} {...route} {...this.state} path={match.path+route.path}
-								 {...{handleSortGens, handleRefresh}} />)}
+								 {...{handleSortGens, handleRefresh, handleRenameGen, handleAdd, handleDelete, handleSave}} />)}
 						<PropsRoute {...this.state} component={UniverseListDisplay} />
 					</Switch>
 				</div>)

@@ -1,11 +1,20 @@
-
 import {PROP_DESC} from '../components/Characters/Cards/CardsUtil';
+import SHORT_DESC from './ShortDesc';
 
 const IGNORE_FEATURES = ["Hit Points", 'Feat'];
 const USE_PARENT_DESC = ["Favored Enemy"]
 
 const abbreviate = true;
 const isHarryPotter = true;
+
+const replace = {
+	"Orc": "Giant",
+	"Elf": "Veela",
+	"Rock Gnome": "Pukwudgie",
+	"Gnome": "Pukwudgie",
+	"Gnomish": "Pukwudgie",
+	"Dwarvish": "Gobbledegook"
+}
 
 var configData;
 
@@ -24,37 +33,15 @@ function getMod(val) {
 }
 
 
-function ddbConvert(data){
+function defaultCharacterData(data){
+	
 
-	if(typeof data === 'string'){
-		try{
-			data = JSON.parse(data);
-		}
-		catch(e){
-			return {};
-		}
-	}
-	configData = data.configData;
-	data = data.character;
-
-	var coin = data.currencies;
-
-	var c = {
+	return {
 		level: data.level,
 		proficiencyBonus: data.proficiencyBonus,
 		hitDice: [],
-		body: {
-			speeds: {
-				walk: data.weightSpeeds.normal.walk
-			}
-		},
-		background: {
-			startingCoin: ((coin.pp) ? coin.pp+'p':'')
-				+((coin.ep) ? coin.ep+'e':'')
-				+((coin.gp) ? coin.gp+'g':'')
-				+((coin.sp) ? coin.sp+'s':'')
-				+((coin.cp) ? coin.cp+'c':'')
-		},
+		body: getBody(data),
+		background: getBackground(data),
 		race: {
 			name: isHarryPotter ? harryPotterify(data.race) : data.race,
 			size: data.size
@@ -83,48 +70,201 @@ function ddbConvert(data){
 			resistances: [],
 			other: []
 		},
-		equipment: {
-			armor: {},
-			containers: []
-		},
-		spellcasting: null,
-		cards: []
+		spellcasting: null
 	};
-	if(data.name) c.name = data.name;
+}
 
-	if(data.eyes) c.body.eyes = data.eyes;
-	if(data.skin) c.body.skin = data.skin;
-	if(data.hair) c.body.hair = data.hair;
-	if(data.age) c.body.age = data.age;
-	if(data.height) c.body.height = data.height;
-	if(data.weight) c.body.weight = data.weight;
-
+function getBody(data){
 	const spds = data.weightSpeeds.normal;
-	if(spds.fly) c.body.speeds.fly = spds.fly;
-	if(spds.burrow) c.body.speeds.burrow = spds.burrow;
-	if(spds.swim) c.body.speeds.swim = spds.swim;
-	if(spds.climb) c.body.speeds.climb = spds.climb;
+	var body = {};
 
+	if(data.eyes) body.eyes = data.eyes;
+	if(data.skin) body.skin = data.skin;
+	if(data.hair) body.hair = data.hair;
+	if(data.age) body.age = data.age;
+	if(data.height) body.height = data.height;
+	if(data.weight) body.weight = data.weight;
+
+	// speeds
+	body.speeds = { walk: spds.walk };
+	if(spds.fly) body.speeds.fly = spds.fly;
+	if(spds.burrow) body.speeds.burrow = spds.burrow;
+	if(spds.swim) body.speeds.swim = spds.swim;
+	if(spds.climb) body.speeds.climb = spds.climb;
+
+	return body;
+}
+
+function getBackground(data){
 	const bg = data.features.background;
+	const coin = data.currencies;
+
+	var background = {}
+
+	background.startingCoin = ((coin.pp) ? coin.pp+'p':'')
+			+((coin.ep) ? coin.ep+'e':'')
+			+((coin.gp) ? coin.gp+'g':'')
+			+((coin.sp) ? coin.sp+'s':'')
+			+((coin.cp) ? coin.cp+'c':'');
+
 	if(bg.hasCustomBackground){
 		if(bg.customBackground.name) 
-			c.background.name = bg.customBackground.name
+			background.name = bg.customBackground.name
+	}
+	else if(bg.definition.name) 
+		background.name = bg.definition.name
+	
+	if(data.traits.personalityTraits) background.personality = data.traits.personalityTraits;
+	if(data.traits.ideals) background.ideal = data.traits.ideals;
+	if(data.traits.bonds) background.bond = data.traits.bonds;
+	if(data.traits.flaws) background.flaw = data.traits.flaws;
 
-	}else{
-		if(bg.definition.name) c.background.name = bg.definition.name
-		if(bg.definition.featureName){
-			c.features.push({
+	return background;
+}
+
+function getInventory(data){
+
+	var equipment = {
+		armor: {},
+		containers: []
+	};
+	var cards = [];
+
+	// inventory ------
+	if(data.inventory.armor){
+		const armor = (data.inventory && data.inventory.armor && data.inventory.armor.filter(a=>a.equipped)) ||[];
+		armor.forEach(arm=>{
+			if(arm.definition.name === 'Shield'){
+				equipment.hasShield = true;
+			}
+			else if(!arm.stackable){
+				equipment.armor = {
+					name: arm.definition.name,
+					data: {
+						ac: arm.definition.armorClass,
+						itemType: arm.definition.type
+					}
+				}
+			}
+			else{
+				//todo stackable armor
+			}
+		})
+	}
+	if(data.inventory.weapons){
+		var weaps = data.inventory.weapons;
+		var weapCount = {};
+
+		weaps.forEach(w=>{
+			let name = swapComma(w.definition.name)
+			if(!weapCount[name]) weapCount[name] = 0;
+			weapCount[name]++;
+
+			// only put weapon once
+			if(cards.find(card=>card.name === name))
+				return;
+
+			const shortRange = (w.definition.range && w.definition.range > 5) ? w.definition.range : undefined;
+			var card = {
+				category: 'item',
+				name: name,
+				consumable: w.definition.isConsumable,
+				weight: w.definition.weight,
+				attackType: w.definition.attackType,
+				damage: {
+					diceString: w.definition.damage.diceString,
+					damageType: w.definition.damageType,
+					addModifier: true
+				},
+				range: shortRange,
+				longRange: (shortRange) ? w.definition.longRange : undefined,
+				weaponCategory: w.definition.category,
+				properties: w.definition.properties
+			};
+
+			if(abbreviate){
+				card.properties.forEach(p=>p.description = PROP_DESC[p.name])
+			}
+			cards.push(card);
+		});
+
+		weaps = [];
+		for(var w in weapCount){
+			weaps.push((weapCount[w] > 1) ? weapCount[w]+' '+w+'s' : w);
+		}
+
+		equipment.weapons = weaps.join(", ");
+
+		
+	}
+	if(data.inventory.gear){
+
+		var magic = makeContainer('Magical',data.inventory.gear.filter(g=>g.definition.magic||g.definition.subType==='Potion'));
+		var tools = makeContainer('Tools',data.inventory.gear.filter(g=>g.definition.subType==='Tool'));
+		var bp = makeContainer('Backpack', 
+			data.inventory.gear.filter(g=>
+				g.definition.subType!=='Tool'
+				&& g.definition.subType!=='Potion'
+				&& !g.definition.magic
+				&& g.definition.name !== 'Backpack'))
+
+		equipment.containers.push(bp);
+		if(tools.content.length) equipment.containers.push(tools);
+		if(magic.content.length) equipment.containers.push(magic);
+
+		data.inventory.gear.forEach(e=>{
+
+			var addCard = e.definition.subType==='Potion';
+			if(!addCard) return;
+
+			let name = swapComma(e.definition.name)
+
+			var card = {
+				category: 'item',
+				name: name,
+				consumable: e.definition.isConsumable,
+				weight: e.definition.weight,
+				healing: {
+					diceString: '2d4 + 2',
+					addModifier: false
+				},
+				description: cleanParagraphHTML(e.definition.description)
+			};
+
+			cards.push(card);
+		})
+	}
+	if(data.notes.personalPossessions)
+		equipment.containers.push({ content: [data.notes.personalPossessions] })
+
+	return {equipment, cards};
+}
+
+function ddbConvert(data){
+
+	if(typeof data === 'string'){
+		try{
+			data = JSON.parse(data);
+		}
+		catch(e){
+			return {};
+		}
+	}
+	configData = data.configData;
+	data = data.character;
+
+	var c = defaultCharacterData(data);
+
+	if(data.name) c.name = data.name;
+	
+	// background feature
+	const bg = data.features.background;
+	if(!bg.hasCustomBackground && bg.definition.featureName){
+		c.features.push({
 				name: bg.definition.featureName,
 				desc: (abbreviate) ? getShortDesc(bg.definition.featureName) : bg.definition.featureDescription
 			})
-		}
 	}
-	
-	
-	if(data.traits.personalityTraits) c.background.personality = data.traits.personalityTraits;
-	if(data.traits.ideals) c.background.ideal = data.traits.ideals;
-	if(data.traits.bonds) c.background.bond = data.traits.bonds;
-	if(data.traits.flaws) c.background.flaw = data.traits.flaws;
 
 	data.features.racialTraits.forEach(f=>feature(f,c));
 
@@ -157,114 +297,10 @@ function ddbConvert(data){
 	if(bg.customBackground.dynamicModifiers)
 		bg.customBackground.dynamicModifiers.forEach(m=>processMod(m,{},c));
 
+	var { equipment, cards } = getInventory(data);
+	c.equipment = equipment;
+	c.cards = cards;
 
-
-	// inventory ------
-	if(data.inventory.armor){
-		const armor = (data.inventory && data.inventory.armor && data.inventory.armor.filter(a=>a.equipped)) ||[];
-		armor.forEach(arm=>{
-			if(arm.definition.name === 'Shield'){
-				c.equipment.hasShield = true;
-			}
-			else if(!arm.stackable){
-				c.equipment.armor = {
-					name: arm.definition.name,
-					data: {
-						ac: arm.definition.armorClass,
-						itemType: arm.definition.type
-					}
-				}
-			}
-			else{
-				//todo stackable armor
-			}
-		})
-	}
-	if(data.inventory.weapons){
-		var weaps = data.inventory.weapons;
-		var weapCount = {};
-
-		weaps.forEach(w=>{
-			let name = swapComma(w.definition.name)
-			if(!weapCount[name]) weapCount[name] = 0;
-			weapCount[name]++;
-
-			// only put weapon once
-			if(c.cards.find(card=>card.name === name))
-				return;
-
-			const shortRange = (w.definition.range && w.definition.range > 5) ? w.definition.range : undefined;
-			var card = {
-				category: 'item',
-				name: name,
-				consumable: w.definition.isConsumable,
-				weight: w.definition.weight,
-				attackType: w.definition.attackType,
-				damage: {
-					diceString: w.definition.damage.diceString,
-					damageType: w.definition.damageType,
-					addModifier: true
-				},
-				range: shortRange,
-				longRange: (shortRange) ? w.definition.longRange : undefined,
-				weaponCategory: w.definition.category,
-				properties: w.definition.properties
-			};
-
-			if(abbreviate){
-				card.properties.forEach(p=>p.description = PROP_DESC[p.name])
-			}
-			c.cards.push(card);
-		});
-
-		weaps = [];
-		for(var w in weapCount){
-			weaps.push((weapCount[w] > 1) ? weapCount[w]+' '+w+'s' : w);
-		}
-
-		c.equipment.weapons = weaps.join(", ");
-
-		
-	}
-	if(data.inventory.gear){
-
-		var magic = makeContainer('Magical',data.inventory.gear.filter(g=>g.definition.magic||g.definition.subType==='Potion'));
-		var tools = makeContainer('Tools',data.inventory.gear.filter(g=>g.definition.subType==='Tool'));
-		var bp = makeContainer('Backpack', 
-			data.inventory.gear.filter(g=>
-				g.definition.subType!=='Tool'
-				&& g.definition.subType!=='Potion'
-				&& !g.definition.magic
-				&& g.definition.name !== 'Backpack'))
-
-		c.equipment.containers.push(bp);
-		if(tools.content.length) c.equipment.containers.push(tools);
-		if(magic.content.length) c.equipment.containers.push(magic);
-
-		data.inventory.gear.forEach(e=>{
-
-			var addCard = e.definition.subType==='Potion';
-			if(!addCard) return;
-
-			let name = swapComma(e.definition.name)
-
-			var card = {
-				category: 'item',
-				name: name,
-				consumable: e.definition.isConsumable,
-				weight: e.definition.weight,
-				healing: {
-					diceString: '2d4 + 2',
-					addModifier: false
-				},
-				description: cleanParagraphHTML(e.definition.description)
-			};
-
-			c.cards.push(card);
-		})
-	}
-	if(data.notes.personalPossessions)
-		c.equipment.containers.push({ content: [data.notes.personalPossessions] })
 	return c;
 }
 
@@ -656,113 +692,7 @@ function getShortDesc(name){
 	if(name.startsWith("Sneak Attack"))
 		return "If you have advantage or target is flanked, deal extra damage"
 
-	switch(name) {
-		case "Ability Score Improvement": return false
-		case "Ability Score Increase": return false
-		case "Abjuration Savant": return "Half gold/time to copy Abj. spells"
-		case "Action Surge": return "Take another action on your turn";
-		case "Among the Dead": return "Undead who directly attack you make a WIS save or target someone else. A succesful save or attacking the creature makes it immune to this for a day."
-		case "Arcane Recovery": return "(^lvl/2) spell slot levels on short rest"
-		case "Arcane Tradition": return false
-		case "Arcane Ward": return "When you cast lvl 1+ Abjuration spell, gain (lvlx2) + (INT) temp  HP. Lasts until long rest"
-		case "Archery": return "+2 to ranged weapon attack"
-		case "Artificer’s Lore": return false;
-		case "Assassinate": return false;
-		case "Athlete": return "Standing up costs 5 ft, climbing doesn't cost extra, running long jump or running high jump after only 5 ft.";
-		case "Bonus Proficiencies": return false
-		case "Bonus Proficiency": return false
-		case "Careful Spell": return "(1) a creature you hit succeeds their save"
-		case "Channel Belief": return "short rest restores"
-		case "City Secrets": return "Your party can travel in cities twice as fast while out of combat"
-		case "Circle Forms": return "Transform into CR 1 creature";
-		case "Circle of the Moon": return false
-		case "Colossus Slayer": return "Weapons deal an extra 1d8 on creatures below full health"
-		case "Combat Wild Shape": return "Wild Shape is a bonus action. Can use a bonus action to spend 1 spell slot to regain 1d8 HP per spell level."
-		case "Criminal Contact": return "trustworthy associate who can link you to a criminal network"
-		case "Cunning Action": return '';
-		case "Danger Sense": return false;
-		case "Darkvision": return "see 60 ft in darkness"
-		case "Deflect Missiles": return false;
-		case "Destructive Wrath": return "Channel Belief: maximum lighting or thunder damage"
-		case "Distant Spell": return "(1) double the range of a spell"
-		case "Divine Domain": return false
-		case "Dragon Ancestor": return false
-		case "Draconic Bloodline": return false
-		case "Draconic Resilience": return false
-		case "Empowered Spell": return "(1) reroll up to cha damage dice"
-		case "Evocation Savant": return "gold and time to copy an evocation spell is halved"
-		case "Expertise": return false
-		case "Extended Spell": return "(1) double duration of spell up to 24hr"
-		case "Fast Hands": return "see Cunning Action card"
-		case "Favored Enemy": return "+2 damage against"
-		case "Fey Ancestry": return false
-		case "Flurry of Blows": return false;
-		case "Font of Magic": case "Flexible Casting": return 'sorcery points ↔ spell slots';
-		case "Fury of the Small": return "If attack larger creature, add your level to the damage. Regain after short rest"
-		case "Gnome Cunning": return false
-		case "Halfling Nimbleness": return "move through larger creatures' space"
-		case "Healing Light": return "d6"
-		case "Heightened Spell": return "(3) target disadvantage on save"
-		case "Hunter Conclave": return false
-		case "Ki": return false;
-		case "Life Domain": return "Healing spells of 1st level or higher regain 2 + the spell’s level additional HP"
-		case "Lucky": return "Reroll 1's"
-		case "Martial Archetype": return false
-		case "Martial Arts": return false;
-		case "Martial Arts (d4)": return ' ';
-		case "Mask of the Wild": return "You can hide in any natural phenomena (like rain)"
-		case "Metamagic": return false
-		case "Military Rank": return "Soldiers loyal to your military organization recognize your authority."
-		case "Natural Explorer": 
-			return "2x proficiency to INT and WIS checks in favored terrain. If travel 1 hr+ in favored terrain: difficult terrain doesn't slow, can't get lost except by magic, always alert to danger, forage x2, tracking gives number, size, how long ago, alone can stealth at normal pace"
-		case "Naturally Stealthy": return "Hide when obscured by a larger creature"
-		case "Open Hand Technique": return "see Flurry of Blows card"
-		case "Patient Defense": return false;
-		case "Portent": return "After long rest, roll two d20s. ______  ______ You can replace any roll with these."
-		case "Position of Privilege": return "You are welcome in high society, and people assume you have the right to be wherever you are. Common folk make every effort to accommodate you."
-		case "Protection": return "If weiding a shield: When an enemy attacks an ally within 5 ft of you, use your reaction to impose disadvantage."
-		case "Quickened Spell": return "(2) change action to bonus action"
-		case "Rage": return "+2 to damage"
-		case "Rage (Damage +2)": return false
-		case "Ranger’s Companion": return "";
-		case "Reckless Attack": return "Advantage on first attack roll (melee weapon using Strength), but attack rolls against you have advantage until your next turn."
-		case "Relentless Endurance":  return "When reduced to 0 HP you can go to 1 HP instead"
-		case "Researcher": return "If you don't know a piece of lore, you often know where to obtain it"
-		case "Rustic Hospitality": return "You can find a place to hide, rest, or recuperate among other commoners. They will shield you from the law or anyone else, though they will not risk their lives for you."
-		case "Savage Attacks": return "crit with melee weapon, roll damage dice 1 more time";
-		case "Sculpt Spells": return "Choose a number of creatures equal to 1 + the spell’s level that will succeed on their saves and take no damage"
-		case "Second-Story Work": return "Climb doesn't cost extra movement. Jump distance (DEX) ft."
-		case "Second Wind": return "Regain after short/long rest."
-		case "School of Abjuration": return false
-		case "Sorcerous Origin": return false;
-		case "Step of the Wind": return false;
-		case "Subtle Spell": return "(1) spell doesn't require V or S"
-		case "Thief": return false;
-		case "Tides of Chaos": return "Reroll. Regain after a Wild Magic Surge."
-		case "Trance": return "meditate 4 hrs instead of sleep"
-		case "Turn Undead": return false
-		case "Twinned Spell": return "( lvl ) target 2nd creature in range."
-		case "Two-Weapon Fighting": return "add your ability modifier to the damage of the second attack"
-		case "Unarmored Defense": return false;
-		case "Unarmored Movement": return false;
-		case "Wanderer": return "Excellent memory for maps and geography. Find food, water for 6 people daily";
-		case "Way of the Open Hand": return false;
-		case "Wild Magic": return false;
-		case "Wild Magic Surge": return "After a level 1+ spell, roll a d20. If you get a 1, a Surge happens."
-		case "Wild Shape": return "Regain after short/long rest. Lasts (lvl/2) hours."
-		case "Wild Shape Forms": return false
-		case "Wrath of the Storm": return "2d8";
-		default: return undefined;
-	}
-}
-
-const replace = {
-	"Orc": "Giant",
-	"Elf": "Veela",
-	"Rock Gnome": "Pukwudgie",
-	"Gnome": "Pukwudgie",
-	"Gnomish": "Pukwudgie",
-	"Dwarvish": "Gobbledegook"
+	return SHORT_DESC[name];
 }
 
 function harryPotterify(str){
