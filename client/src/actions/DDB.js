@@ -1,20 +1,11 @@
-import {PROP_DESC} from '../components/Characters/Cards/CardsUtil';
-import SHORT_DESC from './ShortDesc';
+import SHORT_DESC, { replace, CARD_DATA } from './ShortDesc';
+import { defaultCharacterData, getInventory } from './DDBConvert';
 
 const IGNORE_FEATURES = ["Hit Points", 'Feat'];
 const USE_PARENT_DESC = ["Favored Enemy"]
 
 const abbreviate = true;
 const isHarryPotter = true;
-
-const replace = {
-	"Orc": "Giant",
-	"Elf": "Veela",
-	"Rock Gnome": "Pukwudgie",
-	"Gnome": "Pukwudgie",
-	"Gnomish": "Pukwudgie",
-	"Dwarvish": "Gobbledegook"
-}
 
 var configData;
 
@@ -32,216 +23,7 @@ function getMod(val) {
 	return mod;
 }
 
-
-function defaultCharacterData(data){
-	
-
-	return {
-		level: data.level,
-		proficiencyBonus: data.proficiencyBonus,
-		hitDice: [],
-		body: getBody(data),
-		background: getBackground(data),
-		race: {
-			name: isHarryPotter ? harryPotterify(data.race) : data.race,
-			size: data.size
-		},
-		classes: [],
-		abilities: {
-			str: { base: data.stats.str, adjust: [] },
-			dex: { base: data.stats.dex, adjust: [] },
-			con: { base: data.stats.con, adjust: [] },
-			int: { base: data.stats.int, adjust: [] },
-			cha: { base: data.stats.cha, adjust: [] },
-			wis: { base: data.stats.wis, adjust: [] }
-		},
-		features: [],
-		proficiencies: {
-			armor: [],
-			weapons: [],
-			skills: [],
-			doubleSkills: [],
-			languages: [],
-			tools: [],
-			doubleTools: []
-		},
-		advResist: {
-			advantages: [],
-			resistances: [],
-			other: []
-		},
-		spellcasting: null
-	};
-}
-
-function getBody(data){
-	const spds = data.weightSpeeds.normal;
-	var body = {};
-
-	if(data.eyes) body.eyes = data.eyes;
-	if(data.skin) body.skin = data.skin;
-	if(data.hair) body.hair = data.hair;
-	if(data.age) body.age = data.age;
-	if(data.height) body.height = data.height;
-	if(data.weight) body.weight = data.weight;
-
-	// speeds
-	body.speeds = { walk: spds.walk };
-	if(spds.fly) body.speeds.fly = spds.fly;
-	if(spds.burrow) body.speeds.burrow = spds.burrow;
-	if(spds.swim) body.speeds.swim = spds.swim;
-	if(spds.climb) body.speeds.climb = spds.climb;
-
-	return body;
-}
-
-function getBackground(data){
-	const bg = data.features.background;
-	const coin = data.currencies;
-
-	var background = {}
-
-	background.startingCoin = ((coin.pp) ? coin.pp+'p':'')
-			+((coin.ep) ? coin.ep+'e':'')
-			+((coin.gp) ? coin.gp+'g':'')
-			+((coin.sp) ? coin.sp+'s':'')
-			+((coin.cp) ? coin.cp+'c':'');
-
-	if(bg.hasCustomBackground){
-		if(bg.customBackground.name) 
-			background.name = bg.customBackground.name
-	}
-	else if(bg.definition.name) 
-		background.name = bg.definition.name
-	
-	if(data.traits.personalityTraits) background.personality = data.traits.personalityTraits;
-	if(data.traits.ideals) background.ideal = data.traits.ideals;
-	if(data.traits.bonds) background.bond = data.traits.bonds;
-	if(data.traits.flaws) background.flaw = data.traits.flaws;
-
-	return background;
-}
-
-function getInventory(data){
-
-	var equipment = {
-		armor: {},
-		containers: []
-	};
-	var cards = [];
-
-	// inventory ------
-	if(data.inventory.armor){
-		const armor = (data.inventory && data.inventory.armor && data.inventory.armor.filter(a=>a.equipped)) ||[];
-		armor.forEach(arm=>{
-			if(arm.definition.name === 'Shield'){
-				equipment.hasShield = true;
-			}
-			else if(!arm.stackable){
-				equipment.armor = {
-					name: arm.definition.name,
-					data: {
-						ac: arm.definition.armorClass,
-						itemType: arm.definition.type
-					}
-				}
-			}
-			else{
-				//todo stackable armor
-			}
-		})
-	}
-	if(data.inventory.weapons){
-		var weaps = data.inventory.weapons;
-		var weapCount = {};
-
-		weaps.forEach(w=>{
-			let name = swapComma(w.definition.name)
-			if(!weapCount[name]) weapCount[name] = 0;
-			weapCount[name]++;
-
-			// only put weapon once
-			if(cards.find(card=>card.name === name))
-				return;
-
-			const shortRange = (w.definition.range && w.definition.range > 5) ? w.definition.range : undefined;
-			var card = {
-				category: 'item',
-				name: name,
-				consumable: w.definition.isConsumable,
-				weight: w.definition.weight,
-				attackType: w.definition.attackType,
-				damage: {
-					diceString: w.definition.damage.diceString,
-					damageType: w.definition.damageType,
-					addModifier: true
-				},
-				range: shortRange,
-				longRange: (shortRange) ? w.definition.longRange : undefined,
-				weaponCategory: w.definition.category,
-				properties: w.definition.properties
-			};
-
-			if(abbreviate){
-				card.properties.forEach(p=>p.description = PROP_DESC[p.name])
-			}
-			cards.push(card);
-		});
-
-		weaps = [];
-		for(var w in weapCount){
-			weaps.push((weapCount[w] > 1) ? weapCount[w]+' '+w+'s' : w);
-		}
-
-		equipment.weapons = weaps.join(", ");
-
-		
-	}
-	if(data.inventory.gear){
-
-		var magic = makeContainer('Magical',data.inventory.gear.filter(g=>g.definition.magic||g.definition.subType==='Potion'));
-		var tools = makeContainer('Tools',data.inventory.gear.filter(g=>g.definition.subType==='Tool'));
-		var bp = makeContainer('Backpack', 
-			data.inventory.gear.filter(g=>
-				g.definition.subType!=='Tool'
-				&& g.definition.subType!=='Potion'
-				&& !g.definition.magic
-				&& g.definition.name !== 'Backpack'))
-
-		equipment.containers.push(bp);
-		if(tools.content.length) equipment.containers.push(tools);
-		if(magic.content.length) equipment.containers.push(magic);
-
-		data.inventory.gear.forEach(e=>{
-
-			var addCard = e.definition.subType==='Potion';
-			if(!addCard) return;
-
-			let name = swapComma(e.definition.name)
-
-			var card = {
-				category: 'item',
-				name: name,
-				consumable: e.definition.isConsumable,
-				weight: e.definition.weight,
-				healing: {
-					diceString: '2d4 + 2',
-					addModifier: false
-				},
-				description: cleanParagraphHTML(e.definition.description)
-			};
-
-			cards.push(card);
-		})
-	}
-	if(data.notes.personalPossessions)
-		equipment.containers.push({ content: [data.notes.personalPossessions] })
-
-	return {equipment, cards};
-}
-
-function ddbConvert(data){
-
+function attemptJSONParse(data){
 	if(typeof data === 'string'){
 		try{
 			data = JSON.parse(data);
@@ -250,6 +32,12 @@ function ddbConvert(data){
 			return {};
 		}
 	}
+	return data;
+}
+
+function ddbConvert(data){
+
+	data = attemptJSONParse(data);
 	configData = data.configData;
 	data = data.character;
 
@@ -291,34 +79,14 @@ function ddbConvert(data){
 		data.features.feats.forEach(f=>feature(f,c,clas,cl,data))
 
 		c.classes.push(clas);
-	})
+	});
 
 	bg.dynamicModifiers.forEach(m=>processMod(m,{},c));
 	if(bg.customBackground.dynamicModifiers)
 		bg.customBackground.dynamicModifiers.forEach(m=>processMod(m,{},c));
 
-	var { equipment, cards } = getInventory(data);
-	c.equipment = equipment;
-	c.cards = cards;
-
+	c = { ...c, ...getInventory(data)};
 	return c;
-}
-
-function makeContainer(label, arr){
-	var items = [];
-	
-	arr.forEach(g=>{
-		var name = swapComma(g.definition.name.toLowerCase());
-		var showQuantity = g.quantity > 1 && !name.startsWith('ball bearings')
-
-		items.push((showQuantity ? g.quantity+" ": '')
-			+name
-		)
-	});
-	return {
-		name: label,
-		content: items
-	}
 }
 
 function swapComma(str){
@@ -499,7 +267,7 @@ function feature(f,c,clas,classData){
 			}
 		}
 
-		card = {...card, ...getData(card.name)};
+		card = {...card, ...CARD_DATA[card.name]};
 	}
 
 	c.features.push(result);
@@ -510,11 +278,6 @@ function cleanDescHTML(str){
 	return window.$('<div>'+str+'</div>').text();
 }
 
-function cleanParagraphHTML(str){
-	return window.$('<div>'+str+'</div>').find('p').map((i,p)=>{
-		return window.$(p).text()
-	}).toArray();
-}
 
 function processMod(m,f,c,clas,classData){
 	var name = swapComma(m.friendlySubtypeName).toLowerCase();
@@ -640,55 +403,7 @@ function getIcon(name){
 	}
 }
 
-function getData(name){
-	switch(name){
-		case "Second Wind": 
-			return {
-				icon: 'svg game-icons/delapouite/originals/healing',
-				range: 'Self',
-				healing: {
-					addModifier: true,
-					diceString: "1d10"
-				}
-			};
-		case 'Font of Magic':
-			return {
-				name: 'Flexible Casting',
-				subtitle: 'Sorcery Points',
-				shortDesc: "Use sorcery points to gain spell slots, or sacrifice spell slots to gain sorcery points",
-				uses: { count: 2 },
-				icon: 'svg game-icons/lorc/trade',
-				description: [
-					"You can transform unexpended sorcery points into one spell slot as a bonus action on your turn. You can create spell slots no higher in level than 5th. You can expend one spell slot as a bonus action and gain a number of sorcery points equal to the slot&rsquo;s level.",
-					"Any spell slot you create with this feature vanishes when you finish a long rest.",
-					"<table style='width:100%'><thead><tr><th>Spell Slot Level&nbsp;&nbsp;</th><th>Sorcery Points</th></tr></thead><tbody><tr><td>1st</td><td>2</td></tr><tr><td>2nd</td><td>3</td></tr><tr><td>3rd</td><td>5</td></tr><tr><td>4th</td><td>6</td></tr><tr><td>5th</td><td>7</td></tr></tbody></table>"
-				]
-			}
-			case 'Martial Arts (d4)':
-				return {
-					"name": "Martial Arts",
-					"icon": "svg game-icons/lorc/punch-blast",
-					"damage": {
-						"diceString": "1d4",
-						"attack": true,
-						"progression": true,
-						"addModifier": true
-					},
-					description: [
-						"You gain the following benefits while you are unarmed or wielding only monk weapons and you aren't wearing armor or a shield.",
-						"• Can use Dex instead of Strength for Monk Weapons and Unarmed Strikes.",
-						"• Can use 1d4 for Monk Weapons and Unarmed Strikes.",
-						"• Can attack as a bonus action using an Unarmed Strike if you attacked with an Unarmed Strike or Monk Weapon.",
-						"Monk Weapons are shortswords, and any simple melee weapon that isn't 2 handed or heavy.",
-						"At Higher Levels: At level 5 the damage is 1d6, 1d8 at level 11, and 1d10 at level 17"
-					]
-				}
-		default: return undefined;
-	}
-}
-
 function getShortDesc(name){
-
 	if(name.startsWith("Sneak Attack"))
 		return "If you have advantage or target is flanked, deal extra damage"
 
@@ -702,4 +417,4 @@ function harryPotterify(str){
 	return str;
 }
 
-export { ddbConvert };
+export { ddbConvert, swapComma, isHarryPotter, harryPotterify, abbreviate };

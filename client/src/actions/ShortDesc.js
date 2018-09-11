@@ -96,4 +96,55 @@ const SHORT_DESCS = {
 	"Wrath of the Storm": "2d8"
 }
 
+const replace = {
+	"Orc": "Giant",
+	"Elf": "Veela",
+	"Rock Gnome": "Pukwudgie",
+	"Gnome": "Pukwudgie",
+	"Gnomish": "Pukwudgie",
+	"Dwarvish": "Gobbledegook"
+}
+
+const CARD_DATA = {
+	"Second Wind": {
+		icon: 'svg game-icons/delapouite/originals/healing',
+		range: 'Self',
+		healing: {
+			addModifier: true,
+			diceString: "1d10"
+		}
+	},
+	'Font of Magic': {
+		name: 'Flexible Casting',
+		subtitle: 'Sorcery Points',
+		shortDesc: "Use sorcery points to gain spell slots, or sacrifice spell slots to gain sorcery points",
+		uses: { count: 2 },
+		icon: 'svg game-icons/lorc/trade',
+		description: [
+			"You can transform unexpended sorcery points into one spell slot as a bonus action on your turn. You can create spell slots no higher in level than 5th. You can expend one spell slot as a bonus action and gain a number of sorcery points equal to the slot&rsquo;s level.",
+			"Any spell slot you create with this feature vanishes when you finish a long rest.",
+			"<table style='width:100%'><thead><tr><th>Spell Slot Level&nbsp;&nbsp;</th><th>Sorcery Points</th></tr></thead><tbody><tr><td>1st</td><td>2</td></tr><tr><td>2nd</td><td>3</td></tr><tr><td>3rd</td><td>5</td></tr><tr><td>4th</td><td>6</td></tr><tr><td>5th</td><td>7</td></tr></tbody></table>"
+		]
+	},
+	'Martial Arts (d4)': {
+		"name": "Martial Arts",
+		"icon": "svg game-icons/lorc/punch-blast",
+		"damage": {
+			"diceString": "1d4",
+			"attack": true,
+			"progression": true,
+			"addModifier": true
+		},
+		description: [
+			"You gain the following benefits while you are unarmed or wielding only monk weapons and you aren't wearing armor or a shield.",
+			"• Can use Dex instead of Strength for Monk Weapons and Unarmed Strikes.",
+			"• Can use 1d4 for Monk Weapons and Unarmed Strikes.",
+			"• Can attack as a bonus action using an Unarmed Strike if you attacked with an Unarmed Strike or Monk Weapon.",
+			"Monk Weapons are shortswords, and any simple melee weapon that isn't 2 handed or heavy.",
+			"At Higher Levels: At level 5 the damage is 1d6, 1d8 at level 11, and 1d10 at level 17"
+		]
+	}
+}
+
 export default SHORT_DESCS;
+export { replace, CARD_DATA };
