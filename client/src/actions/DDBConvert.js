@@ -1,5 +1,6 @@
 import {PROP_DESC} from '../components/Characters/Cards/CardsUtil';
 import { swapComma, isHarryPotter, harryPotterify, abbreviate } from './DDB';
+import { CARD_DATA } from './ShortDesc';
 
 function makeContainer(label, arr){
 	var items = [];
@@ -186,4 +187,41 @@ function getInventory({ inventory: {armor = [], weapons = [], gear = []} = {}, n
 	return {equipment, cards};
 }
 
-export { defaultCharacterData, getInventory } 
+function getIcon(name){
+	switch(name){
+		case "Second Wind": return 'svg game-icons/delapouite/originals/healing';
+		default: return undefined;
+	}
+}
+
+const getFeatureCard = (definition, limit) => {
+	var abil = limit.find(a=>a.name === definition.name);
+	var activation = (definition.activationType && definition.activationTime);
+	const shortRange = (definition.range && definition.range > 5) ? definition.range : undefined;
+	return {
+		name: definition.name,
+		category: 'spell',
+		consumable: definition.isConsumable,
+		weight: definition.weight,
+		attackType: definition.attackType,
+		castTime: activation ? (definition.activationTime+' '+definition.activationType.toLowerCase()) : "Modifier",
+		range: shortRange,
+		isFeature: true,
+		icon: getIcon(definition.name),
+		description: definition.description.replace('</p>','').split('<p>'),
+		longRange: (shortRange) ? definition.longRange : undefined,
+		properties: definition.properties,
+		damage: (!definition.damage) ? undefined : {
+			diceString: definition.damage.diceString,
+			damageType: definition.damageType,
+			addModifier: true
+		},
+		uses: (!abil) ? undefined : {
+			count: abil.maxUses,
+			reset: abil.resetType.toLowerCase()
+		},
+		...CARD_DATA[definition.name]
+	}
+}
+
+export { defaultCharacterData, getInventory, getFeatureCard } 

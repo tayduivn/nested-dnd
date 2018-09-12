@@ -1,5 +1,5 @@
-import SHORT_DESC, { replace, CARD_DATA } from './ShortDesc';
-import { defaultCharacterData, getInventory } from './DDBConvert';
+import SHORT_DESC, { replace } from './ShortDesc';
+import { defaultCharacterData, getInventory, getFeatureCard } from './DDBConvert';
 
 const IGNORE_FEATURES = ["Hit Points", 'Feat'];
 const USE_PARENT_DESC = ["Favored Enemy"]
@@ -98,180 +98,135 @@ function swapComma(str){
 	return str.trim();
 }
 
-function feature(f,c,clas,classData){
-	if(IGNORE_FEATURES.includes(f.definition.name)) return;
-	if(f.definition.name === "Spellcasting"){
-		if(!c.spellcasting){
-			c.spellcasting = {
-				list: []
-			}
+function getSpellCard({ definition: def, alwaysPrepared }, spellcasting){
+	const lvl = def.level;
+	const shortRange = (def.range && def.range.rangeValue > 5) ? def.range.rangeValue : undefined;
+
+	// add spell to spellcasting
+	var spell = {
+		name: def.name,
+		level: lvl,
+		ritual: def.ritual,
+		prepared: alwaysPrepared || lvl === 0
+	}
+	if(!spellcasting.spells[lvl])
+		spellcasting.spells[lvl] = [];
+	spellcasting.spells[lvl].push(spell)
+
+	return {
+		...spell,
+		category: 'spell',
+		weaponCategory: null,
+		range: shortRange,
+		concentration: def.concentration,
+		description: def.description,
+		attackType: def.attackType,
+		castTime: def.castingTime && def.castingTime.castingTimeInterval+" "+def.castingTime.castingTimeUnit,
+		properties: null,
+		saveData: (def.requiresSavingThrow) ? { throw: def.saveDcStat } : undefined,
+		duration: (def.duration) ? def.duration.durationInterval+" "+def.duration.durationUnit : undefined,
+		components: (!def.components) ? undefined : {
+			types: def.components.replace(', ',''),
+			materials: def.componentsDescription
 		}
+	}
+}
 
-		var spellcasting = {
-			name: clas.name,
-			level: clas.level,
-			ability: classData.class.spellCastingAbility.toLowerCase(),
-			spells: [],
-			ritualCast: f.definition.description.includes("Ritual Cast")
-		};
+function processFeatureOption(o, { name, description }, c, clas, classData){
+	if(!o.description || USE_PARENT_DESC.includes(name)){
+		o.description = description;
+		o.parentFeature = name;
+	}
+	feature({ definition: o}, c, clas, classData);
+}
 
-		const classConfig = configData.classConfigurations.find((c=>c.name===clas.name));
-
-		var slots = classConfig.spellRules.levelSpellSlots[clas.level]
-		if(slots) c.spellcasting.slots = slots;
-
-		if(classData.spells){
-			/// ------------- ADD SPELLS -------------
-			classData.spells.forEach(s=>{
-				const lvl = s.definition.level;
-				if(!spellcasting.spells[lvl])
-					spellcasting.spells[lvl] = [];
-
-				var spell = {
-					name: s.definition.name,
-					level: lvl,
-					ritual: s.definition.ritual,
-					prepared: s.alwaysPrepared || lvl === 0
-				}
-				spellcasting.spells[lvl].push(spell)
-
-				const shortRange = (s.definition.range && s.definition.range.rangeValue > 5) ? s.definition.range.rangeValue : undefined;
-				const def = s.definition;
-				var card = Object.assign({
-					category: 'spell',
-					weaponCategory: null,
-					range: shortRange,
-					concentration: def.concentration,
-					description: def.description,
-					attackType: def.attackType,
-					castTime: def.castingTime && def.castingTime.castingTimeInterval+" "+def.castingTime.castingTimeUnit,
-					properties: null
-				}, spell);
-
-				if(def.requiresSavingThrow){
-					card.saveData = {
-						throw: def.saveDcStat
-					}
-				}
-				if(def.duration){
-					card.duration = def.duration.durationInterval+" "+def.duration.durationUnit+( def.duration.durationInterval > 1 ? s:'');
-				}
-				if(def.components){
-					card.components = {
-						types: def.components.replace(', ',''),
-						materials: def.componentsDescription
-					}
-				}
-
-				c.cards.push(card);
-			});
+function processSpellcasting(description, c, clas, classData){
+	if(!c.spellcasting){
+		c.spellcasting = {
+			list: [] 
 		}
-
-		c.spellcasting.list.push(spellcasting);
-
-		return;
-	}
-	if(f.definition.name === "Thieves’ Cant"){
-		c.proficiencies.languages.push('Thieves’ Cant');
-		return;
 	}
 
-	var doDisplay = !f.definition.hideInBuilder;
+	var spellcasting = {
+		name: clas.name,
+		level: clas.level,
+		ability: classData.class.spellCastingAbility.toLowerCase(),
+		spells: [],
+		ritualCast: description.includes("Ritual Cast")
+	};
 
-	if(f.options && f.options.length){
-		f.options.forEach(o=>{
-			if(!o.description || USE_PARENT_DESC.includes(f.definition.name)){
-				o.description = f.definition.description;
-				o.parentFeature = f.definition.name;
-			}
-			o = {
-				definition: o
-			}
-			feature(o,c,clas,classData);
-		})
-		doDisplay = false;
+	const classConfig = configData.classConfigurations.find((c=>c.name===clas.name));
+
+	var slots = classConfig.spellRules.levelSpellSlots[clas.level]
+	if(slots) c.spellcasting.slots = slots;
+
+	if(classData.spells){
+		/// ------------- ADD SPELLS -------------
+		classData.spells.forEach(s=>c.cards.push(getSpellCard(s, spellcasting)));
 	}
 
-	var mods = f.definition.grantedModifiers || [];
-	if(f.dynamicModifiers) 
-		mods = mods.concat(f.dynamicModifiers);
+	c.spellcasting.list.push(spellcasting);
 
-	var hasSubFeatures = f.definition.features && f.definition.features.length
+	return;
+}
+
+function feature({ definition, options = [], dynamicModifiers = [], limitedUseAbilities: limit = [], isAttack }, c, clas, classData){
+
+	// returnable
+	if(IGNORE_FEATURES.includes(definition.name)) return;
+	if(definition.name === "Spellcasting")
+		return processSpellcasting(definition.description, c, clas, classData);
+	if(definition.name === "Thieves’ Cant")
+		return c.proficiencies.languages.push('Thieves’ Cant');
+	
+	var doDisplay = !definition.hideInBuilder;
+	var mods = (definition.grantedModifiers || []).concat(dynamicModifiers);
+	var hasSubFeatures = definition.features && definition.features.length
 	var onlyProficiency = mods.length && !hasSubFeatures;
+	var name = definition.name;
+	
+	// process options
+	if(options.length) doDisplay = false;
+	options.forEach(o=>processFeatureOption(o, definition, c, clas, classData))
+
+	// modifiers
 	mods.forEach(m=>{
-		var isProf = processMod(m,f,c,clas,classData);
+		var isProf = processMod(m, definition.name, c, clas, classData);
 		if(isProf === false) onlyProficiency = false;
 	})
-	if(onlyProficiency || !doDisplay) return;
+	if(onlyProficiency || !doDisplay) 
+		return;
 
-	var name = f.definition.name;
-	if(f.definition.dynamicModifiers){
-		name = f.definition.dynamicModifiers.map(m=>m.friendlySubtypeName).join(", ");
-		if(!name.length) name = f.definition.name;
+	if(definition.dynamicModifiers){
+		name = definition.dynamicModifiers.map(m=>m.friendlySubtypeName).join(", ");
+		if(!name.length) name = definition.name;
 	}
+	// ---- end modifiers
 	
 	var result = {
 		name: (name==='Font of Magic') ? 'Flexible Casting' : name,
-		desc: cleanDescHTML(f.definition.description)
+		desc: cleanDescHTML(definition.description)
 	}
 
-	var limit = f.limitedUseAbilities;
 	if(limit && limit.length && name !== 'Font of Magic'){
 		limit.forEach(l=>result.uses = l.maxUses); //todo check multiple
 	}
 
-	getAdvResist(f.definition.parentFeature || result.name, c.advResist, f.definition.name);
+	getAdvResist(definition.parentFeature || result.name, c.advResist, definition.name);
 
 	if(abbreviate){
-		var shortDesc = getShortDesc(f.definition.parentFeature || result.name);
+		var shortDesc = getShortDesc(definition.parentFeature || result.name);
 		if(shortDesc !== undefined) result.desc = shortDesc;
 		if(shortDesc === false) return;
 	}
-	if(f.definition.activationType === 'Action')
+	if(definition.activationType === 'Action')
 		result.desc = "";	
 
-	var card = false;
-	if((f.definition.activationType && f.definition.activationTime) || f.isAttack){
-		var activation = (f.definition.activationType && f.definition.activationTime);
-		const shortRange = (f.definition.range && f.definition.range > 5) ? f.definition.range : undefined;
-		card = {
-			name: f.definition.name,
-			category: 'spell',
-			consumable: f.definition.isConsumable,
-			weight: f.definition.weight,
-			attackType: f.definition.attackType,
-			castTime: activation ? (f.definition.activationTime+' '+f.definition.activationType.toLowerCase()) : "Modifier",
-			range: shortRange,
-			isFeature: true,
-			icon: getIcon(f.definition.name),
-			description: f.definition.description.replace('</p>','').split('<p>'),
-			longRange: (shortRange) ? f.definition.longRange : undefined,
-			properties: f.definition.properties
-		};
-
-		if(f.definition.damage){
-			card.damage = {
-				diceString: f.definition.damage.diceString,
-				damageType: f.definition.damageType,
-				addModifier: true
-			};
-		}
-
-		if(f.limitedUseAbilities){
-			var abil = f.limitedUseAbilities.find(a=>a.name === f.definition.name);
-			if(abil){
-				card.uses = {
-					count: abil.maxUses,
-					reset: abil.resetType.toLowerCase()
-				}
-			}
-		}
-
-		card = {...card, ...CARD_DATA[card.name]};
+	if((definition.activationType && definition.activationTime) || isAttack){
+		c.cards.push(getFeatureCard(definition, limit))
 	}
 
 	c.features.push(result);
-	if(card) c.cards.push(card);
 }
 
 function cleanDescHTML(str){
@@ -279,7 +234,7 @@ function cleanDescHTML(str){
 }
 
 
-function processMod(m,f,c,clas,classData){
+function processMod(m, fName, c, clas, classData){
 	var name = swapComma(m.friendlySubtypeName).toLowerCase();
 
 	var weapons = ['weapons','crossbow','sword','dagger','rapier'];
@@ -315,7 +270,7 @@ function processMod(m,f,c,clas,classData){
 			break;
 		case "set":
 			if(m.subType === 'subclass')
-				clas.subclasses[f.definition.name] = classData.subclass.name;
+				clas.subclasses[fName] = classData.subclass.name;
 			else if(m.subType === 'unarmored-armor-class'){
 				c.equipment.armor.unarmoredBonus = m.value
 				if(!m.value && m.stat){
@@ -393,13 +348,6 @@ function getAdvResist(name, { advantages, resistances, other }, childFeature){
 			advantages.push("Initiative during your first turn attacking creatures that have not yet acted")
 			break;
 		default: return;
-	}
-}
-
-function getIcon(name){
-	switch(name){
-		case "Second Wind": return 'svg game-icons/delapouite/originals/healing';
-		default: return undefined;
 	}
 }
 
