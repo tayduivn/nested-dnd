@@ -90,9 +90,32 @@ const Returns = ({ returns, handleChange }) => (
 	</div>
 )
 
+const BulkAdd = ({ handleBulkAdd, bulkAddText, handleChange }) => (
+	<div>
+		<label className="mr-1">Bulk Add</label>
+		<button className="btn btn-primary" onClick={handleBulkAdd}>Bulk Add</button>
+		<textarea className="form-control" value={bulkAddText} placeholder="Insert 1 row per line" 
+			onChange={(e)=>handleChange('bulkAddText', e.target.value)} />
+	</div>
+)
+
+const Rows = ({ returns, handleChange, rows, concat, generators, tables, _id }) => (
+	<div className="form-group">
+		<label>Rows</label>
+		<ul className="p-0">
+			{returns === 'fng'
+				? <FNG {...{handleChange, rows}} />
+				: !rows.map ? null : rows.map( (c = {}, i)=>
+						<NotFNG key={i} {...c} {...{returns, concat, handleChange, generators, tables, rows, _id}} />)
+			}
+		</ul>
+		<button className="btn btn-primary" onClick={()=>handleChange(['rows',rows.length || 0],{type: 'string'})}>
+			<i className="fas fa-plus" /> Add
+		</button>
+	</div>
+)
 const DisplayForm = ({_id, desc, returns = 'text', rows = [], roll, tables = [], concat, rowWeights, public: isPublic, source = {}, handleChange, totalWeight, handleDelete, generators, isEmbedded, location, handleBulkAdd, bulkAddText}) => (
 	<div>
-		{/* --------- Returns ------------ */}
 		{ !isEmbedded ? <Returns {...{returns, handleChange}} /> : null }
 
 		{/* --------- Concatenate ------------ */}
@@ -104,30 +127,17 @@ const DisplayForm = ({_id, desc, returns = 'text', rows = [], roll, tables = [],
 		</div>
 
 		{/* --------- Capitalize First ------------ */}
-		{returns === 'fng' ?
-		<div className="form-group">
-			<label>
-				<input type="checkbox" checked={rows[3] && rows[3].value} name="capitalize" 
-					onChange={(e)=>handleChange(['rows', 3, 'value'], e.target.checked)} /> 
-				<strong> Capitalize:</strong> The first letter of the result will always be capitalized.
-			</label>
-		</div>
-		: null}
+		{returns === 'fng'
+			? <div className="form-group">
+				<label>
+					<input type="checkbox" checked={rows[3] && rows[3].value} name="capitalize" 
+						onChange={(e)=>handleChange(['rows', 3, 'value'], e.target.checked)} /> 
+					<strong> Capitalize:</strong> The first letter of the result will always be capitalized.
+				</label>
+			</div>
+			: null}
 
-		{/* --------- Rows ------------ */}
-		<div className="form-group">
-			<label>Rows</label>
-			<ul className="p-0">
-				{returns === 'fng'
-					? <FNG {...{handleChange, rows}} />
-					: !rows.map ? null : rows.map( (c = {}, i)=>
-							<NotFNG key={i} {...c} {...{returns, concat, handleChange, generators, tables, rows, _id}} />)
-				}
-			</ul>
-			<button className="btn btn-primary" onClick={()=>handleChange(['rows',rows.length || 0],{type: 'string'})}>
-				<i className="fas fa-plus" /> Add
-			</button>
-		</div>
+		<Rows {...{ returns, handleChange, rows, concat, generators, tables, _id }} />
 
 		{!concat ? <div>Weights Total = {totalWeight}</div> : null}
 
@@ -147,16 +157,8 @@ const DisplayForm = ({_id, desc, returns = 'text', rows = [], roll, tables = [],
 				(roll && roll.toString) ? roll.toString() : null }</div>
 		}
 
-		{/* --------- Add Multiple ------------ */}
-		{ returns === 'text'
-			? <div>
-					<label className="mr-1">Bulk Add</label>
-					<button className="btn btn-primary" onClick={handleBulkAdd}>Bulk Add</button>
-					<textarea className="form-control" value={bulkAddText} placeholder="Insert 1 row per line" 
-						onChange={(e)=>handleChange('bulkAddText', e.target.value)} />
-				</div>
-			: null}
-
+		{ returns === 'text' ? <BulkAdd {...{handleBulkAdd, bulkAddText, handleChange }} /> : null}
+		
 		<div className="btn btn-danger" onClick={handleDelete}>Delete</div>
 	</div>
 )
