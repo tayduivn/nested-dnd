@@ -64,28 +64,22 @@ const NotFNG = ({type, value, weight, returns, concat, handleChange, generators,
 		type={returns === 'generator' && (!type || type === 'string') ? 'generator' : type } />
 )
 
-const Returns = ({ returns, handleChange }) => (
+const ReturnOption = ({ returns, handleChange, type = "" }) => (
+	<label className={"form-check btn btn-secondary"+((returns === type)?' active':'')}>
+		<input className="form-check-input" type="radio" name="returns" id="returns" value={type} 
+			checked={returns === type}
+			onChange={e=>handleChange('returns',e.target.value)}/>
+		<span className="form-check-label">{type}</span>
+	</label>
+)
+
+const Returns = (props) => (
 	<div className="form-group">
 		<label className="mr-2">Returns</label>
 		<div className="btn-group">
-			<label className={"form-check btn btn-secondary"+((returns === 'generator')?' active':'')}>
-				<input className="form-check-input" type="radio" name="returns" id="returns" value="generator" 
-					checked={returns === 'generator'}
-					onChange={e=>handleChange('returns',e.target.value)}/>
-				<span className="form-check-label">generator</span>
-			</label>
-			<label className={"form-check btn btn-secondary"+((returns === 'text')?' active':'')}>
-				<input className="form-check-input" type="radio" name="returns" id="returns" value="text" 
-					checked={returns === 'text'}
-					onChange={e=>handleChange('returns',e.target.value)} />
-				<span className="form-check-label">text</span>
-			</label>
-			<label className={"form-check btn btn-secondary"+((returns === 'fng')?' active':'')}>
-				<input className="form-check-input" type="radio" name="returns" id="returns" value="fng" 
-					checked={returns === 'fng'}
-					onChange={e=>handleChange('returns',e.target.value)} />
-				<span className="form-check-label">fantasy name generator</span>
-			</label>
+			<ReturnOption {...props} type="generator" />
+			<ReturnOption {...props} type="text" />
+			<ReturnOption {...props} type="fng" />
 		</div>
 	</div>
 )
@@ -114,6 +108,7 @@ const Rows = ({ returns, handleChange, rows, concat, generators, tables, _id }) 
 		</button>
 	</div>
 )
+
 const DisplayForm = ({_id, desc, returns = 'text', rows = [], roll, tables = [], concat, rowWeights, public: isPublic, source = {}, handleChange, totalWeight, handleDelete, generators, isEmbedded, location, handleBulkAdd, bulkAddText}) => (
 	<div>
 		{ !isEmbedded ? <Returns {...{returns, handleChange}} /> : null }
@@ -151,14 +146,10 @@ const DisplayForm = ({_id, desc, returns = 'text', rows = [], roll, tables = [],
 			: null
 		}
 
-		{/* --------- Preview ------------ */}
-		{isEmbedded ? null : 
-			<div>Roll: {typeof roll === 'string' ? roll : 
-				(roll && roll.toString) ? roll.toString() : null }</div>
-		}
+		{isEmbedded ? null :	<div>Roll: {typeof roll === 'string' ? roll : (roll && roll.toString) ? roll.toString() : null }</div>}
 
 		{ returns === 'text' ? <BulkAdd {...{handleBulkAdd, bulkAddText, handleChange }} /> : null}
-		
+
 		<div className="btn btn-danger" onClick={handleDelete}>Delete</div>
 	</div>
 )
@@ -277,6 +268,13 @@ export default class EditTable extends Component {
 			this.props.handleDelete();
 	}
 
+	getTotalWeight = (rows = []) => {
+		var totalWeight = 0;
+		if(rows.forEach){
+			rows.forEach((r={})=>totalWeight+=(r&&r.weight)||1);
+		}
+		return totalWeight;
+	}
 
 	render() {
 
@@ -286,16 +284,10 @@ export default class EditTable extends Component {
 		const { table: embeddedTable = {} } = this.props.location.state || {}
 		var { generators, tables } = pack;
 		const { rows } = this.state;
+		const totalWeight = this.getTotalWeight(rows);
 
 		generators = Object.keys(generators);
-
-		if(typeof embeddedTable === 'object') 
-			embeddedTable.returns = table.returns;
-
-		var totalWeight = 0;
-		if(rows && rows.forEach){
-			rows.forEach((r={})=>totalWeight+=(r&&r.weight)||1);
-		}
+		embeddedTable.returns = table.returns;
 
 		return (
 			<div className="EditTable">
