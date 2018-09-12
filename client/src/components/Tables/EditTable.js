@@ -30,144 +30,143 @@ function toLabel(val){
 	return val.replace(/-/g,' ').replace(/_/g,' ');
 }
 
-const Display = ({ _id, title = "", desc, returns = 'text', rows = [], roll, tables = [], concat, rowWeights, public: isPublic, source = {}, isCreate, handleChange , totalWeight, handleAdd = ()=>{}, handleDelete, generators, isEmbedded, location, handleBulkAdd, bulkAddText}) => (
-	<div className="form">
+const FNG = ({handleChange, rows}) => (
+	<div>
+		<Select value={wrapOption(rows[0] && rows[0].value, rows[1] && rows[1].value)} 
+			onChange={({ value })=>{
+				handleChange(['rows',0,'value'], value[0]);
+				handleChange(['rows',1,'value'], value[1]);
+			}}
+			options={arrayOptions} >
+		</Select>
+		<select className="form-control" value={rows[2] && rows[2].value}
+			onChange={(e)=>handleChange(['rows',2,'value'], e.target.value)}>
+			<option></option>
+			<option value="0">Male</option>
+			<option value="1">Female</option>
+		</select>
+	</div>
+)
 
+const NotFNG = ({type, value, weight, returns, concat, handleChange, generators, tables, rows, _id}) => (
+	<MixedThing options={{
+			types: (returns === 'generator') 
+				? ['generator', 'table_id', 'table', 'data']
+				: ['string','table_id','table', 'data','dice'],
+			property: ['rows',i],
+			showWeight: !concat,
+			isTextarea: true
+		}} {...{handleChange, value, generators, weight, i}}
+		tables={returns === 'generator' 
+			? tables.filter(t=>t.returns==='generator' && t._id !== _id)
+			: tables.filter(t=>t.returns!=='generator' && t._id !== _id)}
+		array={rows}
+		type={returns === 'generator' && (!type || type === 'string') ? 'generator' : type } />
+)
+
+const Returns = ({ returns, handleChange }) => (
+	<div className="form-group">
+		<label className="mr-2">Returns</label>
+		<div className="btn-group">
+			<label className={"form-check btn btn-secondary"+((returns === 'generator')?' active':'')}>
+				<input className="form-check-input" type="radio" name="returns" id="returns" value="generator" 
+					checked={returns === 'generator'}
+					onChange={e=>handleChange('returns',e.target.value)}/>
+				<span className="form-check-label">generator</span>
+			</label>
+			<label className={"form-check btn btn-secondary"+((returns === 'text')?' active':'')}>
+				<input className="form-check-input" type="radio" name="returns" id="returns" value="text" 
+					checked={returns === 'text'}
+					onChange={e=>handleChange('returns',e.target.value)} />
+				<span className="form-check-label">text</span>
+			</label>
+			<label className={"form-check btn btn-secondary"+((returns === 'fng')?' active':'')}>
+				<input className="form-check-input" type="radio" name="returns" id="returns" value="fng" 
+					checked={returns === 'fng'}
+					onChange={e=>handleChange('returns',e.target.value)} />
+				<span className="form-check-label">fantasy name generator</span>
+			</label>
+		</div>
+	</div>
+)
+
+const DisplayForm = ({_id, desc, returns = 'text', rows = [], roll, tables = [], concat, rowWeights, public: isPublic, source = {}, handleChange, totalWeight, handleDelete, generators, isEmbedded, location, handleBulkAdd, bulkAddText}) => (
+	<div>
+		{/* --------- Returns ------------ */}
+		{ !isEmbedded ? <Returns {...{returns, handleChange}} /> : null }
+
+		{/* --------- Concatenate ------------ */}
+		<div className="form-group">
+			<label>
+				<input type="checkbox" checked={concat} name="chooseRandom" onChange={(e)=>handleChange('concat', !concat)} /> 
+				<strong> Combine Rows:</strong> The rows will combine together (instead of returning 1 random row).
+			</label>
+		</div>
+
+		{/* --------- Capitalize First ------------ */}
+		{returns === 'fng' ?
+		<div className="form-group">
+			<label>
+				<input type="checkbox" checked={rows[3] && rows[3].value} name="capitalize" 
+					onChange={(e)=>handleChange(['rows', 3, 'value'], e.target.checked)} /> 
+				<strong> Capitalize:</strong> The first letter of the result will always be capitalized.
+			</label>
+		</div>
+		: null}
+
+		{/* --------- Rows ------------ */}
+		<div className="form-group">
+			<label>Rows</label>
+			<ul className="p-0">
+				{returns === 'fng'
+					? <FNG {...{handleChange, rows}} />
+					: !rows.map ? null : rows.map( (c = {}, i)=>
+							<NotFNG key={i} {...c} {...{returns, concat, handleChange, generators, tables, rows, _id}} />)
+				}
+			</ul>
+			<button className="btn btn-primary" onClick={()=>handleChange(['rows',rows.length || 0],{type: 'string'})}>
+				<i className="fas fa-plus" /> Add
+			</button>
+		</div>
+
+		{!concat ? <div>Weights Total = {totalWeight}</div> : null}
+
+		{/* --------- Source ------------ */}
+		{ returns !== 'fng' 
+			? <div className="form-group">
+					<label>Source URL</label>
+					<input value={source.url} name="source" className="form-control"
+						onChange={(e)=>handleChange(['source', 'url'], e.target.value )} />
+				</div>
+			: null
+		}
+
+		{/* --------- Preview ------------ */}
+		{isEmbedded ? null : 
+			<div>Roll: {typeof roll === 'string' ? roll : 
+				(roll && roll.toString) ? roll.toString() : null }</div>
+		}
+
+		{/* --------- Add Multiple ------------ */}
+		{ returns === 'text'
+			? <div>
+					<label className="mr-1">Bulk Add</label>
+					<button className="btn btn-primary" onClick={handleBulkAdd}>Bulk Add</button>
+					<textarea className="form-control" value={bulkAddText} placeholder="Insert 1 row per line" 
+						onChange={(e)=>handleChange('bulkAddText', e.target.value)} />
+				</div>
+			: null}
+
+		<div className="btn btn-danger" onClick={handleDelete}>Delete</div>
+	</div>
+)
+
+const Display = ({isCreate, handleAdd = ()=>{}, title = "", ...rest}) => (
+	<div className="form">
 		{ isCreate ?
 			<button  className="btn btn-primary" onClick={()=>handleAdd(title)} >Create</button> 
-			:<div>
-
-				{/* --------- Returns ------------ */}
-				{ !isEmbedded ?
-					<div className="form-group">
-						<label className="mr-2">Returns</label>
-						<div className="btn-group">
-							<label className={"form-check btn btn-secondary"+((returns === 'generator')?' active':'')}>
-								<input className="form-check-input" type="radio" name="returns" id="returns" value="generator" 
-									checked={returns === 'generator'}
-									onChange={e=>handleChange('returns',e.target.value)}/>
-								<span className="form-check-label">generator</span>
-							</label>
-							<label className={"form-check btn btn-secondary"+((returns === 'text')?' active':'')}>
-								<input className="form-check-input" type="radio" name="returns" id="returns" value="text" 
-									checked={returns === 'text'}
-									onChange={e=>handleChange('returns',e.target.value)} />
-								<span className="form-check-label">text</span>
-							</label>
-							<label className={"form-check btn btn-secondary"+((returns === 'fng')?' active':'')}>
-								<input className="form-check-input" type="radio" name="returns" id="returns" value="fng" 
-									checked={returns === 'fng'}
-									onChange={e=>handleChange('returns',e.target.value)} />
-								<span className="form-check-label">fantasy name generator</span>
-							</label>
-						</div>
-					</div>
-					: null }
-
-				{/* --------- Concatenate ------------ */}
-				<div className="form-group">
-					<label>
-						<input type="checkbox" checked={concat} name="chooseRandom" onChange={(e)=>handleChange('concat', !concat)} /> 
-						<strong> Combine Rows:</strong> The rows will combine together (instead of returning 1 random row).
-					</label>
-				</div>
-
-				{/* --------- Capitalize First ------------ */}
-				{returns === 'fng' ?
-				<div className="form-group">
-					<label>
-						<input type="checkbox" checked={rows[3] && rows[3].value} name="capitalize" 
-							onChange={(e)=>handleChange(['rows', 3, 'value'], e.target.checked)} /> 
-						<strong> Capitalize:</strong> The first letter of the result will always be capitalized.
-					</label>
-				</div>
-				: null}
-
-				{/* --------- Rows ------------ */}
-				<div className="form-group">
-					<label>Rows</label>
-					<ul className="p-0">
-						{returns === 'fng'
-							// ----------------- FNG 
-							? <div>
-									<Select value={wrapOption(rows[0] && rows[0].value, rows[1] && rows[1].value)} 
-										onChange={({ value })=>{
-											handleChange(['rows',0,'value'], value[0]);
-											handleChange(['rows',1,'value'], value[1]);
-										}}
-										options={arrayOptions} >
-									</Select>
-									<select className="form-control" value={rows[2] && rows[2].value}
-										onChange={(e)=>handleChange(['rows',2,'value'], e.target.value)}>
-										<option></option>
-										<option value="0">Male</option>
-										<option value="1">Female</option>
-									</select>
-								</div>
-
-							// -------------- NOT FNG
-							: (!rows.map ? null : rows.map((c,i)=>{
-								var {type, value, weight} = c || {};
-								return (
-									<MixedThing key={i} options={{
-										types: (returns === 'generator') 
-											? ['generator', 'table_id', 'table', 'data']
-											: ['string','table_id','table', 'data','dice'],
-										property: ['rows',i],
-										showWeight: !concat,
-										isTextarea: true
-									}} {...{handleChange, value, generators, weight, i}}
-									tables={returns === 'generator' 
-										? tables.filter(t=>t.returns==='generator' && t._id !== _id)
-										: tables.filter(t=>t.returns!=='generator' && t._id !== _id)}
-									array={rows}
-									type={returns === 'generator' && (!type || type === 'string') ? 'generator' : type } />
-								)
-							}))
-						}
-					</ul>
-					<button className="btn btn-primary" onClick={()=>handleChange(['rows',rows.length || 0],{type: 'string'})}>
-						<i className="fas fa-plus" /> Add
-					</button>
-				</div>
-
-				{!concat? <div>Weights Total = {totalWeight}</div> : null}
-
-				{/* --------- Source ------------ */}
-				{ returns !== 'fng' 
-					? <div className="form-group">
-							<label>Source URL</label>
-							<input value={source.url} name="source" className="form-control"
-								onChange={(e)=>handleChange(['source', 'url'], e.target.value )} />
-						</div>
-					: null
-				}
-				
-
-
-				{/* --------- Preview ------------ */}
-				{isEmbedded ? null : 
-					<div>Roll: {typeof roll === 'string' ? roll : 
-						(roll && roll.toString) ? roll.toString() : null }</div>
-				}
-
-				{/* --------- Add Multiple ------------ */}
-				{ returns === 'text'
-					? <div>
-							<label className="mr-1">Bulk Add</label>
-							<button className="btn btn-primary" onClick={handleBulkAdd}>Bulk Add</button>
-							<textarea className="form-control" value={bulkAddText} placeholder="Insert 1 row per line" 
-								onChange={(e)=>handleChange('bulkAddText', e.target.value)} />
-						</div>
-					: null}
-				
-
-
-				<div className="btn btn-danger" onClick={handleDelete}>Delete</div>
-
-			</div>
+			: <DisplayForm {...rest} />
 		}
-		
 	</div>
 );
 
