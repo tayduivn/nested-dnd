@@ -1,7 +1,7 @@
-[![David](https://david-dm.org/cattegy/nested-dnd.svg)](https://david-dm.org/cattegy/nested-dnd)
-[![Maintainability](https://api.codeclimate.com/v1/badges/1e5f831c6ccb0e23fad1/maintainability)](https://codeclimate.com/github/cattegy/nested-dnd/maintainability)
+[![David](https://david-dm.org/jsabol/nested-dnd.svg)](https://david-dm.org/jsabol/nested-dnd)
+[![Maintainability](https://api.codeclimate.com/v1/badges/cfc72675a003187893e5/maintainability)](https://codeclimate.com/github/jsabol/nested-dnd/maintainability)
 [![codecov](https://codecov.io/gh/cattegy/nested-dnd/branch/master/graph/badge.svg)](https://codecov.io/gh/cattegy/nested-dnd)
-[![Build Status](https://travis-ci.org/cattegy/nested-dnd.svg?branch=master)](https://travis-ci.org/cattegy/nested-dnd)
+[![Build Status](https://travis-ci.org/jsabol/nested-dnd.svg?branch=master)](https://travis-ci.org/jsabol/nested-dnd)
 
 # Nested D&D
 

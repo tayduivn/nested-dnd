@@ -3,7 +3,7 @@ checks:
   similar-code:
     enabled: true
     config:
-      threshold: 75
+      threshold: 60
   method-complexity:
     config:
       threshold: 10
