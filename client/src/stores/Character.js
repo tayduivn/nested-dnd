@@ -1,7 +1,6 @@
 import { raceStore, backgroundStore } from "./classStore";
 
 import { Abilities, Skills } from "./CharacterAbilities";
-import SpellcastingList from "./Spellcasting";
 import { ClassInfo, Background, Body } from './CharRolePlay'
 import { Health, Proficiencies, AdvResist, Feature } from './CharMiddleCol'
 import Equipment from './Equipment';
@@ -196,25 +195,6 @@ export default class Character {
 			}
 		});
 	}
-	/*
-	getSpellcasting() {
-		let profBonus = this.proficiencyBonus;
-
-		if (this.spellcasting) return this.spellcasting;
-
-		this.spellcasting = new SpellcastingList();
-		
-		this._getRaceSpellcasting(profBonus);
-		this._getClassSpellcasting(profBonus)
-
-		this.cards = new Cards(
-			this.equipment.items,
-			this.spellcasting.getKnownSpells(),
-			this.features
-		);
-
-		return this.spellcasting;
-	}*/
 	printProficiencyBonus() {
 		return appendPlus(this.proficiencyBonus);
 	}

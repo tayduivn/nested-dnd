@@ -26,6 +26,23 @@ function cleanParagraphHTML(str){
 	}).toArray();
 }
 
+const getBody = ({ eyes, skin, hair, age, height, weight, weightSpeeds: { normal: { walk, fly, burrow, swim, climb } } } ) => ({ 
+	eyes, skin, hair, age, height, weight,
+	speeds: { walk, fly, burrow, swim, climb }
+});
+
+const getBackground = ({ features: { background: bg }, currencies: coin = {}, traits: { personalityTraits, ideals, bonds, flaws } = {} }) => ({
+	name: (bg.hasCustomBackground) ? bg.customBackground.name : bg.definition.name,
+	personality: personalityTraits,
+	ideal: ideals, 
+	bonds, flaws,
+	startingCoin: ((coin.pp) ? coin.pp+'p':'')
+		+((coin.ep) ? coin.ep+'e':'')
+		+((coin.gp) ? coin.gp+'g':'')
+		+((coin.sp) ? coin.sp+'s':'')
+		+((coin.cp) ? coin.cp+'c':'')
+});
+
 const defaultCharacterData = (data) => ({
 	level: data.level,
 	proficiencyBonus: data.proficiencyBonus,
@@ -62,23 +79,6 @@ const defaultCharacterData = (data) => ({
 	},
 	spellcasting: null
 })
-
-const getBody = ({ eyes, skin, hair, age, height, weight, weightSpeeds: { normal: { walk, fly, burrow, swim, climb } } } ) => ({ 
-	eyes, skin, hair, age, height, weight,
-	speeds: { walk, fly, burrow, swim, climb }
-});
-
-const getBackground = ({ features: { background: bg }, currencies: coin = {}, traits: { personalityTraits, ideals, bonds, flaws } = {} }) => ({
-	name: (bg.hasCustomBackground) ? bg.customBackground.name : bg.definition.name,
-	personality: personalityTraits,
-	ideal: ideals, 
-	bonds, flaws,
-	startingCoin: ((coin.pp) ? coin.pp+'p':'')
-		+((coin.ep) ? coin.ep+'e':'')
-		+((coin.gp) ? coin.gp+'g':'')
-		+((coin.sp) ? coin.sp+'s':'')
-		+((coin.cp) ? coin.cp+'c':'')
-});
 
 const getGearCard = ({ definition : { isConsumable, weight, description } }, name) => ({
 	category: 'item',

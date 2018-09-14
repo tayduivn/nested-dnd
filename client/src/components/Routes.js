@@ -9,25 +9,6 @@ const renderMergedProps = (component, props) => {
 	return React.createElement(component, finalProps);
 };
 
-// wrap <Route> and use this everywhere instead, then when
-// sub routes are added to any route it'll work
-const RouteWithSubRoutes = route => {
-	// pass the sub-routes down to keep nesting
-	const render =  props => <route.component {...props} routes={route.routes} />
-	const RouteComponent = route.private ? PrivateRoute : PropsRoute;
-	
-	return <RouteComponent {...route} render={render} />
-};
-
-class PrivateRoute extends React.Component {
-	static contextTypes = {
-		loggedIn: PropTypes.bool
-	}
-	render(){
-		return <PrivateRouteDisplay {...this.props} loggedIn={this.context.loggedIn} />
-	}
-}
-
 const PrivateRouteDisplay = ({ component, redirectTo, path, loggedIn, ...rest }) => (
 	<Route
 		{...rest}
@@ -56,5 +37,24 @@ const PropsRoute = ({ component, ...rest }) => (
 			return renderMergedProps(component, {...rest, ...routeProps});
 		}}/>
 );
+
+class PrivateRoute extends React.Component {
+	static contextTypes = {
+		loggedIn: PropTypes.bool
+	}
+	render(){
+		return <PrivateRouteDisplay {...this.props} loggedIn={this.context.loggedIn} />
+	}
+}
+
+// wrap <Route> and use this everywhere instead, then when
+// sub routes are added to any route it'll work
+const RouteWithSubRoutes = route => {
+	// pass the sub-routes down to keep nesting
+	const render =  props => <route.component {...props} routes={route.routes} />
+	const RouteComponent = route.private ? PrivateRoute : PropsRoute;
+	
+	return <RouteComponent {...route} render={render} />
+};
 
 export { PrivateRoute, PropsRoute, RouteWithSubRoutes }

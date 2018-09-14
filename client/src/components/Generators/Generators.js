@@ -51,7 +51,7 @@ export default class Generators extends React.Component {
 		this.state.generatorTree = this.buildTree(props.generators || {});
 	}
 
-	componentWillReceiveProps(nextProps){
+	UNSAFE_componentWillReceiveProps(nextProps){
 		if(this.props.generators !== nextProps.generators){
 			let generatorTree = this.buildTree(nextProps.generators);
 			this.setState({ generatorTree })
