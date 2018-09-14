@@ -1,5 +1,6 @@
 import SHORT_DESC, { replace } from './ShortDesc';
 import { defaultCharacterData, getInventory, getFeatureCard } from './DDBConvert';
+import { getMod } from '../stores/CharacterAbilities';
 
 const IGNORE_FEATURES = ["Hit Points", 'Feat'];
 const USE_PARENT_DESC = ["Favored Enemy"]
@@ -14,13 +15,6 @@ function getAbility(c, abil){
 	var num = stat.base;
 	stat.adjust.forEach(s=>num+=s.amount);
 	return getMod(num);
-}
-
-function getMod(val) {
-	var mod = Math.floor((val - 10) / 2);
-	if (val >= 30) mod = 10;
-	else if (val < 2) mod = -5;
-	return mod;
 }
 
 function attemptJSONParse(data){

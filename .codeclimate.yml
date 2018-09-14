@@ -8,8 +8,8 @@ checks:
     config:
       threshold: 10
 plugins:
- eslint:
-  enabled: true
+  eslint:
+    enabled: true
 exclude_patterns:
  - "config/"
  - "db/"
@@ -30,12 +30,13 @@ exclude_patterns:
  - "Procfile"
  - "client/build/"
  - "client/public"
+ - "client/src/assets/*.js"
+ - "client/src/assets/*.json"
  - "*.md"
  - "**/*.test.js"
  - "*.yml"
  - "*.json"
  - "**/*.json"
- - "**/*.scss"
  - "**/*.svg"
  - "**/*.ttf"
  - "**/*.eot"

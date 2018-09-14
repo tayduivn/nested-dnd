@@ -71,7 +71,7 @@ tableSchema.methods.roll = async function(data){
 				1, // quantity
 				(this.rows[2] !== undefined && this.rows[2] !== null && !isNaN(this.rows[2].value) && this.rows[2].value) || undefined )[0];
 			if(this.rows[3] && this.rows[3].value){
-				return result.split(' ').map(s=>s.charAt(0).toUpperCase()+s.substr(1)).join(' ');
+				return Util.toUpper(result);
 			}
 			return result;
 		}catch(e){
