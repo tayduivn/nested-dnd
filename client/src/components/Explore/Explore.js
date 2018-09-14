@@ -26,7 +26,7 @@ function setBodyStyle({ cssClass = '', txt = '', up = [] } = {}){
 /**
  * This manages the tree data
  */
-export default class TreeManager extends Component {
+export default class Explore extends Component {
 	static propTypes = {
 		// should be auto-passed from router
 		location: PropTypes.object.isRequired,
@@ -367,6 +367,77 @@ export default class TreeManager extends Component {
 		});
 	}
 
+	doSort(inArr, value){
+		inArr.filter(c=>c).map(c=>c&&c.index).filter((v,i,self)=>{
+			return self.indexOf(v)===i
+		});
+		if(inArr && inArr[inArr.length-1]  && inArr[inArr.length-1].includes('NEW'))
+			inArr.splice(inArr.length-1, 1);
+		var child = inArr[value.from];
+
+		inArr.splice(value.from,1);
+		inArr.splice(value.to,0,child);
+
+		var currentInArr = this.state.current.in.filter(c=>c);
+		this.setState(state=>{
+			state = Object.assign({}, state);
+			state.current = Object.assign({}, state.current);
+			state.current.in = inArr.map(ind=>{
+				return currentInArr.find(c=>c.index === ind);
+			});
+			state.current.in.push(currentInArr.find(c=>typeof c.index === 'string'));
+			return state;
+		})
+		return inArr;
+	}
+
+	doDeleteLink(inArr, value){
+		const currentInArr = inArr;
+		var deleteIndex = value;
+		
+		this.setState(state=>{ 
+			state = Object.assign({}, state);
+			state.current = Object.assign({}, state.current);
+			state.current.in = currentInArr.filter(c=>c && c.index!==deleteIndex)
+			return state;
+		});
+
+		return inArr.map(c=>c&&c.index).filter(c=>c && typeof c !== 'string' && c !== deleteIndex);
+	}
+
+	handleChangeState(oldState, index, property, value){
+		var state = {
+			...oldState,
+			current: {...oldState.current}
+		};
+		var displayValue = value;
+
+		// reset to parent value if reset
+		if(property === 'cssClass'){
+			if(value === null){
+				var up = state.current.up;
+				displayValue = up && up[0] && up[0][property];
+				state.current.txt = up[0].txt;
+			}
+			state.current.savedCssClass = value ? value: undefined;
+		}
+
+		if(property === 'txt'){ //always pass cssClass with txt
+			state.current.savedTxt = value;
+			this.handleChange(index, 'cssClass', state.current.cssClass);
+		}
+
+		
+		state.current[property] = displayValue;
+
+		// display change
+		if(property === 'cssClass' || property === 'txt'){
+			setBodyStyle(state.current);
+		}
+
+			return state;
+	}
+
 	handleChange(index, property, value){
 		let universe = this.props.match.params.universe;
 		var inArr = ([]).concat(this.state.current.in) || [];
@@ -380,48 +451,20 @@ export default class TreeManager extends Component {
 
 		if(property === 'sort'){
 			index = this.state.current.index;
-			inArr = inArr.filter(c=>c).map(c=>c&&c.index).filter((v,i,self)=>{
-				return self.indexOf(v)===i
-			});
-			if(inArr && inArr[inArr.length-1]  && inArr[inArr.length-1].includes('NEW'))
-				inArr.splice(inArr.length-1, 1);
-			var child = inArr[value.from];
-
-			inArr.splice(value.from,1);
-			inArr.splice(value.to,0,child);
-
-			var currentInArr = this.state.current.in.filter(c=>c);
-			this.setState(state=>{
-				state = Object.assign({}, state);
-				state.current = Object.assign({}, state.current);
-				state.current.in = inArr.map(ind=>{
-					return currentInArr.find(c=>c.index === ind);
-				});
-				state.current.in.push(currentInArr.find(c=>typeof c.index === 'string'));
-				return state;
-			})
-
+			inArr = this.doSort(inArr, value);
 			property = 'in';
 			value = inArr;
 		}
 		else if(property === 'deleteLink'){
-			const currentInArr = inArr;
-			var deleteIndex = value;
-			
-			this.setState(state=>{ 
-				state = Object.assign({}, state);
-				state.current = Object.assign({}, state.current);
-				state.current.in = currentInArr.filter(c=>c && c.index!==deleteIndex)
-				return state;
-			});
-
-			inArr = inArr.map(c=>c&&c.index).filter(c=>c && typeof c !== 'string' && c !== deleteIndex);
-
+			this.doDeleteLink(inArr, value);
 			property = 'in';
 			value = inArr;
 		}
 		else if(property === 'in'){
-			value = value.filter(ind=>ind!==null);
+			value = value.filter(i=>i!==null);
+		}
+		else if(property === 'cssClass'){ // reset to parent value if reset
+			this.handleChange(index, 'txt', null);
 		}
 
 		let payload = {
@@ -431,49 +474,20 @@ export default class TreeManager extends Component {
 			value: value
 		}
 
+		var saveFunc = (['name','desc','data'].includes(property)) ? this.saveDebounced : this.save;
+
 		// don't update the name field -- may mess up current typing
 		// don't update the up field -- wrong format and may not have parent data
 		// dont' update in field -- wrong format and changes have already taken effect
 		if(property !== 'name'  && property !== 'in' && property !== 'up' && index === this.state.current.index){
-			this.setState(state=>{
-				state = Object.assign({}, state);
-				state.current = Object.assign({}, state.current);
-
-				var displayValue = value;
-
-				// reset to parent value if reset
-				if(property === 'cssClass'){
-					if(value === null){
-						var up = state.current.up;
-						displayValue = up && up[0] && up[0][property];
-						state.current.txt = up[0].txt;
-						saveFunc(index, 'txt', universe, { ...payload, property: 'txt', value: null });
-					}
-
-					state.current.savedCssClass = value ? value: undefined;
-				}
-
-				if(property === 'txt'){ //always pass cssClass with txt
-					state.current.savedTxt = value;
-					this.handleChange(index, 'cssClass', state.current.cssClass);
-				}
-
-				
-				state.current[property] = displayValue;
-
-				// display change
-				if(property === 'cssClass' || property === 'txt'){
-					setBodyStyle(state.current);
-				}
-
-				return state;
-			});
+			this.setState(oldState => this.handleChangeState(oldState, index, property, value));
 		}
 
 		// call the debounced versions if typing
-		var saveFunc = (['name','desc','data'].includes(property)) ? this.saveDebounced : this.save;
 		saveFunc(index, property, universe, payload);
 	}
+
+
 
 	makeUrlMatchCurrent(nextState, nextProps){
 		const nextHash = this.getIndexFromHash(nextProps);
@@ -493,23 +507,17 @@ export default class TreeManager extends Component {
 		if(!this.state.current) 
 			return <div className="main pt-5">{LOADING}</div>
 
-		const current = this.state.current;
+		const { generators, tables, universe = {}, location: { pathname } } = this.props;
+		const { showAdd, pack = {}, current, showData } = this.state;
+		const { handleRestart, handleClick, handleChange, handleAdd, setIndex, toggleData } = this;
 
 		return (
-			<DocumentTitle title={current ? current.isa || current.name : 'Explore'}>
-				<ExplorePage {...this.state.current} 
-						font={this.state.pack && this.state.pack.font}
-						isUniverse={this.props.location.pathname.includes('universe')}
-						handleRestart={this.handleRestart} 
-						handleClick={this.handleClick} handleChange={this.handleChange} handleAdd={this.handleAdd} 
-						setIndex={this.setIndex}
-						generators={this.props.generators} 
-						tables={this.props.tables}
-						showAdd={this.state.showAdd} 
-						location={this.props.location.pathname}
-						pack={this.state.pack}
-						favorites={this.props.universe && this.props.universe.favorites} 
-						toggleData={this.toggleData} showData={this.state.showData} />
+			<DocumentTitle title={current ? (current.name || current.isa) : 'Explore'}>
+				<ExplorePage {...current} 
+						font={pack.font} isUniverse={pathname.includes('universe')}
+						location={pathname} favorites={universe.favorites} 
+						{...{ generators, tables, showAdd, pack, handleRestart, handleClick, handleChange, handleAdd, setIndex, toggleData, showData }}
+				/>
 			</DocumentTitle>
 		)
 	}
