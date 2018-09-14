@@ -30,6 +30,11 @@ if (process.env.NODE_ENV === "production") {
 	const staticPath = path.join(__dirname, "/../client/build");
 	app.use(express.static(staticPath));
 	console.log("Serving static files at / from " + staticPath);
+
+	// Express serve up index.html file if it doesn't recognize route
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+	});
 } 
 
 if (process.env.NODE_ENV !== "test") {
