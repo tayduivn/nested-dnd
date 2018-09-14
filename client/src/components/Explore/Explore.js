@@ -75,10 +75,12 @@ export default class Explore extends Component {
 			tasks.forEach(t=>{
 				if(!t.universe) return;
 
-				var universe, index;
-				if(!(universe = universes[t.universe]))
+				var universe = universes[t.universe];
+				var index = universe.array[t.index];
+
+				if(!universe)
 					universe = universes[t.universe] = { array: {} }
-				if(!(index = universe.array[t.index]))
+				if(!index)
 					index = universe.array[t.index] = {}
 				index[t.property] = t.value
 			})

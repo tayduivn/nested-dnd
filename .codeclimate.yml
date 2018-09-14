@@ -4,6 +4,9 @@ checks:
     enabled: true
     config:
       threshold: 50
+  method-complexity:
+    config:
+      threshold: 10
 plugins:
  eslint:
   enabled: true
