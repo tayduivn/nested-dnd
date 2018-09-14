@@ -27,7 +27,7 @@ import { GeneratorsPage } from '../Generators/Generators';
 import Generator from '../Generators/Generator';
 import EditGenerator from '../Generators/EditGenerator';
 import PlayersPreview from '../Explore/PlayersPreview'
-// import { sendPlayersPreview } from '../../actions/WebSocketAction';
+import { sendPlayersPreview, subscribeToPlayersPreview } from '../../actions/WebSocketAction';
 
 import "./App.css";
 
@@ -144,7 +144,8 @@ const routes = [
 	},
 	{
 		path: '/players-preview',
-		component: PlayersPreview
+		component: PlayersPreview,
+		subscribeToPlayersPreview: subscribeToPlayersPreview
 	},
 	{
 		path: '/explore/:packurl',
@@ -167,19 +168,17 @@ class App extends Component {
 		return {
 			loggedIn: PropTypes.bool,
 			loadFonts: PropTypes.func,
-			//sendPlayersPreview: PropTypes.func
+			sendPlayersPreview: PropTypes.func
 		}
 	}
 	getChildContext(){
 		return { 
 			loggedIn: !!this.state.loggedIn,
 			loadFonts: this.handleLoadFonts,
-			//sendPlayersPreview: this.sendPlayersPreview
+			sendPlayersPreview: this.sendPlayersPreview
 		}
 	}
-	/*sendPlayersPreview = (icon) => {
-		sendPlayersPreview({src: icon})
-	}*/
+	sendPlayersPreview = (icon) => sendPlayersPreview({src: icon});
 	handleLoadFonts(fonts = [], source = 'google'){
 		if(!fonts) return;
 		if(!(fonts instanceof Array))

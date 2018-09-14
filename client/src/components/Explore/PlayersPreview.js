@@ -1,8 +1,10 @@
 import React from "react";
-
-import { subscribeToPlayersPreview } from '../../actions/WebSocketAction';
+import PropTypes from "prop-types";
 
 export default class PlayersPreview extends React.Component {
+	static propTypes = {
+		subscribeToPlayersPreview: PropTypes.func
+	}
 	state = {
 		src: undefined,
 		alt: undefined
@@ -10,7 +12,7 @@ export default class PlayersPreview extends React.Component {
 	componentDidMount(){
 		this.setState({status: "subscribed"});
 
-		subscribeToPlayersPreview((err, {src, alt} = {}) => {
+		this.props.subscribeToPlayersPreview((err, {src, alt} = {}) => {
 			this.setState({status: "retrieved"});
 			this.setState({src,alt});
 		});
