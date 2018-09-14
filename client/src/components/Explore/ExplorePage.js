@@ -7,7 +7,7 @@ import Child from './Child'
 import colors from '../../colors';
 import { MixedKeyValue } from '../Form/MixedThing';
 import Title from './Title';
-import IconSelectModal, { ModalHeader } from './ModalIconSelect';
+import IconSelectModal, { ModalHeader } from './ModalIconSelect'; 
 
 const textures = ["3px-tile","45-degree-fabric-dark","45-degree-fabric-light","60-lines","ag-square","always-grey","arabesque","arches","black-scales","bright-squares","dark-mosaic","dark-wood","diagonal-striped-brick","diamond-upholstery","dimension","egg-shell","flowers","foggy-birds","food","football-no-lines","gradient-squares","gravel","gray-floral","grid-me","grunge-wall","hexellence","honey-im-subtle","inspiration-geometry","leather","light-gray","light-grey-floral-motif","light-paper-fibers","maze-black","maze-white","nestedBaconverse","nestedDoughnutverse","nestedLasagnaverse","nestedSharkverse","padded-light","pineapple-cut","pixel-weave","polaroid","purty-wood","random-grey-variations","retina-wood","robots","rocky-wall","scribble-light","shattered-dark","shley-tree-1","shley-tree-2","skulls","stardust","subtle-white-feathers","tileable-wood-colored","tileable-wood","tree-bark","type","washi","white-diamond-dark","woven-light","woven","xv"];
 

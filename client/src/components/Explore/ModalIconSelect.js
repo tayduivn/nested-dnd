@@ -83,11 +83,11 @@ export default class IconSelectModal extends React.Component {
 									<a href="/players-preview">Player view</a>
 									<br />
 									<img src={icon} alt="Preview" />
-									<input className="form-control" value={icon} onChange={(e)=>this.handleChange(e.target.value)} />
+									<input className="form-control" value={this.state.newValue} onChange={(e)=>this.handleChange(e.target.value)} />
 								</div>
 							: ( this.state.showTextBox ? 
 								<div>
-									<input className="form-control" value={icon} onChange={(e)=>this.handleChange(e.target.value)} />
+									<input className="form-control" value={this.state.newValue} onChange={(e)=>this.handleChange(e.target.value)} />
 								</div>
 							: <IconSelect key={this.props.index} status={{isEnabled: true}} 
 									value={this.state.newValue} 
