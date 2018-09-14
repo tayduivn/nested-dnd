@@ -26,10 +26,9 @@ const IconSelectDisplay = ({status = {}, validationState, iconArr = [], virtualS
 		<div className="row">
 			<div className="col-md">
 				<div validationstate={validationState} className="form-group">
-					<Select 
-						name="icon" 
+					<Select name="icon" 
 						components={{ MenuList, Option }} 
-						defaultValue={multi ? iconArr : iconArr[0] } 
+						value={multi ? iconArr : iconArr[0] } 
 						options={iconOptions} 
 						onChange={(v)=>handleChange(multi ? v : [v], animArr)}
 						isClearable={false} 
@@ -60,16 +59,10 @@ class IconSelect extends React.Component{
 		setPreview: PropTypes.func,
 		saveProperty: PropTypes.func
 	}
-	constructor(){
-		super();
-		this.handleChange = this.handleChange.bind(this);
-		this.handleChangeAnim = this.handleChangeAnim.bind(this);
-		this.handleClickChosen = this.handleClickChosen.bind(this);
-	}
 	shouldComponentUpdate(nextProps){
 		return (nextProps.value !== this.props.value || nextProps.status.isUpdated !== this.props.status.isUpdated );
 	}
-	handleChange(value = [], animArr = []){
+	handleChange = (value = [], animArr = []) => {
 		var { iconArr, animArr: anims } = this._parseIconArr(this.props.value);
 		animArr = (animArr) ? animArr : anims;
 
@@ -112,7 +105,7 @@ class IconSelect extends React.Component{
 		if(DEBUG) console.log("\t\t\t save icon: "+value);
 		return this.props.saveProperty(value);
 	}
-	handleChangeAnim(event){
+	handleChangeAnim = (event) => {
 		var index = event.target.getAttribute("data-index");
 		var anim = event.target.value;
 
@@ -121,7 +114,7 @@ class IconSelect extends React.Component{
 		animArr[index] = anim;
 		this.handleChange(iconArr, animArr);
 	}
-	handleClickChosen({value}){
+	handleClickChosen = ({value}) => {
 		var { iconArr, animArr } = this._parseIconArr(this.props.value)
 		var index = iconArr.indexOf(value);
 		if(index !== -1){

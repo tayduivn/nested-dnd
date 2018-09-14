@@ -2,13 +2,12 @@ import React from "react";
 import {TransitionGroup,  CSSTransition} from 'react-transition-group'
 import SVG from 'react-inlinesvg';
 import ReactSortable from 'react-sortablejs';
-import PropTypes from "prop-types";
 
-import IconSelect from '../Form/IconSelect';
 import Child from './Child'
 import colors from '../../colors';
 import { MixedKeyValue } from '../Form/MixedThing';
 import Title from './Title';
+import IconSelectModal, { ModalHeader } from './ModalIconSelect';
 
 const textures = ["3px-tile","45-degree-fabric-dark","45-degree-fabric-light","60-lines","ag-square","always-grey","arabesque","arches","black-scales","bright-squares","dark-mosaic","dark-wood","diagonal-striped-brick","diamond-upholstery","dimension","egg-shell","flowers","foggy-birds","food","football-no-lines","gradient-squares","gravel","gray-floral","grid-me","grunge-wall","hexellence","honey-im-subtle","inspiration-geometry","leather","light-gray","light-grey-floral-motif","light-paper-fibers","maze-black","maze-white","nestedBaconverse","nestedDoughnutverse","nestedLasagnaverse","nestedSharkverse","padded-light","pineapple-cut","pixel-weave","polaroid","purty-wood","random-grey-variations","retina-wood","robots","rocky-wall","scribble-light","shattered-dark","shley-tree-1","shley-tree-2","skulls","stardust","subtle-white-feathers","tileable-wood-colored","tileable-wood","tree-bark","type","washi","white-diamond-dark","woven-light","woven","xv"];
 
@@ -71,14 +70,6 @@ function getHighlightColor(cssClass){
 	
 	return (colors[name]) ? colors[name][variant] : cssClass;
 }
-
-const ModalHeader = () => (
-	<div className="modal-header">
-		<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-)
 
 const Icon = ({name = false, txt = "", alignment = "", fadeIn = true}) => {
 	if(!name || !name.trim || !name.split) return null;
@@ -250,94 +241,6 @@ class PatternSelectModal extends React.Component {
 									</div>
 								</div>
 							))}
-						</div>
-					</div>
-				</div>
-			</div>
-		);
-	}
-}
-
-class IconSelectModal extends React.Component {
-
-	static contextTypes = {
-		sendPlayersPreview: PropTypes.func
-	}
-	state = {
-		newValue: null,
-		useImg: null,
-		showTextBox: null,
-	}
-	componentDidMount(){
-		window.$('#iconSelectModal').on('hide.bs.modal', this.handleClose);
-		window.$('#iconSelectModal').on('show.bs.modal', this.handleOpen);
-	}
-	handleChange = (value) => {
-		this.setState({newValue: value});
-	}
-	handleChangeType = (e) => {
-		this.setState({
-			useImg: e.target.value==='true',
-			showTextBox:  e.target.value==='text',
-			newValue: ""
-		});
-	}
-	handleOpen = () => {
-		var icon = this.props.icon;
-
-		this.setState({
-			useImg: icon && (!(icon.startsWith("fa") || icon.startsWith("svg "))),
-			showTextBox: icon && icon.startsWith("text "),
-			newValue: (icon && icon.replace("text ","")) || ""
-		})
-	}
-	handleClose = () => {
-		if(this.state.newValue !== null){
-			var newValue = this.state.newValue;
-			if(this.state.showTextBox) newValue = "text "+newValue;
-			this.props.handleChange(this.props.index, 'icon', newValue);
-		}
-
-		if(this.state.useImg !== null)
-			this.props.handleChange(this.props.index, 'useImg', this.state.useImg);
-
-		this.setState({newValue: null, useImg: null});
-	}
-	setPreview = () => {
-		var icon = (this.state.newValue !== null) ? this.state.newValue : this.props.icon;
-		this.context.sendPlayersPreview(icon);
-	}
-	render(){
-		var {icon, cssClass, style } = this.props;
-		var useImg = this.state.useImg;
-		var type = (this.state.showTextBox) ? "text" : !!useImg;
-
-		return (
-			<div className="modal fade" id="iconSelectModal" tabIndex="-1" role="dialog" aria-hidden="true">
-				<div className="modal-dialog" role="document">
-					<div className="modal-content">
-						<ModalHeader />
-						<div className="modal-body">
-							<select value={type} className="input-transparent" onChange={this.handleChangeType}>
-								<option value={false}>Icon</option>
-								<option value="text">Text</option>
-								<option value={true}>Image</option>
-							</select>
-							{ useImg ?
-								<div>
-									<button className="btn btn-default" onClick={this.setPreview}>Show to players</button>
-									<a href="/players-preview">Player view</a>
-									<br />
-									<img src={icon} alt="Preview" />
-									<input className="form-control" value={icon} onChange={(e)=>this.handleChange(e.target.value)} />
-								</div>
-							: ( this.state.showTextBox ? 
-								<div>
-									<input className="form-control" value={icon} onChange={(e)=>this.handleChange(e.target.value)} />
-								</div>
-							: <IconSelect status={{isEnabled: true}} value={this.state.newValue || icon} cssClass={cssClass} style={style} saveProperty={this.handleChange} setPreview={()=>{}} />
-							)}
-							
 						</div>
 					</div>
 				</div>
