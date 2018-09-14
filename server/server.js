@@ -99,5 +99,13 @@ app.use("/api", function(req, res, next){
 	return;
 });
 
+// serve static files in production
+if(process.env.NODE_ENV === "production") {
+	// Express serve up index.html file if it doesn't recognize route
+	app.get('*', (req, res) => {
+		res.sendFile(path.join(__dirname, "/../client/build/index.html"));
+	});
+}
+
 // generic error handler
 app.use(MW.errorHandler);
