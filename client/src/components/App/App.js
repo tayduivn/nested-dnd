@@ -156,7 +156,7 @@ class App extends Component {
 	constructor(){
 		super();
 		this.state = {
-			loggedIn: true,
+			loggedIn: undefined,
 			loadedFonts: []
 		}
 		this.handleLogin = this.handleLogin.bind(this);
@@ -233,13 +233,15 @@ class App extends Component {
 						<Route exact path="/players-preview" />
 						<PropsRoute component={Nav} handleLogout={this.handleLogout} />
 					</Switch>
-					<Switch>
+					{ this.state.loggedIn !== undefined ? 
+						<Switch>
 						<Route exact path="/" component={this.state.loggedIn ? Universes : Splash} />
 						{routes.map((route, i) => <RouteWithSubRoutes key={i} {...route} />)}
 						<PropsRoute path="/login" component={Login} title="Login" handleLogin={this.handleLogin} />
 						<PropsRoute path="/signup" component={Login} title="Sign up" handleLogin={this.handleLogin} />
 						<Route component={NotFound} />
 					</Switch>
+					: null }
 				</div>
 			</Router>
 		);
