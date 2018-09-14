@@ -6,6 +6,8 @@ import { Icon } from '../Explore/ExplorePage'
 import iconOptions from '../../assets/icons.js'
 import { MenuList } from './IsASelect';
 
+import './IconSelect.css';
+
 const DEBUG = false;
 
 const animations = ["spin","spinReverse","pulse","flash","headShake","swing","tada","wobble","jello","rubberBand"]
@@ -29,7 +31,7 @@ const IconSelectDisplay = ({status = {}, validationState, iconArr = [], virtualS
 						components={{ MenuList, Option }} 
 						defaultValue={multi ? iconArr : iconArr[0] } 
 						options={iconOptions} 
-						onChange={(v)=>handleChange(v, animArr)}
+						onChange={(v)=>handleChange(multi ? v : [v], animArr)}
 						isClearable={false} 
 						isMulti={multi} />
 				</div>
@@ -117,7 +119,7 @@ class IconSelect extends React.Component{
 		var { iconArr, animArr } = this._parseIconArr(this.props.value);
 
 		animArr[index] = anim;
-		this.handleChange(iconArr.join(","), animArr);
+		this.handleChange(iconArr, animArr);
 	}
 	handleClickChosen({value}){
 		var { iconArr, animArr } = this._parseIconArr(this.props.value)

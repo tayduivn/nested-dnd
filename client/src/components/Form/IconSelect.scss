@@ -1,0 +1,67 @@
+.icon-option{
+  padding:5px;
+  line-height: 1em;
+  height:auto;
+  font-size: 0.85rem;
+  color:#555;
+
+  &:hover,&:active,&:focus,&.is-focused{
+    background:aliceblue;
+    color:#333;
+    cursor: pointer;
+  }
+
+  .icon{
+    vertical-align:middle;
+    font-size: 2em;
+    svg {
+    	height: 1em;
+    }
+  }
+}
+
+
+#icons-preview{
+  $gutter: 5px;
+  font-size: 0.85rem;
+  margin-left: -$gutter;
+  margin-right: -$gutter;
+
+  .icon-wrap{
+    padding: 0 5px 10px 5px;
+  }
+
+  .form-group.icon { 
+  	width: 6em;
+    $padding: 0px;
+    text-align: center;
+    padding: 7px $padding 1.5em $padding;
+    position:relative;
+    border-radius:5px;
+    margin: 0;
+
+    &.undefined{
+    	background-color: #eee;
+    }
+
+    label{
+      font-weight: normal;
+      font-size: 5em;
+
+      margin: 0 0 .1em 0;
+      line-height: 1em;
+    }
+    select{
+      border:0;
+      padding: 5px 3px;
+      height: auto;
+      font-size: 0.75em;
+      line-height: 1em;
+      -webkit-appearance: none; /*removes original arrow*/
+      width:100%;
+      position: absolute;
+      bottom: 0.5em;
+      right: 0;
+    }
+  }
+}

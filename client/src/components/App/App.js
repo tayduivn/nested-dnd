@@ -180,9 +180,11 @@ class App extends Component {
 	/*sendPlayersPreview = (icon) => {
 		sendPlayersPreview({src: icon})
 	}*/
-	handleLoadFonts(fonts, source = 'google'){
+	handleLoadFonts(fonts = [], source = 'google'){
+		if(!fonts) return;
 		if(!(fonts instanceof Array))
 			fonts = [fonts];
+		if(!fonts.length) return;
 
 		const lf = this.state.loadedFonts;
 

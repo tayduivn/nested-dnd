@@ -10,12 +10,12 @@ import { handleNestedPropertyValue } from '../Generators/EditGenerator';
 
 import './Explore.css';
 
-function setBodyStyle({ cssClass = 'bg-grey-50', txt = '', up = [] } = {}){
+function setBodyStyle({ cssClass = '', txt = '', up = [] } = {}){
 	var body = window.document.getElementById('body');
 	if(!body) return; //for tests
 	var stripped = body.className.split(" ").filter(c=>(!c.startsWith('bg-') && !c.startsWith('ptn-'))).join(" ").trim();
 	if(!cssClass){
-		cssClass = (up[0] && up[0].cssClass) || 'bg-grey-50';
+		cssClass = (up[0] && up[0].cssClass) || '';
 	}
 	if(!txt) txt = '';
 	stripped += " "+cssClass;
@@ -110,7 +110,7 @@ export default class TreeManager extends Component {
 
 
 	// location has changed
-	componentWillReceiveProps(nextProps){
+	UNSAFE_componentWillReceiveProps(nextProps){
 		const isNewPack = (this.props.match.params.packurl !== nextProps.match.params.packurl) && (!!nextProps.match.params.packurl);;
 		const isNewNode = this.state.current && "#"+this.state.current.index !== nextProps.location.hash;
 		const isNewHash = this.props.location.hash !== nextProps.location.hash && nextProps.location.hash.length;
