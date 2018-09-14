@@ -510,9 +510,10 @@ export default class Explore extends Component {
 		const { generators, tables, universe = {}, location: { pathname } } = this.props;
 		const { showAdd, pack = {}, current, showData } = this.state;
 		const { handleRestart, handleClick, handleChange, handleAdd, setIndex, toggleData } = this;
+		const title = current && (current.name || current.isa);
 
 		return (
-			<DocumentTitle title={current ? (current.name || current.isa) : 'Explore'}>
+			<DocumentTitle title={title ? title : 'Explore'}>
 				<ExplorePage {...current} 
 						font={pack.font} isUniverse={pathname.includes('universe')}
 						location={pathname} favorites={universe.favorites} 
