@@ -72,6 +72,14 @@ function getHighlightColor(cssClass){
 	return (colors[name]) ? colors[name][variant] : cssClass;
 }
 
+const ModalHeader = () => (
+	<div className="modal-header">
+		<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+)
+
 const Icon = ({name = false, txt = "", alignment = "", fadeIn = true}) => {
 	if(!name || !name.trim || !name.split) return null;
 	name = name.trim();
@@ -198,11 +206,7 @@ class MoveModal extends React.Component {
 		return (<div className="modal fade" id="moveModal" tabIndex="-1" role="dialog" aria-hidden="true">
 			<div className="modal-dialog" role="document">
 				<div className="modal-content">
-					<div className="modal-header">
-						<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
+					<ModalHeader />
 					<div className="modal-body">
 						<div className="form-group">
 							<label>Parent Index</label>
@@ -230,11 +234,7 @@ class PatternSelectModal extends React.Component {
 			<div className="modal fade" data-backdrop="false" id="patternSelectModal" tabIndex="-1" role="dialog" aria-hidden="true">
 				<div className="modal-dialog" role="document">
 					<div className={"modal-content "+bg}>
-						<div className="modal-header">
-							<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
+						<ModalHeader />
 						<div className="modal-body row">
 							<div className="col-6">
 								<div className="sample" onClick={()=>{this.handleClick(null)}}>
@@ -316,11 +316,7 @@ class IconSelectModal extends React.Component {
 			<div className="modal fade" id="iconSelectModal" tabIndex="-1" role="dialog" aria-hidden="true">
 				<div className="modal-dialog" role="document">
 					<div className="modal-content">
-						<div className="modal-header">
-							<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
+						<ModalHeader />
 						<div className="modal-body">
 							<select value={type} className="input-transparent" onChange={this.handleChangeType}>
 								<option value={false}>Icon</option>
