@@ -51,7 +51,6 @@ export default class Explore extends Component {
 	static contextTypes = {
 		loadFonts: PropTypes.func
 	}
-	
 
 	constructor(props){
 		super(props);
@@ -60,47 +59,14 @@ export default class Explore extends Component {
 			this.state = {...this.state, ...props.location.state};
 		}
 
-		this.handleRestart = this.handleRestart.bind(this);
-		this.handleClick = this.handleClick.bind(this);
-		this.handleChange = this.handleChange.bind(this);
-		this.handleAdd = this.handleAdd.bind(this);
-		this.setIndex = this.setIndex.bind(this);
-		this.save = this.save.bind(this);
 		this.saveDebounced = debounce(this.save.bind(this), 1000);
-
-		var _this = this;
-		this.saver = async.cargo(function(tasks, callback){
-			//combine tasks
-			var universes = {};
-			tasks.forEach(t=>{
-				if(!t.universe) return;
-
-				var universe = universes[t.universe];
-				var index = universe.array[t.index];
-
-				if(!universe)
-					universe = universes[t.universe] = { array: {} }
-				if(!index)
-					index = universe.array[t.index] = {}
-				index[t.property] = t.value
-			})
-			var promises = [];
-
-			for(var id in universes){
-				var promise = DB.set(`universes`, id, universes[id]).then(({error})=>{
-					if(error) _this.setState({error});
-				})
-				promises.push(promise);
-			}
-
-			Promise.all(promises).then(callback); 
-		})
-
-		setBodyStyle(this.state.current);
 	}
+
 	// first ajax data pull
 	componentDidMount(){
+		this._mounted = true;
 		var index = this.getIndexFromHash(this.props);
+		setBodyStyle(this.state.current);
 		return this.getCurrent(this.props, index);
 	}
 
@@ -110,6 +76,34 @@ export default class Explore extends Component {
 		}
 	}
 
+	saver = async.cargo((tasks, callback) => {
+
+		var universes = {}
+
+		tasks.forEach(t=>{
+			if(!t.universe) return;
+
+			var universe = universes[t.universe];
+			if(!universe)
+				universe = universes[t.universe] = { array: {} }
+
+			var index = universe.array[t.index];
+			if(!index)
+				index = universe.array[t.index] = {}
+			
+			index[t.property] = t.value
+		})
+		var promises = [];
+
+		for(var id in universes){
+			var promise = DB.set(`universes`, id, universes[id]).then(({error})=>{
+				if(error) this.setState({error});
+			})
+			promises.push(promise);
+		}
+
+		Promise.all(promises).then(callback); 
+	})
 
 	// location has changed
 	UNSAFE_componentWillReceiveProps(nextProps){
@@ -156,11 +150,12 @@ export default class Explore extends Component {
 	}
 	
 	componentWillUnmount(){
+		this._mounted = false;
+		// reset body background to normal on unmount
 		setBodyStyle({cssClass: ''});
 	}
 
 	getCurrent(props, index, newName){
-		const _this = this;
 		const isUniverse = props.location.pathname.includes('universe')
 		if(index === undefined) return;
 		if(isNaN(index)) index = 0;
@@ -170,49 +165,52 @@ export default class Explore extends Component {
 
 		// stop 1s timeout and do the change;
 		this.saveDebounced.flush();
-		var waitAfterSave = new Promise(resolve=>_this.saver.push({},()=>resolve(db()))); 
+		var waitAfterSave = new Promise(resolve=>this.saver.push({},()=>resolve(db()))); 
 		
 		waitAfterSave.then(({ error, data })=>{
+
+			// component unmounted, return
+			if(!this._mounted) return;
+
 			if(error){
-				_this.setState({ error: error.display });
+				return this.setState({ error: error.display });
 			}
-			else{
-				var { current = {} } = data;
-				var newState = {};
 
-				current.index = parseInt(current.index, 10);
-				var lookup = _this.state.lookup;
-				lookup[current.index] = current;
-				var isCurrentlyVisible = !_this.state.current 
-					|| typeof _this.state.current.index === 'undefined'
-					|| _this.state.current.index === current.index;
+			var { current = {} } = data;
+			
+			current.index = parseInt(current.index, 10);
+			var lookup = this.state.lookup;
+			lookup[current.index] = current;
+			const oldCurrent = this.state.current;
+			
+			var isCurrentlyVisible = !oldCurrent 
+				|| typeof oldCurrent.index === 'undefined'
+				|| oldCurrent.index === current.index;
 
-				if(isCurrentlyVisible){
-					if(isUniverse){
-						if(!(current.in instanceof Array)) 
-							current.in = [];
+			var newState = { lookup };
+			if(data.pack) 
+				newState.pack = data.pack;
 
-						current.in.push({
-							index: index+"NEW",
-							isNew: true,
-							cssClass: 'addNew',
-							icon: 'fas fa-plus',
-							in: []
-						})
-					}
+			if(isCurrentlyVisible){
+				if(isUniverse){
+					if(!(current.in instanceof Array))
+						current.in = [];
 
-					setBodyStyle(current);
-
-					newState = { current, lookup };
-				}else{
-					newState = { lookup };
+					current.in.push({
+						index: index+"NEW",
+						isNew: true,
+						cssClass: 'addNew',
+						icon: 'fas fa-plus',
+						in: []
+					})
 				}
 
-				if(data.pack) 
-					newState.pack = data.pack;
-				
-				_this.setState(newState);
+				setBodyStyle(current);
+
+				newState = { current, ...newState };
 			}
+			
+			this.setState(newState);
 		});
 	}
 
@@ -240,7 +238,7 @@ export default class Explore extends Component {
 	}
 
 	// will set the history, and component will recieve the new props
-	setIndex(index, isDeleting){
+	setIndex = (index, isDeleting) => {
 		if(isNaN(index)) return;
 
 		if(isDeleting && this.state.lookup[index]){
@@ -260,7 +258,7 @@ export default class Explore extends Component {
 		}
 	}
 
-	handleRestart(doRegenerate){
+	handleRestart = (doRegenerate) => {
 		const universe = this.props.match.params.universe;
 
 		// EXPLORE 
@@ -318,7 +316,7 @@ export default class Explore extends Component {
 		}
 	}
 
-	handleAdd(child, event){
+	handleAdd = (child, event) => {
 		if(!child.label){
 			return this.setState({'showAdd': true});
 		}
@@ -340,7 +338,7 @@ export default class Explore extends Component {
 		}
 	}
 
-	handleClick(child){
+	handleClick = (child) => {
 		var lookup = this.state.lookup;
 
 		if(lookup[child.index]){
@@ -357,7 +355,7 @@ export default class Explore extends Component {
 		this.setState((prevState)=>({showData: !prevState.showData}));
 	}
 
-	save(index, property, universe, payload){
+	save = (index, property, universe, payload) => {
 		// remove the one that's in there already
 		this.saver.remove(({data})=>{
 			return data.universe === universe && data.index === index && data.property === property
@@ -407,7 +405,7 @@ export default class Explore extends Component {
 		return inArr.map(c=>c&&c.index).filter(c=>c && typeof c !== 'string' && c !== deleteIndex);
 	}
 
-	handleChangeState(oldState, index, property, value){
+	handleChangeState = (oldState, index, property, value) => {
 		var state = {
 			...oldState,
 			current: {...oldState.current}
@@ -440,7 +438,7 @@ export default class Explore extends Component {
 			return state;
 	}
 
-	handleChange(index, property, value){
+	handleChange = (index, property, value) => {
 		let universe = this.props.match.params.universe;
 		var inArr = ([]).concat(this.state.current.in) || [];
 		index = parseInt(index,10);
