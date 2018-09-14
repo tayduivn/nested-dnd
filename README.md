@@ -5,24 +5,14 @@
 
 # Nested D&D
 
-https://nested-dnd.herokuapp.com
+# https://nested-dnd.herokuapp.com
 
-react-scripts .. webpack.config.dev.js
-``  js
-	devtoolModuleFilenameTemplate: info =>{
-    	var resourcepath = path.resolve(info.absoluteResourcePath);
-    	if(!resourcepath.startsWith("C:")){
-    		resourcepath = "C:/git/cattegy-git/nested-dnd/client/"+resourcepath;
-    	}
-    	return ("file:///"+resourcepath).replace(/\\/g, '/')
-    }
-``
+## Check dependencies 
 
-open static/js/bundle
+``depcheck``
 
-yalc publish 
-yalc add react-scripts
-depcheck
+
+## Database import/export commands
 
 mongodump --db nested-dnd --out server/data/dump
 mongorestore -h <:> -d <heroku_> -u <user> -p <pw> server/data/dump/nested-dnd
@@ -33,16 +23,23 @@ mongoimport --db nested-dnd -c generators --upsert server/data/dump-json/nested-
 mongo nested-dnd
 db.builtpacks.remove()
 
+## Build patterns
+
 cd client\src\assets\patterns && dir /b > patternNames.txt
+
+
+## Build icons
 
 ICOMOON.io
 
 ``for /d %i in (./*) do ( cd "%i" & svgo --config ../../../../../.svgo.js . & cd .. ) `` 
 
-dir /s/n/b *.svg > icons.txt && for /F "tokens=1" %i in (icons.txt) do svgo --config ../../../.svgo.js -i %i
+``dir /s/n/b *.svg > icons.txt && for /F "tokens=1" %i in (icons.txt) do svgo --config ../../../.svgo.js -i %i``
 
+https://github.com/seiyria/gameicons-font
+
+## Get fantasy name generators
 
 // get FNG
 node client/public/getFNG.js
 
-https://github.com/seiyria/gameicons-font
