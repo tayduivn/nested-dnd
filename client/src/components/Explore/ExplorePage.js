@@ -268,16 +268,11 @@ class IconSelectModal extends React.Component {
 		useImg: null,
 		showTextBox: null,
 	}
-	constructor(){
-		super();
-		this.handleChange = this.handleChange.bind(this)
-		this.handleClose = this.handleClose.bind(this);
-	}
 	componentDidMount(){
 		window.$('#iconSelectModal').on('hide.bs.modal', this.handleClose);
 		window.$('#iconSelectModal').on('show.bs.modal', this.handleOpen);
 	}
-	handleChange(value){
+	handleChange = (value) => {
 		this.setState({newValue: value});
 	}
 	handleChangeType = (e) => {
@@ -296,7 +291,7 @@ class IconSelectModal extends React.Component {
 			newValue: (icon && icon.replace("text ","")) || ""
 		})
 	}
-	handleClose(){
+	handleClose = () => {
 		if(this.state.newValue !== null){
 			var newValue = this.state.newValue;
 			if(this.state.showTextBox) newValue = "text "+newValue;

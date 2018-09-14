@@ -56,12 +56,7 @@ export default class EditPack extends Component {
 		"pack": PropTypes.object,
 		"history": PropTypes.object.isRequired
 	}
-	constructor(){
-		super();
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleDelete = this.handleDelete.bind(this);
-	}
-	handleSubmit(e){
+	handleSubmit = (e) => {
 		e.preventDefault();
 		const isCreate = !this.props.pack;
 		var formData = new FormData(e.target);
@@ -84,7 +79,7 @@ export default class EditPack extends Component {
 			})
 		}
 	}
-	handleDelete(){
+	handleDelete = () => {
 		var confirmed = window.confirm("Are you sure you want to delete this pack?");
 		if(!confirmed) return;
 
