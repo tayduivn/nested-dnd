@@ -122,7 +122,9 @@ schema.statics.extend = function(isa, builtpack, extendsThis = []){
 		}
 	}
 
-	generator = Object.assign({},generator.toJSON());
+	if(generator && generator.toJSON)
+		generator = Object.assign({},generator.toJSON());
+	
 	generator.extendsPath = extendsPath;
 	generator.extendsThis = (genData.extendsThis || []).concat(extendsThis);
 	generator._id = genData._id;

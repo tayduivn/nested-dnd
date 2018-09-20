@@ -102,19 +102,20 @@ schema.statics.insertNew = async function(data, pack){
  * @param  {BuiltPack} builtpack 
  * @return {Promise<Nested>}           the root node of the tree
  */
-schema.statics.makeAsRoot = async function(seedArray, builtpack){
+schema.statics.makeAsRoot = async function(seedArray, builtpack, data = {}){
 	var seed = seedArray.shift();
 	var childSeed = seedArray[0];
+	const ancestorData = Object.assign({}, data, seed.data);
 
 	if(seedArray.length === 0){
-		let nestedSeed = await Maker.make(seed, 1, builtpack);
+		let nestedSeed = await Maker.make(seed, 1, builtpack, undefined, ancestorData);
 		nestedSeed.isNestedSeed = true; // this will be our starting point when we generate the world
 		return nestedSeed;
 	}
 
 	// generate the next seed in the array and push to in
 	var node = await Maker.make(seed, 1, builtpack);
-	var generatedChild = await this.makeAsRoot(seedArray, builtpack); 
+	var generatedChild = await this.makeAsRoot(seedArray, builtpack, ancestorData); 
 
 	if(!node.in) node.in = [];
 
