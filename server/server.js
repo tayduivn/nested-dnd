@@ -90,7 +90,7 @@ require("./app/routes/generators.js")(app, mongoose);
 require("./app/routes/tables.js")(app, mongoose);
 require("./app/routes/universes.js")(app, mongoose);
 require("./app/routes/characters.js")(app, mongoose);
-require("./app/routes/players-preview.js")(app, io);
+require("./app/routes/players-preview.js")(app);
 
 
 // 404 error handler returns json

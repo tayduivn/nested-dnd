@@ -1,13 +1,13 @@
 const MW = require("./middleware.js");
 
-module.exports = function(app,io) {
+module.exports = function(app) {
 
-	io.on('connection', (client) => {
+	app.get('/api/players-preview', (req, res, next) => {
+		res.json(req.session.playersPreview || {});
+	});
 
-		client.on('setPlayersPreview', (data) => {
-			console.log('client is setting players preview');
-			io.sockets.emit('showPlayersPreview', data);
-		});
-
+	app.put('/api/players-preview', (req, res, next) => {
+		req.session.playersPreview = req.body;
+		res.json(req.body);
 	});
 }

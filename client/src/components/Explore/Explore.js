@@ -424,8 +424,10 @@ export default class Explore extends Component {
 			state.current.savedCssClass = value ? value: undefined;
 		}
 
-		if(property === 'txt'){ //always pass cssClass with txt
+		//always pass cssClass with txt unless resetting
+		else if(property === 'txt' && value !== null){ 
 			state.current.savedTxt = value;
+
 			this.handleChange(index, 'cssClass', state.current.cssClass);
 		}
 

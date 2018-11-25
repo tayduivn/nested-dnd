@@ -1,18 +1,25 @@
-import io from "socket.io-client";
-
-console.log("Start socket.io connection")
-const socket = io();
+import DB from './CRUDAction';
 
 function subscribeToPlayersPreview(cb){
 	console.log("subscribeToPlayersPreview");
-	socket.on('showPlayersPreview', data => {
-  	cb(null, data)
-  });
+
+	const getData = () => {
+		DB.get('/players-preview','')
+			.then( ({ error, data }) => {
+				cb(error, data);
+			})
+			//in one second get again
+			.then(() => setTimeout(getData, 2000))
+	}
+
+	getData();
 }
+
+
 
 function sendPlayersPreview(data){
 	console.log("sendPlayersPreview");
-	socket.emit('setPlayersPreview', data);
+	DB.set('/players-preview', '', data);
 }
 
 export { sendPlayersPreview, subscribeToPlayersPreview }
