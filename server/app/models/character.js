@@ -1,7 +1,7 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const cardSchema = require('./character/cardSchema');
+const cardSchema = require("./character/cardSchema");
 
 const SKILL_NAMES = [
 	"Acrobatics",
@@ -38,63 +38,76 @@ function getMod(val) {
 	return mod;
 }
 
-var abilitySchema = Schema({
-	base: {
-		type: Number,
-		default: 10,
-		required: true,
-		min: 0,
-		max: 20
+var abilitySchema = Schema(
+	{
+		base: {
+			type: Number,
+			default: 10,
+			required: true,
+			min: 0,
+			max: 20
+		},
+		saveProficient: Boolean,
+		adjust: [
+			{
+				value: Number,
+				level: Number
+			}
+		]
 	},
-	saveProficient: Boolean,
-	adjust: [{
-		value: Number,
-		level: Number
-	}]
-}, { toJSON: { virtuals: true } })
+	{ toJSON: { virtuals: true } }
+);
 
-abilitySchema.virtual('score').get(function(){
+abilitySchema.virtual("score").get(function() {
 	var score = this.base;
 	this.adjust.forEach(a => (score += a.value));
 	return score;
 });
 
-abilitySchema.virtual('mod').get(function(){
+abilitySchema.virtual("mod").get(function() {
 	return getMod(this.score);
 });
 
-abilitySchema.virtual('printMod').get(function(){
+abilitySchema.virtual("printMod").get(function() {
 	return appendPlus(this.mod);
 });
 
-abilitySchema.virtual('saveMod').get(function(){
-	return (this.saveProficient) ? this.mod + this.parent().proficiencyBonus : this.mod
+abilitySchema.virtual("saveMod").get(function() {
+	return this.saveProficient
+		? this.mod + this.parent().proficiencyBonus
+		: this.mod;
 });
 
-abilitySchema.virtual('printSave').get(function(){
+abilitySchema.virtual("printSave").get(function() {
 	return appendPlus(this.saveMod);
 });
 
-var equipmentSchema = Schema({
-	hasShield: Boolean,
-	armor: {
-		name: String,
-		data: {
-			itemType: String,
-			ac: Number
+var equipmentSchema = Schema(
+	{
+		hasShield: Boolean,
+		armor: {
+			name: String,
+			data: {
+				itemType: String,
+				ac: Number
+			},
+			unarmoredBonus: Number
 		},
-		unarmoredBonus: Number
+		containers: [
+			{
+				name: String,
+				content: [String]
+			}
+		],
+		items: [String],
+		weapons: String
 	},
-	containers: [{
-		name: String,
-		content: [String]
-	}],
-	items: [String],
-	weapons: String
-}, { toJSON: { virtuals: true } });
+	{ toJSON: { virtuals: true } }
+);
 
-equipmentSchema.virtual('ac').get(function(){
-	if (!this.armor || !this.armor.data || !this.armor.data.ac) return this.unarmoredAC;
+equipmentSchema.virtual("ac").get(function() {
+	if (!this.armor || !this.armor.data || !this.armor.data.ac)
+		return this.unarmoredAC;
 
 	const DEX = this.parent().abilities.dex.mod;
 	var ac = this.armor.data.ac || 0;
@@ -113,7 +126,7 @@ equipmentSchema.virtual('ac').get(function(){
 	return ac;
 });
 
-equipmentSchema.virtual('unarmoredAC').get(function(){
+equipmentSchema.virtual("unarmoredAC").get(function() {
 	const character = this.parent();
 
 	var DEX = character.abilities.dex.mod;
@@ -128,16 +141,19 @@ equipmentSchema.virtual('unarmoredAC').get(function(){
 	return 10 + DEX + (this.armor.unarmoredBonus ? this.armor.unarmoredBonus : 0);
 });
 
-equipmentSchema.virtual('unshieldedAC').get(function(){
+equipmentSchema.virtual("unshieldedAC").get(function() {
 	if (this.hasShield) return this.ac - 2;
 	else return this.ac;
 });
 
-var featureSchema = Schema({
-	desc: String,
-	name: String,
-	uses: Number
-}, { toJSON: { virtuals: true } });
+var featureSchema = Schema(
+	{
+		desc: String,
+		name: String,
+		uses: Number
+	},
+	{ toJSON: { virtuals: true } }
+);
 
 var spellSchema = Schema({
 	name: String,
@@ -145,43 +161,45 @@ var spellSchema = Schema({
 	ritual: Boolean,
 	prepared: Boolean,
 	note: String
-})
+});
 
-var spellcastingClassSchema = Schema({
-	name: String,
-	title: String,
-	ritualCast: Boolean,
-	level: Number,
-	ability: {
-		type: String,
-		enum: ['str','con','dex','wis','int','cha']
+var spellcastingClassSchema = Schema(
+	{
+		name: String,
+		title: String,
+		ritualCast: Boolean,
+		level: Number,
+		ability: {
+			type: String,
+			enum: ["str", "con", "dex", "wis", "int", "cha"]
+		},
+		spells: [[spellSchema]]
 	},
-	spells: [[spellSchema]]
-}, { toJSON: { virtuals: true } });
+	{ toJSON: { virtuals: true } }
+);
 
-spellcastingClassSchema.virtual('dc').get(function(){
+spellcastingClassSchema.virtual("dc").get(function() {
 	var char = this.parent().parent();
-	if(!char || !char.abilities || !char.abilities[this.ability])
-		return 0;
+	if (!char || !char.abilities || !char.abilities[this.ability]) return 0;
 	return 8 + char.abilities[this.ability].mod + char.proficiencyBonus;
-})
+});
 
-spellcastingClassSchema.virtual('printAbility').get(function(){
+spellcastingClassSchema.virtual("printAbility").get(function() {
 	return this.ability.toUpperCase();
 });
 
-spellcastingClassSchema.virtual('prepares').get(function(){
-	return this.name !== 'Sorcerer'
+spellcastingClassSchema.virtual("prepares").get(function() {
+	return this.name !== "Sorcerer";
 });
 
-spellcastingClassSchema.virtual('numPrepared').get(function(){
+spellcastingClassSchema.virtual("numPrepared").get(function() {
 	var char = this.parent().parent();
-	return this.level+char.abilities[this.ability].mod
+	return this.level + char.abilities[this.ability].mod;
 });
 
-spellcastingClassSchema.virtual('totalSpells').get(function(){
+spellcastingClassSchema.virtual("totalSpells").get(function() {
 	return this.spells.lengt;
-})
+});
 
 var spellcastingSchema = Schema({
 	list: {
@@ -194,144 +212,158 @@ var spellcastingSchema = Schema({
 	}
 });
 
-spellcastingSchema.virtual('totalSpells').get(function(){
+spellcastingSchema.virtual("totalSpells").get(function() {
 	var totalSpells = 0;
-	this.list.forEach(cl=>{
+	this.list.forEach(cl => {
 		totalSpells += cl.spells.length;
-	})
+	});
 	return totalSpells;
-})
+});
 
-var schema = Schema({
-	user: {
-		type: Schema.Types.ObjectId,
-		ref: 'User'
-	},
-	universe: {
-		type: Schema.Types.ObjectId,
-		ref: 'Universe'
-	},
+var schema = Schema(
+	{
+		user: {
+			type: Schema.Types.ObjectId,
+			ref: "User"
+		},
+		universe: {
+			type: Schema.Types.ObjectId,
+			ref: "Universe"
+		},
 
-	name: String,
-	player: String,
-	hp: Number,
-	hitDice: [{
-		value: Number,
-		count: Number
-	}],
-	ddbURL: String,
-
-	proficiencyBonus: {
-		type: Number,
-		default: 2
-	},
-	level: {
-		type: Number,
-		default: 1
-	},
-	
-	classes: [{
 		name: String,
-		level: Number,
-		subclasses: Object
-	}],
-	race:{
-		name: String,
-		label: String,
-		size: String
-	},
-	abilities: {
-		cha: {
-			type: abilitySchema,
-			default: { base: 10 }
-		},
-		con: {
-			type: abilitySchema,
-			default: { base: 10 }
-		},
-		dex: {
-			type: abilitySchema,
-			default: { base: 10 }
-		},
-		int: {
-			type: abilitySchema,
-			default: { base: 10 }
-		},
-		str: {
-			type: abilitySchema,
-			default: { base: 10 }
-		},
-		wis: {
-			type: abilitySchema,
-			default: { base: 10 }
-		}
-	},
-	advResist: {
-		advantages: [String],
-		resistances: [String],
-		other: [featureSchema]
-	},
-	features: [featureSchema],
-	background: {
-		alignment: {
-			type: String,
-			enum: [
-				'Lawful Good', 'Lawful Neutral', 'Lawful Evil',
-				'Neutral Good', 'True Neutral', 'Neutral Evil',
-				'Chaotic Good', 'Chaotic Neutral', 'Chaotic Evil', 'Unknown'
-			]
-		},
-		bond: String,
-		flaw: String,
-		ideal: String,
-		name: String,
-		personality: String,
-		specialty: String,
-		startingCoin: String
-	},
-	body: {
-		eyes: String,
-		hair: String,
-		height: String,
-		skin: String,
-		weight: Number,
-		age: Number,
-		gender: String,
-		speeds: {
-			walk: Number,
-			fly: Number,
-			burrow: Number,
-			swim: Number,
-			climb: Number
-		}
-	},
-	equipment: equipmentSchema,
-	proficiencies: {
-		armor: [String],
-		languages: [String],
-		skills: [String],
-		doubleSkills: [String],
-		tools: [String],
-		doubleTools: [String],
-		weapons: [String]
-	},
-	spellcasting: {
-		type: spellcastingSchema,
-		default: null
-	},
-	cards: [cardSchema]
-}, { toJSON: { virtuals: true } });
+		player: String,
+		hp: Number,
+		hitDice: [
+			{
+				value: Number,
+				count: Number
+			}
+		],
+		ddbURL: String,
 
+		proficiencyBonus: {
+			type: Number,
+			default: 2
+		},
+		level: {
+			type: Number,
+			default: 1
+		},
 
-schema.virtual('initiative').get(function(){
+		classes: [
+			{
+				name: String,
+				level: Number,
+				subclasses: Object
+			}
+		],
+		race: {
+			name: String,
+			label: String,
+			size: String
+		},
+		abilities: {
+			cha: {
+				type: abilitySchema,
+				default: { base: 10 }
+			},
+			con: {
+				type: abilitySchema,
+				default: { base: 10 }
+			},
+			dex: {
+				type: abilitySchema,
+				default: { base: 10 }
+			},
+			int: {
+				type: abilitySchema,
+				default: { base: 10 }
+			},
+			str: {
+				type: abilitySchema,
+				default: { base: 10 }
+			},
+			wis: {
+				type: abilitySchema,
+				default: { base: 10 }
+			}
+		},
+		advResist: {
+			advantages: [String],
+			resistances: [String],
+			other: [featureSchema]
+		},
+		features: [featureSchema],
+		background: {
+			alignment: {
+				type: String,
+				enum: [
+					"Lawful Good",
+					"Lawful Neutral",
+					"Lawful Evil",
+					"Neutral Good",
+					"True Neutral",
+					"Neutral Evil",
+					"Chaotic Good",
+					"Chaotic Neutral",
+					"Chaotic Evil",
+					"Unknown"
+				]
+			},
+			bond: String,
+			flaw: String,
+			ideal: String,
+			name: String,
+			personality: String,
+			specialty: String,
+			startingCoin: String
+		},
+		body: {
+			eyes: String,
+			hair: String,
+			height: String,
+			skin: String,
+			weight: Number,
+			age: Number,
+			gender: String,
+			speeds: {
+				walk: Number,
+				fly: Number,
+				burrow: Number,
+				swim: Number,
+				climb: Number
+			}
+		},
+		equipment: equipmentSchema,
+		proficiencies: {
+			armor: [String],
+			languages: [String],
+			skills: [String],
+			doubleSkills: [String],
+			tools: [String],
+			doubleTools: [String],
+			weapons: [String]
+		},
+		spellcasting: {
+			type: spellcastingSchema,
+			default: null
+		},
+		cards: [cardSchema]
+	},
+	{ toJSON: { virtuals: true } }
+);
+
+schema.virtual("initiative").get(function() {
 	return this.abilities.dex.printMod;
-})
+});
 
-schema.virtual('skills').get(function(){
-	var skills = this.proficiencies && this.proficiencies.skills || [];
-	var doubleSkills = this.proficiencies && this.proficiencies.doubleSkills || [];
+schema.virtual("skills").get(function() {
+	var skills = (this.proficiencies && this.proficiencies.skills) || [];
+	var doubleSkills =
+		(this.proficiencies && this.proficiencies.doubleSkills) || [];
 	const _this = this;
-	
+
 	return SKILL_NAMES.map(function(name) {
 		var data = {
 			name: name,
@@ -340,14 +372,14 @@ schema.virtual('skills').get(function(){
 		};
 		data.printMod = getSkillMod.call(_this, data);
 		return data;
-	})
+	});
 });
 
-schema.virtual('printProficiencyBonus').get(function(){
+schema.virtual("printProficiencyBonus").get(function() {
 	return appendPlus(this.proficiencyBonus);
 });
 
-function getSkillMod({name, proficient, double}) {
+function getSkillMod({ name, proficient, double }) {
 	var mod = 0;
 
 	switch (name) {
@@ -381,11 +413,10 @@ function getSkillMod({name, proficient, double}) {
 		let profBonus = this.proficiencyBonus;
 		mod += profBonus;
 
-		if(double) mod += profBonus;
+		if (double) mod += profBonus;
 	}
 
 	return appendPlus(mod);
 }
 
-
-module.exports = mongoose.model('Character', schema);
+module.exports = mongoose.model("Character", schema);

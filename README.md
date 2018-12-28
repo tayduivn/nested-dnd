@@ -3,19 +3,25 @@
 [![codecov](https://codecov.io/gh/cattegy/nested-dnd/branch/master/graph/badge.svg)](https://codecov.io/gh/cattegy/nested-dnd)
 [![Build Status](https://travis-ci.org/jsabol/nested-dnd.svg?branch=master)](https://travis-ci.org/jsabol/nested-dnd)
 
-# Nested D&D
+# [Nested D&D](https://nested-dnd.herokuapp.com)
 
-# https://nested-dnd.herokuapp.com
+# Installation
 
-## Check dependencies 
+- `npm install -g yarn`
+- Install [MongoDB](https://www.mongodb.com/download-center/community)
+- Create empty folder under /server/data
+- run `npm install`
+- git clone
+- cd `npm install --production`
 
-``depcheck``
+## Check dependencies
 
+`depcheck`
 
 ## Database import/export commands
 
 mongodump --db nested-dnd --out server/data/dump
-mongorestore -h <:> -d <heroku_> -u <user> -p <pw> server/data/dump/nested-dnd
+mongorestore -h <:> -d <heroku\_> -u <user> -p <pw> server/data/dump/nested-dnd
 mongorestore -h <:mlab.com> -d <dbname> -u <user> -p <password> <input .bson file> // collection
 
 mongoexport --db nested-dnd -c generators > server/data/dump-json/nested-dnd/generators.json
@@ -27,14 +33,13 @@ db.builtpacks.remove()
 
 cd client\src\assets\patterns && dir /b > patternNames.txt
 
-
 ## Build icons
 
 ICOMOON.io
 
-``for /d %i in (./*) do ( cd "%i" & svgo --config ../../../../../.svgo.js . & cd .. ) `` 
+`for /d %i in (./*) do ( cd "%i" & svgo --config ../../../../../.svgo.js . & cd .. )`
 
-``dir /s/n/b *.svg > icons.txt && for /F "tokens=1" %i in (icons.txt) do svgo --config ../../../.svgo.js -i %i``
+`dir /s/n/b *.svg > icons.txt && for /F "tokens=1" %i in (icons.txt) do svgo --config ../../../.svgo.js -i %i`
 
 https://github.com/seiyria/gameicons-font
 
@@ -42,4 +47,3 @@ https://github.com/seiyria/gameicons-font
 
 // get FNG
 node client/public/getFNG.js
-

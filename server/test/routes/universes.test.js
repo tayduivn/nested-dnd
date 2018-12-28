@@ -1,34 +1,31 @@
-const chai = require('chai');
+const chai = require("chai");
 const should = chai.should();
-const sinon = require('sinon');
-const request = require('supertest')(app);
+const sinon = require("sinon");
+const request = require("supertest")(app);
 chai.use(require("chai-as-promised"));
-require('sinon-mongoose');
+require("sinon-mongoose");
 
-const Universe = require('../../app/models/universe');
+const Universe = require("../../app/models/universe");
 
-describe('/universes',()=>{
-
+describe("/universes", () => {
 	var UniMock;
 
-	before(()=>{
+	before(() => {
 		UniMock = sinon.mock(Universe);
-	})
+	});
 
-	after(()=>{
+	after(() => {
 		Universe.find.restore();
 	});
 
-	it('should return universes',()=>{
-		UniMock.expects('find')
-			.resolves([
-				new Universe()
-			])
-		request.get('/api/universes')
-			.expect('Content-Type', /json/)
-			.expect(({body})=>{
-				body.should.be.an('array').with.lengthOf(1);
+	it("should return universes", () => {
+		UniMock.expects("find").resolves([new Universe()]);
+		request
+			.get("/api/universes")
+			.expect("Content-Type", /json/)
+			.expect(({ body }) => {
+				body.should.be.an("array").with.lengthOf(1);
 			})
 			.expect(200);
 	});
-})
+});

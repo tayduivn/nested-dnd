@@ -1,25 +1,23 @@
-import DB from './CRUDAction';
+import DB from "./CRUDAction";
 
-function subscribeToPlayersPreview(cb){
+function subscribeToPlayersPreview(cb) {
 	console.log("subscribeToPlayersPreview");
 
 	const getData = () => {
-		DB.get('/players-preview','')
-			.then( ({ error, data }) => {
+		DB.get("/players-preview", "")
+			.then(({ error, data }) => {
 				cb(error, data);
 			})
 			//in one second get again
-			.then(() => setTimeout(getData, 2000))
-	}
+			.then(() => setTimeout(getData, 2000));
+	};
 
 	getData();
 }
 
-
-
-function sendPlayersPreview(data){
+function sendPlayersPreview(data) {
 	console.log("sendPlayersPreview");
-	DB.set('/players-preview', '', data);
+	DB.set("/players-preview", "", data);
 }
 
-export { sendPlayersPreview, subscribeToPlayersPreview }
+export { sendPlayersPreview, subscribeToPlayersPreview };

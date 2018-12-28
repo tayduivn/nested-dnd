@@ -7,13 +7,7 @@ class Container {
 
 export default class Equipment {
 	constructor(
-		{
-			hasShield = false,
-			armor = false,
-			weapons,
-			containers = [],
-			items = []
-		},
+		{ hasShield = false, armor = false, weapons, containers = [], items = [] },
 		character
 	) {
 		if (armor) armor = armor.toLowerCase();
@@ -69,6 +63,3 @@ export default class Equipment {
 		else return this.getAC();
 	}
 }
-
-
-

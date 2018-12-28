@@ -1,21 +1,20 @@
 {
-	"env": {
-		"node": true,
-		"es6": true
-	},
-  "parserOptions": {
-  	"ecmaVersion": 8
+  "extends": "plugin:node/recommended",
+  "plugins": ["node"],
+  "env": {
+    "node": true,
+    "es6": true
   },
-	"extends": [
-		"plugin:node/recommended"
-	],
-	"plugins": [
-		"node"
-	],
-	"ecmaFeatures": {
-		"blockBindings": true
-	},
-	"rules": {
-		"node/no-unpublished-require": "off"
-	}
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "ecmaFeatures": {
+    "blockBindings": true
+  },
+  "globals": {
+    "process": true
+  },
+  "rules": {
+    "node/no-unpublished-require": "off"
+  }
 }

@@ -1,117 +1,119 @@
-import React from 'react';
-import { Router, Route } from 'react-router-dom';
-import chai from 'chai';
-import enzyme from 'enzyme';
-import { spy } from 'sinon';
-import { createMemoryHistory } from 'history';
+import React from "react";
+import { Router, Route } from "react-router-dom";
+import chai from "chai";
+import enzyme from "enzyme";
+import { spy } from "sinon";
+import { createMemoryHistory } from "history";
 
-import Packs from './Packs';
-import Pack from './Pack';
-import { PropsRoute } from '../Routes'
-import EditPack from './EditPack'
+import { PacksList } from "./Packs";
+import Pack from "./Pack";
+import { PropsRoute } from "../Routes";
+import EditPack from "./EditPack";
 
 const should = chai.should();
 
-describe('<Packs />',()=>{
-
+describe("<PacksList />", () => {
 	var wrap;
 
-	before(()=>{
-		spy(console, 'error')
-		spy(enzyme, 'mount')
+	before(() => {
+		spy(console, "error");
+		spy(enzyme, "mount");
 
 		global.fetchReturn = {
-			publicPacks: [{
-				_id: 9028398129,
-				title: 'test'
-			}]
+			publicPacks: [
+				{
+					_id: 9028398129,
+					title: "test"
+				}
+			]
 		};
 		wrap = enzyme.mount(
-			<Router history={createMemoryHistory('/')}>
-				<PropsRoute path='/' component={Packs} match={{
-							path: '/dnd',
-							url: '/dnd',
-							isExact: true
-						}}/>
+			<Router history={createMemoryHistory("/")}>
+				<PropsRoute
+					path="/"
+					component={Packs}
+					match={{
+						path: "/dnd",
+						url: "/dnd",
+						isExact: true
+					}}
+				/>
 			</Router>
 		);
-	})
+	});
 
-	after(()=>{
+	after(() => {
 		global.fetchReturn = {};
 		console.error.restore();
 		enzyme.mount.restore();
-	})
+	});
 
-	it('renders', (done) => {
-		setImmediate(()=>{
+	it("renders", done => {
+		setImmediate(() => {
 			console.error.calledAfter(enzyme.mount).should.equal(false);
 			done();
 		});
 	});
-
 });
 
-describe('<Pack />',()=>{
-
-	before(()=>{
-		spy(console, 'error')
-		spy(enzyme, 'mount')
+describe("<Pack />", () => {
+	before(() => {
+		spy(console, "error");
+		spy(enzyme, "mount");
 
 		global.fetchReturn = {
 			_id: 9028398129,
-			title: 'test',
+			title: "test",
 			generators: [],
 			_user: {}
 		};
-	})
+	});
 
-	after(()=>{
+	after(() => {
 		global.fetchReturn = {};
 		console.error.restore();
 		enzyme.mount.restore();
-	})
+	});
 
-	describe('<ViewPack />',()=>{
-
+	describe("<ViewPack />", () => {
 		var wrap;
 
-		before(()=>{
-			var history = createMemoryHistory('/dnd');
-			history.push('/dnd')
+		before(() => {
+			var history = createMemoryHistory("/dnd");
+			history.push("/dnd");
 			wrap = enzyme.mount(
 				<Router history={history}>
-					<PropsRoute path='/dnd' component={Pack} match={{
-							path: '/dnd',
-							url: '/dnd',
-							params: { pack: 'dnd' },
+					<PropsRoute
+						path="/dnd"
+						component={Pack}
+						match={{
+							path: "/dnd",
+							url: "/dnd",
+							params: { pack: "dnd" },
 							isExact: true
-						}} />
+						}}
+					/>
 				</Router>
 			);
-		})
+		});
 
-		it('renders',(done)=>{
-
-			setImmediate(()=>{
+		it("renders", done => {
+			setImmediate(() => {
 				wrap.update();
 
 				//wrap.find(Pack).instance().state.pack.should.not.equal(null);
 				console.error.calledAfter(enzyme.mount).should.equal(false);
 				done();
 			});
-
 		});
-
 	});
 
-	describe('<EditPack />',()=>{
-
-		it('renders',()=>{
-			var wrap = enzyme.mount(<EditPack pack={{}} history={createMemoryHistory('/dnd/edit')} />)
+	describe("<EditPack />", () => {
+		it("renders", () => {
+			var wrap = enzyme.mount(
+				<EditPack pack={{}} history={createMemoryHistory("/dnd/edit")} />
+			);
 			console.error.calledAfter(enzyme.mount).should.equal(false);
-
 		});
-
 	});
-})
+});

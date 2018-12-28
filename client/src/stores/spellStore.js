@@ -1,18 +1,17 @@
 const DEBUG_SPELL = "Light";
 
-
-class SpellData{
-	constructor(name, options, spells){
-		if(name === DEBUG_SPELL){
-			console.log("DEBUG "+name);
+class SpellData {
+	constructor(name, options, spells) {
+		if (name === DEBUG_SPELL) {
+			console.log("DEBUG " + name);
 		}
 
 		//extend the existing spell
-		if(spells[name]){
+		if (spells[name]) {
 			options = { ...spells[name].originalOptions, ...options };
 		}
 		//set the name
-		if(!options.namegen || !options.namegen.length){
+		if (!options.namegen || !options.namegen.length) {
 			options.namegen = name;
 		}
 
@@ -20,7 +19,25 @@ class SpellData{
 
 		this.originalOptions = options;
 	}
-	_saveOptions({namegen = "", cast_time = "", classes, description = [], components = { types: "" }, school = "", duration = "", level = 0, ritual = false, dice, range, save = false, shortDesc = false, icon = false, isFeature = false, uses, subtitle}){
+	_saveOptions({
+		namegen = "",
+		cast_time = "",
+		classes,
+		description = [],
+		components = { types: "" },
+		school = "",
+		duration = "",
+		level = 0,
+		ritual = false,
+		dice,
+		range,
+		save = false,
+		shortDesc = false,
+		icon = false,
+		isFeature = false,
+		uses,
+		subtitle
+	}) {
 		this.namegen = namegen;
 		this.cast_time = cast_time;
 		this.components = components;
@@ -41,48 +58,51 @@ class SpellData{
 	}
 }
 
-
-class SpellStore{
-	constructor(){
+class SpellStore {
+	constructor() {
 		this.spells = {};
 	}
-	addAll(spells = {}){
-		for(var name in spells){
-			if(DEBUG_SPELL === name){
-				console.log("DEBUG SPELL ----- "+name);
+	addAll(spells = {}) {
+		for (var name in spells) {
+			if (DEBUG_SPELL === name) {
+				console.log("DEBUG SPELL ----- " + name);
 				console.log(spells[name]);
 			}
 
 			this.spells[name] = new SpellData(name, spells[name], this.spells);
 
-			if(DEBUG_SPELL === name){
+			if (DEBUG_SPELL === name) {
 				console.log(this.spells[name]);
 			}
 		}
 	}
-	getAll(){
+	getAll() {
 		return this.spells;
 	}
-	get(name){
-		if(!this.spells[name]){
-			console.log("can't find spell with name "+name);
+	get(name) {
+		if (!this.spells[name]) {
+			console.log("can't find spell with name " + name);
 			return false;
 		}
 		return this.spells[name];
 	}
-	exists(name){
+	exists(name) {
 		return !!this.spells[name];
 	}
-	getNames(){
+	getNames() {
 		return Object.keys(this.spells).sort();
 	}
-	getClassSpells(classname, maxlevel){
+	getClassSpells(classname, maxlevel) {
 		var spells = [];
-		for(var spellname in this.spells){
+		for (var spellname in this.spells) {
 			var spell = this.spells[spellname];
-			if(spell.classes && spell.classes.includes(classname) 
-				&& spell.level && spell.level <= maxlevel
-				&& !spell.feature)
+			if (
+				spell.classes &&
+				spell.classes.includes(classname) &&
+				spell.level &&
+				spell.level <= maxlevel &&
+				!spell.feature
+			)
 				spells.push(spellname);
 		}
 		return spells;

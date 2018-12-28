@@ -1,75 +1,68 @@
-const chai = require('chai');
+const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const should = chai.should();
-const sinon = require('sinon');
-const express = require('express');
+const sinon = require("sinon");
+const express = require("express");
 chai.use(chaiAsPromised);
 
-const User = require('../app/models/user');
-const Pack = require('../app/models/pack');
-const Nested = require('../app/routes/packs/nested');
+const User = require("../app/models/user");
+const Pack = require("../app/models/pack");
+const Nested = require("../app/routes/packs/nested");
 
-describe('Pack',()=>{
-	
+describe("Pack", () => {
 	var pack;
 
-	before(()=>{
-
-		sinon.stub(Pack, 'find').callsFake((query)=>{
+	before(() => {
+		sinon.stub(Pack, "find").callsFake(query => {
 			var p = new Pack();
-			p.exec = (() => {
-				return Promise.resolve(()=>p); 
-			});
+			p.exec = () => {
+				return Promise.resolve(() => p);
+			};
 			return [p];
-		})
+		});
+	});
 
-	})
-
-	beforeEach(()=>{
+	beforeEach(() => {
 		pack = new Pack({
 			id: 123,
-			name: 'testing',
-			seed: 'universe>'
+			name: "testing",
+			seed: "universe>"
 		});
-	})
+	});
 
-	after(()=>{
+	after(() => {
 		Pack.find.restore();
-	})
+	});
 
-	describe('renameSeed()',()=>{
+	describe("renameSeed()", () => {
+		it("should rename the seed", () => {
+			return pack.renameSeed("universe", "uni").then(() => {
+				pack.seed.should.equal("uni>");
+			});
+		});
+	});
 
-		it('should rename the seed',()=>{
-			return pack.renameSeed('universe','uni').then(()=>{
-				pack.seed.should.equal('uni>');
-			})
-		})
-		
-	})
-
-	describe('getSeedFromTree()',()=>{
-
-		it('returns the seed',()=>{
+	describe("getSeedFromTree()", () => {
+		it("returns the seed", () => {
 			var tree = {
-				isa: 'universe',
-			}
+				isa: "universe"
+			};
 			var node = pack.getSeedFromTree(tree);
-			node.isa.should.equal('universe');
+			node.isa.should.equal("universe");
 		});
 
-		it('returns nested seed',()=>{
-			pack.seed = 'foo>bar>';
+		it("returns nested seed", () => {
+			pack.seed = "foo>bar>";
 			var tree = {
-				isa: 'foo',
+				isa: "foo",
 				in: [
 					{
-						isa: 'bar'
+						isa: "bar"
 					}
 				]
-			}
+			};
 			var node = pack.getSeedFromTree(tree);
-			node.isa.should.equal('bar');
-		})
-	})
-
-})
+			node.isa.should.equal("bar");
+		});
+	});
+});

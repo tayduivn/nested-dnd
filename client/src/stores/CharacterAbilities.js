@@ -33,7 +33,6 @@ function getMod(val) {
 	return mod;
 }
 
-
 class Save {
 	constructor({ proficient = false, note = "" }) {
 		this.proficient = !!proficient;
@@ -43,7 +42,7 @@ class Save {
 
 class Ability {
 	/**
-	 * @param {value: Number, level: Number, notes: String} adjust 
+	 * @param {value: Number, level: Number, notes: String} adjust
 	 */
 	constructor({ base = 10, save = {}, adjust = [], notes = [] }) {
 		this.base = base;
@@ -52,7 +51,7 @@ class Ability {
 		this.profBonus = 0;
 		this.notes = notes;
 
-		if (adjust.forEach){
+		if (adjust.forEach) {
 			adjust.forEach(a => this.addAdjustment(a.value, a.level, a.notes));
 		}
 	}
@@ -86,7 +85,6 @@ class Ability {
 	}
 }
 
-
 export class Abilities {
 	constructor({
 		Strength = {},
@@ -110,7 +108,6 @@ export class Abilities {
 		});
 	}
 }
-
 
 class Skill {
 	constructor(name, proficient = false, doubleProficient = false, character) {
@@ -154,7 +151,7 @@ class Skill {
 			let profBonus = this.character.proficiencyBonus;
 			mod += profBonus;
 
-			if(this.doubleProficient) mod += profBonus;
+			if (this.doubleProficient) mod += profBonus;
 		}
 
 		return appendPlus(mod);

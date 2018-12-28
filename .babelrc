@@ -3,10 +3,7 @@
 		"transform-class-properties",
 		"babel-plugin-transform-es2015-modules-commonjs"
 	],
-	"presets": [
-		"env",
-		"react-app"
-	],
+	"presets": ["@babel/preset-env"],
 	"env": {
 		"test": {
 			"plugins": [

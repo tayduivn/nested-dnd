@@ -1,96 +1,97 @@
-const chai = require('chai');
-const Nested = require('../app/routes/packs/nested.js');
-const Universe = require('../app/models/universe.js');
-const assert = require('assert');
+const chai = require("chai");
+const Nested = require("../app/routes/packs/nested.js");
+const Universe = require("../app/models/universe.js");
+const assert = require("assert");
 const should = chai.should();
 
-
 var sampleNode = {
-	name: 'foofoo',
-	isa: 'foo',
+	name: "foofoo",
+	isa: "foo",
 	up: [],
-	cssClass: 'black',
-	txt: 'white',
-	img: 'fooimg',
-	icon: 'fa fa-foo',
+	cssClass: "black",
+	txt: "white",
+	img: "fooimg",
+	icon: "fa fa-foo",
 	in: [
 		{
-			isa: 'bar'
+			isa: "bar"
 		},
 		{
-			name: 'string'
+			name: "string"
 		},
 		{
-			isa: 'barbar',
+			isa: "barbar",
 			in: true
 		}
 	]
-}
+};
 
-describe('Nested', function(){
-
-	describe('_toInstance()',function(){
-
+describe("Nested", function() {
+	describe("_toInstance()", function() {
 		var flat = Nested.copy({
-			name: 'foofoo',
-			isa: 'foo',
+			name: "foofoo",
+			isa: "foo",
 			index: 1,
-			up: [{
-				cssClass: 'blue',
-				txt: 'pink',
-				name: 'fooparent',
-				index: 0
-			}],
-			cssClass: 'black',
-			txt: 'white',
-			img: 'fooimg',
-			icon: 'fa fa-foo',
+			up: [
+				{
+					cssClass: "blue",
+					txt: "pink",
+					name: "fooparent",
+					index: 0
+				}
+			],
+			cssClass: "black",
+			txt: "white",
+			img: "fooimg",
+			icon: "fa fa-foo",
 			in: [
 				{
-					isa: 'bar',
+					isa: "bar",
 					index: 2
 				},
 				{
-					name: 'string',
+					name: "string",
 					index: 3
 				},
 				{
-					isa: 'barbar',
+					isa: "barbar",
 					in: true,
 					index: 4
 				}
 			]
 		})._toInstance();
 
-		it('should set .up to 0', function(){
-			flat.up.should.be.a('number').and.equal(0);
-		})
+		it("should set .up to 0", function() {
+			flat.up.should.be.a("number").and.equal(0);
+		});
 
-		it('should set .in to indexes', function(){
-			flat.in.should.be.an('array').with.lengthOf(3).and.have.members([2,3,4]);
-		})
+		it("should set .in to indexes", function() {
+			flat.in.should.be
+				.an("array")
+				.with.lengthOf(3)
+				.and.have.members([2, 3, 4]);
+		});
 	});
 
-	describe('flatten()',function(){
+	describe("flatten()", function() {
+		it("should return an array of flat instances", function() {});
 
-		it('should return an array of flat instances', function(){
-
-		})
-
-		it('should return a tree with no input', function(){
+		it("should return a tree with no input", function() {
 			var tree = new Nested().flatten(new Universe());
 			assert(tree instanceof Object, "returned tree is an Object");
 		});
 
-		it('should return a tree with good input', function(){
+		it("should return a tree with good input", function() {
 			var universe = new Universe();
 			var tree = Nested.copy(sampleNode).flatten(universe);
 			assert(tree instanceof Object, "returned tree is an Object");
 
 			universe.array.should.have.lengthOf(4);
-			universe.array[0].should.have.property('in').that.is.an('array').with.lengthOf(3).and.have.members([1,2,3]);
+			universe.array[0].should.have
+				.property("in")
+				.that.is.an("array")
+				.with.lengthOf(3)
+				.and.have.members([1, 2, 3]);
 		});
-
 	});
-
 });

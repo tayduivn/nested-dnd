@@ -1,45 +1,46 @@
 const Schema = require("mongoose").Schema;
 
-const Nested = require('../routes/packs/nested');
+const Nested = require("../routes/packs/nested");
 
-const flatInstanceSchema = Schema({
-	name: String,
-	isa: String,
-	txt: {
-		type: String,
-		set: (v)=>!v ? undefined: v,
-		get: (v)=>!v ? undefined: v
+const flatInstanceSchema = Schema(
+	{
+		name: String,
+		isa: String,
+		txt: {
+			type: String,
+			set: v => (!v ? undefined : v),
+			get: v => (!v ? undefined : v)
+		},
+		cssClass: {
+			type: String,
+			set: v => (!v ? undefined : v),
+			get: v => (!v ? undefined : v)
+		},
+		img: String,
+		icon: String,
+		up: Number,
+		todo: Boolean,
+		desc: [String],
+		in: {
+			type: [Number],
+			default: void 0,
+			set: value => {
+				if (!value) value = undefined;
+				return value;
+			}
+		},
+		isNestedSeed: Boolean,
+		data: Schema.Types.Mixed
 	},
-	cssClass: {
-		type: String,
-		set: (v)=>!v ? undefined: v,
-		get: (v)=>!v ? undefined: v
-	},
-	img: String,
-	icon: String,
-	up: Number,
-	todo: Boolean,
-	desc: [String],
-	in: {
-		type: [Number],
-	 	default: void 0,
-	 	set: (value)=>{
-	 		if(!value)
-	 			value = undefined;
-	 		return value;
-	 	}
-	},
-	isNestedSeed: Boolean,
-	data: Schema.Types.Mixed
-}, { _id: false });
-
+	{ _id: false }
+);
 
 /**
  * Should return a Nested
  * @param  {[type]} generations [description]
  * @return {[type]}             [description]
  */
-flatInstanceSchema.methods.expand = function(generations){
+flatInstanceSchema.methods.expand = function(generations) {
 	var inArr = this.in || [];
 	var arr = this.parent().array;
 
@@ -47,51 +48,50 @@ flatInstanceSchema.methods.expand = function(generations){
 	node.up = expandUp.call(this);
 
 	// copy style from parent if it is the currently displayed node
-	if(generations > 0 && !node.cssClass && node.up){
+	if (generations > 0 && !node.cssClass && node.up) {
 		node.cssClass = node.up[0].cssClass;
 		node.txt = node.up[0].txt;
 	}
-	
-	if(!generations || generations < 1){
-		node.in = ((inArr && inArr.length) ? true : undefined) || this.todo;
+
+	if (!generations || generations < 1) {
+		node.in = (inArr && inArr.length ? true : undefined) || this.todo;
 		return node;
 	}
 
 	node.in = [];
-	inArr.forEach((c,i)=>{
-		c = parseInt(c,10);
+	inArr.forEach((c, i) => {
+		c = parseInt(c, 10);
 
 		var cInst = arr[c];
-		if(!cInst) return;
-		
-		cTree = cInst.expand(generations-1);
+		if (!cInst) return;
+
+		cTree = cInst.expand(generations - 1);
 		cTree.index = c;
 		cTree.up = expandUp.call(cInst);
-		
+
 		node.in[i] = cTree;
 	});
 
-	if(!node.in.length){
+	if (!node.in.length) {
 		node.in = undefined;
 	}
-	if(this.todo){
+	if (this.todo) {
 		node.in = true;
 	}
 
 	return node;
-}
+};
 
 /**
  * Populate up with ancestor array from just a parent index
  * @param {Object} node the node to add up to
  */
-function expandUp(){
-
+function expandUp() {
 	//don't have ancestors
-	if(typeof this.up === 'undefined' || this.up === null) 
-		return undefined;
-	if(this.up instanceof Array){
-		if(!this.up.length){ //don't have ancestors
+	if (typeof this.up === "undefined" || this.up === null) return undefined;
+	if (this.up instanceof Array) {
+		if (!this.up.length) {
+			//don't have ancestors
 			this.up = undefined;
 			return undefined;
 		}
@@ -102,17 +102,17 @@ function expandUp(){
 
 	const arr = this.parent().array;
 	var upIndex = this.up;
-	var isParent = true
+	var isParent = true;
 	var up = [];
 
-	while(typeof upIndex !== "undefined"){
-		if(isNaN(upIndex)){
-			throw new Error()
+	while (typeof upIndex !== "undefined") {
+		if (isNaN(upIndex)) {
+			throw new Error();
 		}
 
 		var ref = arr[upIndex];
-		if(!ref){
-			console.log('broken up path '+this.up);
+		if (!ref) {
+			console.log("broken up path " + this.up);
 			upIndex = undefined;
 			continue;
 		}
@@ -122,15 +122,14 @@ function expandUp(){
 		isParent = false;
 		upIndex = ref.up;
 
-		if(up.find((a)=>(a.index === upIndex))){
+		if (up.find(a => a.index === upIndex)) {
 			// infinite loop
 			upIndex = ref.up = undefined;
-		}
-		else {
+		} else {
 			up.push(ancestor);
 
 			// set cssClass and txt
-			if(!up[0].cssClass){
+			if (!up[0].cssClass) {
 				up[0].cssClass = ref.cssClass;
 				up[0].txt = ref.txt;
 			}
@@ -139,6 +138,5 @@ function expandUp(){
 
 	return up;
 }
-
 
 module.exports = { flatInstanceSchema };

@@ -2,7 +2,6 @@ const User = require("../models/user");
 const md = require("./middleware.js");
 
 const auth = (app, passport) => {
-
 	app.post("/api/login", function(req, res, next) {
 		passport.authenticate("local", function(err, user, info) {
 			login(err, user, info, req, res, next);
@@ -18,28 +17,31 @@ const auth = (app, passport) => {
 	app.delete("/api/account", md.isLoggedIn, function(req, res, next) {
 		// TODO: Delete all their stuff
 
-		User.findById(req.user._id).then(async (user)=>{
-			if(!user) 
-				return res.status(404).json({"errorMessage": "Could not find logged in user", "error": err});
+		User.findById(req.user._id)
+			.then(async user => {
+				if (!user)
+					return res.status(404).json({
+						errorMessage: "Could not find logged in user",
+						error: err
+					});
 
-			var deletedObjects = await user.remove();
-			logout(req, res, function(){
-				res.json(deletedObjects);
-			});
-			
-
-		}).catch(next);
+				var deletedObjects = await user.remove();
+				logout(req, res, function() {
+					res.json(deletedObjects);
+				});
+			})
+			.catch(next);
 	});
 
 	// =====================================
 	// LOGOUT ==============================
 	// =====================================
 	app.post("/api/logout", function(req, res) {
-		logout(req,res,(err)=>{
-			if(err) return res.status(500).json(err);
-			
+		logout(req, res, err => {
+			if (err) return res.status(500).json(err);
+
 			res.json({
-				"loggedIn": false
+				loggedIn: false
 			});
 		});
 	});
@@ -52,16 +54,12 @@ const auth = (app, passport) => {
 		}
 	});
 
-
 	app.get("/api/loggedIn", function(req, res) {
 		return res.json({ loggedIn: !!req.user });
 	});
-	
 };
 
-
-
-function logout(req, res, callback){
+function logout(req, res, callback) {
 	req.logout();
 	req.session.destroy(function(err) {
 		if (!err) {
@@ -72,13 +70,11 @@ function logout(req, res, callback){
 				maxAge: null
 			});
 			callback(null);
-		} 
-		else callback(err);
+		} else callback(err);
 	});
 }
 
-function login(err, user, info, req, res, next){
-
+function login(err, user, info, req, res, next) {
 	if (err) {
 		return res.status(401).json(err);
 	}
@@ -86,19 +82,16 @@ function login(err, user, info, req, res, next){
 		return res.status(401).send(info);
 	}
 	req.logIn(user, function(err) {
-
 		if (err) {
-			return (res.headersSent) ? next(err) : res.status(401).json(err);
+			return res.headersSent ? next(err) : res.status(401).json(err);
 		}
 
-		res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
-		res.header('Access-Control-Allow-Credentials','true')
+		res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+		res.header("Access-Control-Allow-Credentials", "true");
 
-		if(user.local)
-			user.local.password = undefined; //don't return the password
-		return res.json({ "loggedIn" : true, "user": user });
+		if (user.local) user.local.password = undefined; //don't return the password
+		return res.json({ loggedIn: true, user: user });
 	});
 }
-
 
 module.exports = auth;

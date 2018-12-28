@@ -1,37 +1,32 @@
-
 class Ancestor {
-	constructor(node){
+	constructor(node) {
 		this.index = node.index;
 		this.name = node.name ? node.name : node.isa;
 	}
 }
 
 class Parent extends Ancestor {
-	constructor(node){
+	constructor(node) {
 		super(node);
 
-		if(node.txt)
-			this.txt = node.txt;
-		if(node.cssClass) 
-			this.cssClass = node.cssClass;
+		if (node.txt) this.txt = node.txt;
+		if (node.cssClass) this.cssClass = node.cssClass;
 	}
 }
 
-
 // TODO validate that undefined aren't added to flat array or returned to user
 class Nested {
-
-	constructor(name, gen, style, desc, data){
+	constructor(name, gen, style, desc, data) {
 		this.name = name;
 		this.desc = desc;
 		this.data = data;
 
-		if(gen){
+		if (gen) {
 			this.isa = gen.isa;
-			this.in = ( gen.in && gen.in.length ) ? true : undefined;
+			this.in = gen.in && gen.in.length ? true : undefined;
 		}
 
-		if(style){
+		if (style) {
 			this.txt = style.txt;
 			this.cssClass = style.cssClass;
 			this.img = style.img;
@@ -39,10 +34,9 @@ class Nested {
 		}
 
 		this.up = []; // placeholder for later
-		
 	}
 
-	static copy(inst){
+	static copy(inst) {
 		var _t = new Nested();
 		_t.name = inst.name;
 		_t.isa = inst.isa;
@@ -50,8 +44,12 @@ class Nested {
 		_t.cssClass = inst.cssClass;
 		_t.img = inst.img;
 		_t.icon = inst.icon;
-		_t.up =  inst.up;
-		_t.in = (inst.todo) ? true : (inst.in && !inst.in.length  && inst.in !== true) ? undefined : inst.in;
+		_t.up = inst.up;
+		_t.in = inst.todo
+			? true
+			: inst.in && !inst.in.length && inst.in !== true
+				? undefined
+				: inst.in;
 		_t.desc = inst.desc;
 		_t.data = inst.data;
 
@@ -60,25 +58,26 @@ class Nested {
 		return _t;
 	}
 
-	static getAncestor(ref, isParent){
-		return (isParent) ? new Parent(ref) : new Ancestor(ref);
+	static getAncestor(ref, isParent) {
+		return isParent ? new Parent(ref) : new Ancestor(ref);
 	}
 
-	setIndex(universe){
+	setIndex(universe) {
 		const emptyIndexes = universe.emptyIndexes || [];
 		const length = universe.array ? universe.array.length : 0;
 
-		if(emptyIndexes.length){
-			this.index = (!universe.array[emptyIndexes[0]]) ? emptyIndexes.shift()  : length;
-		}
-		else{
+		if (emptyIndexes.length) {
+			this.index = !universe.array[emptyIndexes[0]]
+				? emptyIndexes.shift()
+				: length;
+		} else {
 			this.index = length;
 		}
-		
+
 		return this;
 	}
 
-	setUp(up){
+	setUp(up) {
 		this.up = up;
 
 		// copy parent's style
@@ -99,34 +98,32 @@ class Nested {
 	 * @param  {Universe} universe  the universe we are flattening into
 	 * @return {Object}             { tree, array } tree is what is returned to user
 	 */
-	flatten(universe, generations){
-
-		if(typeof this.index === 'undefined' || isNaN(this.index)) 
-			this.index = 0;
+	flatten(universe, generations) {
+		if (typeof this.index === "undefined" || isNaN(this.index)) this.index = 0;
 
 		// no in, termination condition
-		if(!this.in || !(this.in instanceof Array)){
-			universe.array[this.index] = this._toInstance()
+		if (!this.in || !(this.in instanceof Array)) {
+			universe.array[this.index] = this._toInstance();
 			return this;
 		}
 
 		universe.array[this.index] = {}; //placeholder
 
-		if(typeof generations === undefined) 
-			generations = 1;
+		if (typeof generations === undefined) generations = 1;
 
 		// make object to store up
 		var up = this.makeAncestorArray();
 
-		this.in.forEach((n,i)=>{
-			
-			var ch = Nested.copy(n).setUp(up).setIndex(universe);
+		this.in.forEach((n, i) => {
+			var ch = Nested.copy(n)
+				.setUp(up)
+				.setIndex(universe);
 
 			// mark the first loaded node in a new universe
-			if(n.isNestedSeed) universe.lastSaw = ch.index;
+			if (n.isNestedSeed) universe.lastSaw = ch.index;
 
 			// recurse
-			var nestedChild = ch.flatten(universe, generations-1);
+			var nestedChild = ch.flatten(universe, generations - 1);
 			this.in[i] = nestedChild;
 		});
 
@@ -141,32 +138,32 @@ class Nested {
 	 * Expects that nested children of this Nested have an .index property
 	 * @return {Nested}              has numeric up and numeric .in
 	 */
-	_toInstance(){
+	_toInstance() {
 		var inst = Object.assign({}, this);
 		delete inst.index;
 
 		// store boolean if haven't built in yet
-		if(inst.in === true){
+		if (inst.in === true) {
 			inst.todo = true;
 			delete inst.in;
 		}
 
 		// in just indexes
-		if(inst.in instanceof Array){
-			inst.in = this.in.map((c)=>c.index);
+		if (inst.in instanceof Array) {
+			inst.in = this.in.map(c => c.index);
 		}
 
 		// already flat
-		if(!(inst.up instanceof Array))
-			return inst;
+		if (!(inst.up instanceof Array)) return inst;
 
 		inst.up = inst.up.slice(0); // copy the array so don't accidentally modify this
 
-		if(!inst.up.length){ // empty array
+		if (!inst.up.length) {
+			// empty array
 			delete inst.up;
 			return inst;
 		}
-		
+
 		inst.up = inst.up[0].index;
 		return inst;
 	}
@@ -176,7 +173,7 @@ class Nested {
 	 * @param  {Object} node the parent node
 	 * @return {[Object]}      an array of Ancestors
 	 */
-	makeAncestorArray(){
+	makeAncestorArray() {
 		// make obejct to store up
 		var up = [].concat(this.up);
 
@@ -186,7 +183,7 @@ class Nested {
 		up.unshift(parent);
 
 		// remove render data from the grandparent
-		if(up[1]){ 
+		if (up[1]) {
 			up[1] = new Ancestor(up[1]);
 		}
 

@@ -1,7 +1,7 @@
 import React from "react";
 
-import InfoPanel from './InfoPanel';
-import { MARTIAL_WEAPONS } from './CardsUtil';
+import InfoPanel from "./InfoPanel";
+import { MARTIAL_WEAPONS } from "./CardsUtil";
 
 export default class ItemBack extends React.Component {
 	/**
@@ -14,14 +14,10 @@ export default class ItemBack extends React.Component {
 		// for potions of healing and special consumables
 		if (item.description && !item.properties.length) {
 			item.description.forEach(function(desc, index) {
-				props.push(
-					<p key={"desc" + index}>
-						{desc}
-					</p>
-				);
+				props.push(<p key={"desc" + index}>{desc}</p>);
 			});
 		}
-		if(item.properties){
+		if (item.properties) {
 			item.properties.forEach(function(prop, index) {
 				if (prop.name === "Range") return;
 				props.push(
@@ -35,22 +31,35 @@ export default class ItemBack extends React.Component {
 		//todo: simple weapon list
 		item.type = MARTIAL_WEAPONS.includes(item.name)
 			? "martial"
-			: item.consumable ? "consumable" : "simple";
+			: item.consumable
+				? "consumable"
+				: "simple";
 
 		return <Back {...item} props={props} />;
 	}
 }
 
-const Back = ({ consumable, charges, name, castTime = "1 action", range, longRange, duration, concentration, props, weight, itemType, type }) => (
-	<div className={"card weapon" + (consumable ? " red" : charges ? " purple": "")}>
+const Back = ({
+	consumable,
+	charges,
+	name,
+	castTime = "1 action",
+	range,
+	longRange,
+	duration,
+	concentration,
+	props,
+	weight,
+	itemType,
+	type
+}) => (
+	<div
+		className={"card weapon" + (consumable ? " red" : charges ? " purple" : "")}
+	>
 		<div className="card-inner">
-			<h2>
-				{name}
-			</h2>
+			<h2>{name}</h2>
 			<div className="castTime">
-				<em>
-					{castTime}
-				</em>
+				<em>{castTime}</em>
 			</div>
 			<InfoPanel
 				range={range}
@@ -59,17 +68,15 @@ const Back = ({ consumable, charges, name, castTime = "1 action", range, longRan
 				concentration={concentration}
 			/>
 			<div className="desc">
-				<p className={itemType === "Wand" ? "hidden": ""}>
-					<strong>
-						{itemType}
-					</strong>
+				<p className={itemType === "Wand" ? "hidden" : ""}>
+					<strong>{itemType}</strong>
 				</p>
 				{props}
 			</div>
 			<div className="pin-bottom">
-				{weight ? weight+" lb." : ""} 
+				{weight ? weight + " lb." : ""}
 				<span className="right">{type}</span>
 			</div>
 		</div>
 	</div>
-)
+);

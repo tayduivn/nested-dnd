@@ -1,4 +1,4 @@
-import classStore from './classStore';
+import classStore from "./classStore";
 
 export class ClassInfo {
 	constructor({
@@ -16,36 +16,32 @@ export class ClassInfo {
 		this.subclasses = subclasses;
 		this.slots = [];
 
-		if (!this.classData.levels[this.level - 1]){
+		if (!this.classData.levels[this.level - 1]) {
 			console.error(
 				"Can't find " +
 					this.classData.name +
 					" class data for level " +
 					this.level
 			);
-		}
-		else this.slots = this.classData.levels[this.level - 1].slots;
+		} else this.slots = this.classData.levels[this.level - 1].slots;
 	}
 	isSubclass(name, value) {
 		return this.subclasses[name] === value;
 	}
 }
 
-
 export class Background {
-	constructor(
-		{
-			alignment = "Lawful Good",
-			bond = "",
-			flaw = "",
-			feature,
-			ideal = "",
-			name = "Folk Hero",
-			personality = "",
-			specialty = "",
-			startingCoin = "5gp"
-		} = {}
-	) {
+	constructor({
+		alignment = "Lawful Good",
+		bond = "",
+		flaw = "",
+		feature,
+		ideal = "",
+		name = "Folk Hero",
+		personality = "",
+		specialty = "",
+		startingCoin = "5gp"
+	} = {}) {
 		this.alignment = alignment;
 		this.bond = bond;
 		this.flaw = flaw;

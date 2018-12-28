@@ -1,33 +1,24 @@
 import React, { Component } from "react";
-import {
-	BrowserRouter as Router,
-	Switch,
-	Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import PropTypes from "prop-types";
-import WebFont from 'webfontloader';
+import WebFont from "webfontloader";
+import { Provider } from "react-redux";
 
-import { PropsRoute, RouteWithSubRoutes } from '../Routes';
-import Characters from "../Characters/Characters.js";
-import Character from "../Characters/Character.js";
-import Login from "./Login.js";
-import { PacksPage } from "../Packs/Packs";
-import EditPack from "../Packs/EditPack";
-import Pack from "../Packs/Pack";
-import Universes from '../Universes/Universes';
-import EditUniverse from '../Universes/EditUniverse';
-import Explore from "../Explore/Explore";
+import Login from "./Login";
+import Nav from "./Nav";
+import Characters, { Character } from "../Characters";
+import Explore, { Splash, PlayersPreview } from "../Explore";
+import Packs, { routes as packs } from "../Packs";
+import { PropsRoute, RouteWithSubRoutes } from "../Routes";
+import Universes, { routes as universes } from "../Universes";
+
 import DB from "../../actions/CRUDAction";
-import Nav from './Nav';
-import Splash from '../Explore/Splash';
-import Tables from '../Tables/Tables';
-import EditTable from '../Tables/EditTable';
-import Table from '../Tables/Table';
-import { GeneratorsPage } from '../Generators/Generators';
-import Generator from '../Generators/Generator';
-import EditGenerator from '../Generators/EditGenerator';
-import PlayersPreview from '../Explore/PlayersPreview'
-import { sendPlayersPreview, subscribeToPlayersPreview } from '../../actions/WebSocketAction';
+import store from "./store";
+
+import {
+	sendPlayersPreview,
+	subscribeToPlayersPreview
+} from "../../actions/WebSocketAction";
 
 import "./App.css";
 
@@ -37,212 +28,149 @@ const NotFound = () => (
 			<h1>404 Not Found</h1>
 		</div>
 	</div>
-)
+);
 
-const LOADING_GIF = <i className="loading fa fa-spinner fa-spin"></i>;
+const LOADING_GIF = <i className="loading fa fa-spinner fa-spin" />;
 
 const routes = [
 	{
-		path: '/packs',
-		component: PacksPage,
-		routes: [
-			{
-				path: '/:pack',
-				component: Pack,
-				routes: [
-					{
-						path: '/edit',
-						private: true,
-						component: EditPack
-					},
-					{
-						path: '/explore',
-						component: Explore
-					},
-					{
-						path: '/generators',
-						component: GeneratorsPage,
-						routes: [
-							{
-								path: '/create',
-								isCreate: true,
-								private: true,
-								component: EditGenerator
-							},
-							{
-								path: '/:generator',
-								component: Generator,
-								routes: [
-									{
-										path: '/edit',
-										private: true,
-										component: EditGenerator
-									}
-								]	
-							}
-						]
-					},
-					{
-						path: '/tables',
-						component: Tables,
-						routes: [
-							{
-								path: '/create',
-								private: true,
-								isCreate: true,
-								component: EditTable
-							},
-							{
-								path: '/:table',
-								component: Table,
-								routes: [
-									{
-										path: '/edit',
-										private: true,
-										component: EditTable
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
+		path: "/packs",
+		component: Packs,
+		routes: packs
 	},
 	{
-		path: '/universes/:universe?',
+		path: "/universes",
 		component: Universes,
 		private: true,
-		routes: [
-			{
-				path: '/create',
-				isCreate: true,
-				private: true,
-				component: EditUniverse
-			},
-			{
-				path: '/explore',
-				private: true,
-				component: Explore
-			},
-			{
-				path: '/edit',
-				private: true,
-				component: EditUniverse
-			}
-		]
+		routes: universes
 	},
 	{
-		path: '/characters',
+		path: "/characters",
 		component: Characters,
 		routes: [
 			{
-				path: '/:character',
+				path: "/:character",
 				component: Character
 			}
 		]
 	},
 	{
-		path: '/players-preview',
+		path: "/players-preview",
 		component: PlayersPreview,
 		subscribeToPlayersPreview: subscribeToPlayersPreview
 	},
 	{
-		path: '/explore/:packurl',
+		path: "/explore/:packurl",
 		component: Explore
 	}
-]
+];
 
 class App extends Component {
-	constructor(){
+	constructor() {
 		super();
 		this.state = {
 			loggedIn: undefined,
 			loadedFonts: []
-		}
+		};
 		this.handleLogin = this.handleLogin.bind(this);
 		this.handleLogout = this.handleLogout.bind(this);
 		this.handleLoadFonts = this.handleLoadFonts.bind(this);
 	}
-	static get childContextTypes(){
+	static get childContextTypes() {
 		return {
 			loggedIn: PropTypes.bool,
 			loadFonts: PropTypes.func,
 			sendPlayersPreview: PropTypes.func
-		}
+		};
 	}
-	getChildContext(){
-		return { 
+	getChildContext() {
+		return {
 			loggedIn: !!this.state.loggedIn,
 			loadFonts: this.handleLoadFonts,
 			sendPlayersPreview: this.sendPlayersPreview
-		}
+		};
 	}
-	sendPlayersPreview = (icon) => sendPlayersPreview({src: icon});
-	handleLoadFonts(fonts = [], source = 'google'){
-		if(!fonts) return;
-		if(!(fonts instanceof Array))
-			fonts = [fonts];
-		if(!fonts.length) return;
+	sendPlayersPreview = icon => sendPlayersPreview({ src: icon });
+	handleLoadFonts(fonts = [], source = "google") {
+		if (!fonts) return;
+		if (!(fonts instanceof Array)) fonts = [fonts];
+		if (!fonts.length) return;
 
 		const lf = this.state.loadedFonts;
 
 		// remove fonts already loaded
-		fonts = fonts.filter((f)=>!lf.includes(f));
+		fonts = fonts.filter(f => !lf.includes(f));
 
-		if(!fonts.length) return;
+		if (!fonts.length) return;
 
 		WebFont.load({
 			[source]: {
 				families: fonts
 			}
-		})
+		});
 
-		this.setState({ loadedFonts: lf.concat(fonts) })
+		this.setState({ loadedFonts: lf.concat(fonts) });
 	}
-	componentDidMount(){
-		DB.fetch("loggedIn").then((result) => {
-			if(result.data)
-				this.setState({ loggedIn: !!result.data.loggedIn })
-		})
+	componentDidMount() {
+		DB.fetch("loggedIn").then(result => {
+			if (result.data) this.setState({ loggedIn: !!result.data.loggedIn });
+		});
 	}
-	shouldComponentUpdate(nextProps, nextState){
+	shouldComponentUpdate(nextProps, nextState) {
 		const newProps = nextProps !== this.props;
 		const changedLoggedIn = nextState.loggedIn !== this.state.loggedIn;
 		return newProps || changedLoggedIn;
 	}
-	handleLogin(url, payload){
-		return DB.create(url, payload).then((result) => {
+	handleLogin(url, payload) {
+		return DB.create(url, payload).then(result => {
 			var loggedIn = !result.error && result.data;
 			this.setState({ loggedIn: !!loggedIn });
 			return result;
 		});
 	}
-	handleLogout(){
-		return DB.fetch('logout', "POST").then((result) => {
-			this.setState({ loggedIn: !!result.data.loggedIn })
+	handleLogout() {
+		return DB.fetch("logout", "POST").then(result => {
+			this.setState({ loggedIn: !!result.data.loggedIn });
 			return result;
 		});
 	}
 	render() {
 		return (
-			<Router>
-				<div className="app">
-					<Switch>
-						<Route exact path="/players-preview" />
-						<PropsRoute component={Nav} handleLogout={this.handleLogout} />
-					</Switch>
-					{ this.state.loggedIn !== undefined ? 
+			<Provider store={store}>
+				<Router>
+					<div className="app">
 						<Switch>
-						<Route exact path="/" component={this.state.loggedIn ? Universes : Splash} />
-						{routes.map((route, i) => <RouteWithSubRoutes key={i} {...route} />)}
-						<PropsRoute path="/login" component={Login} title="Login" handleLogin={this.handleLogin} />
-						<PropsRoute path="/signup" component={Login} title="Sign up" handleLogin={this.handleLogin} />
-						<Route component={NotFound} />
-					</Switch>
-					: null }
-				</div>
-			</Router>
+							<Route exact path="/players-preview" />
+							<PropsRoute component={Nav} handleLogout={this.handleLogout} />
+						</Switch>
+						{this.state.loggedIn !== undefined ? (
+							<Switch>
+								<Route
+									exact
+									path="/"
+									component={this.state.loggedIn ? Universes : Splash}
+								/>
+								{routes.map((route, i) => (
+									<RouteWithSubRoutes key={i} {...route} />
+								))}
+								<PropsRoute
+									path="/login"
+									component={Login}
+									title="Login"
+									handleLogin={this.handleLogin}
+								/>
+								<PropsRoute
+									path="/signup"
+									component={Login}
+									title="Sign up"
+									handleLogin={this.handleLogin}
+								/>
+								<Route component={NotFound} />
+							</Switch>
+						) : null}
+					</div>
+				</Router>
+			</Provider>
 		);
 	}
 }

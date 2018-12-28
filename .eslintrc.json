@@ -1,4 +1,13 @@
 {
+	"extends": "plugin:node/recommended",
+	"plugins": ["node"],
+	"env": {
+		"node": true,
+		"es6": true
+	},
+	"ecmaFeatures": {
+		"blockBindings": true
+	},
 	"rules": {
 		"indent": [
 			"error",
@@ -7,34 +16,18 @@
 				"SwitchCase": 1
 			}
 		],
-		"linebreak-style": [
-			"error",
-			"unix"
-		],
-		"react/prop-types": "off",
-		"eqeqeq": [
-			"warn",
-			"always"
-		],
-		"radix": [
-			"warn",
-			"always"
-		],
-		"array-callback-return": [
-			"warn"
-		],
+		"linebreak-style": ["error", "unix"],
+		"eqeqeq": ["warn", "always"],
+		"radix": ["warn", "always"],
+		"array-callback-return": ["warn"],
 		"no-console": "off",
 		"no-process-env": "off",
 		"no-extend-native": [
 			2,
 			{
-				"exceptions": [
-					"Array"
-				]
+				"exceptions": ["Array"]
 			}
-		]
-	},
-	"ecmaFeatures": {
-		"blockBindings": true
+		],
+		"node/no-unpublished-require": "off"
 	}
 }

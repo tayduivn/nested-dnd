@@ -1,29 +1,29 @@
 import spellStore from "./spellStore";
 
 var USES = {
-	"Tides of Chaos": ()=>1,
-	"Fury of the Small": ()=>1,
-	"Relentless Endurance": ()=>1, 
-	"Second Wind": ()=>1,
-	"Wild Shape": ()=>2,
-	"Sorcery Points": (level)=>(level),
-	"Bardic Inspiration": (level, abilities)=>{
+	"Tides of Chaos": () => 1,
+	"Fury of the Small": () => 1,
+	"Relentless Endurance": () => 1,
+	"Second Wind": () => 1,
+	"Wild Shape": () => 2,
+	"Sorcery Points": level => level,
+	"Bardic Inspiration": (level, abilities) => {
 		var uses = abilities.Charisma.getMod();
 		if (uses < 1) uses = 1;
 		return uses;
 	},
-	"Wrath of the Storm": (level, abilities)=>{
+	"Wrath of the Storm": (level, abilities) => {
 		var uses = abilities.Wisdom.getMod();
 		if (uses < 1) uses = 1;
 		return uses;
 	},
-	"Channel Belief": (level)=>{
+	"Channel Belief": level => {
 		var uses = 1;
 		if (level >= 6) uses = 2;
 		else if (level >= 18) uses = 3;
 		return uses;
 	},
-	"Rage": (level)=>{
+	Rage: level => {
 		var uses = 2;
 		if (level >= 3) uses = 3;
 		if (level >= 6) uses = 4;
@@ -31,10 +31,10 @@ var USES = {
 		if (level >= 17) uses = 6;
 		return uses;
 	},
-	"Action Surge": (level)=>{
-		return (level >= 17) ? 2 : 1;
+	"Action Surge": level => {
+		return level >= 17 ? 2 : 1;
 	}
-}
+};
 
 class ProficiencyCategory {
 	constructor({ list = [], notes = [], double_proficiency = [] }) {
@@ -43,9 +43,8 @@ class ProficiencyCategory {
 		this.notes = typeof notes === "string" ? [notes] : notes;
 	}
 	addAll(arr, note) {
-		if(!arr || !arr.forEach)
-			return;
-		
+		if (!arr || !arr.forEach) return;
+
 		arr.forEach(l => {
 			if (l.includes("choice")) return;
 			if (!this.list.includes(l)) {
@@ -111,7 +110,7 @@ export class Feature {
 	}
 	getUses(abilities, level) {
 		var usesFunc = USES[this.name];
-		var uses = (usesFunc) ? usesFunc(level, abilities) : false;
+		var uses = usesFunc ? usesFunc(level, abilities) : false;
 
 		// get uses from spell if available
 		let s = spellStore.get(this.name);
@@ -129,18 +128,13 @@ export class Feature {
 		switch (this.name) {
 			case "Circle Forms":
 				if (level >= 6)
-					return (
-						"Transform into CR " +
-						Math.floor(level / 3) +
-						" creature"
-					);
+					return "Transform into CR " + Math.floor(level / 3) + " creature";
 				return desc;
 			default:
 				return desc;
 		}
 	}
 }
-
 
 export class AdvResist {
 	constructor({ advantages = [], resistances = [], other = [] }) {

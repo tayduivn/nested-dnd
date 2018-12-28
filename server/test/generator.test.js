@@ -1,57 +1,53 @@
-const chai = require('chai');
+const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const should = chai.should();
-const sinon = require('sinon');
+const sinon = require("sinon");
 chai.use(chaiAsPromised);
 
-const Generator = require('../app/models/generator');
-const Pack = require('../app/models/pack');
-const BuiltPack = require('../app/models/builtpack');
-const Nested = require('../app/routes/packs/nested')
-const Maintainer = require('../app/models/generator/maintain')
-const assert = require('assert');
+const Generator = require("../app/models/generator");
+const Pack = require("../app/models/pack");
+const BuiltPack = require("../app/models/builtpack");
+const Nested = require("../app/routes/packs/nested");
+const Maintainer = require("../app/models/generator/maintain");
+const assert = require("assert");
 
-
-describe('Generator', ()=>{
-
+describe("Generator", () => {
 	var generator, gens, pack, builtpack, childGen;
 
-	before(()=>{
+	before(() => {
+		sinon.stub(Generator, "find").callsFake(() => gens);
 
-		sinon.stub(Generator, "find").callsFake(()=>gens);
+		sinon.stub(BuiltPack, "findOrBuild").callsFake(() => builtpack);
 
-		sinon.stub(BuiltPack, "findOrBuild").callsFake(()=>builtpack);
-
-		sinon.stub(BuiltPack, "findById").callsFake(function(id){
+		sinon.stub(BuiltPack, "findById").callsFake(function(id) {
 			builtpack._id = id;
 			return builtpack;
 		});
-	})
+	});
 
-	beforeEach(()=>{
-
+	beforeEach(() => {
 		pack = new Pack({
-			seed: 'universe>',
-			name: 'Test'
+			seed: "universe>",
+			name: "Test"
 		});
 
 		generator = new Generator({
-			isa: 'universe',
+			isa: "universe",
 			pack_id: pack._id,
 			style: {
-				txt: { value: 'blue' } ,
-				img: { value: 'test.png'},
-				icon: { value: 'fa fa-amazing'},
-				bg: { value: 'black'},
-				pattern: { value: 'purty-wood' }
+				txt: { value: "blue" },
+				img: { value: "test.png" },
+				icon: { value: "fa fa-amazing" },
+				bg: { value: "black" },
+				pattern: { value: "purty-wood" }
 			},
 			in: [
 				{
-					name: 'always',
+					name: "always",
 					chance: 100
 				},
 				{
-					name: 'never',
+					name: "never",
 					chance: 0,
 					amount: {
 						min: 5,
@@ -59,118 +55,127 @@ describe('Generator', ()=>{
 					}
 				},
 				{
-					name: 'never',
+					name: "never",
 					chance: 0,
 					amount: {
 						min: 4
 					}
 				},
 				{
-					type: 'generator',
-					value: 'supercluster'
+					type: "generator",
+					value: "supercluster"
 				}
 			]
 		});
 
 		childGen = new Generator({
-			isa: 'supercluster',
+			isa: "supercluster",
 			pack_id: pack._id
 		});
 
 		builtpack = new BuiltPack({
 			_id: pack._id,
-			generators:{
-				'universe': generator._doc,
+			generators: {
+				universe: generator._doc,
 				supercluster: childGen._doc
 			}
 		});
 
 		gens = [generator, childGen];
 
-		gens.exec = ()=>gens;
+		gens.exec = () => gens;
+	});
 
-	})
-
-	after(()=>{
+	after(() => {
 		Generator.find.restore();
 		BuiltPack.findOrBuild.restore();
 		BuiltPack.findById.restore();
-	})
-
-	describe('makeAsRoot()', function(){
-
-		it('should should return a node',function(){
-			return Generator.makeAsRoot([generator], builtpack).should.eventually.be.an.instanceOf(Nested)
-		})
-
-		it('should return if there is an extended seed', ()=>{
-			pack.seed = "universe>supercluster>";
-			return Generator.makeAsRoot([generator, childGen], builtpack).should.eventually.be.an.instanceOf(Nested)
-		})
-			
-	})
-
-	describe('makeAsNode()', function(){
-
-		it('should return a node',()=>{
-			var node = {
-				isa: 'supercluster',
-				name: 'supercluster',
-				in: true
-			}
-			return Generator.makeAsNode(node, {array:[]}, builtpack).should.eventually.be.an.instanceOf(Nested)
-		})
-
 	});
 
-	describe('makeStyle()', function(){
-
-		it('should return', ()=>{
-			return generator.makeStyle("blue universe").should.eventually.have.property('cssClass', 'bg-blue-900 ptn-purty-wood');
-		})
-	})
-
-	describe('rename()', function(){
-
-		it('should return',()=>{
-			generator.isa = 'uni';
-			return generator.rename('universe', pack);
+	describe("makeAsRoot()", function() {
+		it("should should return a node", function() {
+			return Generator.makeAsRoot(
+				[generator],
+				builtpack
+			).should.eventually.be.an.instanceOf(Nested);
 		});
-	})
 
-	describe('insertNew()', ()=>{
+		it("should return if there is an extended seed", () => {
+			pack.seed = "universe>supercluster>";
+			return Generator.makeAsRoot(
+				[generator, childGen],
+				builtpack
+			).should.eventually.be.an.instanceOf(Nested);
+		});
+	});
 
-		it('should return generator', ()=>{
-			return Generator.insertNew({ isa: 'test' }, pack).should.eventually.have.property('unbuilt').that.is.instanceOf(Generator);
-		})
-		
-	})
+	describe("makeAsNode()", function() {
+		it("should return a node", () => {
+			var node = {
+				isa: "supercluster",
+				name: "supercluster",
+				in: true
+			};
+			return Generator.makeAsNode(
+				node,
+				{ array: [] },
+				builtpack
+			).should.eventually.be.an.instanceOf(Nested);
+		});
+	});
 
-	describe('make()', ()=>{
+	describe("makeStyle()", function() {
+		it("should return", () => {
+			return generator
+				.makeStyle("blue universe")
+				.should.eventually.have.property(
+					"cssClass",
+					"bg-blue-900 ptn-purty-wood"
+				);
+		});
+	});
 
-		it('should return', ()=>{
-			return Generator.make(generator, builtpack).should.eventually.be.instanceOf(Nested);
-		})
-		
-	})
+	describe("rename()", function() {
+		it("should return", () => {
+			generator.isa = "uni";
+			return generator.rename("universe", pack);
+		});
+	});
 
-	describe('extend()', function(){
+	describe("insertNew()", () => {
+		it("should return generator", () => {
+			return Generator.insertNew({ isa: "test" }, pack)
+				.should.eventually.have.property("unbuilt")
+				.that.is.instanceOf(Generator);
+		});
+	});
+
+	describe("make()", () => {
+		it("should return", () => {
+			return Generator.make(
+				generator,
+				builtpack
+			).should.eventually.be.instanceOf(Nested);
+		});
+	});
+
+	describe("extend()", function() {
 		var inherited = {
 			style: {
-				txt: { value: 'blue' },
-				bg: { value: 'black' }
+				txt: { value: "blue" },
+				bg: { value: "black" }
 			}
-		}
+		};
 		var inheritor = {
-			extends: 'inherited',
+			extends: "inherited",
 			style: {
-				txt: { value: 'green' },
-				icon: { value: 'fi flaticon-castle' }
+				txt: { value: "green" },
+				icon: { value: "fi flaticon-castle" }
 			}
-		}
+		};
 		var builtpack;
 
-		before(()=>{
+		before(() => {
 			inherited = new Generator(inherited);
 			inheritor = new Generator(inheritor);
 			builtpack = new BuiltPack({
@@ -181,21 +186,30 @@ describe('Generator', ()=>{
 			});
 		});
 
-		it('should combine styles',()=>{
+		it("should combine styles", () => {
 			var newGen = inheritor.extend(builtpack);
 			should.exist(newGen._doc);
-			newGen._doc.should.have.property('style');
+			newGen._doc.should.have.property("style");
 			var s = newGen._doc.style._doc;
 
-			s.should.have.property('icon').with.property('value').that.equals('fi flaticon-castle');
-			s.should.have.property('txt').with.property('value').that.equals('green');
-			s.should.have.property('bg').with.property('value').that.equals('black');
-		})
+			s.should.have
+				.property("icon")
+				.with.property("value")
+				.that.equals("fi flaticon-castle");
+			s.should.have
+				.property("txt")
+				.with.property("value")
+				.that.equals("green");
+			s.should.have
+				.property("bg")
+				.with.property("value")
+				.that.equals("black");
+		});
 
-		it('should work with no style',()=>{
+		it("should work with no style", () => {
 			builtpack = new BuiltPack({
 				generators: {
-					inheritor: new Generator({extends: 'inherited'})._doc,
+					inheritor: new Generator({ extends: "inherited" })._doc,
 					inherited: new Generator()._doc
 				}
 			});
@@ -203,8 +217,8 @@ describe('Generator', ()=>{
 			should.exist(newGen._doc);
 		});
 
-		it('should work with only inherited with style',()=>{
-			inheritor = new Generator({extends: 'inherited'});
+		it("should work with only inherited with style", () => {
+			inheritor = new Generator({ extends: "inherited" });
 			delete inheritor.style;
 
 			builtpack = new BuiltPack({
@@ -216,47 +230,36 @@ describe('Generator', ()=>{
 			var newGen = inheritor.extend(builtpack);
 			should.exist(newGen._doc);
 		});
+	});
 
-	})
-
-
-	describe('childSchema', function(){
-
-		describe('.isIncluded', function(){
-
-			it('should return true if chance 100',()=>{
+	describe("childSchema", function() {
+		describe(".isIncluded", function() {
+			it("should return true if chance 100", () => {
 				generator.in[0].isIncluded.should.equal(true);
-			})
+			});
 
-			it('should return false if chance 0',()=>{
+			it("should return false if chance 0", () => {
 				generator.in[1].isIncluded.should.equal(false);
-			})
-
+			});
 		});
 
-		describe('.makeAmount',  function(){
-
-			it('should return 1 if not defined', ()=>{
+		describe(".makeAmount", function() {
+			it("should return 1 if not defined", () => {
 				generator.in[0].makeAmount.should.equal(1);
-			})
+			});
 
-			it('should return amount if defined', ()=>{
+			it("should return amount if defined", () => {
 				generator.in[1].makeAmount.should.equal(5);
-			})
+			});
 
-			it('should return min if only defined', ()=>{
+			it("should return min if only defined", () => {
 				generator.in[2].makeAmount.should.equal(4);
-			})
+			});
 
-			it('should return 0 if only min is 0', ()=>{
+			it("should return 0 if only min is 0", () => {
 				generator.in[2].amount.min = 0;
 				generator.in[2].makeAmount.should.equal(0);
-			})
-
-		})
-
-
-	})
-
-	
-})
+			});
+		});
+	});
+});

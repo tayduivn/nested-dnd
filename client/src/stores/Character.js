@@ -1,29 +1,27 @@
 import { raceStore, backgroundStore } from "./classStore";
 
 import { Abilities, Skills } from "./CharacterAbilities";
-import { ClassInfo, Background, Body } from './CharRolePlay'
-import { Health, Proficiencies, AdvResist, Feature } from './CharMiddleCol'
-import Equipment from './Equipment';
-import Cards, { appendPlus } from './Cards';
+import { ClassInfo, Background, Body } from "./CharRolePlay";
+import { Health, Proficiencies, AdvResist, Feature } from "./CharMiddleCol";
+import Equipment from "./Equipment";
+import Cards, { appendPlus } from "./Cards";
 
 export default class Character {
-	constructor(
-		{
-			lock = false,
-			advResist = {},
-			background = {},
-			equipment = [],
-			classes = [],
-			features = [],
-			name = "",
-			player = "",
-			proficiencies = {},
-			race = { name: "Human" },
-			abilities = {},
-			hp = false,
-			body
-		} = {}
-	) {
+	constructor({
+		lock = false,
+		advResist = {},
+		background = {},
+		equipment = [],
+		classes = [],
+		features = [],
+		name = "",
+		player = "",
+		proficiencies = {},
+		race = { name: "Human" },
+		abilities = {},
+		hp = false,
+		body
+	} = {}) {
 		if (hp !== false) hp = parseInt(hp, 10);
 
 		this.lock = !!lock;
@@ -46,14 +44,19 @@ export default class Character {
 
 		// adjust speed if Monk
 		let monk = this.getClass("Monk");
-		if(monk && monk.level >= 2 && !this.equipment.armor && !this.equipment.hasShield){
+		if (
+			monk &&
+			monk.level >= 2 &&
+			!this.equipment.armor &&
+			!this.equipment.hasShield
+		) {
 			this.body.speed += 10;
 		}
 
 		this.addProficiencies();
 		this.addFeaturesAndAdvantages();
 	}
-	racialAdjustAbilities(){
+	racialAdjustAbilities() {
 		// adjust ability scores based on race
 		for (var ability in this.race.abilities) {
 			this.abilities[ability].addAdjustment(
@@ -64,7 +67,11 @@ export default class Character {
 		}
 	}
 	getSkills() {
-		return new Skills(this.proficiencies.skills.list, this.proficiencies.skills.double_proficiency, this);
+		return new Skills(
+			this.proficiencies.skills.list,
+			this.proficiencies.skills.double_proficiency,
+			this
+		);
 	}
 	isClass(name) {
 		for (var i = 0; i < this.classes.length; i++) {
@@ -103,7 +110,7 @@ export default class Character {
 			this.proficiencyBonus
 		);
 	}
-	_raceFeatures(newAdvantages, newFeatures){
+	_raceFeatures(newAdvantages, newFeatures) {
 		var ar = this.race.advResist;
 		if (ar) {
 			for (var adv in ar.other) {
@@ -113,35 +120,28 @@ export default class Character {
 				});
 			}
 			if (ar.advantages) {
-				this.advResist.advantages.push(
-					...ar.advantages
-				);
+				this.advResist.advantages.push(...ar.advantages);
 			}
 			if (ar.resistances) {
-				this.advResist.resistances.push(
-					...ar.resistances
-				);
+				this.advResist.resistances.push(...ar.resistances);
 			}
 		}
 		for (var feat in this.race.features) {
 			newFeatures.push({ ...this.race.features[feat], name: feat });
 		}
 	}
-	_classFeatures(newFeatures){
+	_classFeatures(newFeatures) {
 		//classes features
 		this.classes.forEach(({ classData, level, subclasses }) => {
-			newFeatures.push(
-				...classData.getFeaturesAtLevel(level, subclasses)
-			);
+			newFeatures.push(...classData.getFeaturesAtLevel(level, subclasses));
 		});
 	}
-	_processAdvantages(newAdvantages, newFeatures){
+	_processAdvantages(newAdvantages, newFeatures) {
 		newFeatures.forEach(f => {
 			if (f.advantage) this.advResist.advantages.push(f.advantage);
 			if (f.resist) this.advResist.resistances.push(f.resist);
 			if (f.advResist) newAdvantages.push(f.advResist);
-			if (f.proficiencies)
-				this.proficiencies.add(f.proficiencies, f.name);
+			if (f.proficiencies) this.proficiencies.add(f.proficiencies, f.name);
 			this.features.push(new Feature(f));
 		});
 		newAdvantages.forEach(a => {
@@ -163,10 +163,9 @@ export default class Character {
 
 		this._raceFeatures(newAdvantages, newFeatures);
 		this._classFeatures(newFeatures);
-		this._processAdvantages(newAdvantages, newFeatures)
-		
+		this._processAdvantages(newAdvantages, newFeatures);
 	}
-	_getRaceSpellcasting(profBonus){
+	_getRaceSpellcasting(profBonus) {
 		if (this.race.spellcasting) {
 			this.spellcasting.add(
 				this.race.spellcasting,
@@ -179,10 +178,10 @@ export default class Character {
 			);
 		}
 	}
-	_getClassSpellcasting(profBonus){
+	_getClassSpellcasting(profBonus) {
 		this.classes.forEach(c => {
 			var classSC = c.classData.spellcasting;
-			if (classSC){
+			if (classSC) {
 				this.spellcasting.add(
 					classSC,
 					c.name,

@@ -1,4 +1,4 @@
-function getAll(thisMap, Type){
+function getAll(thisMap, Type) {
 	var map = {};
 	for (var name in thisMap) {
 		map[name] = new Type(thisMap[name]);
@@ -53,8 +53,8 @@ class ClassStore {
 		return getAll(this.classes, PlayerClass);
 	}
 	get(name) {
-		if(!this.classes[name]){
-			console.error("Can't find class with name "+name);
+		if (!this.classes[name]) {
+			console.error("Can't find class with name " + name);
 		}
 		return new PlayerClass(this.classes[name] ? this.classes[name] : {});
 	}
@@ -63,7 +63,7 @@ class ClassStore {
 	}
 }
 
-function processFeature(feature, name, subclasses){
+function processFeature(feature, name, subclasses) {
 	if (name === "slots") return;
 
 	var desc = feature.desc;
@@ -73,26 +73,27 @@ function processFeature(feature, name, subclasses){
 	if (subclasses[name]) {
 		// it is the subclass category (the superclass)
 		// add the subclass choice to the desc of the superclas
-		desc = (desc && desc.length) ? desc+subclasses[name] : false;
-		return { ...ret, desc }
+		desc = desc && desc.length ? desc + subclasses[name] : false;
+		return { ...ret, desc };
 	}
 
-	if(!feature.subclass || !doInclude(feature.subclass, name, subclasses)) 
+	if (!feature.subclass || !doInclude(feature.subclass, name, subclasses))
 		return ret;
-		
+
 	let useDesc = desc !== false && desc === "" && feature.description;
-	if(useDesc) desc = feature.description;
+	if (useDesc) desc = feature.description;
 
 	return { ...ret, desc };
 }
 
-function doInclude(sc, name, subclasses){
-	let subclassName = sc[sc.length-1]; // 1
-	let superclassName = sc[sc.length-2]; // 0
+function doInclude(sc, name, subclasses) {
+	let subclassName = sc[sc.length - 1]; // 1
+	let superclassName = sc[sc.length - 2]; // 0
 	// it is the chosen subclass
 	let isSubclass = subclasses[subclassName] === name;
 	// it is a feature of the chosen subclass
-	let isSubclassFeature = subclasses[superclassName] && subclasses[superclassName] === subclassName; 
+	let isSubclassFeature =
+		subclasses[superclassName] && subclasses[superclassName] === subclassName;
 	return isSubclass || isSubclassFeature;
 }
 
@@ -168,7 +169,6 @@ class Background {
 	}
 }
 
-
 class BackgroundStore {
 	constructor() {
 		this.backgrounds = {};
@@ -186,7 +186,6 @@ class BackgroundStore {
 		return Object.keys(this.backgrounds).sort();
 	}
 }
-
 
 let classStore = new ClassStore();
 let raceStore = new RaceStore();

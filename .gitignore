@@ -13,6 +13,7 @@ coverage.lcov
 # build
 /client/build
 *.css
+.tmp
 
 # server
 /server/data

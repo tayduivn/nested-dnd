@@ -5,7 +5,7 @@ import Spells, { SpellSlotsAndMoney } from "./CharSheetSpells.js";
 import { Abilities, Skills, Health } from "./CharSheetNumbers.js";
 import { AdvResist, Equipment } from "./CharSheetDesc.js";
 import { RolePlay } from "./CharSheetData.js";
-import ShowWork from './CharSheetShowWork';
+import ShowWork from "./CharSheetShowWork";
 
 import "./CharacterSheet.css";
 
@@ -32,35 +32,23 @@ export default class CharacterSheet extends Component {
 	}
 }
 
-const TopHalf = ({char}) => (
+const TopHalf = ({ char }) => (
 	<div className="row halfpage">
 		<div className="col-4">
-			<BasicInfo
-				name={char.name}
-				classes={char.classes}
-				player={char.player}
-			/>
+			<BasicInfo name={char.name} classes={char.classes} player={char.player} />
 			<Skills skills={char.skills} initiative={char.initiative} />
 		</div>
 		<div className="col-8 full-height">
 			<Abilities abilities={char.abilities} />
 			<div className="row full-height main-content">
 				<div className="col">
-					<Health
-						char={char}
-						hitDice={char.hitDice}
-						hp={char.hp}
-					/>
+					<Health char={char} hitDice={char.hitDice} hp={char.hp} />
 					<AdvResist
 						{...char.advResist}
 						label="Advantages & Resistances"
 						char={char}
 					/>
-					<AdvResist
-						other={char.features}
-						label="Features"
-						char={char}
-					/>
+					<AdvResist other={char.features} label="Features" char={char} />
 				</div>
 				<div className="col top-col">
 					<Equipment {...char.equipment} />
@@ -69,10 +57,13 @@ const TopHalf = ({char}) => (
 			</div>
 		</div>
 	</div>
-)
+);
 
-const BottomHalf = ({char, spellcasting, twoPages}) =>(
-	<div className="row halfpage bottom" style={{ background: "url(css/img/" + char.img + ")" }}>
+const BottomHalf = ({ char, spellcasting, twoPages }) => (
+	<div
+		className="row halfpage bottom"
+		style={{ background: "url(css/img/" + char.img + ")" }}
+	>
 		<RolePlay
 			col={spellcasting && !twoPages ? 3 : 4}
 			race={char.race}
@@ -89,14 +80,13 @@ const BottomHalf = ({char, spellcasting, twoPages}) =>(
 			classes={char.classes}
 			proficiencies={char.proficiencies}
 		/>
-		{spellcasting && !twoPages
-			? <SpellbookAllClasses
-					col={5}
-					spellcasting={spellcasting}
-				/>
-			: ""}
+		{spellcasting && !twoPages ? (
+			<SpellbookAllClasses col={5} spellcasting={spellcasting} />
+		) : (
+			""
+		)}
 	</div>
-)
+);
 
 class SinglePage extends Component {
 	static get propTypes() {
@@ -107,26 +97,28 @@ class SinglePage extends Component {
 	render() {
 		let char = this.props.character;
 		let spellcasting = char.spellcasting;
-		if(!spellcasting || spellcasting.totalSpells === 0)
-			spellcasting = false;
+		if (!spellcasting || spellcasting.totalSpells === 0) spellcasting = false;
 
-		let twoPages =
-			spellcasting && spellcasting.totalSpells > BREAK_TO_2PAGE;
+		let twoPages = spellcasting && spellcasting.totalSpells > BREAK_TO_2PAGE;
 		return (
 			<div>
 				<div className="paper">
 					<TopHalf char={char} />
-					<BottomHalf char={char} spellcasting={spellcasting} twoPages={twoPages} />
+					<BottomHalf
+						char={char}
+						spellcasting={spellcasting}
+						twoPages={twoPages}
+					/>
 				</div>
-				{spellcasting && twoPages
-					? <div className="paper">
-							<div className="row halfpage">
-								<SpellbookAllClasses
-									spellcasting={char.spellcasting}
-								/>
-							</div>
+				{spellcasting && twoPages ? (
+					<div className="paper">
+						<div className="row halfpage">
+							<SpellbookAllClasses spellcasting={char.spellcasting} />
 						</div>
-					: ""}
+					</div>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}
@@ -157,20 +149,18 @@ class BasicInfo extends Component {
 				</h1>
 				<h2 id="classLevel">
 					{this.props.classes.map(
-						c =>
-							"Level " +
-							c.level +
-							" " +
-							(c.label ? c.label : c.name)
+						c => "Level " + c.level + " " + (c.label ? c.label : c.name)
 					)}
 				</h2>
-				{this.props.player.length
-					? <p id="player" className="right">
-							<label>Played by </label> {this.props.player}
-						</p>
-					: <p id="player" className="write-in">
-							Player Name
-						</p>}
+				{this.props.player.length ? (
+					<p id="player" className="right">
+						<label>Played by </label> {this.props.player}
+					</p>
+				) : (
+					<p id="player" className="write-in">
+						Player Name
+					</p>
+				)}
 			</div>
 		);
 	}
@@ -184,19 +174,21 @@ class SpellbookAllClasses extends Component {
 		};
 	}
 	render() {
-		var spellcasting = this.props.spellcasting || {list:[]}
+		var spellcasting = this.props.spellcasting || { list: [] };
 		if (!spellcasting.list.length) return null;
 		const COUNT = spellcasting.totalSpells;
 
 		return (
-			<div className={`close-col col-${this.props.col} 
-									${COUNT > BREAK_TO_2PAGE
-																			? "fullpage"
-																			: COUNT > BREAK_TO_2COL ? "long" : ""}
+			<div
+				className={`close-col col-${this.props.col} 
+									${COUNT > BREAK_TO_2PAGE ? "fullpage" : COUNT > BREAK_TO_2COL ? "long" : ""}
 								`}
 			>
-				{spellcasting.list.map((a, i) =>
-					(a.spells.length === 0 ? null : <Spells key={i} {...a} count={COUNT} />) 
+				{spellcasting.list.map(
+					(a, i) =>
+						a.spells.length === 0 ? null : (
+							<Spells key={i} {...a} count={COUNT} />
+						)
 				)}
 			</div>
 		);

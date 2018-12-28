@@ -32,7 +32,6 @@ const multiclassSpellSlots = [
 	[4, 3, 3, 3, 3, 2, 2, 1, 1]
 ];
 
-
 class KnownSpell {
 	constructor(name, note) {
 		this.name = name;
@@ -46,7 +45,7 @@ class KnownSpell {
 	}
 	getData() {
 		var spell = spellStore.get(this.name);
-		if(!spell){
+		if (!spell) {
 			return {};
 		}
 		return spell;
@@ -90,7 +89,9 @@ class Spellcasting {
 		});
 	}
 	printAbility() {
-		return (skillAbbrev[this.ability]) ? skillAbbrev[this.ability].toUpperCase() : "";
+		return skillAbbrev[this.ability]
+			? skillAbbrev[this.ability].toUpperCase()
+			: "";
 	}
 	spellsByLevel() {
 		var levels = [];
@@ -107,7 +108,6 @@ class Spellcasting {
 		return levels;
 	}
 }
-
 
 export default class SpellcastingList {
 	constructor() {
@@ -142,7 +142,7 @@ export default class SpellcastingList {
 
 		this.list.push({
 			name: name,
-			title: (name) ? name.replace(/ \(.*\)/g, "") + " Spells" : "",
+			title: name ? name.replace(/ \(.*\)/g, "") + " Spells" : "",
 			spellcasting: spellcasting,
 			prepares: prepares,
 			numPrepared: level + modifier,
@@ -211,8 +211,6 @@ export default class SpellcastingList {
 		return casterLevels[0].slots;
 	}
 }
-
-
 
 /*
 class SpellListAbility{

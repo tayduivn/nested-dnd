@@ -1,6 +1,6 @@
 import React from "react";
 
-function makeList(map){
+function makeList(map) {
 	var arr = [];
 	for (var name in map) {
 		var list = map[name];
@@ -10,51 +10,41 @@ function makeList(map){
 	return arr;
 }
 
-const Subclass = ({subclasses}) => (
-	<p>{makeList(subclasses)}</p>
-)
+const Subclass = ({ subclasses }) => <p>{makeList(subclasses)}</p>;
 
-const ListItem = ({name, list}) =>(
+const ListItem = ({ name, list }) => (
 	<span key={name}>
 		{name}: {list}
 		<br />
 	</span>
-)
+);
 
 const Item = ({ xs, label, value = {} }) => (
-	<div className={"col"+(xs ? '-'+xs : '')}>
-		<p className="title-sm">
-			{label}
-		</p>
-		<div className="item-entry">
-			{JSON.stringify(value)}
-		</div>
+	<div className={"col" + (xs ? "-" + xs : "")}>
+		<p className="title-sm">{label}</p>
+		<div className="item-entry">{JSON.stringify(value)}</div>
 	</div>
 );
 
-const ShowWork = ({col, background = {}, classes = []}) => (
+const ShowWork = ({ col, background = {}, classes = [] }) => (
 	<div className={`close-col col-${col}`}>
 		<p className="title-sm">Personality Trait</p>
-		<p>
-			{background.personality}
-		</p>
+		<p>{background.personality}</p>
 		<p className="title-sm">Ideal</p>
-		<p>
-			{background.ideal}
-		</p>
+		<p>{background.ideal}</p>
 		<p className="title-sm">Bond</p>
-		<p>
-			{background.bond}
-		</p>
+		<p>{background.bond}</p>
 		<p className="title-sm">Flaw</p>
-		<p>
-			{background.flaw}
-		</p>
+		<p>{background.flaw}</p>
 		<p className="title-sm">Subclasses</p>
-		<div className={classes.map(c => makeList(c.subclasses)).length ? "" : "hidden"}>
-			{classes.map((c,i) =>
+		<div
+			className={
+				classes.map(c => makeList(c.subclasses)).length ? "" : "hidden"
+			}
+		>
+			{classes.map((c, i) => (
 				<Subclass subclasses={c.subclasses} key={i} />
-			)}
+			))}
 		</div>
 	</div>
 );

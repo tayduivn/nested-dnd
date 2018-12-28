@@ -1,4 +1,3 @@
-
 const PROP_DESC = {
 	Light:
 		"With two light weapons, you can attack with main hand and use bonus action to make an offhand attack",
@@ -48,8 +47,7 @@ function getDamageTypeName(type) {
 	if (!type || !type.toLowerCase) return "";
 
 	let _type = type.toLowerCase();
-	if (DMG_NAME[_type]) 
-		return DMG_NAME[_type];
+	if (DMG_NAME[_type]) return DMG_NAME[_type];
 
 	return DMG_ICONS[_type] ? _type : type;
 }
@@ -69,4 +67,12 @@ function recalcFontSize(t) {
 	}
 }
 
-export { recalcFontSize, getDamageTypeName, getDamageTypeIcon, CARDS_PER_PAGE, SPELL_LVL_ICONS, MARTIAL_WEAPONS, PROP_DESC }
+export {
+	recalcFontSize,
+	getDamageTypeName,
+	getDamageTypeIcon,
+	CARDS_PER_PAGE,
+	SPELL_LVL_ICONS,
+	MARTIAL_WEAPONS,
+	PROP_DESC
+};
