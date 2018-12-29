@@ -5,7 +5,8 @@ import EditUniverse from "./EditUniverse";
 import Universes from "./Universes";
 import Explore from "../Explore";
 
-import { fetchPacks } from "../Packs/actions";
+import { actions as packActions } from "../Packs";
+import actions from "./actions";
 
 const routes = [
 	{
@@ -31,17 +32,20 @@ const routes = [
 	}
 ];
 
-const Container = connect({
-	mapStateToProps: state => ({
-		packs: state.packs,
-		universes: state.universes
-	}),
-	mapDispatchToProps: dispatch => ({
-		onInitialLoad: () => {
-			dispatch(fetchPacks());
-		}
-	})
-})(Universes);
+const mapStateToProps = state => ({
+	packs: state.packs,
+	universes: state.universes
+});
+const mapDispatchToProps = dispatch => ({
+	onInitialLoad: ({ packs, universes }) => {
+		dispatch(packActions.fetch(dispatch, packs.loaded));
+		dispatch(actions.fetch(dispatch, universes.loaded));
+	}
+});
+const Container = connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Universes);
 
 export default Container;
 

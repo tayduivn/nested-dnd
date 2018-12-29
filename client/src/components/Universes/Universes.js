@@ -3,7 +3,7 @@ import { Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import DB from "../../actions/CRUDAction";
-import { LOADING_GIF } from "../App/App";
+import { LOADING_GIF } from "../App";
 import { PacksList, PackUL } from "../Packs";
 import { PropsRoute, RouteWithSubRoutes } from "../Routes";
 
@@ -21,7 +21,6 @@ const UniverseListDisplay = ({ universes }) => (
 
 class Universes extends Component {
 	state = {
-		loading: true,
 		universes: undefined,
 		error: undefined,
 		generators: undefined,
@@ -32,7 +31,6 @@ class Universes extends Component {
 	static contextTypes = {
 		loadFonts: PropTypes.func
 	};
-
 	static propTypes = {
 		match: PropTypes.object
 	};
@@ -40,16 +38,18 @@ class Universes extends Component {
 		match: { params: {} }
 	};
 
-	componentDidMount() {
-		this.props.onInitialLoad();
-		this.getData(this.props);
+	constructor(props) {
+		super(props);
+		props.onInitialLoad(props);
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate(previProps) {
 		if (!this.props.match.params) return;
 
-		if (this.props.match.params.universe !== prevProps.match.params.universe)
-			this.getData(this.props);
+		// universe change
+		const { universe: updated } = this.props.match.params;
+		const { universe: current } = previProps.match.params;
+		if (current !== updated) this.getData(this.props);
 	}
 
 	getData(props) {

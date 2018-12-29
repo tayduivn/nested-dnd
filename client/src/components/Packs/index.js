@@ -7,7 +7,7 @@ import Explore from "../Explore";
 import Generators, { routes as generators } from "../Generators";
 import Tables, { routes as tables } from "../Tables";
 
-import { addPack } from "./actions";
+import actions from "./actions";
 
 const routes = [
 	{
@@ -43,12 +43,15 @@ const routes = [
 	}
 ];
 
-const Container = connect({
-	mapDispatchToProps: dispatch => ({
-		onAddPack: data => dispatch(addPack(data))
-	}),
-	mapStateToProps: state => state.packs
-})(Packs);
+const mapDispatchToProps = dispatch => ({
+	onAddPack: data => dispatch(actions.add(data))
+});
+const mapStateToProps = state => state.packs;
+
+const Container = connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Packs);
 
 export default Container;
-export { Pack, EditPack, routes, PackUL, PacksList };
+export { Pack, EditPack, routes, PackUL, PacksList, actions };
