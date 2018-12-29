@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../Util";
 
 import Ancestors from "./Ancestors";
 import { ColorPicker, HexColorPicker } from "../Form/ColorPicker";
@@ -283,7 +283,7 @@ class BGSelectPopover extends React.Component {
 	}
 	render() {
 		return (
-			<button id="bgOptions" tabIndex="0" ref={this.ref}>
+			<div id="bgOptions" tabIndex="0" ref={this.ref}>
 				<button
 					className={"btn bg " + this.props.cssClass}
 					type="button"
@@ -313,7 +313,7 @@ class BGSelectPopover extends React.Component {
 				{this.state.display ? (
 					<div className="popover-cover" onClick={this.handleClose} />
 				) : null}
-			</button>
+			</div>
 		);
 	}
 }

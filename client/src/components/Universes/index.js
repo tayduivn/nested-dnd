@@ -6,6 +6,7 @@ import Universes from "./Universes";
 import Explore from "../Explore";
 
 import { actions as packActions } from "../Packs";
+import { actions as userActions } from "../User";
 import actions from "./actions";
 
 const routes = [
@@ -17,6 +18,7 @@ const routes = [
 	},
 	{
 		path: "/:universe",
+		component: Explore,
 		routes: [
 			{
 				path: "/explore",
@@ -34,13 +36,15 @@ const routes = [
 
 const mapStateToProps = state => ({
 	packs: state.packs,
-	universes: state.universes
+	universes: state.universes,
+	loggedIn: state.user.loggedIn
 });
 const mapDispatchToProps = dispatch => ({
-	onInitialLoad: ({ packs, universes }) => {
+	loadUniverses: ({ packs, universes }) => {
 		dispatch(packActions.fetch(dispatch, packs.loaded));
 		dispatch(actions.fetch(dispatch, universes.loaded));
-	}
+	},
+	checkLoggedIn: () => dispatch(userActions.checkLoggedIn(dispatch))
 });
 const Container = connect(
 	mapStateToProps,

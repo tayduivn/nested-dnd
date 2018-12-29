@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../Util";
 
 import DB from "../../actions/CRUDAction";
 import { ddbConvert } from "../../actions/DDB";

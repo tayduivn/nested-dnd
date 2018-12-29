@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { Link, Switch } from "react-router-dom";
-import PropTypes from "prop-types";
 
 import DB from "../../actions/CRUDAction";
 import { LOADING_GIF } from "../App/App";
-import { RouteWithSubRoutes, PropsRoute } from "../Routes";
+import { makeSubRoutes, PropsRoute } from "../Routes";
 import { GeneratorsList } from "../Generators";
 import { TablesList } from "../Tables/Tables";
 
@@ -146,21 +145,11 @@ const ViewPack = ({
  */
 export default class Pack extends Component {
 	state = {
-		pack: null,
-		error: null
+		filters: {}
 	};
-
-	static contextTypes = {
-		loggedIn: PropTypes.bool
-	};
-
-	componentDidMount() {
-		var params = this.props.match.params;
-		if (params.pack && !params.gen) {
-			DB.get("packs", params.pack).then(({ error, data }) => {
-				this.setState({ pack: data, error: error });
-			});
-		}
+	constructor(props) {
+		super(props);
+		props.fetchPack(props.match.params.pack);
 	}
 
 	handleRenameGen = () => {
@@ -170,53 +159,50 @@ export default class Pack extends Component {
 	};
 
 	handleRebuild = () => {
-		const packid = this.props.match.params.pack;
+		const { pack: { packid } = {} } = this.props.match.params || {};
 		DB.set("builtpacks", packid + "/rebuild", {}).then(({ error, data }) => {
 			this.setState({ error: error });
 		});
 	};
 
 	render() {
-		var showGen = this.props.match.params.gen;
-		const baseUrl = this.props.match.path;
+		const { loggedIn, match, routes, error, getPack } = this.props;
+		const pack = getPack(match.params.pack);
 		const {
 			handleRebuild,
 			handleFilterToggle,
 			handleGeneratorToggle,
 			handleRenameGen
 		} = this;
-		const { pack } = this.state;
 
-		if (this.state.error) return this.state.error.display;
-		if (!this.state.pack && !showGen)
+		if (error) return error.display;
+		if (!pack.loaded) {
 			return (
 				<div className="main">
 					<div className="container mt-5">{LOADING_GIF}</div>
 				</div>
 			);
+		}
 
 		return (
 			<div id="Pack">
 				<Switch>
-					{this.props.routes.map((route, i) => (
-						<RouteWithSubRoutes
-							key={i}
-							{...route}
-							path={baseUrl + route.path}
-							{...{ pack, handleRenameGen }}
-						/>
-					))}
+					{makeSubRoutes(routes, match.path, {
+						pack,
+						handleRenameGen,
+						loggedIn
+					})}
 					<PropsRoute
 						exact
-						path={baseUrl}
+						path={match.path}
 						component={ViewPack}
-						{...this.state.pack}
-						loggedIn={this.context.loggedIn}
+						{...pack}
+						loggedIn={this.props.loggedIn}
 						filters={this.state.filters}
 						filteredGens={this.state.filteredGens}
 						query={this.state.query}
 						handleQuery={this.handleQuery}
-						gens={this.state.pack.generators}
+						gens={this.props.pack && this.props.pack.generators}
 						{...{ handleRebuild, handleFilterToggle, handleGeneratorToggle }}
 					/>
 				</Switch>

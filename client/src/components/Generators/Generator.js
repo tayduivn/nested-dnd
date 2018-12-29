@@ -5,14 +5,10 @@ import async from "async";
 import debounce from "debounce";
 
 import DB from "../../actions/CRUDAction";
-import { RouteWithSubRoutes, PropsRoute } from "../Routes";
+import { makeSubRoutes, PropsRoute } from "../Routes";
 import { LOADING_GIF } from "../App/App";
 
 class ViewGenerator extends Component {
-	static contextTypes = {
-		loggedIn: PropType.bool
-	};
-
 	render() {
 		const gen = this.props.built;
 		const { pack: packid, generator: isa } = this.props.match.params;
@@ -25,7 +21,7 @@ class ViewGenerator extends Component {
 				<h1>{isa}</h1>
 
 				{/* --------- Edit Button ------------ */}
-				{this.context.loggedIn ? (
+				{this.props.loggedIn ? (
 					<Link to={"/packs/" + packid + "/generators/" + isa + "/edit"}>
 						<button className="btn btn-primary">Edit Generator</button>
 					</Link>
@@ -164,16 +160,13 @@ export default class Generator extends Component {
 		else {
 			content = (
 				<Switch>
-					{routes.map((route, i) => (
-						<RouteWithSubRoutes
-							key={i}
-							{...route}
-							path={match.path + route.path}
-							{...{ pack, handleChange, handleDelete }}
-							{...generator}
-							id={generator._id}
-						/>
-					))}
+					{makeSubRoutes(routes, match.path, {
+						...generator,
+						pack,
+						handleChange,
+						handleDelete,
+						id: generator._id
+					})}
 					<PropsRoute
 						exact
 						path={match.path}

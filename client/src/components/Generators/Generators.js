@@ -2,7 +2,7 @@ import React from "react";
 import { Link, Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { RouteWithSubRoutes, PropsRoute } from "../Routes";
+import { makeSubRoutes, PropsRoute } from "../Routes";
 import DB from "../../actions/CRUDAction";
 
 const Filters = ({ filters = {}, handleFilterToggle }) => (
@@ -320,14 +320,7 @@ class Generators extends React.Component {
 			<div id="Generators" className="main">
 				<div className="container mt-5">
 					<Switch>
-						{routes.map((route, i) => (
-							<RouteWithSubRoutes
-								key={i}
-								{...route}
-								path={match.path + route.path}
-								{...{ handleAdd, pack }}
-							/>
-						))}
+						{makeSubRoutes(routes, match.path, { handleAdd, pack })}
 						<PropsRoute
 							{...rest}
 							exact

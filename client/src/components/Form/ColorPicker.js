@@ -105,7 +105,7 @@ class HexColorPicker extends React.Component {
 		};
 
 		return (
-			<button id="txtOptions" tabIndex="0" ref={this.ref}>
+			<div id="txtOptions" tabIndex="0" ref={this.ref}>
 				<button
 					className={"btn txt " + this.props.cssClass}
 					onClick={this.handleOpen}
@@ -140,7 +140,7 @@ class HexColorPicker extends React.Component {
 				{this.state.display ? (
 					<div className="popover-cover" onClick={this.handleClose} />
 				) : null}
-			</button>
+			</div>
 		);
 	}
 }

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Link, Switch, Route } from "react-router-dom";
-import PropTypes from "prop-types";
+import { Switch, Route } from "react-router-dom";
+import { Link } from "../Util";
+import { connect } from "react-redux";
 
-import DB from "../../actions/CRUDAction";
-import { LOADING_GIF } from "../App/App";
-import { RouteWithSubRoutes } from "../Routes";
+import { LOADING_GIF } from "../App";
+import { loadFonts } from "../App/store";
+import { makeSubRoutes, PropsRoute } from "../Routes";
 
 import "./Packs.css";
 
@@ -105,11 +106,13 @@ const PackInput = ({
 	</li>
 );
 
-class PackUL extends Component {
-	static contextTypes = { loadFonts: PropTypes.func };
-
+class PackULInner extends Component {
 	componentDidMount() {
 		if (this.props.list) this.loadFonts(this.props.list);
+	}
+
+	shouldComponentUpdate(nextProps) {
+		return JSON.stringify(this.props) !== JSON.stringify(nextProps);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -123,7 +126,7 @@ class PackUL extends Component {
 			if (!fonts.includes(pack.font)) fonts.push(pack.font);
 		});
 
-		if (fonts.length) this.context.loadFonts(fonts);
+		if (fonts.length) this.props.loadFonts(fonts);
 	}
 	render() {
 		const list = this.props.list,
@@ -171,77 +174,61 @@ class PackUL extends Component {
 	}
 }
 
+const PackUL = connect(
+	state => ({}),
+	dispatch => ({
+		loadFonts: (fonts, source) => dispatch(loadFonts(fonts, source))
+	})
+)(PackULInner);
+
 const MyPacks = ({ myPacks }) => (
 	<div>
 		<h2>My Packs</h2>
-		{myPacks === null ? LOADING_GIF : ""}
-		{myPacks && myPacks.length === 0 ? (
+		{myPacks === null && LOADING_GIF}
+		{myPacks && myPacks.length === 0 && (
 			<p>You have not created any packs yet</p>
-		) : (
-			""
 		)}
-		{myPacks ? <PackUL list={myPacks} addButton={true} /> : null}
+		{myPacks && <PackUL list={myPacks} addButton={true} />}
 	</div>
 );
 
-const Display = ({ loggedIn, error, data, publicPacks }) => (
-	<div id="Packs > Display">
-		{loggedIn ? <MyPacks myPacks={data ? data.myPacks : null} /> : null}
+const PacksList = ({ loggedIn, error, myPacks, publicPacks }) => (
+	<div id="Packs > PacksList">
+		{loggedIn && <MyPacks myPacks={myPacks} />}
 
 		<h2>Public Packs</h2>
 
-		{data === null ? LOADING_GIF : ""}
-		{error ? error.display : null}
+		{myPacks === null && LOADING_GIF}
+		{error && error.display}
 
-		{publicPacks && publicPacks.length === 0 ? (
+		{publicPacks && publicPacks.length === 0 && (
 			<p>There are no public packs to display</p>
-		) : null}
-		{publicPacks ? <PackUL list={publicPacks} /> : null}
+		)}
+		{publicPacks && <PackUL list={publicPacks} />}
 	</div>
 );
 
-const PacksPageWrap = () => (
+const PacksPageWrap = props => (
 	<div className="main">
 		<div className="container mt-5">
-			<Packs />
+			<PacksList {...props} />
 		</div>
 	</div>
 );
 
-const Packs = ({ routes, match = {} }) => (
+const Packs = ({ routes, match = {}, ...props }) => (
 	<div id="Packs">
 		<Switch>
-			{routes.map((route, i) => (
-				<RouteWithSubRoutes key={i} {...route} path={match.path + route.path} />
-			))}
-			<Route exact path={match.path} component={PacksPageWrap} />
+			<PropsRoute
+				exact
+				path={match.path}
+				component={PacksPageWrap}
+				{...props}
+			/>
+			{makeSubRoutes(routes, match.path, props)}
 		</Switch>
 	</div>
 );
-
-class PacksList extends Component {
-	state = {
-		data: null,
-		error: null
-	};
-	static contextTypes = { loggedIn: PropTypes.bool };
-	componentDidMount() {
-		//fetch data
-		const _t = this;
-		DB.fetch("packs").then(result => {
-			_t.setState(result);
-		});
-	}
-	render() {
-		return (
-			<Display
-				{...this.state}
-				loggedIn={this.context.loggedIn}
-				publicPacks={this.state.data ? this.state.data.publicPacks : []}
-			/>
-		);
-	}
-}
 
 export default Packs;
 export { PackUL, PacksList };

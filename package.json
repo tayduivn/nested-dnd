@@ -13,7 +13,7 @@
 		"build": "yarn build-css && react-scripts build --dir client",
 		"build-css": "node-sass-chokidar client/src/ -o client/src/",
 		"dev-client": "concurrently --kill-others-on-fail \"yarn _watch-css\" \"yarn _start-js\"",
-		"dev-server": "yarn babel && nodemon --inspect server/server.js",
+		"dev-server": "nodemon --inspect server/server.js",
 		"dev-db": "mongod --dbpath ./server/data",
 		"dev-test": "cross-env NODE_ENV=test mocha --exit --require ./.testSetup.js 'server/**/*.test.js' 'client/**/*.test.js'",
 		"build-icon-options": "cd client/public/icons && dir /s/n/b *.svg > icons.txt && node gi_convert.js > ../../src/assets/icons.js",
@@ -35,6 +35,7 @@
 		"color-js": "^1.0.4",
 		"connect-flash": "^0.1.1",
 		"connect-mongo": "^2.0.1",
+		"connected-react-router": "^6.1.0",
 		"cookie-parser": "^1.4.3",
 		"cross-env": "^5.1.4",
 		"debounce": "^1.1.0",
@@ -102,7 +103,8 @@
 		"redux-devtools": "^3.5.0",
 		"sinon": "^6.0.0",
 		"sinon-mongoose": "^2.1.1",
-		"supertest": "^3.0.0"
+		"supertest": "^3.0.0",
+		"why-did-you-update": "^1.0.6"
 	},
 	"browserslist": {
 		"development": [
@@ -137,5 +139,7 @@
 		"sourceMap": false,
 		"instrument": false
 	},
-	"stylelint": {}
+	"stylelint": {
+		"rules": {}
+	}
 }

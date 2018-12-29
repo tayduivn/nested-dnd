@@ -1,10 +1,9 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import React from "react";
+import { Link } from "../Util";
 
 import "./Nav.css";
 
-const NavRender = ({ loggedIn, handleLogout }) => (
+const Nav = ({ loggedIn, handleLogout }) => (
 	<nav className="navbar navbar-dark navbar-expand-lg">
 		<Link className="navbar-brand" to="/">
 			Nested D&D
@@ -51,11 +50,5 @@ const NavRender = ({ loggedIn, handleLogout }) => (
 	</nav>
 );
 
-export default class Nav extends Component {
-	static contextTypes = { loggedIn: PropTypes.bool };
-	render() {
-		return <NavRender {...this.props} loggedIn={this.context.loggedIn} />;
-	}
-}
-
+export default Nav;
 //<IconDebug show={false} />

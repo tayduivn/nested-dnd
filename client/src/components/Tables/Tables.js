@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { RouteWithSubRoutes } from "../Routes";
+import { makeSubRoutes } from "../Routes";
 import DB from "../../actions/CRUDAction";
 
 export default class Tables extends Component {
@@ -40,15 +40,7 @@ export default class Tables extends Component {
 			<div id="Tables" className="main">
 				<div className="container mt-5">
 					<Switch>
-						{routes.map((route, i) => (
-							<RouteWithSubRoutes
-								key={i}
-								{...route}
-								path={match.path + route.path}
-								pack={pack}
-								{...{ handleAdd }}
-							/>
-						))}
+						{makeSubRoutes(routes, match.path, { pack, handleAdd })}
 					</Switch>
 				</div>
 			</div>

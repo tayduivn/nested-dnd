@@ -1,19 +1,15 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import PropTypes from "prop-types";
-import WebFont from "webfontloader";
-import { Provider } from "react-redux";
+import { Switch, Route, BrowserRouter } from "react-router-dom";
 
-import Login from "./Login";
+import { Login } from "../User";
 import Nav from "./Nav";
 import Characters, { Character } from "../Characters";
 import Explore, { Splash, PlayersPreview } from "../Explore";
 import Packs, { routes as packs } from "../Packs";
-import { PropsRoute, RouteWithSubRoutes } from "../Routes";
+import { PropsRoute, makeSubRoutes } from "../Routes";
 import Universes, { routes as universes } from "../Universes";
 
 import DB from "../../actions/CRUDAction";
-import store from "./store";
 
 import {
 	sendPlayersPreview,
@@ -21,6 +17,12 @@ import {
 } from "../../actions/WebSocketAction";
 
 import "./App.css";
+
+// monkey patch
+/*if (process.env.NODE_ENV !== "production") {
+	const { whyDidYouUpdate } = require("why-did-you-update");
+	whyDidYouUpdate(React);
+}*/
 
 const NotFound = () => (
 	<div className="main">
@@ -65,60 +67,18 @@ const routes = [
 	}
 ];
 
-class App extends Component {
-	constructor() {
-		super();
-		this.state = {
-			loggedIn: undefined,
-			loadedFonts: []
-		};
+export default class App extends Component {
+	constructor(props) {
+		super(props);
 		this.handleLogin = this.handleLogin.bind(this);
 		this.handleLogout = this.handleLogout.bind(this);
-		this.handleLoadFonts = this.handleLoadFonts.bind(this);
 	}
-	static get childContextTypes() {
-		return {
-			loggedIn: PropTypes.bool,
-			loadFonts: PropTypes.func,
-			sendPlayersPreview: PropTypes.func
-		};
-	}
-	getChildContext() {
-		return {
-			loggedIn: !!this.state.loggedIn,
-			loadFonts: this.handleLoadFonts,
-			sendPlayersPreview: this.sendPlayersPreview
-		};
-	}
+
 	sendPlayersPreview = icon => sendPlayersPreview({ src: icon });
-	handleLoadFonts(fonts = [], source = "google") {
-		if (!fonts) return;
-		if (!(fonts instanceof Array)) fonts = [fonts];
-		if (!fonts.length) return;
 
-		const lf = this.state.loadedFonts;
-
-		// remove fonts already loaded
-		fonts = fonts.filter(f => !lf.includes(f));
-
-		if (!fonts.length) return;
-
-		WebFont.load({
-			[source]: {
-				families: fonts
-			}
-		});
-
-		this.setState({ loadedFonts: lf.concat(fonts) });
-	}
-	componentDidMount() {
-		DB.fetch("loggedIn").then(result => {
-			if (result.data) this.setState({ loggedIn: !!result.data.loggedIn });
-		});
-	}
 	shouldComponentUpdate(nextProps, nextState) {
 		const newProps = nextProps !== this.props;
-		const changedLoggedIn = nextState.loggedIn !== this.state.loggedIn;
+		const changedLoggedIn = nextProps.loggedIn !== this.props.loggedIn;
 		return newProps || changedLoggedIn;
 	}
 	handleLogin(url, payload) {
@@ -135,45 +95,49 @@ class App extends Component {
 		});
 	}
 	render() {
+		const { loggedIn, loadFonts } = this.props;
 		return (
-			<Provider store={store}>
-				<Router>
-					<div className="app">
+			<BrowserRouter>
+				<div className="app">
+					<Switch>
+						<Route exact path="/players-preview" />
+						<PropsRoute
+							component={Nav}
+							handleLogout={this.handleLogout}
+							loggedIn={loggedIn}
+						/>
+					</Switch>
+					{loggedIn !== null ? (
 						<Switch>
-							<Route exact path="/players-preview" />
-							<PropsRoute component={Nav} handleLogout={this.handleLogout} />
+							<PropsRoute
+								exact
+								path="/"
+								component={loggedIn ? Universes : Splash}
+								loadFonts={loadFonts}
+								loggedIn={loggedIn}
+							/>
+							{makeSubRoutes(routes, "", { loggedIn, loadFonts })}
+							<PropsRoute
+								path="/login"
+								component={Login}
+								title="Login"
+								handleLogin={this.handleLogin}
+								loggedIn={loggedIn}
+							/>
+							<PropsRoute
+								path="/signup"
+								component={Login}
+								title="Sign up"
+								handleLogin={this.handleLogin}
+								loggedIn={loggedIn}
+							/>
+							<Route component={NotFound} />
 						</Switch>
-						{this.state.loggedIn !== undefined ? (
-							<Switch>
-								<Route
-									exact
-									path="/"
-									component={this.state.loggedIn ? Universes : Splash}
-								/>
-								{routes.map((route, i) => (
-									<RouteWithSubRoutes key={i} {...route} />
-								))}
-								<PropsRoute
-									path="/login"
-									component={Login}
-									title="Login"
-									handleLogin={this.handleLogin}
-								/>
-								<PropsRoute
-									path="/signup"
-									component={Login}
-									title="Sign up"
-									handleLogin={this.handleLogin}
-								/>
-								<Route component={NotFound} />
-							</Switch>
-						) : null}
-					</div>
-				</Router>
-			</Provider>
+					) : null}
+				</div>
+			</BrowserRouter>
 		);
 	}
 }
 
-export default App;
 export { NotFound, LOADING_GIF };

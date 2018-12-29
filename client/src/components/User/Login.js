@@ -108,10 +108,9 @@ export default class Login extends Component {
 
 	static propTypes = {
 		title: PropTypes.string,
-		handleLogin: PropTypes.func
+		handleLogin: PropTypes.func,
+		loggedIn: PropTypes.bool
 	};
-
-	static contextTypes = { loggedIn: PropTypes.bool };
 
 	constructor(props) {
 		super(props);
@@ -160,7 +159,7 @@ export default class Login extends Component {
 	}
 	render() {
 		if (
-			this.context.loggedIn ||
+			this.props.loggedIn ||
 			(!this.state.emailError &&
 				!this.state.passwordError &&
 				this.state.submitted)

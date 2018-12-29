@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import DB from "../../actions/CRUDAction";
 import { LOADING_GIF } from "../App/App";
-import { RouteWithSubRoutes } from "../Routes";
+import { makeSubRoutes } from "../Routes";
 
 import async from "async";
 
@@ -74,15 +74,14 @@ export default class Table extends Component {
 		else {
 			content = (
 				<Switch>
-					{routes.map((route, i) => (
-						<RouteWithSubRoutes
-							key={i}
-							{...route}
-							path={match.path + route.path}
-							{...{ table, handleDelete, handleChange, isCreate, pack }}
-							id={table._id}
-						/>
-					))}
+					{makeSubRoutes(routes, match.path, {
+						table,
+						handleDelete,
+						handleChange,
+						isCreate,
+						pack,
+						id: table._id
+					})}
 				</Switch>
 			);
 		}

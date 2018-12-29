@@ -17,9 +17,6 @@ const ModalHeader = () => (
 );
 
 export default class IconSelectModal extends React.Component {
-	static contextTypes = {
-		sendPlayersPreview: PropTypes.func
-	};
 	state = {
 		newValue: null,
 		useImg: null,
@@ -66,7 +63,7 @@ export default class IconSelectModal extends React.Component {
 	setPreview = () => {
 		var icon =
 			this.state.newValue !== null ? this.state.newValue : this.props.icon;
-		this.context.sendPlayersPreview(icon);
+		this.props.sendPlayersPreview(icon);
 	};
 	render() {
 		var { icon, cssClass, style } = this.props;

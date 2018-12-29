@@ -5,89 +5,94 @@ import PropTypes from "prop-types";
 import DB from "../../actions/CRUDAction";
 import { LOADING_GIF } from "../App";
 import { PacksList, PackUL } from "../Packs";
-import { PropsRoute, RouteWithSubRoutes } from "../Routes";
+import { PropsRoute, makeSubRoutes } from "../Routes";
 
-const UniverseListDisplay = ({ universes }) => (
-	<div className="main">
-		<div className="container mt-5">
-			<div className="universes">
-				<h1>Universes</h1>
-				<PackUL list={universes} isUniverse={true} addButton={true} />
+/**
+getData(props) {
+	if (!props) props = this.props;
+	if (!this.props.match.params) return;
+
+	const universe =
+		(props.match && props.match.params && props.match.params.universe) ||
+		false;
+	if (!this.state.loading) this.setState({ loading: true });
+
+	if (universe && universe !== "create") {
+		DB.get("universes", universe).then(({ error, data: universe }) => {
+			this.setState({ error, universe, loading: false });
+
+			if (universe && universe.pack) {
+				DB.fetch(`builtpacks/${universe.pack._id}/generators`).then(
+					({ error, data: generators }) => {
+						this.setState({ error, generators });
+					}
+				);
+				DB.fetch(`packs/${universe.pack._id}/tables`).then(
+					({ error, data: tables }) => {
+						this.setState({ error, tables });
+					}
+				);
+
+				this.context.loadFonts(universe.pack.font);
+			}
+		});
+	} else if (universe === "create") {
+		DB.get("packs").then(({ error, data: packs }) =>
+			this.setState({ error, packs, loading: false })
+		);
+	} else
+		DB.get("universes").then(({ error, data: universes }) =>
+			this.setState({ error, universes, loading: false })
+		);
+}**/
+
+const UniverseListDisplay = ({
+	universes: { loaded, array, error },
+	packs,
+	loggedIn
+}) => {
+	if (error) return error.display;
+
+	return (
+		<div className="main">
+			<div className="container mt-5">
+				<div className="universes">
+					<h1>Universes</h1>
+					{!loaded ? (
+						LOADING_GIF
+					) : error ? (
+						error.display
+					) : (
+						<PackUL list={array} isUniverse={true} addButton={true} />
+					)}
+				</div>
+				<PacksList {...packs} loggedIn={loggedIn} />
 			</div>
-			<PacksList />
 		</div>
-	</div>
-);
+	);
+};
 
 class Universes extends Component {
-	state = {
-		universes: undefined,
-		error: undefined,
-		generators: undefined,
-		tables: undefined,
-		universe: undefined,
-		packs: undefined
-	};
-	static contextTypes = {
-		loadFonts: PropTypes.func
-	};
 	static propTypes = {
-		match: PropTypes.object
+		match: PropTypes.object,
+		universes: PropTypes.object,
+		packs: PropTypes.object,
+		loggedIn: PropTypes.bool
 	};
 	static defaultProps = {
 		match: { params: {} }
 	};
-
-	constructor(props) {
-		super(props);
-		props.onInitialLoad(props);
+	componentDidMount() {
+		if (this.props.match.isExact) this.props.loadUniverses(this.props);
 	}
 
 	componentDidUpdate(previProps) {
 		if (!this.props.match.params) return;
 
 		// universe change
-		const { universe: updated } = this.props.match.params;
-		const { universe: current } = previProps.match.params;
-		if (current !== updated) this.getData(this.props);
-	}
-
-	getData(props) {
-		if (!props) props = this.props;
-		if (!this.props.match.params) return;
-
-		const universe =
-			(props.match && props.match.params && props.match.params.universe) ||
-			false;
-		if (!this.state.loading) this.setState({ loading: true });
-
-		if (universe && universe !== "create") {
-			DB.get("universes", universe).then(({ error, data: universe }) => {
-				this.setState({ error, universe, loading: false });
-
-				if (universe && universe.pack) {
-					DB.fetch(`builtpacks/${universe.pack._id}/generators`).then(
-						({ error, data: generators }) => {
-							this.setState({ error, generators });
-						}
-					);
-					DB.fetch(`packs/${universe.pack._id}/tables`).then(
-						({ error, data: tables }) => {
-							this.setState({ error, tables });
-						}
-					);
-
-					this.context.loadFonts(universe.pack.font);
-				}
-			});
-		} else if (universe === "create") {
-			DB.get("packs").then(({ error, data: packs }) =>
-				this.setState({ error, packs, loading: false })
-			);
-		} else
-			DB.get("universes").then(({ error, data: universes }) =>
-				this.setState({ error, universes, loading: false })
-			);
+		//const { universe: updated } = this.props.match.params;
+		//const { universe: current } = previProps.match.params;
+		// if (current !== updated) this.getData(this.props);
 	}
 
 	handleSave = e => {
@@ -152,7 +157,14 @@ class Universes extends Component {
 	};
 
 	render() {
-		const { routes = [], match } = this.props;
+		const {
+			routes = [],
+			match,
+			universes,
+			packs,
+			loggedIn,
+			loadFonts
+		} = this.props;
 		const {
 			handleRenameGen,
 			handleSortGens,
@@ -162,30 +174,25 @@ class Universes extends Component {
 			handleSave
 		} = this;
 
-		var content = this.state.error ? (
-			<div className="main">{this.state.error.display}</div>
-		) : this.state.loading ? (
-			<div className="main">{LOADING_GIF}</div>
-		) : (
+		var content = (
 			<div id="Universes">
 				<Switch>
-					{routes.map((route, i) => (
-						<RouteWithSubRoutes
-							key={i}
-							{...route}
-							{...this.state}
-							path={match.path + route.path}
-							{...{
-								handleSortGens,
-								handleRefresh,
-								handleRenameGen,
-								handleAdd,
-								handleDelete,
-								handleSave
-							}}
-						/>
-					))}
-					<PropsRoute {...this.state} component={UniverseListDisplay} />
+					{makeSubRoutes(routes, match.path, {
+						handleSortGens,
+						handleRefresh,
+						handleRenameGen,
+						handleAdd,
+						handleDelete,
+						handleSave,
+						universes,
+						packs,
+						loggedIn,
+						loadFonts
+					})}
+					<PropsRoute
+						{...{ universes, packs, loggedIn }}
+						component={UniverseListDisplay}
+					/>
 				</Switch>
 			</div>
 		);

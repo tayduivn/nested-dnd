@@ -12,12 +12,14 @@ import actions from "./actions";
 const routes = [
 	{
 		path: "/create",
+		exact: true,
 		isCreate: true,
 		private: true,
 		component: EditPack
 	},
 	{
 		path: "/:pack",
+		isCreate: false,
 		component: Pack,
 		routes: [
 			{
@@ -43,10 +45,20 @@ const routes = [
 	}
 ];
 
-const mapDispatchToProps = dispatch => ({
-	onAddPack: data => dispatch(actions.add(data))
-});
-const mapStateToProps = state => state.packs;
+const mapStateToProps = (state, ownProps) => {
+	return {
+		...ownProps,
+		...state.packs,
+		loggedIn: state.user.loggedIn,
+		getPack: packid => (state.packs.map && state.packs.map[packid]) || {}
+	};
+};
+const mapDispatchToProps = dispatch => {
+	return {
+		onAddPack: data => dispatch(actions.add(data)),
+		fetchPack: id => dispatch(actions.fetchPack(dispatch, id))
+	};
+};
 
 const Container = connect(
 	mapStateToProps,

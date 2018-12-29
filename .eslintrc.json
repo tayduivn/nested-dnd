@@ -16,7 +16,6 @@
 				"SwitchCase": 1
 			}
 		],
-		"linebreak-style": ["error", "unix"],
 		"eqeqeq": ["warn", "always"],
 		"radix": ["warn", "always"],
 		"array-callback-return": ["warn"],

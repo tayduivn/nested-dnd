@@ -52,9 +52,6 @@ export default class Explore extends Component {
 		pack: (this.props.universe && this.props.universe.pack) || {},
 		showData: false
 	};
-	static contextTypes = {
-		loadFonts: PropTypes.func
-	};
 
 	constructor(props) {
 		super(props);
@@ -75,11 +72,8 @@ export default class Explore extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (
-			this.state.pack.font !== prevState.pack.font &&
-			this.context.loadFonts
-		) {
-			this.context.loadFonts([this.state.pack.font]);
+		if (this.state.pack.font !== prevState.pack.font && this.props.loadFonts) {
+			this.props.loadFonts([this.state.pack.font]);
 		}
 	}
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../Util";
 import PropTypes from "prop-types";
 
 import "./Splash.css";
@@ -44,11 +44,8 @@ const Pack = ({ pack }) => (
 );
 
 class Splash extends React.Component {
-	static contextTypes = {
-		loadFonts: PropTypes.func
-	};
 	componentDidMount() {
-		if (this.context.loadFonts) this.context.loadFonts([nested.font, dnd.font]);
+		this.props.loadFonts([nested.font, dnd.font]);
 	}
 	render() {
 		return (
