@@ -35,6 +35,6 @@ const config = {
 	}
 };
 
-config.rules = { ...config.rules, ...techdebt };
+config.rules = Object.assign({}, config.rules, techdebt);
 
 module.exports = config;
