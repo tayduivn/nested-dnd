@@ -141,7 +141,7 @@ function validateMixedThing(input) {
 			input.rows.length === 1 &&
 			typeof input.rows[0] === "string"
 		) {
-			input = { type: string, value: input.rows[0] };
+			input = { type: "string", value: input.rows[0] };
 		} else {
 			// validate against table schema
 			var t = new Table(input.value);
@@ -156,7 +156,7 @@ function validateMixedThing(input) {
 		input.value !== undefined
 	) {
 		if (input.value && input.value.rows) input.type = "table";
-		else throw Error("cannot set name to value " + value);
+		else throw Error("cannot set name to value " + input.value);
 	}
 	return input;
 }

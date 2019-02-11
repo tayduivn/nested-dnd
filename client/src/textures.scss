@@ -1,6 +1,16 @@
-@import './variables.scss';
+@import "./variables.scss";
 
-$textures: ['3px-tile', '45-degree-fabric-dark', '45-degree-fabric-light', '60-lines', 'ag-square', 'always-grey', 'arabesque', 'arches', 'black-scales', 'bright-squares', 'dark-mosaic', 'dark-wood', 'diagonal-striped-brick', 'diamond-upholstery', 'dimension', 'egg-shell', 'flowers', 'foggy-birds', 'food', 'football-no-lines', 'gradient-squares', 'gravel', 'gray-floral', 'grid-me', 'grunge-wall', 'hexellence', 'honey-im-subtle', 'inspiration-geometry', 'leather', 'light-gray', 'light-grey-floral-motif', 'light-paper-fibers', 'maze-black', 'maze-white', 'nestedBaconverse', 'nestedDoughnutverse', 'nestedLasagnaverse', 'nestedSharkverse', 'padded-light', 'pineapple-cut', 'pixel-weave', 'polaroid', 'purty-wood', 'random-grey-variations', 'retina-wood', 'robots', 'rocky-wall', 'scribble-light', 'shattered-dark', 'shley-tree-1', 'shley-tree-2', 'skulls', 'stardust', 'subtle-white-feathers', 'tileable-wood-colored', 'tileable-wood', 'tree-bark', 'type', 'washi', 'white-diamond-dark', 'woven-light', 'woven', 'xv'];
+$textures: [ "3px-tile", "45-degree-fabric-dark", "45-degree-fabric-light", "60-lines", "ag-square",
+	"always-grey", "arabesque", "arches", "black-scales", "bright-squares", "dark-mosaic", "dark-wood",
+	"diagonal-striped-brick", "diamond-upholstery", "dimension", "egg-shell", "flowers", "foggy-birds",
+	"food", "football-no-lines", "gradient-squares", "gravel", "gray-floral", "grid-me", "grunge-wall",
+	"hexellence", "honey-im-subtle", "inspiration-geometry", "leather", "light-gray",
+	"light-grey-floral-motif", "light-paper-fibers", "maze-black", "maze-white", "nestedBaconverse",
+	"nestedDoughnutverse", "nestedLasagnaverse", "nestedSharkverse", "padded-light", "pineapple-cut",
+	"pixel-weave", "polaroid", "purty-wood", "random-grey-variations", "retina-wood", "robots",
+	"rocky-wall", "scribble-light", "shattered-dark", "shley-tree-1", "shley-tree-2", "skulls",
+	"stardust", "subtle-white-feathers", "tileable-wood-colored", "tileable-wood", "tree-bark", "type",
+	"washi", "white-diamond-dark", "woven-light", "woven", "xv" ];
 $black: #000;
 $red: #f00;
 $yellow: #ff0;
@@ -8,9 +18,11 @@ $blue: #00f;
 $green: #008000;
 
 @each $name in $textures {
-  .ptn-#{$name}, .ptn-#{$name}.btn:not(:disabled):not(.disabled):active, .ptn-#{$name}.btn:not(:disabled):not(.disabled).active {
-    background-image: url('./assets/patterns/#{$name}.png');
-  }
+	.ptn-#{$name},
+	.ptn-#{$name}.btn:not(:disabled):not(.disabled):active,
+	.ptn-#{$name}.btn:not(:disabled):not(.disabled).active {
+		background-image: url("./assets/patterns/#{$name}.png");
+	}
 }
 
 .ptn-purty-wood,
@@ -18,73 +30,104 @@ $green: #008000;
 .ptn-white-diamond-dark,
 .ptn-60-lines,
 .ptn-45-degree-fabric-dark {
-  background-blend-mode: color-burn;
+	background-blend-mode: color-burn;
 }
 
 .ptn-stardust,
 .ptn-rocky-wall {
-  background-blend-mode: exclusion;
+	background-blend-mode: exclusion;
 }
 
 .ptn-shattered-dark {
-  background-blend-mode: multiply;
+	background-blend-mode: multiply;
 }
 
 .ptn-rainbow,
 .child-inner.ptn-rainbow {
+	$rainbow: linear-gradient(to right bottom, #f0f, #ffa500, #ff0, SpringGreen, #0ff);
 
-  $rainbow: linear-gradient(to right bottom, #f0f, #ffa500, #ff0, SpringGreen, #0ff);
+	background-image: $rainbow;
+	color: $black;
 
-  background-image: $rainbow;
-  color: $black;
+	&.fa,
+	&.gi,
+	svg {
+		background-clip: text;
+		fill: $rainbow;
+		text-fill-color: transparent;
+	}
 
-  &.fa,
-  &.gi,
-  svg {
-    background-clip: text;
-    fill: $rainbow;
-    text-fill-color: transparent;
-  }
-
-  &.btn {
-    $btn-bg: #00ff7f;
-    @include button-variant($btn-bg, $btn-bg)
-  }
+	&.btn {
+		$btn-bg: #00ff7f;
+		@include button-variant($btn-bg, $btn-bg);
+	}
 }
-
 
 .ptn-ocean {
-  $ocean: linear-gradient(transparent, #0057be);
+	$ocean: linear-gradient(transparent, #0057be);
 
-  background-image: $ocean;
+	background-image: $ocean;
 }
 
-
-@keyframes colorchange
-{
-  0% { background: $red; }
-  25% { background: $yellow; }
-  50% { background: $blue; }
-  75% { background: $green; }
-  100% { background: $red; }
+@keyframes colorchange {
+	0% {
+		background: $red;
+	}
+	25% {
+		background: $yellow;
+	}
+	50% {
+		background: $blue;
+	}
+	75% {
+		background: $green;
+	}
+	100% {
+		background: $red;
+	}
 }
 
-@keyframes colorchange /* Safari and Chrome - necessary duplicate */
-{
-  0% {background: $red;}
-  25% {background: $yellow;}
-  50% {background: $blue;}
-  75% {background: $green;}
-  100% {background: $red;}
+@keyframes colorchange /* Safari and Chrome - necessary duplicate */ {
+	0% {
+		background: $red;
+	}
+	25% {
+		background: $yellow;
+	}
+	50% {
+		background: $blue;
+	}
+	75% {
+		background: $green;
+	}
+	100% {
+		background: $red;
+	}
 }
 
 .ptn-colorchange {
-  animation: colorchange 10s infinite;
-  color: $black;
+	animation: colorchange 10s infinite;
+	color: $black;
 
-  &.icon,
-  &.icon svg {
-    background-clip: text;
-    text-fill-color: transparent;
-  }
+	&.icon,
+	&.icon svg {
+		background-clip: text;
+		text-fill-color: transparent;
+	}
+}
+/* ----------------- https://loading.io/pattern ---------------- */
+
+.ptn-interstellar {
+	background-image: url("./assets/patterns/interstellar.svg");
+	background-size: 100% 100%;
+}
+
+.ptn-fireflies {
+	background-image: url("./assets/patterns/firefly.svg");
+	background-size: 100% 100%;
+}
+
+.ptn-rain {
+	background-image: url("./assets/patterns/rain.gif");
+	background-blend-mode: overlay;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 
 import Characters from "../Characters/Characters";
-import { toUpper } from "../../util/util";
+import { toUpper } from "../../util";
 
 const NavItem = ({ label, active }) => (
 	<li className="nav-item">

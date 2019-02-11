@@ -81,20 +81,12 @@ const NotFNG = ({
 				: tables.filter(t => t.returns !== "generator" && t._id !== _id)
 		}
 		array={rows}
-		type={
-			returns === "generator" && (!type || type === "string")
-				? "generator"
-				: type
-		}
+		type={returns === "generator" && (!type || type === "string") ? "generator" : type}
 	/>
 );
 
 const ReturnOption = ({ returns, handleChange, type = "" }) => (
-	<label
-		className={
-			"form-check btn btn-secondary" + (returns === type ? " active" : "")
-		}
-	>
+	<label className={"form-check btn btn-secondary" + (returns === type ? " active" : "")}>
 		<input
 			className="form-check-input"
 			type="radio"
@@ -134,15 +126,7 @@ const BulkAdd = ({ handleBulkAdd, bulkAddText, handleChange }) => (
 	</div>
 );
 
-const Rows = ({
-	returns,
-	handleChange,
-	rows,
-	concat,
-	generators,
-	tables,
-	_id
-}) => (
+const Rows = ({ returns, handleChange, rows, concat, generators, tables, _id }) => (
 	<div className="form-group">
 		<label>Rows</label>
 		<ul className="p-0">
@@ -168,9 +152,7 @@ const Rows = ({
 		</ul>
 		<button
 			className="btn btn-primary"
-			onClick={() =>
-				handleChange(["rows", rows.length || 0], { type: "string" })
-			}
+			onClick={() => handleChange(["rows", rows.length || 0], { type: "string" })}
 		>
 			<i className="fas fa-plus" /> Add
 		</button>
@@ -209,8 +191,8 @@ const DisplayForm = ({
 					name="chooseRandom"
 					onChange={e => handleChange("concat", !concat)}
 				/>
-				<strong> Combine Rows:</strong> The rows will combine together (instead
-				of returning 1 random row).
+				<strong> Combine Rows:</strong> The rows will combine together (instead of returning 1
+				random row).
 			</label>
 		</div>
 
@@ -224,15 +206,12 @@ const DisplayForm = ({
 						name="capitalize"
 						onChange={e => handleChange(["rows", 3, "value"], e.target.checked)}
 					/>
-					<strong> Capitalize:</strong> The first letter of the result will
-					always be capitalized.
+					<strong> Capitalize:</strong> The first letter of the result will always be capitalized.
 				</label>
 			</div>
 		) : null}
 
-		<Rows
-			{...{ returns, handleChange, rows, concat, generators, tables, _id }}
-		/>
+		<Rows {...{ returns, handleChange, rows, concat, generators, tables, _id }} />
 
 		{!concat ? <div>Weights Total = {totalWeight}</div> : null}
 
@@ -251,18 +230,11 @@ const DisplayForm = ({
 
 		{isEmbedded ? null : (
 			<div>
-				Roll:{" "}
-				{typeof roll === "string"
-					? roll
-					: roll && roll.toString
-						? roll.toString()
-						: null}
+				Roll: {typeof roll === "string" ? roll : roll && roll.toString ? roll.toString() : null}
 			</div>
 		)}
 
-		{returns === "text" ? (
-			<BulkAdd {...{ handleBulkAdd, bulkAddText, handleChange }} />
-		) : null}
+		{returns === "text" ? <BulkAdd {...{ handleBulkAdd, bulkAddText, handleChange }} /> : null}
 
 		<div className="btn btn-danger" onClick={handleDelete}>
 			Delete
@@ -362,12 +334,7 @@ export default class EditTable extends Component {
 				if (isValid && !this.state.isCreate) {
 					// nest embedded
 					if (this.props.isEmbedded) {
-						property = [
-							"rows",
-							this.props.match.params.index,
-							"value",
-							property
-						];
+						property = ["rows", this.props.match.params.index, "value", property];
 					}
 
 					// debounce typing
@@ -379,9 +346,7 @@ export default class EditTable extends Component {
 		);
 	};
 
-	handleChangeEmbedded = () => {
-		console.log("jey monika");
-	};
+	handleChangeEmbedded = () => {};
 
 	handleDelete = () => {
 		if (this.props.isEmbedded) console.log("test");
@@ -398,14 +363,7 @@ export default class EditTable extends Component {
 
 	render() {
 		const { handleChange, handleBulkAdd, handleDelete } = this;
-		const {
-			isCreate,
-			match,
-			isEmbedded,
-			table,
-			handleAdd,
-			pack = {}
-		} = this.props;
+		const { isCreate, match, isEmbedded, table, handleAdd, pack = {} } = this.props;
 		const { roll } = table;
 		const { table: embeddedTable = {} } = this.props.location.state || {};
 		var { generators, tables } = pack;

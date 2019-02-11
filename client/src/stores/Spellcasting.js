@@ -53,13 +53,8 @@ class KnownSpell {
 }
 
 class Spellcasting {
-	constructor(
-		{ spells = [], ability, dc, notes = {}, ritual_cast = false },
-		source
-	) {
-		this.spells = spells.map
-			? spells.map(s => new KnownSpell(s, notes[s]))
-			: [];
+	constructor({ spells = [], ability, dc, notes = {}, ritual_cast = false }, source) {
+		this.spells = spells.map ? spells.map(s => new KnownSpell(s, notes[s])) : [];
 		this.ability = ability;
 		this.dc = dc;
 		this.notes = notes;
@@ -81,24 +76,21 @@ class Spellcasting {
 		if (!obj.notes) obj.notes = {};
 
 		obj.spells.forEach(name => {
-			if (!this.knowSpell(name))
-				this.spells.push(new KnownSpell(name, obj.notes[name]));
+			if (!this.knowSpell(name)) this.spells.push(new KnownSpell(name, obj.notes[name]));
 		});
 		this.spells.sort((a, b) => {
 			return a.name ? a.name.localeCompare(b.name) : true;
 		});
 	}
 	printAbility() {
-		return skillAbbrev[this.ability]
-			? skillAbbrev[this.ability].toUpperCase()
-			: "";
+		return skillAbbrev[this.ability] ? skillAbbrev[this.ability].toUpperCase() : "";
 	}
 	spellsByLevel() {
 		var levels = [];
 		this.spells.forEach(s => {
 			var data = s.getData();
 			if (!data) {
-				console.error("Couldn't find spell " + s);
+				//console.error("Couldn't find spell " + s);
 				return;
 			}
 
@@ -127,18 +119,13 @@ export default class SpellcastingList {
 			var highestSpellSlot = 0;
 			slots.forEach((num, i) => {
 				if (highestSpellSlot) return;
-				if (slots[i + 1] === 0 || slots[i + 1] === undefined)
-					highestSpellSlot = i;
+				if (slots[i + 1] === 0 || slots[i + 1] === undefined) highestSpellSlot = i;
 			});
 			classSpells = spellStore.getClassSpells(name, highestSpellSlot);
 			spellcasting.learnSpells({ spells: classSpells });
 		}
 
-		var prepares =
-			name === "Druid" ||
-			name === "Wizard" ||
-			name === "Cleric" ||
-			name === "Paladin";
+		var prepares = name === "Druid" || name === "Wizard" || name === "Cleric" || name === "Paladin";
 
 		this.list.push({
 			name: name,

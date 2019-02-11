@@ -1,5 +1,4 @@
 const chai = require("chai");
-const should = chai.should();
 const sinon = require("sinon");
 const request = require("supertest")(app);
 chai.use(require("chai-as-promised"));

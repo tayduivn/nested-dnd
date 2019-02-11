@@ -32,6 +32,7 @@ describe("Universe", () => {
 
 		pack = new Pack({
 			seed: "universe",
+			url: "test",
 			name: "HELLO"
 		});
 
@@ -44,7 +45,7 @@ describe("Universe", () => {
 			});
 		});
 
-		sinon.stub(Universe, "find").callsFake(query => {
+		sinon.stub(Universe, "find").callsFake(() => {
 			return [];
 		});
 	});

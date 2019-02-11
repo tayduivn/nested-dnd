@@ -24,9 +24,7 @@ module.exports = {
 			return next();
 		}
 
-		res
-			.status(401)
-			.json({ error: "You need to be an administrator to do that" });
+		res.status(401).json({ error: "You need to be an administrator to do that" });
 	},
 
 	canViewTable: function(req, res, next) {
@@ -35,13 +33,8 @@ module.exports = {
 			.then(table => {
 				if (!table) return res.status(404);
 
-				if (
-					!table.public &&
-					(!req.user || table.user.toString() !== req.user.id)
-				)
-					return res
-						.status(401)
-						.json({ error: "You do not have permission to view this table" });
+				if (!table.public && (!req.user || table.user.toString() !== req.user.id))
+					return res.status(401).json({ error: "You do not have permission to view this table" });
 
 				req.table = table;
 				next();
@@ -56,9 +49,7 @@ module.exports = {
 				if (!table) return res.status(404);
 
 				if (!req.user || table.user.toString() !== req.user.id)
-					return res
-						.status(401)
-						.json({ error: "You do not have permission to edit this table" });
+					return res.status(401).json({ error: "You do not have permission to edit this table" });
 
 				req.table = table;
 				next();
@@ -73,9 +64,7 @@ module.exports = {
 			if (req.pack.public || (req.user && req.pack._user.id === req.user.id)) {
 				return next();
 			} else {
-				return res
-					.status(401)
-					.json({ error: "You do not have permission to view this pack" });
+				return res.status(401).json({ error: "You do not have permission to view this pack" });
 			}
 		});
 	},
@@ -118,9 +107,7 @@ module.exports = {
 
 	canEditPack: function(req, res, next) {
 		if (!req.isAuthenticated())
-			res
-				.status(401)
-				.json({ error: "You need to be logged in to edit packs." });
+			res.status(401).json({ error: "You need to be logged in to edit packs." });
 
 		return getPack(req, res, () => {
 			if (!req.pack) return;
@@ -128,9 +115,7 @@ module.exports = {
 			if (req.user && req.pack._user.id === req.user.id) {
 				return next();
 			} else {
-				return res
-					.status(401)
-					.json({ error: "You do not have permission to edit this pack" });
+				return res.status(401).json({ error: "You do not have permission to edit this pack" });
 			}
 		});
 	},
@@ -147,13 +132,7 @@ module.exports = {
 		else {
 			res.status(500);
 			console.error(err); // internal error
-			console.error(
-				err.fileName +
-					" | col:" +
-					err.columnNumber +
-					" | line:" +
-					err.lineNumber
-			); // internal error
+			console.error(err.fileName + " | col:" + err.columnNumber + " | line:" + err.lineNumber); // internal error
 			console.error(err.stack);
 		}
 
@@ -193,16 +172,10 @@ module.exports = {
 function getPack(req, res, next) {
 	var packGetter;
 
-	if (req.params.pack)
-		packGetter = Pack.findOne({ _id: req.params.pack }).populate(
-			"_user",
-			"name id"
-		);
-	else if (req.params.url)
-		packGetter = Pack.findOne({ url: req.params.url }).populate(
-			"_user",
-			"name id"
-		);
+	//	if (req.params.pack)
+	//		packGetter = Pack.findOne({ _id: req.params.pack || req.params. }).populate("_user", "name id");
+	if (req.params.url)
+		packGetter = Pack.findOne({ url: req.params.url }).populate("_user", "name id");
 	else return res.status(412).json({ error: "Missing pack id" });
 
 	return packGetter

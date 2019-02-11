@@ -1,16 +1,15 @@
 import React from "react";
-import { Router, Route } from "react-router-dom";
-import chai from "chai";
+import { Router } from "react-router-dom";
 import enzyme from "enzyme";
 import { spy } from "sinon";
 import { createMemoryHistory } from "history";
+import { Provider } from "react-redux";
 
-import { PacksList } from "./Packs";
 import Pack from "./Pack";
+import Packs from "./Packs";
 import { PropsRoute } from "../Routes";
 import EditPack from "./EditPack";
-
-const should = chai.should();
+import { store } from "../App";
 
 describe("<PacksList />", () => {
 	var wrap;
@@ -92,6 +91,7 @@ describe("<Pack />", () => {
 							params: { pack: "dnd" },
 							isExact: true
 						}}
+						fetchPack={() => {}}
 					/>
 				</Router>
 			);
@@ -111,7 +111,9 @@ describe("<Pack />", () => {
 	describe("<EditPack />", () => {
 		it("renders", () => {
 			var wrap = enzyme.mount(
-				<EditPack pack={{}} history={createMemoryHistory("/dnd/edit")} />
+				<Provider store={store}>
+					<EditPack pack={{}} history={createMemoryHistory("/dnd/edit")} match={{ params: [] }} />
+				</Provider>
 			);
 			console.error.calledAfter(enzyme.mount).should.equal(false);
 		});

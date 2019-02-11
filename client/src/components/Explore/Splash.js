@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "../Util";
-import PropTypes from "prop-types";
 
 import "./Splash.css";
 

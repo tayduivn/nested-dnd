@@ -15,12 +15,10 @@ const morgan = require("morgan");
 const app = express();
 const port = process.env.PORT || 3001;
 const server = require("http").createServer(app);
-const io = require("socket.io")(server);
+//const io = require("socket.io")(server);
 
-const Util = require("./app/models/utils");
 const MW = require("./app/routes/middleware");
 
-let db;
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 mongoose.set("useNewUrlParser", true);
@@ -29,22 +27,20 @@ mongoose.set("useNewUrlParser", true);
 if (process.env.NODE_ENV === "production") {
 	const staticPath = path.join(__dirname, "/../client/build");
 	app.use(express.static(staticPath));
-	console.log("Serving static files at / from " + staticPath);
 }
 
 if (process.env.NODE_ENV !== "test") {
-	mongoose.connect(
-		process.env.MONGODB_URI || "mongodb://localhost:27017/nested-dnd",
-		function(err, client) {
-			if (err) {
-				console.log(err);
-				throw new Error("Couldn't connect to mongo database");
-			} else {
-				// launch ======================================================================
-				server.listen(port, () => console.log(`Listening on port ${port}`));
-			}
+	mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/nested-dnd", function(
+		err
+	) {
+		if (err) {
+			console.log(err);
+			throw new Error("Couldn't connect to mongo database");
+		} else {
+			// launch ======================================================================
+			server.listen(port, () => console.log(`Listening on port ${port}`));
 		}
-	);
+	});
 }
 
 require("./config/passport")(passport); // pass passport for configuration
@@ -83,17 +79,30 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 // routes ======================================================================
 
+const auth = require("./app/routes/auth");
+const builtpacks = require("./app/routes/builtpacks");
+const characters = require("./app/routes/characters");
+const explore = require("./app/routes/explore");
+const packs = require("./app/routes/packs");
+const playersPreview = require("./app/routes/players-preview.js");
+const tables = require("./app/routes/tables");
+const universes = require("./app/routes/universes");
+const normal = require("./app/routes/normal");
+
 // load our routes and pass in our app and fully configured passport
-require("./app/routes/auth.js")(app, passport);
-require("./app/routes/packs.js")(app, mongoose);
-require("./app/routes/generators.js")(app, mongoose);
-require("./app/routes/tables.js")(app, mongoose);
-require("./app/routes/universes.js")(app, mongoose);
-require("./app/routes/characters.js")(app, mongoose);
-require("./app/routes/players-preview.js")(app);
+app.use("/api", auth);
+
+app.use("/api/builtpacks", builtpacks);
+app.use("/api/characters", characters);
+app.use("/api/explore", explore);
+app.use("/api/packs", packs);
+app.use("/api/players-preview", playersPreview);
+app.use("/api/tables", tables);
+app.use("/api/universes", MW.isLoggedIn, universes);
+app.use("/api/normal", normal);
 
 // 404 error handler returns json
-app.use("/api", function(req, res, next) {
+app.use("/api", function(req, res) {
 	res.status(404).json({ error: { message: "404 Not Found" } });
 	return;
 });
@@ -108,3 +117,5 @@ if (process.env.NODE_ENV === "production") {
 
 // generic error handler
 app.use(MW.errorHandler);
+
+module.exports = app;

@@ -2,9 +2,7 @@
 
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const generatorSchema = require("./generator");
 
-const BUILD_FREQUENCY = 1000 * 3600; // 1 hour
 const SEED_DELIM = ">";
 
 var packSchema = Schema({
@@ -21,10 +19,13 @@ var packSchema = Schema({
 	},
 	name: {
 		type: String,
-		required: true
+		required: true,
+		set: val => (!val ? this._id : val),
+		get: val => (!val ? this._id : val)
 	},
 	url: {
-		type: String
+		type: String,
+		required: true
 	},
 	font: String,
 	cssClass: String,

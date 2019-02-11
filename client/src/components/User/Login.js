@@ -3,6 +3,48 @@ import PropTypes from "prop-types";
 
 import "./Login.css";
 
+const Email = ({ email, emailError, handleChange }) => (
+	<div className="form-group" name="email">
+		<label htmlFor="login_email">Email</label>
+		<input
+			id="login_email"
+			name="email"
+			className={`form-control ${emailError ? "is-invalid" : ""}`}
+			type="email"
+			aria-describedby="emailHelp"
+			placeholder="email"
+			value={email}
+			onChange={handleChange}
+			required
+		/>
+		<small id="emailHelp" className="invalid-feedback">
+			{emailError}
+		</small>
+	</div>
+);
+
+const Password = ({ password, passwordError, handleChange, isConfirm }) => (
+	<div className="form-group" name="password">
+		<label htmlFor={`password${isConfirm ? "_confirm" : ""}`}>Password</label>
+		<input
+			id={`password${isConfirm ? "_confirm" : ""}`}
+			type="password"
+			placeholder="password"
+			name={`password${isConfirm ? "2" : ""}`}
+			className={`form-control ${passwordError ? "is-invalid" : ""}`}
+			autoComplete="new-password"
+			aria-describedby="pwHelp"
+			value={password}
+			onChange={handleChange}
+			minLength="8"
+			required
+		/>
+		<small id="pwHelp" className="invalid-feedback">
+			{passwordError}
+		</small>
+	</div>
+);
+
 const DisplayLogin = ({
 	title,
 	handleSubmit,
@@ -21,70 +63,12 @@ const DisplayLogin = ({
 		<div className="container mt-5 loginForm">
 			<h1 className="mb-1">{title}</h1>
 			<form onSubmit={handleSubmit}>
-				<div className="form-group" name="email">
-					<label htmlFor="login_email">Email</label>
-					<input
-						id="login_email"
-						name="email"
-						className={`form-control ${
-							emailValid === false ? "is-invalid" : ""
-						}`}
-						type="email"
-						aria-describedby="emailHelp"
-						placeholder="email"
-						value={email}
-						onChange={handleChange}
-						required
-					/>
-					<small id="emailHelp" className="invalid-feedback">
-						{emailError}
-					</small>
-				</div>
-				<div className="form-group" name="password">
-					<label htmlFor="first_password">Password</label>
-					<input
-						id="first_password"
-						type="password"
-						placeholder="password"
-						name="password"
-						className={`form-control ${
-							passwordValid === false ? "is-invalid" : ""
-						}`}
-						autoComplete="new-password"
-						aria-describedby="pwHelp"
-						value={password}
-						onChange={handleChange}
-						minLength="8"
-						required
-					/>
-					<small id="pwHelp" className="invalid-feedback">
-						{passwordError}
-					</small>
-				</div>
+				<Email {...{ email, emailValid, emailError, handleChange }} />
+				<Password {...{ password, passwordValid, passwordError, handleChange }} />
 				{title === "Login" ? null : (
-					<div className="form-group" name="confim_password">
-						<label htmlFor="confim">Confim password</label>
-						<input
-							id="confim"
-							type="password"
-							placeholder="password"
-							name="password2"
-							className={`form-control ${
-								password2Valid === false ? "is-invalid" : ""
-							}`}
-							autoComplete="new-password"
-							aria-describedby="pwHelp"
-							value={password2}
-							onChange={handleChange}
-							minLength="8"
-							required
-						/>
-						<small id="pwHelp" className="invalid-feedback">
-							{password2Error}
-						</small>
-					</div>
+					<Password {...{ password2, password2Valid, password2Error, handleChange }} />
 				)}
-				<button type="submit" className="btn btn-default">
+				<button type="submit" className="btn btn-primary">
 					Submit
 				</button>
 			</form>
@@ -95,14 +79,8 @@ const DisplayLogin = ({
 export default class Login extends Component {
 	state = {
 		email: "",
-		emailValid: null,
-		emailError: null,
 		password: "",
-		passwordValid: null,
-		passwordError: null,
 		password2: "",
-		password2Valid: null,
-		password2Error: null,
 		submitted: false
 	};
 
@@ -128,41 +106,21 @@ export default class Login extends Component {
 	handleSubmit(e) {
 		e.preventDefault();
 
-		if (
-			this.props.title !== "Login" &&
-			this.state.password !== this.state.password2
-		) {
-			this.setState({
-				password2Valid: false,
-				password2Error: "Passwords do not match"
-			});
-			return;
-		}
-
-		const payload = {
-			email: this.state.email,
-			password: this.state.password
-		};
-
 		this.props
-			.handleLogin(this.props.location.pathname, payload)
-			.then(({ error, data: json }) => {
-				let newState = {
-					emailValid: json && json.emailError ? false : null,
-					emailError: json && json.emailError,
-					passwordValid: json && json.passwordError ? false : null,
-					passwordError: json && json.passwordError,
-					submitted: true
-				};
-				this.setState(newState);
-			});
+			.handleLogin(this.props.location.pathname, {
+				email: this.state.email,
+				password: this.state.password,
+				password2: this.state.password2,
+				isSignup: this.props.title !== "Login"
+			})
+			.then(() => this.setState({ submitted: true }));
 	}
 	render() {
+		const error = this.props.error || {};
+
 		if (
 			this.props.loggedIn ||
-			(!this.state.emailError &&
-				!this.state.passwordError &&
-				this.state.submitted)
+			(!error.emailError && !error.passwordError && this.state.submitted)
 		) {
 			this.props.history.goBack();
 			return null;
@@ -172,6 +130,7 @@ export default class Login extends Component {
 			<DisplayLogin
 				{...this.props}
 				{...this.state}
+				{...error}
 				handleSubmit={this.handleSubmit}
 				handleChange={this.handleChange}
 			/>

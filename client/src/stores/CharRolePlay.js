@@ -1,13 +1,7 @@
 import classStore from "./classStore";
 
 export class ClassInfo {
-	constructor({
-		name = "Fighter",
-		level = 1,
-		label = "",
-		subclasses = {},
-		knownSpells = {}
-	}) {
+	constructor({ name = "Fighter", level = 1, label = "", subclasses = {}, knownSpells = {} }) {
 		this.name = name;
 		this.classData = classStore.get(name);
 		this.level = level;
@@ -17,12 +11,12 @@ export class ClassInfo {
 		this.slots = [];
 
 		if (!this.classData.levels[this.level - 1]) {
-			console.error(
+			/*console.error(
 				"Can't find " +
 					this.classData.name +
 					" class data for level " +
 					this.level
-			);
+			);*/
 		} else this.slots = this.classData.levels[this.level - 1].slots;
 	}
 	isSubclass(name, value) {

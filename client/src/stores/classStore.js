@@ -54,7 +54,7 @@ class ClassStore {
 	}
 	get(name) {
 		if (!this.classes[name]) {
-			console.error("Can't find class with name " + name);
+			//console.error("Can't find class with name " + name);
 		}
 		return new PlayerClass(this.classes[name] ? this.classes[name] : {});
 	}
@@ -77,8 +77,7 @@ function processFeature(feature, name, subclasses) {
 		return { ...ret, desc };
 	}
 
-	if (!feature.subclass || !doInclude(feature.subclass, name, subclasses))
-		return ret;
+	if (!feature.subclass || !doInclude(feature.subclass, name, subclasses)) return ret;
 
 	let useDesc = desc !== false && desc === "" && feature.description;
 	if (useDesc) desc = feature.description;
@@ -92,8 +91,7 @@ function doInclude(sc, name, subclasses) {
 	// it is the chosen subclass
 	let isSubclass = subclasses[subclassName] === name;
 	// it is a feature of the chosen subclass
-	let isSubclassFeature =
-		subclasses[superclassName] && subclasses[superclassName] === subclassName;
+	let isSubclassFeature = subclasses[superclassName] && subclasses[superclassName] === subclassName;
 	return isSubclass || isSubclassFeature;
 }
 

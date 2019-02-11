@@ -1,8 +1,7 @@
 @import "../../variables.scss";
 
-#explorePage{
-
-	.modal-body{
+#explorePage {
+	.modal-body {
 		background-color: white;
 	}
 
@@ -15,247 +14,29 @@
 		left: 0;
 	}
 
-	.sortable-ghost{
+	.sortable-ghost {
 		opacity: 0;
 	}
-	
-	#childrenGrid{
+
+	#childrenGrid {
 		margin-top: $grid-gutter-width/2;
 	}
-	#content{
+	#content {
 		padding-top: 50px;
 		min-height: 100%;
 	}
 
-	.icon{
-		margin: 0; 
+	.icon {
+		margin: 0;
 		background-size: cover;
 	}
-	.icon.spin, .icon.spinReverse{
+	.icon.spin,
+	.icon.spinReverse {
 		animation-duration: 5s;
 	}
-	.icon.text{
+	.icon.text {
 		line-height: 1em;
 		font-weight: bold;
-	}
-
-	.buttons-bar {
-		padding: 0;
-		line-height:0;
-		font-size: 1.1rem;
-		flex-flow: row nowrap;
-		justify-content: space-between;
-		border-top: 1px solid currentColor;
-
-		.btn{
-			border-radius: 0;
-			height:100%;
-			white-space: pre-line;
-			font-size: 1em;
-			line-height: 1.8;
-			align-items:flex-start;
-			border: 0;
-			border-bottom: 1px solid transparent;	
-
-			&:hover, &:focus{
-				border-color: currentColor !important;
-			}
-
-			&:focus, &:active {
-				box-shadow: none;
-				outline: 0;
-			}
-
-		}
-
-		> .col:first-child{
-			border-bottom-left-radius: $border-radius-lg;
-
-			.dropdown-toggle {
-				border-bottom-left-radius: $border-radius-lg;
-			}
-		}
-
-		.right > :last-child > .btn, 
-		.right > .btn:last-child {
-			border-bottom-right-radius: $border-radius-lg;
-		}
-
-		.right a{
-			color: inherit;
-		}
-
-		.right .btn {
-			color: inherit;
-
-			&:not(:hover){
-				background: transparent;
-			}
-		}
-	}
-
-	#title{
-		width: 450px;
-		max-width: 450px;
-
-		#name {
-			text-align: center;
-			margin-bottom: 0.75em;
-		}
-
-		h1, h2{
-			text-align: center;
-		}
-
-		.icon {
-			height: 1em;
-			width: 1em;
-			padding: 0;
-			vertical-align: top;
-		}
-
-		.icon-wrap {
-			$fontSize: 6rem;
-			$padding: 0.75rem;
-
-			max-height: $fontSize + ($padding*2);
-			font-size: $fontSize;
-
-			.btn {
-				padding: $padding;
-				overflow:hidden;
-				color: inherit;
-				text-align: center;
-				font-size: $fontSize;
-				height: $fontSize + ($padding*2);
-				width: $fontSize + ($padding*2);
-
-				&:not(:hover){
-					background: transparent;
-					border-color: transparent;
-				}
-
-				.icon{
-					margin:0;
-					padding:0;
-				}
-
-				&.addNew{
-					opacity: 0.25;
-
-					&:hover, &.showAdd{
-						opacity: 1;
-					}
-				}
-			}
-		}
-
-		/* Up to large */
-		@media (max-width: map-get($grid-breakpoints, "lg")) {
-			font-size: 4vw;
-			max-width: 100%;
-			width: 100%;
-
-			.resetBtn{
-				float: none;
-			}
-
-			.icon-wrap, #name, h1, h2{
-				text-align: left;
-			}
-
-			.icon-wrap, .icon-wrap .btn{
-				font-size: 2.75rem;
-			}
-		}
-
-		h1{
-			margin: 0;
-			line-height: 1em;
-			font-size: 1.9rem;
-		}
-
-		h2{
-			margin: 0rem 0 0 0;
-			font-size: 1rem;
-		}
-
-		#styleOptions{
-
-			.btn{
-				padding-left: 0.35em;
-				padding-right:  0.35em;
-				position: relative;
-			}
-
-			a, a:focus {
-				outline: 0;
-			}
-
-			> :first-child{
-				margin-left: 0.5em;
-			}
-
-			> * {
-				position: relative;
-				display:inline-block;
-				height: 100%;
-			}
-
-			.swatch{
-				width: 1.2rem;
-				height: 1.2rem;
-				border: 1px solid currentColor;
-				cursor: pointer;
-				position: relative;
-
-				&.txt{
-					background-color: currentColor;
-				}
-
-				i {
-					position: relative;
-					font-size: 0.9rem;
-					top: -0.55em;
-				}
-
-			}
-
-			#txtOptions{
-				position: relative;
-			}
-
-			.dropdown-item {
-				padding: 0.2em 1em;
-			}
-
-			a:hover {
-				text-decoration: none;
-			}
-		}
-
-		.dropdown-menu{
-			color: inherit;
-			border: 1px solid currentColor;
-			top: -1px !important;
-			border-top-left-radius: 0;
-			border-top-right-radius: 0;
-			height: auto;
-			max-height: 80vh;
-			overflow-y: auto;
-			max-width: 393px;
-
-
-			.btn{
-				white-space: nowrap;
-				text-align: left;
-				border-bottom: 0;
-				width: 100%;
-				overflow-x: hidden;
-				text-overflow: ellpsis;
-				padding: 0.2em 1em;
-			}
-		}
 	}
 
 	ul#description {
@@ -269,11 +50,11 @@
 			padding: 0.3em 0.5em;
 		}
 
-		li:focus{
+		li:focus {
 			outline-color: currentColor;
 		}
 
-		input#newLine{
+		input#newLine {
 			background: transparent;
 			border-top: 0;
 			border-right: 0;
@@ -289,61 +70,65 @@
 		&.empty {
 			opacity: 0.5;
 
-			&:hover, &:focus-within{
+			&:hover,
+			&:focus-within {
 				opacity: 1;
 			}
 		}
 	}
 
-	.description.alert-default{
+	.description.alert-default {
 		text-align: left;
 		font-size: 1.3em;
-		margin-top:-25px;
-		margin-bottom:30px;
+		margin-top: -25px;
+		margin-bottom: 30px;
 		padding: 0;
 	}
 
-
-	i.gi{
-		font-size:inherit;
+	i.gi {
+		font-size: inherit;
 	}
 
-	.child-appear, .child-enter {
-		opacity: 0.01;
-	}
-
-	.delay500{
+	.delay500 {
 		transition-delay: 500ms;
 	}
 
-	.child-appear.child-appear-active,.child-enter.child-enter-active  {
-		opacity: 1;
-		transition: opacity 400ms ease-in;
+	@keyframes example {
+		from {
+			opacity: 0;
+			transform: translateY(15px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0px);
+		}
 	}
 
 	// --------------------------------------------
 	$yPadding: 0.75rem;
 	$xPadding: 0.75rem;
 
-	.child{
-		color: inherit;
+	.child {
 		text-shadow: none;
 		font-weight: normal;
 		padding: $xPadding !important;
+		opacity: 0;
+		animation: example 500ms ease;
+		animation-fill-mode: forwards;
 
-		&:hover, &:focus{
+		&:hover,
+		&:focus {
 			color: inherit;
-			background:inherit;
+			background: inherit;
 			text-decoration: none;
 		}
 
-		&a{
+		&a {
 			text-decoration: none;
 		}
-		
 
-		.child-inner{
-			cursor:default;
+		.child-inner {
+			cursor: default;
 			position: relative;
 			text-align: center;
 			white-space: pre-wrap;
@@ -357,18 +142,19 @@
 			height: 100%;
 			padding: $yPadding $xPadding;
 
-			.wrap{
-				text-align:center;
+			.wrap {
+				text-align: center;
 				padding: 0;
 				width: 100%;
 				overflow: hidden;
 
 				.icon {
 					line-height: 1em;
-					width: 100%
+					width: 100%;
 				}
 
-				h1, h2{
+				h1,
+				h2 {
 					text-align: center;
 					overflow: hidden;
 					text-overflow: ellipsis;
@@ -376,49 +162,52 @@
 				}
 			}
 
-			&.link{ 
+			&.link {
 				cursor: pointer;
 
-				&:hover,&:focus,&:active,&:active:focus {
+				&:hover,
+				&:focus,
+				&:active,
+				&:active:focus {
 					opacity: 1;
-				 box-shadow: 0px 0px 5px !important;
+					box-shadow: 0px 0px 5px !important;
 				}
 
-				.icon{
+				.icon {
 					font-size: 5rem;
 					height: 5rem;
 				}
 
-				.wrap{
-					h1{
+				.wrap {
+					h1 {
 						display: block;
 						font-weight: inherit;
 						font-size: 1rem;
 						margin: 0.5em 0 0 0;
 					}
-					h2{
+					h2 {
 						font-size: 0.85rem;
 						margin: 0;
 					}
 				}
 
-				&:hover, &:focus{
+				&:hover,
+				&:focus {
 					text-decoration: none;
 					box-sizing: content-box;
-					top:-$yPadding;
-					left:-$xPadding;
+					top: -$yPadding;
+					left: -$xPadding;
 
-					.wrap{
+					.wrap {
 						padding: 0 $xPadding;
 					}
 				}
 			}
 
-			&.empty, &.no-icon{
-				
-				border-top:5px solid transparent;
-
-				.wrap h1, .wrap .icon{
+			&.empty,
+			&.no-icon {
+				.wrap h1,
+				.wrap .icon {
 					display: inline;
 					font-size: 1.4rem;
 					font-weight: normal;
@@ -426,66 +215,69 @@
 				}
 			}
 
-			&.no-icon{
-				.icon{
-					display:none;
-				}
-			}
-
-			&.empty{ // so they don't look clickable
-				background: transparent !important;
-				color: inherit !important;
-				white-space: pre-wrap;
-
-				.icon{
-					vertical-align: sub;
-				}
-
-				h2{
+			&.no-icon {
+				.icon {
 					display: none;
 				}
 			}
 
-			&.addNew{
+			&.empty {
+				// so they don't look clickable
+				background: transparent !important;
+				color: inherit !important;
+				white-space: pre-wrap;
+
+				.icon {
+					vertical-align: sub;
+				}
+
+				h2 {
+					display: none;
+				}
+			}
+
+			&.addNew {
 				opacity: 0.25;
 				overflow: visible;
 
-				.wrap{
+				.icon {
+					font-size: 2rem !important;
+					height: 2rem !important;
+				}
+				h1 {
+					display: none;
+				}
+
+				.wrap {
 					overflow: visible;
 				}
 
-				&:hover, &.showAdd{
+				&:hover,
+				&.showAdd {
 					opacity: 1;
 				}
 
-				&.showAdd{
-					padding:0;
+				&.showAdd {
+					padding: 0;
 
-					h1{ 
-						display:none;
-					}
-
-					&:hover, &:focus{
+					&:hover,
+					&:focus {
 						content-box: border-box;
 						top: 0;
 						left: 0;
-						padding:0;
+						padding: 0;
 
 						.wrap {
 							padding: 0;
 						}
 					}
-
 				}
-
 			}
-
-			
-		}//.child-inner
+		} //.child-inner
 
 		$linkHeight: 2.5rem;
 
-		.linkLabel{
+		.linkLabel {
 			position: absolute;
 			top: $yPadding/2;
 			left: $xPadding/2;
@@ -496,15 +288,19 @@
 			text-align: left;
 			transition-duration: 500ms;
 			transition-property: width, height, border-radius;
-			transition-timing-function:  ease;
+			transition-timing-function: ease;
 			cursor: pointer;
 			background-color: #000;
 
-			> div:first-child{
+			> div:first-child {
 				position: absolute;
-				margin:0 !important;
+				margin: 0 !important;
 				top: -25%;
 				left: -25%;
+			}
+
+			svg {
+				display: none;
 			}
 
 			span {
@@ -514,16 +310,15 @@
 		}
 
 		.deleteLink {
-			display:block;
+			display: block;
 			position: absolute;
 			top: 1rem;
-			right: .25rem;
+			right: 0.25rem;
 			z-index: 1;
 		}
 
-		&:hover{
-
-			.linkLabel{
+		&:hover {
+			.linkLabel {
 				width: 100%;
 				height: 100%;
 				border-radius: $border-radius-lg;
@@ -533,32 +328,32 @@
 					bottom: -40%;
 					top: unset;
 				}
-				
+
+				svg {
+					display: block;
+				}
+
 				span {
 					display: none;
 				}
 			}
-
 		}
-
-	}//.child ---------------------------------------------
-
+	} //.child ---------------------------------------------
 
 	.example-enter {
 		transition-delay: 1s;
 		visibility: hidden;
 		opacity: 0;
-		height:0px;
-		width:0px;
-		
+		height: 0px;
+		width: 0px;
 	}
 	.example-enter.example-enter-active {
 		opacity: 1;
-		transition-delay: 1s;
 		visibility: visible;
-		height:auto;
-	 width:auto;
+		height: auto;
+		width: auto;
 		transition: opacity 500ms ease-in;
+		transition-delay: 1s;
 	}
 
 	.example-exit {
@@ -571,54 +366,60 @@
 	}
 
 	.switch-enter {
-			opacity: 0.01;
+		opacity: 0.01;
 	}
 	.switch-enter.switch-enter-active {
-			opacity: 1.0;
-			transition: opacity 0.5s ease-in
+		opacity: 1;
+		transition: opacity 0.5s ease-in;
 	}
 	.switch-exit {
-			/* Completely hide the button while it's being animated and before it's removed from the DOM. */
-			visibility: hidden;
-			height: 0px;
-			width: 0px;
-			position:absolute;
-			
-			/* Starting opacity */
-			opacity: 1.0;
+		/* Completely hide the button while it's being animated and before it's removed from the DOM. */
+		visibility: hidden;
+		height: 0px;
+		width: 0px;
+		position: absolute;
+
+		/* Starting opacity */
+		opacity: 1;
 	}
 	.switch-exit.switch-exit-active {
-			/* Ending opacity: 
+		/* Ending opacity:
 			Trigger opacity change so the "transitionend" event will fire, causing React to remove from the DOM. */
-			opacity: 0;
-			transition: opacity 0.5s ease-in
+		opacity: 0;
+		transition: opacity 0.5s ease-in;
 	}
 
 	/* Transition */
-	.slide-up-appear,.slide-up-enter {
-			opacity: 0;
-			transform: translateY(15px);
-			transition: all 500ms ease;
+	.slide-up-appear,
+	.slide-up-enter {
+		opacity: 0;
+		transform: translateY(15px);
+		transition: all 500ms ease;
 	}
 
-	.slide-up-appear.slide-up-appear-active,.slide-up-enter.slide-up-enter-active {
-			opacity: 1;
-			transform: translateY(0px);
+	.slide-up-appear.slide-up-appear-active,
+	.slide-up-enter.slide-up-enter-active {
+		opacity: 1;
+		transform: translateY(0px);
 	}
 
 	.slide-up-exit.slide-up-exit-active {
-			display: none;
-			transition-delay: 0 !important;
+		display: none;
+		transition-delay: 0 !important;
 	}
 
-
-	.fa[class^="flaticon-"]:before, .fa[class*=" flaticon-"]:before, .fa[class^="flaticon-"]:after, .fa[class*=" flaticon-"]:after{
-		font-size:1em;
-		margin:0;
+	.fa[class^="flaticon-"]:before,
+	.fa[class*=" flaticon-"]:before,
+	.fa[class^="flaticon-"]:after,
+	.fa[class*=" flaticon-"]:after {
+		font-size: 1em;
+		margin: 0;
 	}
 
-	.fake-disabled{
-		textarea, input, select {
+	.fake-disabled {
+		textarea,
+		input,
+		select {
 			background-color: #eee;
 		}
 	}
@@ -634,10 +435,9 @@
 			text-overflow: ellipsis;
 		}
 	}
-
 }
 
-#patternSelectModal{
+#patternSelectModal {
 	.sample {
 		height: 5rem;
 		margin-bottom: $grid-gutter-width;
@@ -645,8 +445,16 @@
 		border: 1px solid currentColor;
 		cursor: pointer;
 
-		&:hover{
+		&:hover {
 			border-radius: 1em;
 		}
 	}
+}
+
+.link {
+	color: inherit;
+}
+
+.link[class*="bg-"] {
+	color: var(--contrast);
 }

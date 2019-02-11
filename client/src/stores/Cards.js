@@ -45,16 +45,7 @@ class Card {
 		this.category = "Items";
 		this.thing = thing;
 
-		if (thing.name === "Talon") {
-			console.log("HEY");
-		}
-
-		let data =
-			!thing.data && thing.getIsa()
-				? thing.getIsa().data
-				: thing.data
-					? thing.data
-					: {};
+		let data = !thing.data && thing.getIsa() ? thing.getIsa().data : thing.data ? thing.data : {};
 
 		// get spell data
 		if (data && data.extend_spell) {
@@ -66,10 +57,7 @@ class Card {
 				data.description &&
 				data.description[data.description.length - 1].startsWith("At Higher")
 			) {
-				data.description = data.description.splice(
-					data.description.length - 1,
-					1
-				);
+				data.description = data.description.splice(data.description.length - 1, 1);
 			}
 		}
 
@@ -83,9 +71,7 @@ class Card {
 				if (typeof c === "string") description.push(c);
 			});
 		}
-		this.description = data.description
-			? description.concat(data.description)
-			: description;
+		this.description = data.description ? description.concat(data.description) : description;
 
 		for (var name in data) {
 			if (this[name] === undefined) this[name] = data[name];
@@ -111,8 +97,7 @@ export default class Cards {
 		var featureSpells = [];
 		features.forEach(f => {
 			let spell = spellStore.get(f.name);
-			if (spell && spell.isFeature)
-				featureSpells.push(new Card().setSpell(spell));
+			if (spell && spell.isFeature) featureSpells.push(new Card().setSpell(spell));
 		});
 
 		this.arr = items

@@ -1,0 +1,10 @@
+/* SearchBar.scss */
+@import "../../variables.scss";
+
+.search-bar {
+	@include dropdown();
+
+	a {
+		color: inherit;
+	}
+}

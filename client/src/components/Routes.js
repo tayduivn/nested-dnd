@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 function cleanProps(props) {
 	const p = { ...props };
@@ -8,63 +8,64 @@ function cleanProps(props) {
 	delete p.match;
 	delete p.computedMatch;
 	delete p.history;
+	delete p.exact;
+	delete p.path;
 	return p;
 }
 
-const PrivateRoute = ({
-	component: Component,
-	redirectTo,
-	path,
-	exact,
-	loggedIn,
-	routes,
-	...rest
-}) => {
-	const props = cleanProps(rest);
-	return (
-		<Route
-			path={path}
-			exact={exact}
-			render={routeProps => {
-				if (!loggedIn && routeProps.location.pathname.startsWith(path)) {
-					console.log(path);
-					window.history.pushState({}, "", routeProps.location.pathname);
-				}
+class Private extends React.Component {
+	privateRender = routeProps => {
+		const { component: Component, redirectTo, path, exact, loggedIn, routes, ...rest } = this.props;
+		const props = cleanProps(rest);
+		if (!loggedIn && routeProps.location.pathname.startsWith(path)) {
+			window.history.pushState({}, "", routeProps.location.pathname);
+		}
 
-				return loggedIn ? (
-					<Component routes={routes} {...props} {...routeProps} />
-				) : (
-					<Redirect
-						to={{
-							pathname: redirectTo || "/login",
-							state: { from: routeProps.location }
-						}}
-					/>
-				);
-			}}
-		/>
-	);
-};
+		return loggedIn ? (
+			<Component routes={routes} {...props} {...routeProps} />
+		) : (
+			<Redirect
+				to={{
+					pathname: redirectTo || "/login",
+					state: { from: routeProps.location }
+				}}
+			/>
+		);
+	};
+	render() {
+		const { path, exact } = this.props;
+		return <Route path={path} exact={exact} render={this.privateRender} props={this.props} />;
+	}
+}
 
-const PropsRoute = ({ component: Component, path, exact, routes, ...rest }) => {
-	const props = cleanProps(rest);
-	return (
-		<Route
-			path={path}
-			exact={exact}
-			render={routeProps => (
-				<Component routes={routes} {...props} {...routeProps} />
-			)}
-		/>
-	);
-};
+const PrivateRoute = connect(function mapStateToProps(state) {
+	return { loggedIn: state.user.loggedIn };
+})(Private);
+
+class PropsRoute extends React.Component {
+	renderFunc = (routeProps = {}) => {
+		const { component: Component, routes, ...rest } = this.props;
+		const props = cleanProps(rest);
+		return <Component routes={routes} {...props} {...routeProps} />;
+	};
+	render() {
+		const { path, exact } = this.props;
+		return <Route path={path} exact={exact} render={this.renderFunc} props={this.props} />;
+	}
+}
 
 // wrap <Route> and use this everywhere instead, then when
 // sub routes are added to any route it'll work
 const makeSubRoutes = (routes = [], oldpath = "", props) => {
 	return routes.map((route, i) => {
 		const RouteComponent = route.private ? PrivateRoute : PropsRoute;
-		return (
+		let arr = [];
+
+		if (route.routes) {
+			arr = arr.concat(makeSubRoutes(route.routes, oldpath + route.path, props));
+		}
+
+		arr.push(
 			<RouteComponent
 				key={i}
 				path={oldpath + route.path}
@@ -74,6 +75,8 @@ const makeSubRoutes = (routes = [], oldpath = "", props) => {
 				{...props}
 			/>
 		);
+
+		return arr;
 	});
 };
 

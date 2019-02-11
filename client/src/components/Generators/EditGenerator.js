@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "../Util";
 
-import { getQueryParams } from "../../util/util";
+import { getQueryParams } from "../../util";
 import IconSelect from "../Form/IconSelect";
 import IsASelect from "../Form/IsASelect";
 import MixedThing, { MixedKeyValue, MixedSortable } from "../Form/MixedThing";
@@ -140,9 +140,8 @@ const Display = ({
 								name="chooseRandom"
 								onChange={e => handleChange("chooseRandom", !chooseRandom)}
 							/>
-							<strong> Replace with Random:</strong> When you add this is a
-							universe, it will be replaced with a random generator that "Is a"{" "}
-							{isa}.
+							<strong> Replace with Random:</strong> When you add this is a universe, it will be
+							replaced with a random generator that "Is a" {isa}.
 						</label>
 					</div>
 				) : null}
@@ -150,10 +149,7 @@ const Display = ({
 				{/* --------- Is a... ------------ */}
 				<div className="form-group">
 					<label>
-						Is a...{" "}
-						<Link to={match.url.replace(isa, encodeURIComponent(xtends))}>
-							{xtends}
-						</Link>{" "}
+						Is a... <Link to={match.url.replace(isa, encodeURIComponent(xtends))}>{xtends}</Link>{" "}
 					</label>
 					<IsASelect
 						onChange={o => {
@@ -192,9 +188,7 @@ const Display = ({
 
 				{/* --------- Icon ------------ */}
 
-				{(style.useImg !== undefined && style.useImg !== null) ||
-				style.img ||
-				style.icon ? (
+				{(style.useImg !== undefined && style.useImg !== null) || style.img || style.icon ? (
 					<div>
 						<select
 							value={style.useImg}
@@ -207,7 +201,6 @@ const Display = ({
 						<button
 							className="btn btn-default"
 							onMouseDown={() => {
-								console.log("use default");
 								handleChange(["style", "icon"], undefined);
 								handleChange(["style", "img"], undefined);
 								handleChange(["style", "useImg"], undefined);
@@ -220,9 +213,7 @@ const Display = ({
 							<input
 								className="form-control"
 								value={mixedToPlainType(style.img)}
-								onChange={e =>
-									handleChange(["style", "img"], { value: e.target.value })
-								}
+								onChange={e => handleChange(["style", "img"], { value: e.target.value })}
 							/>
 						) : (
 							<IconSelect
@@ -262,9 +253,7 @@ const Display = ({
 					) : null}
 					<button
 						className="btn btn-primary"
-						onClick={() =>
-							handleChange(["desc", desc.length], { type: "string" })
-						}
+						onClick={() => handleChange(["desc", desc.length], { type: "string" })}
 					>
 						<i className="fas fa-plus" /> add
 					</button>
@@ -286,9 +275,7 @@ const Display = ({
 
 					<button
 						className="btn btn-primary"
-						onClick={() =>
-							handleChange(["in", inArr.length], { type: "generator" })
-						}
+						onClick={() => handleChange(["in", inArr.length], { type: "generator" })}
 					>
 						<i className="fas fa-plus" /> add
 					</button>
@@ -304,9 +291,7 @@ const Display = ({
 						value={source.url}
 						name="source"
 						className="form-control"
-						onChange={e =>
-							handleChange("source", { ...source, url: e.target.value })
-						}
+						onChange={e => handleChange("source", { ...source, url: e.target.value })}
 					/>
 				</div>
 
@@ -340,10 +325,7 @@ export default class EditGenerator extends Component {
 
 	constructor(props) {
 		super(props);
-		var rawData =
-			props.unbuilt ||
-			(props.location.state && props.location.state.data) ||
-			{};
+		var rawData = props.unbuilt || (props.location.state && props.location.state.data) || {};
 		const params = getQueryParams(this.props.location);
 
 		this.state = {
@@ -376,7 +358,7 @@ export default class EditGenerator extends Component {
 
 				// TODO: error messagin
 				valid = true;
-				const generators = Object.keys(this.props.pack.generators);
+				const generators = Object.keys(this.props.pack.generators || {});
 				if (property === "isa" && generators.includes(value)) {
 					valid = false;
 				}
@@ -403,7 +385,7 @@ export default class EditGenerator extends Component {
 		const { isCreate, match, pack } = this.props;
 		const built = this.props.built || {};
 		const inherits = built.gen_ids && built.gen_ids.length > 1;
-		const gens = Object.keys(this.props.pack.generators) || [];
+		const gens = Object.keys(this.props.pack.generators || {}) || [];
 		gens.splice(gens.indexOf(this.state.isa), 1);
 
 		return (

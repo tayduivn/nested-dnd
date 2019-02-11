@@ -1,12 +1,11 @@
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const should = chai.should();
 const sinon = require("sinon");
 chai.use(chaiAsPromised);
 
 const BuiltPack = require("../app/models/builtpack");
 const Pack = require("../app/models/pack");
-const Generator = require("../app/models/generator");
+const { Generator } = require("../app/models/generator");
 const Nested = require("../app/routes/packs/nested");
 
 describe("BuiltPack", () => {
@@ -25,6 +24,7 @@ describe("BuiltPack", () => {
 	beforeEach(() => {
 		pack = new Pack({
 			seed: "universe>",
+			url: "test",
 			name: "Test"
 		});
 
@@ -70,17 +70,13 @@ describe("BuiltPack", () => {
 
 	describe("growFromSeed()", function() {
 		it("should should return a node", function() {
-			return builtpack
-				.growFromSeed(pack)
-				.should.eventually.be.an.instanceOf(Nested);
+			return builtpack.growFromSeed(pack).should.eventually.be.an.instanceOf(Nested);
 		});
 	});
 
 	describe("findOrBuild()", () => {
 		it("returns a builtpack", function() {
-			return BuiltPack.findOrBuild(pack).should.eventually.be.instanceOf(
-				BuiltPack
-			);
+			return BuiltPack.findOrBuild(pack).should.eventually.be.instanceOf(BuiltPack);
 		});
 	});
 });

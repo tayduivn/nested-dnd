@@ -4,12 +4,10 @@ const should = chai.should();
 const sinon = require("sinon");
 chai.use(chaiAsPromised);
 
-const Generator = require("../app/models/generator");
+const { Generator } = require("../app/models/generator");
 const Pack = require("../app/models/pack");
 const BuiltPack = require("../app/models/builtpack");
 const Nested = require("../app/routes/packs/nested");
-const Maintainer = require("../app/models/generator/maintain");
-const assert = require("assert");
 
 describe("Generator", () => {
 	var generator, gens, pack, builtpack, childGen;
@@ -28,6 +26,7 @@ describe("Generator", () => {
 	beforeEach(() => {
 		pack = new Pack({
 			seed: "universe>",
+			url: "test",
 			name: "Test"
 		});
 
@@ -94,10 +93,9 @@ describe("Generator", () => {
 
 	describe("makeAsRoot()", function() {
 		it("should should return a node", function() {
-			return Generator.makeAsRoot(
-				[generator],
-				builtpack
-			).should.eventually.be.an.instanceOf(Nested);
+			return Generator.makeAsRoot([generator], builtpack).should.eventually.be.an.instanceOf(
+				Nested
+			);
 		});
 
 		it("should return if there is an extended seed", () => {
@@ -128,10 +126,7 @@ describe("Generator", () => {
 		it("should return", () => {
 			return generator
 				.makeStyle("blue universe")
-				.should.eventually.have.property(
-					"cssClass",
-					"bg-blue-900 ptn-purty-wood"
-				);
+				.should.eventually.have.property("cssClass", "bg-blue-900 ptn-purty-wood");
 		});
 	});
 
@@ -152,10 +147,7 @@ describe("Generator", () => {
 
 	describe("make()", () => {
 		it("should return", () => {
-			return Generator.make(
-				generator,
-				builtpack
-			).should.eventually.be.instanceOf(Nested);
+			return Generator.make(generator, builtpack).should.eventually.be.instanceOf(Nested);
 		});
 	});
 

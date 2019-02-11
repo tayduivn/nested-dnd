@@ -81,7 +81,7 @@ class SpellStore {
 	}
 	get(name) {
 		if (!this.spells[name]) {
-			console.log("can't find spell with name " + name);
+			// console.log("can't find spell with name " + name);
 			return false;
 		}
 		return this.spells[name];

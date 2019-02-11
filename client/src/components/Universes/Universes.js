@@ -3,54 +3,11 @@ import { Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import DB from "../../actions/CRUDAction";
-import { LOADING_GIF } from "../App";
+import { LOADING_GIF } from "../App/App";
 import { PacksList, PackUL } from "../Packs";
-import { PropsRoute, makeSubRoutes } from "../Routes";
+import { PropsRoute } from "../Routes";
 
-/**
-getData(props) {
-	if (!props) props = this.props;
-	if (!this.props.match.params) return;
-
-	const universe =
-		(props.match && props.match.params && props.match.params.universe) ||
-		false;
-	if (!this.state.loading) this.setState({ loading: true });
-
-	if (universe && universe !== "create") {
-		DB.get("universes", universe).then(({ error, data: universe }) => {
-			this.setState({ error, universe, loading: false });
-
-			if (universe && universe.pack) {
-				DB.fetch(`builtpacks/${universe.pack._id}/generators`).then(
-					({ error, data: generators }) => {
-						this.setState({ error, generators });
-					}
-				);
-				DB.fetch(`packs/${universe.pack._id}/tables`).then(
-					({ error, data: tables }) => {
-						this.setState({ error, tables });
-					}
-				);
-
-				this.context.loadFonts(universe.pack.font);
-			}
-		});
-	} else if (universe === "create") {
-		DB.get("packs").then(({ error, data: packs }) =>
-			this.setState({ error, packs, loading: false })
-		);
-	} else
-		DB.get("universes").then(({ error, data: universes }) =>
-			this.setState({ error, universes, loading: false })
-		);
-}**/
-
-const UniverseListDisplay = ({
-	universes: { loaded, array, error },
-	packs,
-	loggedIn
-}) => {
+const UniverseListDisplay = ({ universes: { loaded, array, error } = {}, packs, loggedIn }) => {
 	if (error) return error.display;
 
 	return (
@@ -93,6 +50,15 @@ class Universes extends Component {
 		//const { universe: updated } = this.props.match.params;
 		//const { universe: current } = previProps.match.params;
 		// if (current !== updated) this.getData(this.props);
+	}
+	shouldComponentUpdate(nextProps) {
+		const loggedInState = nextProps.loggedIn !== this.props.loggedIn;
+		const changedUnis =
+			JSON.stringify(nextProps.universes) !== JSON.stringify(this.props.universes);
+		const changedPacks = JSON.stringify(nextProps.packs) !== JSON.stringify(this.props.packs);
+		const url = JSON.stringify(nextProps.location) !== JSON.stringify(this.props.location);
+
+		return loggedInState || changedUnis || changedPacks || url;
 	}
 
 	handleSave = e => {
@@ -150,49 +116,34 @@ class Universes extends Component {
 	handleRenameGen = (oldname, newname) => {
 		var gens = this.state.generators;
 		if (!gens) return;
-		if (oldname !== null && newname)
-			gens.splice(gens.indexOf(oldname), 1, newname);
+		if (oldname !== null && newname) gens.splice(gens.indexOf(oldname), 1, newname);
 		else if (newname === null) gens.splice(gens.indexOf(newname), 1);
 		else gens.unshift(newname);
 	};
 
-	render() {
-		const {
-			routes = [],
-			match,
+	getData = () => {
+		const { universes, packs, loggedIn, loadFonts } = this.props;
+
+		return {
+			handleSortGens: this.handleSortGens,
+			handleRefresh: this.handleRefresh,
+			handleRenameGen: this.handleRenameGen,
+			handleAdd: this.handleAdd,
+			handleDelete: this.handleDelete,
+			handleSave: this.handleSave,
 			universes,
 			packs,
 			loggedIn,
 			loadFonts
-		} = this.props;
-		const {
-			handleRenameGen,
-			handleSortGens,
-			handleRefresh,
-			handleAdd,
-			handleDelete,
-			handleSave
-		} = this;
+		};
+	};
+	render() {
+		const { universes, packs, loggedIn } = this.props;
 
 		var content = (
 			<div id="Universes">
 				<Switch>
-					{makeSubRoutes(routes, match.path, {
-						handleSortGens,
-						handleRefresh,
-						handleRenameGen,
-						handleAdd,
-						handleDelete,
-						handleSave,
-						universes,
-						packs,
-						loggedIn,
-						loadFonts
-					})}
-					<PropsRoute
-						{...{ universes, packs, loggedIn }}
-						component={UniverseListDisplay}
-					/>
+					<PropsRoute {...{ universes, packs, loggedIn }} component={UniverseListDisplay} />
 				</Switch>
 			</div>
 		);
@@ -200,5 +151,7 @@ class Universes extends Component {
 		return content;
 	}
 }
+
+//{makeSubRoutes(routes, match.path, this.getData())}
 
 export default Universes;

@@ -1,9 +1,11 @@
-import { CHECK_IS_LOGGEDIN } from "./actions";
+import { CHECK_IS_LOGGEDIN, SET_LOGGED_IN } from "./actions";
 
 const initial = {
 	error: false,
 	loading: false,
-	loggedIn: null
+	loggedIn: null,
+	email: undefined,
+	username: undefined
 };
 
 export default (state = initial, action) => {
@@ -13,6 +15,8 @@ export default (state = initial, action) => {
 			r.loggedIn = action.loggedIn;
 
 			return r;
+		case SET_LOGGED_IN:
+			return { ...state, error: action.error, loggedIn: action.loggedIn, email: action.email };
 		default:
 			return state;
 	}

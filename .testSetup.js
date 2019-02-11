@@ -9,8 +9,10 @@ const passport = require("passport");
 
 require("sinon-mongoose");
 require("@babel/register")();
+require("babel-polyfill");
 require("ignore-styles");
 require("es6-promise").polyfill();
+require("chai").should();
 //require('isomorphic-fetch');
 
 enzyme.configure({ adapter: new Adapter() });
@@ -18,10 +20,10 @@ enzyme.configure({ adapter: new Adapter() });
 const exposedProperties = ["window", "navigator", "document"];
 
 // Set up globals
-global.document = new JSDOM("<!DOCTYPE html>", {
+const document = (global.document = new JSDOM("<!DOCTYPE html>", {
 	url: "https://nested-dnd.herokuapp.com"
-}).window.document;
-global.window = document.defaultView;
+}).window.document);
+const window = (global.window = document.defaultView);
 global.navigator = {
 	userAgent: "node.js"
 };
@@ -36,27 +38,21 @@ global.assertThrowsAsync = async function(test, error) {
 	}
 	throw new assert.AssertionError({
 		message:
-			"Missing rejection" +
-			(error ? " with " + error.name : "") +
-			". Function returned " +
-			result
+			"Missing rejection" + (error ? " with " + error.name : "") + ". Function returned " + result
 	});
 };
-global.location = global.window.location = Object.assign(
-	{},
-	global.window.location,
-	{
-		configurable: true,
-		replace: sinon.stub(),
-		href: global.window.location.href || "",
-		set: function(o) {
-			global.window.location.href = o;
-		}
+global.location = Object.assign({}, global.window.location, {
+	configurable: true,
+	replace: sinon.stub(),
+	href: global.window.location.href || "",
+	set: function(o) {
+		global.window.location.href = o;
 	}
-);
+});
+
 var clonedLocation;
 Object.defineProperty(window, "location", {
-	get: function(f) {
+	get: function() {
 		return clonedLocation;
 	},
 	set: function(o) {
@@ -72,41 +68,43 @@ Object.keys(window || {}).forEach(property => {
 		global[property] = document.defaultView[property];
 	}
 });
+
+const CanvasStub = {
+	fillRect: function() {},
+	clearRect: function() {},
+	getImageData: function(x, y, w, h) {
+		return {
+			data: new Array(w * h * 4)
+		};
+	},
+	putImageData: function() {},
+	createImageData: function() {
+		return [];
+	},
+	setTransform: function() {},
+	drawImage: function() {},
+	save: function() {},
+	fillText: function() {},
+	restore: function() {},
+	beginPath: function() {},
+	moveTo: function() {},
+	lineTo: function() {},
+	closePath: function() {},
+	stroke: function() {},
+	translate: function() {},
+	scale: function() {},
+	rotate: function() {},
+	arc: function() {},
+	fill: function() {},
+	measureText: function() {
+		return { width: 0 };
+	},
+	transform: function() {},
+	rect: function() {},
+	clip: function() {}
+};
 global.window.HTMLCanvasElement.prototype.getContext = function() {
-	return {
-		fillRect: function() {},
-		clearRect: function() {},
-		getImageData: function(x, y, w, h) {
-			return {
-				data: new Array(w * h * 4)
-			};
-		},
-		putImageData: function() {},
-		createImageData: function() {
-			return [];
-		},
-		setTransform: function() {},
-		drawImage: function() {},
-		save: function() {},
-		fillText: function() {},
-		restore: function() {},
-		beginPath: function() {},
-		moveTo: function() {},
-		lineTo: function() {},
-		closePath: function() {},
-		stroke: function() {},
-		translate: function() {},
-		scale: function() {},
-		rotate: function() {},
-		arc: function() {},
-		fill: function() {},
-		measureText: function() {
-			return { width: 0 };
-		},
-		transform: function() {},
-		rect: function() {},
-		clip: function() {}
-	};
+	return CanvasStub;
 };
 global.window.HTMLCanvasElement.prototype.toDataURL = function() {
 	return "";
@@ -114,7 +112,31 @@ global.window.HTMLCanvasElement.prototype.toDataURL = function() {
 
 global.fetchReturn = {};
 
-global.fetch = window.fetch = function() {
+function storageMock() {
+	var storage = {};
+
+	return {
+		setItem: function(key, value) {
+			storage[key] = value || "";
+		},
+		getItem: function(key) {
+			return key in storage ? storage[key] : null;
+		},
+		removeItem: function(key) {
+			delete storage[key];
+		},
+		get length() {
+			return Object.keys(storage).length;
+		},
+		key: function(i) {
+			var keys = Object.keys(storage);
+			return keys[i] || null;
+		}
+	};
+}
+
+// causes request size doesn't match content length
+window.fetch = function() {
 	return Promise.resolve({
 		body: {},
 		status: 200,
@@ -127,42 +149,27 @@ global.fetch = window.fetch = function() {
 	});
 };
 if (!window.localStorage) {
-	function storageMock() {
-		var storage = {};
-
-		return {
-			setItem: function(key, value) {
-				storage[key] = value || "";
-			},
-			getItem: function(key) {
-				return key in storage ? storage[key] : null;
-			},
-			removeItem: function(key) {
-				delete storage[key];
-			},
-			get length() {
-				return Object.keys(storage).length;
-			},
-			key: function(i) {
-				var keys = Object.keys(storage);
-				return keys[i] || null;
-			}
-		};
-	}
 	window.localStorage = storageMock();
 }
+
+class TD {}
+
+global.TextDecoder = TD;
+
+window.parseInt = int => int;
 
 require("./server/config/passport")(passport);
 const MW = require("./server/app/routes/middleware");
 const User = require("./server/app/models/user");
 const Pack = require("./server/app/models/pack");
 const BuiltPack = require("./server/app/models/builtpack");
-const Generator = require("./server/app/models/generator");
+const { Generator } = require("./server/app/models/generator");
 const Table = require("./server/app/models/table");
 const Universe = require("./server/app/models/universe");
 
+//const app = require("./server/server"); // just run it as a sanity check for code coverage
 var app = express();
-app.use(bodyParser.json()); // parse application/json
+
 app.use(passport.initialize());
 app.use((req, res, next) => {
 	req.session = {
@@ -187,16 +194,37 @@ app.use((req, res, next) => {
 	User.find.restore();
 });
 
-require("./server/app/routes/auth.js")(app, passport);
-require("./server/app/routes/packs.js")(app);
-require("./server/app/routes/generators.js")(app);
-require("./server/app/routes/tables.js")(app);
+app.use(bodyParser.json()); // parse application/json
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const packs = require("./server/app/routes/packs");
+const auth = require("./server/app/routes/auth");
+const builtpacks = require("./server/app/routes/builtpacks");
+const characters = require("./server/app/routes/characters");
+const explore = require("./server/app/routes/explore");
+
+const playersPreview = require("./server/app/routes/players-preview.js");
+const tables = require("./server/app/routes/tables");
+const universes = require("./server/app/routes/universes");
+const normal = require("./server/app/routes/normal");
+
+// load our routes and pass in our app and fully configured passport
+app.use("/api", auth);
+
+app.use("/api/packs", packs);
+app.use("/api/builtpacks", builtpacks);
+app.use("/api/characters", characters);
+app.use("/api/explore", explore);
+app.use("/api/players-preview", playersPreview);
+app.use("/api/tables", tables);
+app.use("/api/universes", MW.isLoggedIn, universes);
+app.use("/api/normal", normal);
+
 app.use(MW.errorHandler);
-app.use("/api", function(req, res, next) {
+app.use("/api", function(req, res) {
 	res.status(404).json({ error: { message: "404 Not Found" } });
 	return;
 });
-global.app = app;
 
 // stubs
 //
@@ -241,6 +269,6 @@ sinon.stub(Generator, "create").callsFake(createFunc);
 sinon.stub(Table, "create").callsFake(createFunc);
 sinon.stub(Universe, "create").callsFake(createFunc);
 
-require("./server/server"); // just run it as a sanity check for code coverage
-
 var documentRef = document;
+
+global.app = app;

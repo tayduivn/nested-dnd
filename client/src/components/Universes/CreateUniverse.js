@@ -1,17 +1,12 @@
 import React, { Component } from "react";
 
 import { PackUL } from "../Packs/Packs";
-import { getQueryParams } from "../../util/util";
+import { getQueryParams } from "../../util";
 
 const Display = ({ packs, onSelectPack, selectedPack, handleAdd }) => (
 	<div>
 		<h1>Create universe</h1>
-		<PackUL
-			list={packs}
-			selectable={true}
-			onSelect={onSelectPack}
-			selected={selectedPack}
-		/>
+		<PackUL list={packs} selectable={true} onSelect={onSelectPack} selected={selectedPack} />
 		{selectedPack ? (
 			<form
 				className="form-group mt-4 mb-3"
@@ -23,9 +18,7 @@ const Display = ({ packs, onSelectPack, selectedPack, handleAdd }) => (
 				<input
 					name="title"
 					className="form-control form-control-lg"
-					defaultValue={
-						packs.find(p => p._id === selectedPack).name + " Universe"
-					}
+					defaultValue={packs.find(p => p._id === selectedPack).name + " Universe"}
 					required
 				/>
 				<button type="submit" className="mt-3 btn btn-lg btn-primary">
@@ -75,8 +68,6 @@ export default class CreateUniverse extends Component {
 }
 
 function appendBlank(packs) {
-	console.log(packs);
-
 	const nested = {
 		_id: "5aa2f8c11e0a791ed4d0a547",
 		name: "Nested",

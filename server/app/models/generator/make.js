@@ -22,13 +22,11 @@ var Maker = {
 		if (!node) {
 			let name = await gen.makeName(data);
 			let style = await gen.makeStyle(name);
-			let desc = gen.desc
-				? await Promise.all(
-						gen.desc.map(d =>
-							this.makeMixedThing(d, builtpack.model("Table"), data)
-						)
-				  )
-				: undefined;
+			if (!gen.desc) gen.desc = [];
+			let promise = Promise.all(
+				gen.desc.map(d => this.makeMixedThing(d, builtpack.model("Table"), data))
+			);
+			let desc = gen.desc ? await promise : undefined;
 			node = new Nested(name, gen, style, desc, gen.data);
 		}
 
@@ -74,12 +72,7 @@ var Maker = {
 
 		var amount = child.makeAmount;
 
-		var { gen, table } = await checkTypes(
-			child,
-			Table,
-			builtpack,
-			ancestorData
-		).catch(() => {
+		var { gen, table } = await checkTypes(child, Table, builtpack, ancestorData).catch(() => {
 			amount = 0;
 			return {};
 		});
@@ -88,17 +81,12 @@ var Maker = {
 
 		for (var i = 0; i < amount; i++) {
 			if (gen) {
-				arr.push(
-					await Maker.make(gen, generations, builtpack, undefined, ancestorData)
-				);
+				arr.push(await Maker.make(gen, generations, builtpack, undefined, ancestorData));
 			} else if (table) {
 				var result = await table.roll();
 				if (typeof result === undefined) continue;
-				if (typeof result === "string")
-					result = { value: result, type: "string" };
-				arr = arr.concat(
-					await this.makeChild(result, builtpack, generations, ancestorData)
-				);
+				if (typeof result === "string") result = { value: result, type: "string" };
+				arr = arr.concat(await this.makeChild(result, builtpack, generations, ancestorData));
 			} else if (child.value) {
 				arr.push({
 					name: child.value,
@@ -121,8 +109,7 @@ var Maker = {
 		if (typeof thing === "string" || !thing) return thing;
 
 		var { type, value } = thing;
-		if (type === undefined || value === undefined || value === null)
-			return value;
+		if (type === undefined || value === undefined || value === null) return value;
 
 		// replace type and value with the data
 		if (type === "data") {
@@ -199,11 +186,7 @@ function getTableModel(thing, Table) {
 	var parent = thing.$parent || (thing.parent && thing.parent());
 
 	if (parent) Table = parent.model("Table");
-	if (
-		typeof thing.type === "string" &&
-		thing.type.includes("table") &&
-		!Table
-	) {
+	if (typeof thing.type === "string" && thing.type.includes("table") && !Table) {
 		throw new Error("Argument Table is required");
 	}
 
@@ -215,9 +198,9 @@ async function rollEmbeddedTable(value, thing, Table, data) {
 		var table = new Table(value);
 		value = await table.roll(data);
 	} else {
-		console.error("Data needs cleanup - table should not be a string: ");
-		var parent = thing.$parent || thing.parent();
-		console.error(parent.toJSON());
+		//console.error("Data needs cleanup - table should not be a string: ");
+		//var parent = thing.$parent || thing.parent();
+		//console.error(parent.toJSON());
 		value = value.toString();
 	}
 	return value;

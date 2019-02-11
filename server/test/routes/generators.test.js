@@ -1,6 +1,5 @@
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const should = chai.should();
 const sinon = require("sinon");
 const request = require("supertest")(app);
 chai.use(chaiAsPromised);
@@ -9,7 +8,7 @@ require("sinon-mongoose");
 const MW = require("../../app/routes/middleware");
 const Pack = require("../../app/models/pack");
 const User = require("../../app/models/user");
-const Generator = require("../../app/models/generator");
+const { Generator } = require("../../app/models/generator");
 const BuiltPack = require("../../app/models/builtpack");
 
 describe("/packs/:pack/generator", () => {

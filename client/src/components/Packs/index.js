@@ -1,25 +1,18 @@
-import { connect } from "react-redux";
-
-import Packs, { PackUL, PacksList } from "./Packs";
+import Packs, { PackUL, PacksList } from "./Packs.js";
 import Pack from "./Pack";
 import EditPack from "./EditPack";
 import Explore from "../Explore";
 import Generators, { routes as generators } from "../Generators";
 import Tables, { routes as tables } from "../Tables";
+import { connect } from "react-redux";
 
 import actions from "./actions";
 
 const routes = [
 	{
-		path: "/create",
-		exact: true,
-		isCreate: true,
-		private: true,
-		component: EditPack
-	},
-	{
 		path: "/:pack",
 		isCreate: false,
+		exact: false,
 		component: Pack,
 		routes: [
 			{
@@ -42,6 +35,13 @@ const routes = [
 				routes: tables
 			}
 		]
+	},
+	{
+		path: "/create",
+		exact: true,
+		isCreate: true,
+		private: true,
+		component: EditPack
 	}
 ];
 
@@ -50,20 +50,21 @@ const mapStateToProps = (state, ownProps) => {
 		...ownProps,
 		...state.packs,
 		loggedIn: state.user.loggedIn,
-		getPack: packid => (state.packs.map && state.packs.map[packid]) || {}
+		// needs to be a function because this is Packs not Pack
+		getPack: packid => {
+			return (state.packs.byId && state.packs.byId[packid]) || {};
+		}
 	};
 };
-const mapDispatchToProps = dispatch => {
-	return {
-		onAddPack: data => dispatch(actions.add(data)),
-		fetchPack: id => dispatch(actions.fetchPack(dispatch, id))
-	};
-};
-
-const Container = connect(
+const mapDispatchToProps = dispatch => ({
+	onAddPack: data => dispatch(actions.add(data)),
+	fetchPack: id => dispatch(actions.fetchPack(dispatch, id)),
+	fetchRebuild: id => dispatch(actions.fetchRebuild(dispatch, id))
+});
+const PacksContainer = connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(Packs);
 
-export default Container;
+export default PacksContainer;
 export { Pack, EditPack, routes, PackUL, PacksList, actions };

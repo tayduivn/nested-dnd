@@ -1,22 +1,92 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import IconSelect from "../Form/IconSelect";
 
-const ModalHeader = () => (
+class TypeChanger extends React.PureComponent {
+	render() {
+		const { type, handleChangeType } = this.props;
+		return (
+			<select value={type} className="input-transparent" onChange={handleChangeType}>
+				<option value={false}>Icon</option>
+				<option value="text">Text</option>
+				<option value={true}>Image</option>
+			</select>
+		);
+	}
+}
+
+const TextBox = ({ newValue, handleChange }) => (
+	<div>
+		<input className="form-control" value={newValue} onChange={e => handleChange(e.target.value)} />
+	</div>
+);
+
+const ImageInput = ({ setPreview, icon, newValue }) => (
+	<div>
+		<button className="btn btn-default" onClick={setPreview}>
+			Show to players
+		</button>
+		<a href="/players-preview">Player view</a>
+		<br />
+		<img src={icon} alt="Preview" />
+		<input
+			className="form-control"
+			value={newValue}
+			onChange={e => this.handleChange(e.target.value)}
+		/>
+	</div>
+);
+
+const ModalBody = ({
+	type,
+	useImg,
+	icon,
+	index,
+	cssClass,
+	txt,
+	handleChange,
+	handleChangeType,
+	setPreview = () => {},
+	newValue,
+	showTextBox
+}) => (
+	<div className="modal-body">
+		<TypeChanger {...{ type, handleChangeType }} />
+		{useImg ? (
+			<ImageInput {...{ setPreview, icon, newValue }} />
+		) : showTextBox ? (
+			<TextBox {...{ newValue, handleChange }} />
+		) : (
+			<IconSelect
+				status={{ isEnabled: true }}
+				saveProperty={handleChange}
+				style={{ color: txt }}
+				{...{ cssClass, key: index, value: newValue, setPreview }}
+			/>
+		)}
+	</div>
+);
+
+const ModalHeader = (
 	<div className="modal-header">
-		<button
-			type="button"
-			className="close"
-			data-dismiss="modal"
-			aria-label="Close"
-		>
+		<button type="button" className="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
 );
 
-export default class IconSelectModal extends React.Component {
+const ModalIconsComponent = props => (
+	<div className="modal fade" id="iconSelectModal" tabIndex="-1" role="dialog" aria-hidden="true">
+		<div className="modal-dialog" role="document">
+			<div className="modal-content">
+				{ModalHeader}
+				<ModalBody {...props} />
+			</div>
+		</div>
+	</div>
+);
+
+export default class IconSelectModal extends React.PureComponent {
 	state = {
 		newValue: null,
 		useImg: null,
@@ -40,7 +110,6 @@ export default class IconSelectModal extends React.Component {
 	};
 	handleOpen = () => {
 		var icon = this.props.icon || "";
-		console.log(icon);
 
 		this.setState({
 			useImg: !(icon.startsWith("fa") || icon.startsWith("svg ")),
@@ -61,72 +130,30 @@ export default class IconSelectModal extends React.Component {
 		this.setState({ newValue: null, useImg: null });
 	};
 	setPreview = () => {
-		var icon =
-			this.state.newValue !== null ? this.state.newValue : this.props.icon;
+		var icon = this.state.newValue !== null ? this.state.newValue : this.props.icon;
 		this.props.sendPlayersPreview(icon);
 	};
 	render() {
-		var { icon, cssClass, style } = this.props;
-		var useImg = this.state.useImg;
+		var { icon, cssClass, txt } = this.props;
+		const { handleChange, handleChangeType, setPreview } = this;
+		const { useImg, newValue, showTextBox } = this.state;
 		var type = this.state.showTextBox ? "text" : !!useImg;
 
 		return (
-			<div
-				className="modal fade"
-				id="iconSelectModal"
-				tabIndex="-1"
-				role="dialog"
-				aria-hidden="true"
-			>
-				<div className="modal-dialog" role="document">
-					<div className="modal-content">
-						<ModalHeader />
-						<div className="modal-body">
-							<select
-								value={type}
-								className="input-transparent"
-								onChange={this.handleChangeType}
-							>
-								<option value={false}>Icon</option>
-								<option value="text">Text</option>
-								<option value={true}>Image</option>
-							</select>
-							{useImg ? (
-								<div>
-									<button className="btn btn-default" onClick={this.setPreview}>
-										Show to players
-									</button>
-									<a href="/players-preview">Player view</a>
-									<br />
-									<img src={icon} alt="Preview" />
-									<input
-										className="form-control"
-										value={this.state.newValue}
-										onChange={e => this.handleChange(e.target.value)}
-									/>
-								</div>
-							) : this.state.showTextBox ? (
-								<div>
-									<input
-										className="form-control"
-										value={this.state.newValue}
-										onChange={e => this.handleChange(e.target.value)}
-									/>
-								</div>
-							) : (
-								<IconSelect
-									key={this.props.index}
-									status={{ isEnabled: true }}
-									value={this.state.newValue}
-									saveProperty={this.handleChange}
-									setPreview={() => {}}
-									{...{ cssClass, style }}
-								/>
-							)}
-						</div>
-					</div>
-				</div>
-			</div>
+			<ModalIconsComponent
+				{...{
+					handleChange,
+					handleChangeType,
+					setPreview,
+					useImg,
+					type,
+					icon,
+					cssClass,
+					txt,
+					newValue,
+					showTextBox
+				}}
+			/>
 		);
 	}
 }

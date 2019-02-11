@@ -20,9 +20,7 @@ const CharacterItem = c => (
 
 const CharactersList = ({ characters = [] }) => (
 	<ul className="list-group characterList">
-		{characters.map
-			? characters.map((c, i) => <CharacterItem key={i} {...c} />)
-			: null}
+		{characters.map ? characters.map((c, i) => <CharacterItem key={i} {...c} />) : null}
 	</ul>
 );
 
@@ -34,7 +32,7 @@ const ImportFromDDB = ({ handleUpdate }) => (
 				className="form-control"
 				id="ddbData"
 				name="ddbData"
-				placeholder="Go to your D&D Beyond character page, add &quot;/json&quot; to the end of the URL, and copy/paste the data here. For example: https://www.dndbeyond.com/profile/username/characters/0000000/json"
+				placeholder='Go to your D&D Beyond character page, add "/json" to the end of the URL, and copy/paste the data here. For example: https://www.dndbeyond.com/profile/username/characters/0000000/json'
 			/>
 			<button type="submit" className="btn btn-primary mt-1">
 				Import
@@ -63,12 +61,8 @@ export default class Characters extends React.Component {
 		e.preventDefault();
 		var data = new FormData(e.currentTarget).get("ddbData");
 		var newData = ddbConvert(data);
-		console.log(newData);
 		const _this = this;
-		DB.create(
-			"/universes/" + this.props.universe_id + "/characters",
-			newData
-		).then(r => {
+		DB.create("/universes/" + this.props.universe_id + "/characters", newData).then(r => {
 			_this.setState({
 				error: r.error,
 				data: _this.state.data.concat([r.data])
@@ -77,9 +71,7 @@ export default class Characters extends React.Component {
 	};
 
 	componentDidMount() {
-		DB.fetch("/universes/" + this.props.universe_id + "/characters").then(r =>
-			this.setState(r)
-		);
+		DB.fetch("/universes/" + this.props.universe_id + "/characters").then(r => this.setState(r));
 	}
 	render() {
 		if (this.state.error) return this.state.error.display;

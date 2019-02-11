@@ -35,7 +35,7 @@ cd client\src\assets\patterns && dir /b > patternNames.txt
 
 ## Build icons
 
-ICOMOON.io
+- ICOMOON.io
 
 `for /d %i in (./*) do ( cd "%i" & svgo --config ../../../../../.svgo.js . & cd .. )`
 

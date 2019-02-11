@@ -1,8 +1,6 @@
 @import "./variables.scss";
 
 // BOOTSTRAP ------------------------------
-@import "../../node_modules/bootstrap/scss/root";
-@import "../../node_modules/bootstrap/scss/reboot";
 @import "../../node_modules/bootstrap/scss/type";
 @import "../../node_modules/bootstrap/scss/grid";
 @import "../../node_modules/bootstrap/scss/navbar";
@@ -26,6 +24,36 @@
 @import "./textures.scss";
 @import "./animations.scss";
 
+//RESETS
+*,
+*::before,
+*::after {
+	box-sizing: border-box; // 1
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0; // 1
+	font-family: $font-family-base;
+	font-size: $font-size-base;
+	font-weight: $font-weight-base;
+	line-height: $line-height-base;
+	color: $body-color;
+	text-align: left; // 3
+	background-color: $body-bg; // 2
+}
+
+textarea {
+	font-family: $font-family-base;
+}
+
+a {
+	text-decoration: none;
+}
+
 // Bootstrap fixes ------------------------
 
 .btn {
@@ -40,6 +68,14 @@
 		color: $link-color;
 		background: $body-color;
 	}
+}
+
+// Bootstrap makes this -webkit-appearance: button; which fucks with styles
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+	-webkit-appearance: none;
 }
 
 .dropdown-menu button,

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import { Route, Switch } from "react-router";
 
 import { Login } from "../User";
 import Nav from "./Nav";
@@ -8,21 +8,18 @@ import Explore, { Splash, PlayersPreview } from "../Explore";
 import Packs, { routes as packs } from "../Packs";
 import { PropsRoute, makeSubRoutes } from "../Routes";
 import Universes, { routes as universes } from "../Universes";
+import { ConnectedRouter } from "connected-react-router";
+import { history } from "./store";
 
-import DB from "../../actions/CRUDAction";
-
-import {
-	sendPlayersPreview,
-	subscribeToPlayersPreview
-} from "../../actions/WebSocketAction";
+import { sendPlayersPreview, subscribeToPlayersPreview } from "../../actions/WebSocketAction";
 
 import "./App.css";
 
 // monkey patch
-/*if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
 	const { whyDidYouUpdate } = require("why-did-you-update");
 	whyDidYouUpdate(React);
-}*/
+}
 
 const NotFound = () => (
 	<div className="main">
@@ -31,6 +28,8 @@ const NotFound = () => (
 		</div>
 	</div>
 );
+
+// Create an enhanced history that syncs navigation events with the store
 
 const LOADING_GIF = <i className="loading fa fa-spinner fa-spin" />;
 
@@ -68,12 +67,6 @@ const routes = [
 ];
 
 export default class App extends Component {
-	constructor(props) {
-		super(props);
-		this.handleLogin = this.handleLogin.bind(this);
-		this.handleLogout = this.handleLogout.bind(this);
-	}
-
 	sendPlayersPreview = icon => sendPlayersPreview({ src: icon });
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -81,61 +74,34 @@ export default class App extends Component {
 		const changedLoggedIn = nextProps.loggedIn !== this.props.loggedIn;
 		return newProps || changedLoggedIn;
 	}
-	handleLogin(url, payload) {
-		return DB.create(url, payload).then(result => {
-			var loggedIn = !result.error && result.data;
-			this.setState({ loggedIn: !!loggedIn });
-			return result;
-		});
-	}
-	handleLogout() {
-		return DB.fetch("logout", "POST").then(result => {
-			this.setState({ loggedIn: !!result.data.loggedIn });
-			return result;
-		});
-	}
+
 	render() {
 		const { loggedIn, loadFonts } = this.props;
 		return (
-			<BrowserRouter>
-				<div className="app">
+			<ConnectedRouter history={history}>
+				<div id="App" className="app">
 					<Switch>
 						<Route exact path="/players-preview" />
 						<PropsRoute
 							component={Nav}
-							handleLogout={this.handleLogout}
+							handleLogout={this.props.handleLogout}
 							loggedIn={loggedIn}
 						/>
 					</Switch>
 					{loggedIn !== null ? (
 						<Switch>
 							<PropsRoute
-								exact
-								path="/"
 								component={loggedIn ? Universes : Splash}
-								loadFonts={loadFonts}
-								loggedIn={loggedIn}
+								{...{ exact: true, path: "/", loadFonts, loggedIn }}
 							/>
 							{makeSubRoutes(routes, "", { loggedIn, loadFonts })}
-							<PropsRoute
-								path="/login"
-								component={Login}
-								title="Login"
-								handleLogin={this.handleLogin}
-								loggedIn={loggedIn}
-							/>
-							<PropsRoute
-								path="/signup"
-								component={Login}
-								title="Sign up"
-								handleLogin={this.handleLogin}
-								loggedIn={loggedIn}
-							/>
+							<PropsRoute path="/login" component={Login} title="Login" loggedIn={loggedIn} />
+							<PropsRoute path="/signup" component={Login} title="Sign up" loggedIn={loggedIn} />
 							<Route component={NotFound} />
 						</Switch>
 					) : null}
 				</div>
-			</BrowserRouter>
+			</ConnectedRouter>
 		);
 	}
 }

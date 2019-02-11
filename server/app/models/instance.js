@@ -112,7 +112,6 @@ function expandUp() {
 
 		var ref = arr[upIndex];
 		if (!ref) {
-			console.log("broken up path " + this.up);
 			upIndex = undefined;
 			continue;
 		}

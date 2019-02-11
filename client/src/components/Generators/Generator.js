@@ -5,7 +5,7 @@ import async from "async";
 import debounce from "debounce";
 
 import DB from "../../actions/CRUDAction";
-import { makeSubRoutes, PropsRoute } from "../Routes";
+import { PropsRoute } from "../Routes";
 import { LOADING_GIF } from "../App/App";
 
 class ViewGenerator extends Component {
@@ -32,11 +32,7 @@ class ViewGenerator extends Component {
 						return (
 							<li key={i}>
 								<strong>{k}</strong>:{" "}
-								{gen[k] instanceof Object ? (
-									<pre>{JSON.stringify(gen[k], null, 2)}</pre>
-								) : (
-									gen[k]
-								)}
+								{gen[k] instanceof Object ? <pre>{JSON.stringify(gen[k], null, 2)}</pre> : gen[k]}
 							</li>
 						);
 					})}
@@ -80,12 +76,10 @@ export default class Generator extends Component {
 			newValues[t.property] = t.value;
 		});
 
-		DB.set("packs/" + pack + "/generators", _id, newValues).then(
-			({ error, data }) => {
-				if (error) this.setState({ generator: data, error });
-				callback();
-			}
-		);
+		DB.set("packs/" + pack + "/generators", _id, newValues).then(({ error, data }) => {
+			if (error) this.setState({ generator: data, error });
+			callback();
+		});
 	});
 
 	componentDidMount() {
@@ -103,26 +97,23 @@ export default class Generator extends Component {
 		if (!generator) generator = { built: {} };
 		if (!generator.built) generator.built = {};
 
-		const urlChanged =
-			this.props.match.params.generator !== prevProps.match.params.generator;
-		const isaDifferentThanSaved =
-			this.props.match.params.generator !== generator.built.isa;
+		/*const urlChanged = this.props.match.params.generator !== prevProps.match.params.generator;
+		const isaDifferentThanSaved = this.props.match.params.generator !== generator.built.isa;
 		if (urlChanged && isaDifferentThanSaved) {
 			console.log("test");
-		}
+		}*/
 	}
 
 	handleDelete = () => {
 		const { pack, generator } = this.props.match.params;
 
-		DB.delete(
-			"packs/" + pack + "/generators",
-			this.state.generator.unbuilt._id
-		).then(({ error, data }) => {
-			if (error) return this.setState({ error });
-			this.props.handleRenameGen(generator, null);
-			this.props.history.push("/packs/" + pack);
-		});
+		DB.delete("packs/" + pack + "/generators", this.state.generator.unbuilt._id).then(
+			({ error, data }) => {
+				if (error) return this.setState({ error });
+				this.props.handleRenameGen(generator, null);
+				this.props.history.push("/packs/" + pack);
+			}
+		);
 	};
 
 	debouncedChange = (property, value) => {
@@ -139,9 +130,7 @@ export default class Generator extends Component {
 				if (property === "isa") {
 					const { pack, generator } = this.props.match.params;
 					var newUrl =
-						this.props.match.path
-							.replace(":pack", pack)
-							.replace(":generator", value) + "/edit";
+						this.props.match.path.replace(":pack", pack).replace(":generator", value) + "/edit";
 					this.props.history.replace(newUrl);
 					this.props.handleRenameGen(generator, value);
 				}
@@ -150,9 +139,8 @@ export default class Generator extends Component {
 	};
 
 	render() {
-		const { match, pack, routes } = this.props;
+		const { match } = this.props;
 		const { generator, error } = this.state;
-		const { handleChange, handleDelete } = this;
 
 		var content;
 		if (error) content = error.display;
@@ -160,19 +148,7 @@ export default class Generator extends Component {
 		else {
 			content = (
 				<Switch>
-					{makeSubRoutes(routes, match.path, {
-						...generator,
-						pack,
-						handleChange,
-						handleDelete,
-						id: generator._id
-					})}
-					<PropsRoute
-						exact
-						path={match.path}
-						component={ViewGenerator}
-						{...generator}
-					/>
+					<PropsRoute exact path={match.path} component={ViewGenerator} {...generator} />
 				</Switch>
 			);
 		}
@@ -180,3 +156,13 @@ export default class Generator extends Component {
 		return <div id="Generator">{content}</div>;
 	}
 }
+
+/*
+{makeSubRoutes(routes, match.path, {
+	...generator,
+	pack,
+	handleChange,
+	handleDelete,
+	id: generator._id
+})}
+*/

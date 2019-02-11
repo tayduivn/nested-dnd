@@ -1,15 +1,12 @@
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const should = chai.should();
 const sinon = require("sinon");
 chai.use(chaiAsPromised);
 
-const Generator = require("../app/models/generator");
+const { Generator } = require("../app/models/generator");
 const Pack = require("../app/models/pack");
 const BuiltPack = require("../app/models/builtpack");
-const Nested = require("../app/routes/packs/nested");
 const Maintainer = require("../app/models/generator/maintain");
-const assert = require("assert");
 
 describe("Maintainer", () => {
 	var builtpack, pack, generator, gens, childGen, inheritorGen;
@@ -28,6 +25,7 @@ describe("Maintainer", () => {
 	beforeEach(() => {
 		pack = new Pack({
 			name: "The Pack",
+			url: "test",
 			seed: "universe>"
 		});
 
@@ -119,20 +117,16 @@ describe("Maintainer", () => {
 		it("should handle bad input", () => {
 			var result = Maintainer.getGeneratorChildren();
 			result.should.be.an("array").and.have.lengthOf(0);
-			var result = Maintainer.getGeneratorChildren(undefined);
+			result = Maintainer.getGeneratorChildren(undefined);
 			result.should.be.an("array").and.have.lengthOf(0);
-			var result = Maintainer.getGeneratorChildren(null);
+			result = Maintainer.getGeneratorChildren(null);
 			result.should.be.an("array").and.have.lengthOf(0);
 		});
 	});
 
 	describe("renameChildren()", () => {
 		it("should rename top level gen", () => {
-			var result = Maintainer.renameChildren(
-				generator,
-				"supercluster",
-				"super"
-			);
+			var result = Maintainer.renameChildren(generator, "supercluster", "super");
 			result.should.have.property("in").that.is.an("array");
 			result.in[1].should.have.property("value").that.equals("super");
 		});
@@ -252,11 +246,7 @@ describe("Maintainer", () => {
 		it("should return undefined if there are no generators", () => {
 			gens = [];
 			gens.exec = () => gens;
-			return Maintainer.rename(
-				generator,
-				pack,
-				"universe"
-			).should.eventually.equal(undefined);
+			return Maintainer.rename(generator, pack, "universe").should.eventually.equal(undefined);
 		});
 	});
 });

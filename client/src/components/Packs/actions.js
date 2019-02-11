@@ -6,6 +6,7 @@ export const FETCH_PACK = "PACKS_FETCH_PACK";
 export const SET = "PACKS_SET";
 export const SET_PACK = "PACKS_SET_PACK";
 export const ERROR = "PACKS_ERROR";
+export const REBUILD_PACK = "PACK_REBUILD";
 
 export const add = pack => ({ type: ADD, pack });
 
@@ -32,7 +33,10 @@ export const fetchPack = (dispatch, id, loaded) => {
 			}
 		});
 	}
-	return { type: FETCH_PACK, id };
+	return {
+		type: FETCH_PACK,
+		id
+	};
 };
 
 const setError = error => ({ type: ERROR, error });
@@ -46,9 +50,21 @@ export const setPack = pack => ({
 	id: pack._id
 });
 
+export const fetchRebuild = (dispatch, id) => {
+	DB.set("builtpacks", id + "/rebuild", {}).then(({ error, data }) => {
+		if (error) dispatch(setError(error));
+		else dispatch(setPack(data));
+	});
+	return {
+		type: REBUILD_PACK,
+		id: id
+	};
+};
+
 export default {
 	add,
 	fetch,
 	fetchPack,
-	set
+	set,
+	fetchRebuild
 };

@@ -2,12 +2,8 @@ const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const should = chai.should();
 const sinon = require("sinon");
-const sinonMg = require("sinon-mongoose");
 const request = require("supertest");
-const mongoose = require("mongoose");
 chai.use(chaiAsPromised);
-
-const MW = require("../../app/routes/middleware");
 
 const User = require("../../app/models/user");
 

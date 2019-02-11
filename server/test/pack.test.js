@@ -1,19 +1,15 @@
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const should = chai.should();
 const sinon = require("sinon");
-const express = require("express");
 chai.use(chaiAsPromised);
 
-const User = require("../app/models/user");
 const Pack = require("../app/models/pack");
-const Nested = require("../app/routes/packs/nested");
 
 describe("Pack", () => {
 	var pack;
 
 	before(() => {
-		sinon.stub(Pack, "find").callsFake(query => {
+		sinon.stub(Pack, "find").callsFake(() => {
 			var p = new Pack();
 			p.exec = () => {
 				return Promise.resolve(() => p);
@@ -26,6 +22,7 @@ describe("Pack", () => {
 		pack = new Pack({
 			id: 123,
 			name: "testing",
+			url: "test",
 			seed: "universe>"
 		});
 	});

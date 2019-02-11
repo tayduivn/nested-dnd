@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const childSchema = require("./generator/childSchema");
-const styleSchema = require("./generator/styleSchema");
-const sourceSchema = require("./source");
+const childSchema = require("./childSchema");
+const styleSchema = require("./styleSchema");
+const sourceSchema = require("../source");
 
-const Maintainer = require("./generator/maintain");
-const Maker = require("./generator/make");
-const Nested = require("../routes/packs/nested");
-const Universe = require("./universe");
+const Maintainer = require("./maintain");
+const Maker = require("./make");
+const Nested = require("../../routes/packs/nested");
+const Universe = require("../universe");
 
-const SEED_DELIM = ">";
+const GENERATE_LEVELS = 1;
 
 var schema = Schema({
 	pack: {
@@ -79,9 +79,7 @@ schema.methods.makeStyle = async function(name) {
 };
 
 schema.methods.makeName = async function(data = {}) {
-	return this.name
-		? Maker.makeMixedThing(this.name, this.model("Table"), data)
-		: undefined;
+	return this.name ? Maker.makeMixedThing(this.name, this.model("Table"), data) : undefined;
 };
 
 // ----------------------- STATICS
@@ -107,28 +105,17 @@ schema.statics.insertNew = async function(data, pack) {
  */
 schema.statics.makeAsRoot = async function(seedArray, builtpack, data = {}) {
 	var seed = seedArray.shift();
-	var childSeed = seedArray[0];
 	const ancestorData = Object.assign({}, data, seed.data);
 
 	if (seedArray.length === 0) {
-		let nestedSeed = await Maker.make(
-			seed,
-			1,
-			builtpack,
-			undefined,
-			ancestorData
-		);
+		let nestedSeed = await Maker.make(seed, GENERATE_LEVELS, builtpack, undefined, ancestorData);
 		nestedSeed.isNestedSeed = true; // this will be our starting point when we generate the world
 		return nestedSeed;
 	}
 
 	// generate the next seed in the array and push to in
-	var node = await Maker.make(seed, 1, builtpack);
-	var generatedChild = await this.makeAsRoot(
-		seedArray,
-		builtpack,
-		ancestorData
-	);
+	var node = await Maker.make(seed, GENERATE_LEVELS, builtpack);
+	var generatedChild = await this.makeAsRoot(seedArray, builtpack, ancestorData);
 
 	if (!node.in) node.in = [];
 
@@ -168,7 +155,7 @@ schema.statics.makeAsNode = async function(tree, universe, builtpack) {
 		if (generator) {
 			tree = await Maker.make(
 				generator,
-				1,
+				GENERATE_LEVELS,
 				builtpack,
 				tree,
 				universe.getAncestorData(tree.index)
@@ -191,7 +178,7 @@ schema.statics.makeAsNode = async function(tree, universe, builtpack) {
  * @return {Promise<Nested>}           the random thing
  */
 schema.statics.make = function(generator, builtpack) {
-	return Maker.make(generator, 1, builtpack);
+	return Maker.make(generator, GENERATE_LEVELS, builtpack);
 };
 
 // ----------------------- METHODS
@@ -270,5 +257,3 @@ function mergeStyle(arr, labels) {
 }
 
 module.exports = mongoose.model("Generator", schema);
-
-module.exports.generatorSchema = schema;

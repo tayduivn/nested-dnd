@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 
 import DB from "../../actions/CRUDAction";
 import { LOADING_GIF } from "../App/App";
-import { makeSubRoutes } from "../Routes";
 
 import async from "async";
 
@@ -27,9 +26,7 @@ export default class Table extends Component {
 		const tableid = this.props.match.params.table;
 
 		if (tableid) {
-			DB.get("tables", tableid).then(({ error, data: table }) =>
-				this.setState({ table, error })
-			);
+			DB.get("tables", tableid).then(({ error, data: table }) => this.setState({ table, error }));
 		}
 	}
 
@@ -61,30 +58,27 @@ export default class Table extends Component {
 	// get the table if you haven't already
 
 	render() {
-		const { handleDelete, handleChange } = this;
-		const { routes, match, pack, isCreate } = this.props;
+		const { isCreate } = this.props;
 		const { table } = this.state;
 
 		var content;
 
-		if (this.state.error)
-			content = <div className="main">{this.state.error.display}</div>;
-		else if (!table && !isCreate)
-			content = <div className="main">{LOADING_GIF}</div>;
+		if (this.state.error) content = <div className="main">{this.state.error.display}</div>;
+		else if (!table && !isCreate) content = <div className="main">{LOADING_GIF}</div>;
 		else {
-			content = (
-				<Switch>
-					{makeSubRoutes(routes, match.path, {
-						table,
-						handleDelete,
-						handleChange,
-						isCreate,
-						pack,
-						id: table._id
-					})}
-				</Switch>
-			);
+			content = <Switch />;
 		}
 		return <div id="Table">{content}</div>;
 	}
 }
+
+/*
+{makeSubRoutes(routes, match.path, {
+	table,
+	handleDelete,
+	handleChange,
+	isCreate,
+	pack,
+	id: table._id
+})}
+*/

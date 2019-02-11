@@ -1,21 +1,20 @@
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const should = chai.should();
 const sinon = require("sinon");
 const request = require("supertest")(app);
-const express = require("express");
+
 chai.use(chaiAsPromised);
 require("sinon-mongoose");
 
 const MW = require("../../app/routes/middleware");
 const Pack = require("../../app/models/pack");
-const Generator = require("../../app/models/generator");
+const { Generator } = require("../../app/models/generator");
 const User = require("../../app/models/user");
 const BuiltPack = require("../../app/models/builtpack");
 const Table = require("../../app/models/table");
 
 describe("/packs", () => {
-	var user, pack, packs, PackMock, GenMock, BuiltPackMock, TableMock;
+	var user, pack, PackMock, GenMock, BuiltPackMock, TableMock;
 
 	const USER_ID = "5ab53068b647d20b0c7b308a";
 
@@ -87,6 +86,17 @@ describe("/packs", () => {
 			return request
 				.post("/api/packs")
 				.set("Accept", "application/json")
+				.expect("Content-Type", /json/)
+				.send({ name: "animals", url: "animals" })
+
+				.expect(({ body }) => {
+					body.should.have.property("name", "animals");
+					body.should.have.property("_user", USER_ID);
+				})
+				.expect(200);
+			/*return request
+				.post("/api/packs")
+				.set("Accept", "application/json")
 				.send({
 					name: "animals"
 				})
@@ -95,7 +105,7 @@ describe("/packs", () => {
 				.expect(({ body }) => {
 					body.should.have.property("name", "animals");
 					body.should.have.property("_user", USER_ID);
-				});
+				});*/
 		});
 	});
 

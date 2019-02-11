@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Generator = require("./generator");
+const { Generator } = require("./generator");
 
 var schema = Schema({
 	_id: {
@@ -125,8 +125,7 @@ schema.statics.extend = function(isa, builtpack, extendsThis = []) {
 		}
 	}
 
-	if (generator && generator.toJSON)
-		generator = Object.assign({}, generator.toJSON());
+	if (generator && generator.toJSON) generator = Object.assign({}, generator.toJSON());
 
 	generator.extendsPath = extendsPath;
 	generator.extendsThis = (genData.extendsThis || []).concat(extendsThis);
@@ -168,8 +167,7 @@ schema.methods.getGen = function(isa) {
 	if (!gen) return undefined;
 
 	// prevent extending itself
-	if (gen.extendsPath && gen.extendsPath.includes(gen.isa))
-		gen.extends = undefined;
+	if (gen.extendsPath && gen.extendsPath.includes(gen.isa)) gen.extends = undefined;
 
 	// TODO: temporary cleanup
 	if (!gen.gen_ids) gen.gen_ids = [gen._id];
@@ -187,8 +185,7 @@ schema.methods.getGen = function(isa) {
  * @param  {Generator} the generator to push
  */
 schema.methods.setGen = function(generator) {
-	if (generator.toJSON)
-		throw new Error("Cannot put raw generator object into builtpack");
+	if (generator.toJSON) throw new Error("Cannot put raw generator object into builtpack");
 	if (!generator.gen_ids) throw new Error("Must have gen_ids");
 
 	var gen = Object.assign({}, generator);
@@ -254,9 +251,7 @@ schema.methods.growFromSeed = function(pack) {
 
 	var gens = pack.seedIsValid(pack.seed, this);
 	if (!gens || !gens.length) {
-		throw new Error(
-			"Could not find seed " + pack.seed + " in built pack " + this._id
-		);
+		throw new Error("Could not find seed " + pack.seed + " in built pack " + this._id);
 	}
 	return this.model("Generator").makeAsRoot(gens, this);
 };

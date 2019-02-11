@@ -1,112 +1,91 @@
-import React, { Component } from "react";
-import { Switch, Route } from "react-router-dom";
-import { Link } from "../Util";
-import { connect } from "react-redux";
-
-import { LOADING_GIF } from "../App";
-import { loadFonts } from "../App/store";
-import { makeSubRoutes, PropsRoute } from "../Routes";
+import React from "react";
+import Link from "../Util/Link";
 
 import "./Packs.css";
+import { connect } from "react-redux";
 
-const PackLink = ({
-	_id,
-	name,
-	title,
-	txt,
-	font,
-	cssClass,
-	description,
-	isUniverse,
-	dependencies,
-	lastSaw,
-	...pack
-}) => (
-	<li className={`col`}>
-		<div className="btn-group">
-			<Link
-				to={isUniverse ? "/universes/" + _id + "/explore" : "/packs/" + _id}
-				className={`btn col ${cssClass}`}
-				style={{ color: txt }}
-			>
-				<h1 style={{ fontFamily: font ? `'${font}', serif` : "inherit" }}>
-					{title || name}
-				</h1>
-				{description ? <p>{description}</p> : null}
-				{isUniverse && dependencies && dependencies.length ? (
-					<p>
-						<strong>Packs</strong>: {dependencies.join(", ")}
-					</p>
-				) : null}
-				{lastSaw ? (
-					<p>
-						<strong>Currently viewing:</strong> {lastSaw}
-					</p>
-				) : null}
-			</Link>
-			<Link
-				to={(isUniverse ? "/universes/" : "/packs/") + _id + "/edit"}
-				className={`edit btn col-xs-auto d-flex align-items-center justify-content-center ${cssClass}`}
-				style={{ color: txt }}
-			>
-				<h2>
-					<i className="fas fa-pen-square" />
-					<small>Edit</small>
-				</h2>
-			</Link>
-		</div>
-	</li>
+import { LOADING_GIF } from "../App/App";
+import { loadFonts } from "../App/store";
+
+const EDIT_BUTTON = (
+	<h2>
+		<i className="fas fa-pen-square" />
+		<small>Edit</small>
+	</h2>
 );
 
-const PackInput = ({
-	_id,
-	name,
-	txt,
-	font,
-	cssClass,
-	description,
-	selected,
-	onSelect,
-	url,
-	...pack
-}) => (
-	<li className={`col`}>
-		<div className="btn-group">
-			<button
-				onClick={onSelect}
-				id={_id}
-				className={`btn col ${cssClass}`}
-				style={{ color: txt }}
-			>
-				<h1
-					className="webfont"
-					style={{ fontFamily: font ? `'${font}', serif` : "inherit" }}
-				>
-					<span className={`fa-stack ${selected ? "selected" : ""}`}>
-						<i className="fas fa-circle fa-2x" />
-						<i className="fa fa-check fa-stack-1x" />
-					</span>
-					{name}
-				</h1>
-				{description ? <p>{description}</p> : null}
-			</button>
-			{url ? (
-				<Link
-					to={"/explore/" + url}
-					className={`explore btn col-xs-auto ${cssClass}`}
-					style={{ color: txt }}
-				>
-					<h2>
-						<i className="fas fa-eye" />
-						<small>preview</small>
-					</h2>
-				</Link>
-			) : null}
-		</div>
-	</li>
-);
+const EDITBTN_CLS = "edit btn col-xs-auto d-flex align-items-center justify-content-center";
 
-class PackULInner extends Component {
+class PackLink extends React.PureComponent {
+	render() {
+		const { _id, name, url, title, txt, font, description, isUniverse } = this.props;
+		const { dependencies, lastSaw, cssClass = "bg-grey-900" } = this.props;
+		const URL = isUniverse ? `/universes/${_id}` : `/packs/${url}`;
+		const style = { color: txt };
+
+		return (
+			<li className={`col`}>
+				<div className="btn-group">
+					<Link to={`${URL}/explore`} className={`btn col ${cssClass}`} style={style}>
+						<h1 style={{ fontFamily: font ? `'${font}', serif` : "inherit" }}>{title || name}</h1>
+						{description && <p>{description}</p>}
+						{isUniverse && dependencies && dependencies.length && (
+							<p>
+								<strong>Packs</strong>: {dependencies.join(", ")}
+							</p>
+						)}
+						{lastSaw && (
+							<p>
+								<strong>Currently viewing:</strong> {lastSaw}
+							</p>
+						)}
+					</Link>
+					<Link to={`${URL}/edit`} className={`${EDITBTN_CLS} ${cssClass}`} style={style}>
+						{EDIT_BUTTON}
+					</Link>
+				</div>
+			</li>
+		);
+	}
+}
+
+class PackInput extends React.PureComponent {
+	render() {
+		const { _id, name, txt, font, cssClass, description, selected, url } = this.props;
+		const { onSelect } = this.props;
+		const exploreLinkClass = `explore btn col-xs-auto ${cssClass}`;
+		const style = { color: txt };
+		return (
+			<li className={`col`}>
+				<div className="btn-group">
+					<button {...{ onClick: onSelect, _id, style }} className={`btn col ${cssClass}`}>
+						<h1 className="webfont" style={{ fontFamily: font ? `'${font}', serif` : "inherit" }}>
+							<span className={`fa-stack ${selected ? "selected" : ""}`}>
+								<i className="fas fa-circle fa-2x" />
+								<i className="fa fa-check fa-stack-1x" />
+							</span>
+							{name}
+						</h1>
+						{description ? <p>{description}</p> : null}
+					</button>
+					{url ? (
+						<Link to={"/explore/" + url} className={exploreLinkClass} style={style}>
+							<h2>
+								<i className="fas fa-eye" />
+								<small>preview</small>
+							</h2>
+						</Link>
+					) : null}
+				</div>
+			</li>
+		);
+	}
+}
+
+const ADD_BUTTON_CLASSNAME =
+	"create col btn btn-outline-primary d-flex align-items-center justify-content-center";
+
+class PackULInner extends React.Component {
 	componentDidMount() {
 		if (this.props.list) this.loadFonts(this.props.list);
 	}
@@ -129,40 +108,26 @@ class PackULInner extends Component {
 		if (fonts.length) this.props.loadFonts(fonts);
 	}
 	render() {
-		const list = this.props.list,
+		const list = this.props.list || [],
 			selectable = this.props.selectable,
 			selected = this.props.selected,
 			onSelect = this.props.onSelect,
 			addButton = this.props.addButton,
-			isUniverse = this.props.isUniverse;
+			isUniverse = this.props.isUniverse,
+			to = `${isUniverse ? "/universes" : "/packs"}/create`;
 
 		return (
 			<ul className="row packs">
-				{list
-					? list.map(p => {
-							return selectable ? (
-								<PackInput
-									key={p._id}
-									{...p}
-									selected={selected === p._id}
-									onSelect={onSelect}
-								/>
-							) : (
-								<PackLink
-									key={p._id}
-									{...p.pack}
-									{...p}
-									isUniverse={isUniverse}
-								/>
-							);
-					  })
-					: null}
+				{list.map(p => {
+					return selectable ? (
+						<PackInput key={p._id} {...p} selected={selected === p._id} onSelect={onSelect} />
+					) : (
+						<PackLink key={p._id} {...p.pack} {...p} isUniverse={isUniverse} />
+					);
+				})}
 				{addButton ? (
 					<li className="col">
-						<Link
-							to={`${isUniverse ? "/universes" : "/packs"}/create`}
-							className="create col btn btn-outline-primary d-flex align-items-center justify-content-center"
-						>
+						<Link to={to} className={ADD_BUTTON_CLASSNAME}>
 							<span>
 								<i className="fas fa-plus" /> Create new
 							</span>
@@ -185,9 +150,7 @@ const MyPacks = ({ myPacks }) => (
 	<div>
 		<h2>My Packs</h2>
 		{myPacks === null && LOADING_GIF}
-		{myPacks && myPacks.length === 0 && (
-			<p>You have not created any packs yet</p>
-		)}
+		{myPacks && myPacks.length === 0 && <p>You have not created any packs yet</p>}
 		{myPacks && <PackUL list={myPacks} addButton={true} />}
 	</div>
 );
@@ -201,9 +164,7 @@ const PacksList = ({ loggedIn, error, myPacks, publicPacks }) => (
 		{myPacks === null && LOADING_GIF}
 		{error && error.display}
 
-		{publicPacks && publicPacks.length === 0 && (
-			<p>There are no public packs to display</p>
-		)}
+		{publicPacks && publicPacks.length === 0 && <p>There are no public packs to display</p>}
 		{publicPacks && <PackUL list={publicPacks} />}
 	</div>
 );
@@ -218,15 +179,7 @@ const PacksPageWrap = props => (
 
 const Packs = ({ routes, match = {}, ...props }) => (
 	<div id="Packs">
-		<Switch>
-			<PropsRoute
-				exact
-				path={match.path}
-				component={PacksPageWrap}
-				{...props}
-			/>
-			{makeSubRoutes(routes, match.path, props)}
-		</Switch>
+		<PacksPageWrap {...props} match={match} />
 	</div>
 );
 

@@ -1,18 +1,20 @@
 import React from "react";
-import { Router, Route } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { expect } from "chai";
 import { mount } from "enzyme";
 import { spy } from "sinon";
+import { Provider } from "react-redux";
+import { PropsRoute } from "../Routes";
 
 import Explore from "./Explore";
 import ExplorePage from "./ExplorePage";
 import Ancestors from "./Ancestors";
 import Splash from "./Splash";
 import { createMemoryHistory } from "history";
-
-import DB from "../../actions/CRUDAction";
+import { store } from "../App";
 
 window.location = "/";
+const NOOP = () => {};
 
 const current = {
 	isa: "test",
@@ -38,9 +40,11 @@ describe("<Explore />", () => {
 		const history = createMemoryHistory();
 		history.location.state = current;
 		wrap = mount(
-			<Router history={history}>
-				<Route path="/" component={Explore} />
-			</Router>
+			<Provider store={store}>
+				<Router history={history}>
+					<PropsRoute path="/" component={Explore} loadCurrent={NOOP} loadFonts={NOOP} />
+				</Router>
+			</Provider>
 		);
 
 		global.fetchReturn = current;
@@ -86,7 +90,7 @@ describe("<Splash />", () => {
 		history.location.state = current;
 		mount(
 			<Router history={history}>
-				<Route path="/" component={Splash} />
+				<PropsRoute path="/" component={Splash} loadFonts={NOOP} />
 			</Router>
 		);
 		expect(Explore.prototype.componentDidMount.calledOnce).to.equal(true);
@@ -96,13 +100,10 @@ describe("<Splash />", () => {
 describe("<Ancestors />", () => {
 	it("renders single button", done => {
 		var wrapper = mount(
-			<Ancestors
-				handleClick={() => {}}
-				ancestors={[{ name: "test", index: 0 }]}
-			/>
+			<Ancestors handleClick={() => {}} ancestors={[{ name: "test", index: 0 }]} />
 		);
 		setImmediate(() => {
-			expect(wrapper.find("button")).to.have.lengthOf(1);
+			expect(wrapper.getElements("button")).to.have.lengthOf(1);
 			done();
 		});
 	});
@@ -115,7 +116,7 @@ describe("<Ancestors />", () => {
 			/>
 		);
 		setImmediate(() => {
-			expect(wrapper.find("button")).to.have.lengthOf(3);
+			expect(wrapper.getElements(".ancestors__dropdown-item")).to.have.lengthOf(1);
 			done();
 		});
 	});

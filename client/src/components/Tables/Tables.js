@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Link, Switch } from "react-router-dom";
 import PropTypes from "prop-types";
-
-import { makeSubRoutes } from "../Routes";
 import DB from "../../actions/CRUDAction";
 
 export default class Tables extends Component {
@@ -20,33 +18,28 @@ export default class Tables extends Component {
 		const PACK_ID = this.props.pack._id;
 		const PATHNAME = this.props.location.pathname;
 
-		DB.create("pack/" + PACK_ID + "/table", payload).then(
-			({ error, data: table }) => {
-				if (error) return this.setState({ error });
-				this.setState({ table, isCreate: false });
+		DB.create("pack/" + PACK_ID + "/table", payload).then(({ error, data: table }) => {
+			if (error) return this.setState({ error });
+			this.setState({ table, isCreate: false });
 
-				var newURL = PATHNAME.replace("/create", "/" + table._id + "/edit");
+			var newURL = PATHNAME.replace("/create", "/" + table._id + "/edit");
 
-				this.props.history.replace(newURL);
-			}
-		);
+			this.props.history.replace(newURL);
+		});
 	};
 
 	render() {
-		const { routes, match, pack } = this.props;
-		const { handleAdd } = this;
-
 		return (
 			<div id="Tables" className="main">
 				<div className="container mt-5">
-					<Switch>
-						{makeSubRoutes(routes, match.path, { pack, handleAdd })}
-					</Switch>
+					<Switch />
 				</div>
 			</div>
 		);
 	}
 }
+
+//{makeSubRoutes(routes, match.path, { pack, handleAdd })}
 
 class TablesList extends Component {
 	static propTypes = {
@@ -55,7 +48,7 @@ class TablesList extends Component {
 		match: PropTypes.object
 	};
 
-	render = () => {
+	render() {
 		const { isOwner, tables, match } = this.props;
 		const state = { packid: match.params.pack, tables };
 
@@ -79,7 +72,7 @@ class TablesList extends Component {
 				</ul>
 			</div>
 		);
-	};
+	}
 }
 
 export { TablesList };

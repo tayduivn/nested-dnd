@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const generatorSchema = require("./generator").generatorSchema;
 
 const Nested = require("../routes/packs/nested");
 const { flatInstanceSchema } = require("./instance");
@@ -31,6 +30,15 @@ var universeSchema = Schema({
 
 	array: [flatInstanceSchema]
 });
+
+universeSchema.methods.setLastSaw = function(index = 0) {
+	var rootIndex = this.array[index]
+		? parseInt(index, 10)
+		: typeof this.lastSaw !== undefined
+			? this.lastSaw
+			: 0;
+	this.lastSaw = parseInt(rootIndex, 10);
+};
 
 universeSchema.methods.getAncestorData = function(index, ancestorData = {}) {
 	let current = this.array[index] || this.array[0] || {};
@@ -69,7 +77,6 @@ universeSchema.methods.moveInstance = function(index, newUp) {
 universeSchema.methods.deleteInstance = function(index, willDeleteParent) {
 	index = parseInt(index, 10);
 	if (isNaN(index)) {
-		console.log(index + " is not a number");
 		return;
 	}
 
@@ -77,24 +84,19 @@ universeSchema.methods.deleteInstance = function(index, willDeleteParent) {
 		//delete everyhing
 		this.array = [{ name: this.title }];
 		this.lastSaw = 0;
-		console.log("index is 0");
 		return;
 	}
 	var instance = this.array[index];
 
 	if (!instance) {
-		console.log(index + ": " + this.array[index] + " is false");
 		return;
 	}
 
 	// has children, recurse
 	if (instance.in) {
-		console.log("----------");
-		console.log(index + " in: [" + instance.in.join(", ") + "]");
 		instance.in.forEach(j => {
 			this.deleteInstance(j, true);
 		});
-		console.log("----------");
 	}
 
 	// fix lastSaw
@@ -128,8 +130,6 @@ universeSchema.methods.deleteInstance = function(index, willDeleteParent) {
 
 		this.array.set(index, null);
 	}
-
-	console.log("deleted " + index);
 };
 
 universeSchema.methods.getNested = async function(index, pack) {
@@ -158,7 +158,7 @@ universeSchema.methods.getNested = async function(index, pack) {
 			inst.up = 0;
 			parent = this.array[0];
 		}
-		if(!parent.in) 
+		if(!parent.in)
 			parent.in = [];
 
 		if(!parent.in.includes(i)){
@@ -190,11 +190,7 @@ universeSchema.methods.getNested = async function(index, pack) {
 
 	const builtpack = await this.model("BuiltPack").findOrBuild(pack);
 
-	var generated = await this.model("Generator").makeAsNode(
-		nested,
-		this,
-		builtpack
-	);
+	var generated = await this.model("Generator").makeAsNode(nested, this, builtpack);
 	generated.index = rootIndex;
 	var tree = generated.flatten(this);
 
@@ -231,6 +227,7 @@ universeSchema.statics.getTemp = async function(session_id, pack, index) {
 	var universes = await this.find(query);
 	var universe;
 
+	// universes stored in this session, find the one for this pack
 	for (var i = 0, u; (u = universes[i]); i++) {
 		var found = u.pack && u.pack.toString() === pack.id;
 		if (found) {
@@ -239,26 +236,22 @@ universeSchema.statics.getTemp = async function(session_id, pack, index) {
 			break;
 		}
 	}
-	universes.forEach(u => u.remove());
+	// delete all universes in this session?
+	// universes.forEach(u => u.remove());
 
 	// pack exists
 	if (universe && universe.pack.toString() === pack.id) {
-		const nested = await universe.getNested(index, pack);
-		universe.expires = Date.now();
-		universe.save();
-
-		return nested;
+		await universe.getNested(index, pack);
+	} else {
+		// pack doesn't exist, build it and return the root
+		var { universe: newUni } = await this.build(pack);
+		universe = newUni;
 	}
-
-	// pack doesn't exist, build it and return the root
-	var { universe, nested } = await this.build(pack);
 
 	universe.session_id = session_id;
 	universe.expires = Date.now();
-
 	universe.save();
-
-	return nested;
+	return universe;
 };
 
 module.exports = mongoose.model("Universe", universeSchema);

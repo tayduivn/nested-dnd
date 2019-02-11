@@ -82,7 +82,7 @@ var Maintainer = {
 
 		//validate extends
 		if (data.extends && !builtpack.getGen(data.extends)) {
-			var e = new Error(
+			e = new Error(
 				data.extends + " extends generator doesn't exist in pack " + pack._id
 			);
 			e.status = 412;
@@ -95,7 +95,7 @@ var Maintainer = {
 
 			for (var i = 0; i < isas.length; i++) {
 				if (!builtpack.getGen(isas[i]) && isas[i] !== data.isa) {
-					var e = new ReferenceError(
+					e = new ReferenceError(
 						"Could not find child generator that is a " + isas[i]
 					);
 					e.status = 412;
@@ -149,7 +149,6 @@ var Maintainer = {
 
 		var isaNew = generator.isa;
 		var Generator = generator.model("Generator");
-		var BuiltPack = generator.model("BuiltPack");
 
 		let result = await Promise.all([
 			// find generators in this pack that contain in or extend with isaOld

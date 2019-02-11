@@ -63,20 +63,10 @@ const Display = ({ character, handleUpdate }) => (
 						<CharacterSheet character={character} />
 					</div>
 				</div>
-				<div
-					className="tab-pane fade"
-					id="cards"
-					role="tabpanel"
-					aria-labelledby="cards-tab"
-				>
+				<div className="tab-pane fade" id="cards" role="tabpanel" aria-labelledby="cards-tab">
 					<Cards character={character} />
 				</div>
-				<div
-					className="tab-pane fade"
-					id="edit"
-					role="tabpanel"
-					aria-labelledby="edit-tab"
-				>
+				<div className="tab-pane fade" id="edit" role="tabpanel" aria-labelledby="edit-tab">
 					<ImportFromDDB handleUpdate={handleUpdate} />
 				</div>
 			</div>
@@ -98,16 +88,11 @@ export default class Character extends React.Component {
 		e.preventDefault();
 		var data = new FormData(e.currentTarget).get("ddbData");
 		var newData = ddbConvert(data);
-		console.log(newData);
-		DB.set("characters", this.props.match.params.character, newData).then(r =>
-			this.setState(r)
-		);
+		DB.set("characters", this.props.match.params.character, newData).then(r => this.setState(r));
 	};
 
 	componentDidMount() {
-		DB.get("characters", this.props.match.params.character).then(r =>
-			this.setState(r)
-		);
+		DB.get("characters", this.props.match.params.character).then(r => this.setState(r));
 
 		WebFont.load({
 			google: {
@@ -117,13 +102,10 @@ export default class Character extends React.Component {
 	}
 
 	render() {
-		if (this.state.error)
-			return <div className="main">{this.state.error.display}</div>;
+		if (this.state.error) return <div className="main">{this.state.error.display}</div>;
 
 		if (!this.state.data) return <div className="main">{LOADING_GIF}</div>;
 
-		return (
-			<Display character={this.state.data} handleUpdate={this.handleUpdate} />
-		);
+		return <Display character={this.state.data} handleUpdate={this.handleUpdate} />;
 	}
 }

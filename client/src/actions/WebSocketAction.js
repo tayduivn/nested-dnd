@@ -1,8 +1,6 @@
 import DB from "./CRUDAction";
 
 function subscribeToPlayersPreview(cb) {
-	console.log("subscribeToPlayersPreview");
-
 	const getData = () => {
 		DB.get("/players-preview", "")
 			.then(({ error, data }) => {
@@ -16,7 +14,6 @@ function subscribeToPlayersPreview(cb) {
 }
 
 function sendPlayersPreview(data) {
-	console.log("sendPlayersPreview");
 	DB.set("/players-preview", "", data);
 }
 

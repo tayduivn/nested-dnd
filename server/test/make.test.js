@@ -6,7 +6,7 @@ chai.use(chaiAsPromised);
 
 const Maker = require("../app/models/generator/make");
 const BuiltPack = require("../app/models/builtpack");
-const Generator = require("../app/models/generator");
+const { Generator } = require("../app/models/generator");
 const Table = require("../app/models/table");
 const Nested = require("../app/routes/packs/nested");
 
@@ -100,9 +100,7 @@ describe("Maker", () => {
 	describe("make()", () => {
 		it("should return a node", () => {
 			return Maker.make(generator, undefined, builtpack).then(node => {
-				node.should.be.an
-					.instanceOf(Nested)
-					.and.have.property("name", "blue banana");
+				node.should.be.an.instanceOf(Nested).and.have.property("name", "blue banana");
 				node.should.have.property("cssClass", "bg-blue-900");
 			});
 		});
@@ -178,9 +176,7 @@ describe("Maker", () => {
 		});
 
 		it("should return a string if type not set", () => {
-			return Maker.makeMixedThing({ value: "test" }).should.eventually.equal(
-				"test"
-			);
+			return Maker.makeMixedThing({ value: "test" }).should.eventually.equal("test");
 		});
 
 		it("should return a string if type is string", () => {

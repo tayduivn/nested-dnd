@@ -1,8 +1,6 @@
-const chai = require("chai");
 const Nested = require("../app/routes/packs/nested.js");
 const Universe = require("../app/models/universe.js");
 const assert = require("assert");
-const should = chai.should();
 
 var sampleNode = {
 	name: "foofoo",

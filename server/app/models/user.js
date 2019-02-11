@@ -2,11 +2,6 @@
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt-nodejs");
-const async = require("async");
-
-const Pack = require("./pack");
-const Generator = require("./generator");
-const BuiltPack = require("./builtpack");
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({

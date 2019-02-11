@@ -1,32 +1,97 @@
+/* Ancestors.scss */
 @import "../../variables.scss";
 
-#title .parent{
+.ancestors {
 	border-color: currentColor;
+	padding: 0;
 
-	.btn{
+	.fa-caret-left {
+		font-size: $font-size-base;
+	}
+
+	&__dropdown-item {
+		@include colored-button();
+		color: inherit;
+		display: block;
+		padding: 1em 0.75em;
+	}
+
+	&__split-parent,
+	&__one-button {
+		border-radius: 0;
+		border-bottom-left-radius: $border-radius-lg;
 		border-color: inherit;
+		border: 0;
+		text-align: left;
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+		font-size: 1.1rem;
+		white-space: normal;
+		line-height: 2rem;
 
-		&.btn.transparent{
-
-			&:not(:hover){
+		&.transparent {
+			&:not(:hover) {
 				background: transparent;
 				border-color: transparent !important;
 			}
 		}
+		&:focus {
+			box-shadow: none !important;
+		}
 	}
 
-	.immediate {
-		width: 100%;
-		text-align: left;
+	&__menu {
+		color: inherit;
+		border: 1px solid currentColor;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		height: auto;
+		max-height: 80vh;
+		overflow-y: auto;
+		max-width: 393px;
+		margin: 0;
+		min-width: 100%;
+		top: 99%;
+
+		&:hover {
+			color: inherit;
+		}
+
+		.btn {
+			white-space: nowrap;
+			text-align: left;
+			border-bottom: 0;
+			width: 100%;
+			overflow-x: hidden;
+			text-overflow: ellpsis;
+			padding: 0.2em 1em;
+		}
 	}
 
-	.fa-caret-left{
-		font-size: $font-size-base;
+	&__toggler {
+		transition: none;
+		padding-top: 0;
+		padding-bottom: 0;
+		border-radius: 0;
+		flex-grow: 0 !important;
+
+		&::after {
+			border: 0;
+			content: "...";
+		}
 	}
 
-	&.btn{
-		text-align: left;
-		padding-left: 1em;
-		padding-right: 1em;
+	// open ancestors__menu when you hover over the parent
+	&:hover {
+		.ancestors__menu {
+			display: block;
+		}
+		.ancestors__toggler {
+			box-sizing: content-box;
+			border: 1px solid currentColor;
+			height: 100%;
+			z-index: 1001;
+			border-bottom-width: 0;
+		}
 	}
 }
