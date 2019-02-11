@@ -6,7 +6,7 @@ import { getUniverse } from "../Explore/reducers";
 import { addChild } from "../Explore/actions";
 import Sifter from "sifter";
 
-import "./IsaSelect.css";
+import "./IsASelect.css";
 
 const height = 30;
 
