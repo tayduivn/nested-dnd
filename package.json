@@ -67,7 +67,7 @@
 		"react-router": "^4.3.1",
 		"react-router-dom": "^4.3.1",
 		"react-router-redux": "^4.0.8",
-		"react-scripts": "https://github.com/cattegy/create-react-app#react-scripts",
+		"react-scripts": "git://github.com/cattegy/create-react-app#react-scripts",
 		"react-select": "^2.3.0",
 		"react-sortable": "^2.0.0",
 		"react-sortablejs": "^1.3.6",

@@ -10263,9 +10263,9 @@ react-router@^4.3.1:
     prop-types "^15.6.1"
     warning "^4.0.1"
 
-"react-scripts@https://github.com/cattegy/create-react-app#react-scripts":
+"react-scripts@git://github.com/cattegy/create-react-app#react-scripts":
   version "2.1.2"
-  resolved "https://github.com/cattegy/create-react-app#658759cab8c72e3ad7c43f663f441add5d77e601"
+  resolved "git://github.com/cattegy/create-react-app#bdecd931222dd6a3c328dd09925068f99ec45210"
   dependencies:
     "@babel/core" "7.1.6"
     "@svgr/webpack" "2.4.1"
