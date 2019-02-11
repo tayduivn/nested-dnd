@@ -77,6 +77,7 @@ const SortableList = ({ handlechange, index, ...props }) => (
 		{...props}
 		options={{
 			animation: 300,
+			delay: 100,
 			group: "children",
 			filter: ".isNew", //ignore
 			onEnd: evt => {
