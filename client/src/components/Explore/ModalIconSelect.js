@@ -33,20 +33,17 @@ const TextBox = ({ newValue, handleChange }) => (
 	</div>
 );
 
-const ImageInput = ({ setPreview, icon, newValue }) => (
+const ImageInput = ({ setPreview, icon, newValue, handleChange }) => (
 	<div>
 		<button className="btn btn-default" onClick={setPreview}>
 			Show to players
 		</button>
 		<a href="/players-preview">Player view</a>
 		<br />
-		<input
-			className="form-control"
-			value={newValue}
-			onChange={e => this.handleChange(e.target.value)}
-		/>
-		<br />
-		<img className="iconSelectModal__img" src={icon} alt="Preview" />
+		<input className="form-control" value={newValue} onChange={e => handleChange(e.target.value)} />
+		<div className="iconSelectModal__img-wrap">
+			<img className="iconSelectModal__img" src={icon} alt="Preview" />
+		</div>
 	</div>
 );
 
@@ -66,7 +63,7 @@ const ModalBody = ({
 	<div className="iconSelectModal__body modal-body">
 		<TypeChanger {...{ type, handleChangeType }} />
 		{useImg ? (
-			<ImageInput {...{ setPreview, icon, newValue }} />
+			<ImageInput {...{ setPreview, icon, newValue, handleChange }} />
 		) : showTextBox ? (
 			<TextBox {...{ newValue, handleChange }} />
 		) : (
