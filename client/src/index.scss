@@ -223,3 +223,28 @@ i.fi {
 		background-color: #eee;
 	}
 }
+
+/* hold */
+.sortable-chosen {
+	opacity: 1 !important;
+
+	.child-inner {
+		background: var(--contrast) !important;
+		color: var(--parent-theme) !important;
+	}
+}
+
+/* floating */
+.sortable-drag {
+	.child-inner {
+		//border: 3px solid currentColor;
+
+		//color: white;
+	}
+}
+
+/* placeholder */
+.sortable-ghost {
+	.child-inner {
+	}
+}

@@ -107,7 +107,7 @@ $material-colors: map-merge($more-colors, $material-colors);
 		padding: 0;
 		left: 0;
 		top: 100%;
-		z-index: 0;
+		z-index: 1;
 		max-height: 75vh;
 		overflow-y: auto;
 

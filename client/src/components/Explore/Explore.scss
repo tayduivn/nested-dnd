@@ -1,10 +1,6 @@
 @import "../../variables.scss";
 
 #explorePage {
-	.modal-body {
-		background-color: white;
-	}
-
 	.popover-cover {
 		position: fixed;
 		z-index: 1;
@@ -113,8 +109,11 @@
 		font-weight: normal;
 		padding: $xPadding !important;
 		opacity: 0;
-		animation: example 500ms ease;
-		animation-fill-mode: forwards;
+
+		&:not([class*="sortable-"]) {
+			animation: example 500ms ease;
+			animation-fill-mode: forwards;
+		}
 
 		&:hover,
 		&:focus {

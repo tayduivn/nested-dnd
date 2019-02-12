@@ -2,11 +2,23 @@ import React from "react";
 
 import IconSelect from "../Form/IconSelect";
 
+import "./ModalIconSelect.css";
+
+import { sendPlayersPreview } from "../../actions/WebSocketAction";
+
+const MODAL_SETTINGS = {
+	id: "iconSelectModal",
+	className: "iconSelectModal modal fade",
+	tabIndex: "-1",
+	role: "dialog",
+	"aria-hidden": "true"
+};
+
 class TypeChanger extends React.PureComponent {
 	render() {
 		const { type, handleChangeType } = this.props;
 		return (
-			<select value={type} className="input-transparent" onChange={handleChangeType}>
+			<select value={type} onChange={handleChangeType}>
 				<option value={false}>Icon</option>
 				<option value="text">Text</option>
 				<option value={true}>Image</option>
@@ -28,12 +40,13 @@ const ImageInput = ({ setPreview, icon, newValue }) => (
 		</button>
 		<a href="/players-preview">Player view</a>
 		<br />
-		<img src={icon} alt="Preview" />
 		<input
 			className="form-control"
 			value={newValue}
 			onChange={e => this.handleChange(e.target.value)}
 		/>
+		<br />
+		<img className="iconSelectModal__img" src={icon} alt="Preview" />
 	</div>
 );
 
@@ -50,7 +63,7 @@ const ModalBody = ({
 	newValue,
 	showTextBox
 }) => (
-	<div className="modal-body">
+	<div className="iconSelectModal__body modal-body">
 		<TypeChanger {...{ type, handleChangeType }} />
 		{useImg ? (
 			<ImageInput {...{ setPreview, icon, newValue }} />
@@ -68,20 +81,23 @@ const ModalBody = ({
 );
 
 const ModalHeader = (
-	<div className="modal-header">
-		<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+	<div className="iconSelectModal__header modal-header">
+		<button
+			type="button"
+			className="iconSelectModal__close close"
+			data-dismiss="modal"
+			aria-label="Close"
+		>
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
 );
 
 const ModalIconsComponent = props => (
-	<div className="modal fade" id="iconSelectModal" tabIndex="-1" role="dialog" aria-hidden="true">
-		<div className="modal-dialog" role="document">
-			<div className="modal-content">
-				{ModalHeader}
-				<ModalBody {...props} />
-			</div>
+	<div className="iconSelectModal__dialog modal-dialog" role="document">
+		<div className="iconSelectModal__content modal-content">
+			{ModalHeader}
+			<ModalBody {...props} />
 		</div>
 	</div>
 );
@@ -92,11 +108,15 @@ export default class IconSelectModal extends React.PureComponent {
 		useImg: null,
 		showTextBox: null
 	};
+	constructor(props) {
+		super(props);
+		this.modalRef = React.createRef();
+	}
 	componentDidMount() {
 		const modal = document.getElementById("iconSelectModal");
 
-		modal.addEventListener("hide.bs.modal", this.handleClose);
-		modal.addEventListener("show.bs.modal", this.handleOpen);
+		window.$(modal).on("hide.bs.modal", this.handleClose);
+		window.$(modal).on("show.bs.modal", this.handleOpen);
 	}
 	handleChange = value => {
 		this.setState({ newValue: value });
@@ -131,7 +151,7 @@ export default class IconSelectModal extends React.PureComponent {
 	};
 	setPreview = () => {
 		var icon = this.state.newValue !== null ? this.state.newValue : this.props.icon;
-		this.props.sendPlayersPreview(icon);
+		sendPlayersPreview({ src: icon });
 	};
 	render() {
 		var { icon, cssClass, txt } = this.props;
@@ -140,20 +160,12 @@ export default class IconSelectModal extends React.PureComponent {
 		var type = this.state.showTextBox ? "text" : !!useImg;
 
 		return (
-			<ModalIconsComponent
-				{...{
-					handleChange,
-					handleChangeType,
-					setPreview,
-					useImg,
-					type,
-					icon,
-					cssClass,
-					txt,
-					newValue,
-					showTextBox
-				}}
-			/>
+			<div {...MODAL_SETTINGS} ref={this.modalRef}>
+				<ModalIconsComponent
+					{...{ setPreview, useImg, type, icon, cssClass, txt, newValue, showTextBox }}
+					{...{ handleChange, handleChangeType }}
+				/>
+			</div>
 		);
 	}
 }

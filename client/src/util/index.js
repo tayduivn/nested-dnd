@@ -44,8 +44,7 @@ function valueIsUndefined(value) {
 }
 
 function downloadJSON(obj, filename) {
-	var dataStr =
-		"data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+	var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
 	var dlAnchorElem = document.getElementById("downloadAnchorElem");
 	dlAnchorElem.setAttribute("href", dataStr);
 	dlAnchorElem.setAttribute("download", filename + ".json");
@@ -67,10 +66,7 @@ function uniq(a) {
 
 	return a.filter(function(item) {
 		var type = typeof item;
-		if (type in prims)
-			return prims[type].hasOwnProperty(item)
-				? false
-				: (prims[type][item] = true);
+		if (type in prims) return prims[type].hasOwnProperty(item) ? false : (prims[type][item] = true);
 		else return objs.indexOf(item) >= 0 ? false : objs.push(item);
 	});
 }
@@ -139,8 +135,17 @@ function setBodyStyle({ cssClass = "", txt = "", up = [] } = {}) {
 	body.style.color = txt;
 }
 
+const splitClass = (cssClass = "") => {
+	const parts = cssClass.split(" ");
+	return {
+		bg: parts.find(p => p.startsWith("bg-")) || "",
+		ptn: parts.find(p => p.startsWith("ptn-")) || ""
+	};
+};
+
 export {
 	uniq,
+	splitClass,
 	copyToClipboard,
 	binaryFind,
 	clean,

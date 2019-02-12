@@ -9,6 +9,9 @@ import SearchBar from "./SearchBar";
 import Description from "./Description";
 import BGSelectPopover from "./BGSelectPopover";
 
+import { changeInstance } from "./actions";
+import { splitClass } from "../../util";
+
 import "./Title.css";
 
 const CENTER_ALIGN = "d-flex align-items-center justify-content-center";
@@ -79,13 +82,9 @@ class FavoriteButton extends React.PureComponent {
 
 class PatternButton extends React.PureComponent {
 	render() {
-		const { cssClass = "" } = this.props;
+		const { cssClass = "", bg = "" } = this.props;
 		return (
-			<button
-				className={`title__btn ${cssClass}`}
-				data-toggle="modal"
-				data-target="#patternSelectModal"
-			>
+			<button className={`title__btn ${bg}`} data-toggle="modal" data-target="#patternSelectModal">
 				<div className={`pattern swatch`}>
 					{cssClass.split(" ").length > 1 && <i className="fa fa-check" />}
 				</div>
@@ -100,14 +99,17 @@ class StyleOptions extends React.PureComponent {
 		const { index, cssClass, up = [], txt, name, isa, isFavorite, toggleFavorite } = this.props;
 		const resetTxt = up[0] && up[0].txt;
 		const resetColor = parentBG(up);
+		const { bg } = splitClass(cssClass);
 		return (
-			<div id="styleOptions" className="title__btn-collection col-xs-auto right">
+			<div id="styleOptions" className={`title__btn-collection col-xs-auto right`}>
 				<BGSelectPopover {...{ index, highlight, handleChange, resetTxt, resetColor, cssClass }} />
-				<PatternButton cssClass={cssClass} />
-				<HexColorPicker {...{ color, index, highlight, txt, handleChange, resetTxt, cssClass }} />
-				<FavoriteButton {...{ cssClass, isFavorite, toggleFavorite }} />
-				<SettingsCog {...{ cssClass, toggleData, name, isa, packid }} />
-				<DeleteButton handleRestart={handleRestart} cssClass={cssClass} />
+				<PatternButton cssClass={cssClass} bg={bg} />
+				<HexColorPicker
+					{...{ color, index, highlight, txt, handleChange, resetTxt, cssClass: bg }}
+				/>
+				<FavoriteButton {...{ isFavorite, toggleFavorite, cssClass: bg }} />
+				<SettingsCog {...{ toggleData, name, isa, packid, cssClass: bg }} />
+				<DeleteButton handleRestart={handleRestart} cssClass={bg} />
 			</div>
 		);
 	}
@@ -182,11 +184,23 @@ class TheTitleComponent extends React.Component {
 	state = {
 		title: this.props.name || this.props.isa
 	};
+	constructor(props) {
+		super(props);
+		this.textareaRef = React.createRef();
+	}
+
+	componentDidMount() {
+		const textarea = this.textareaRef.current;
+		textarea.style.height = `${textarea.scrollHeight}px`;
+	}
+
 	handleChange = e => {
 		const val = e.target.value;
 		this.setState({ title: val });
 		// todo debounce
 		this.props.handleChange(val);
+		const textarea = this.textareaRef.current;
+		textarea.style.height = `${textarea.scrollHeight}px`;
 	};
 
 	render() {
@@ -194,7 +208,9 @@ class TheTitleComponent extends React.Component {
 		return (
 			<div className={"col col-lg-12 px-2 justify-content-lg-center " + VERTICAL_ALIGN}>
 				<div id="name" style={{ color: txt }}>
-					<input
+					<textarea
+						rows="1"
+						ref={this.textareaRef}
 						className="title__input webfont"
 						value={this.state.title}
 						disabled={!isEditable}
@@ -221,7 +237,7 @@ const TheTitle = connect(
 	},
 	function mapDispatchToProps(dispatch, { index, universeId, isEditable }) {
 		return {
-			handleChange: () => {}
+			handleChange: val => dispatch(changeInstance(index, "name", val, universeId, dispatch))
 		};
 	}
 )(TheTitleComponent);

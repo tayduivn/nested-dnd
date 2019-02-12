@@ -1,0 +1,28 @@
+/* ModalIconSelect */
+@import "../../variables.scss";
+
+.iconSelectModal {
+	//color: black;
+
+	&__header {
+		border: 0;
+	}
+	&__close {
+		color: inherit;
+	}
+
+	&__img {
+		max-width: 100%;
+	}
+	&__dialog {
+		max-width: 100%;
+		margin: 0;
+	}
+	&__content {
+		background: black;
+		color: white;
+	}
+	&__body {
+		background-color: transparent;
+	}
+}

@@ -1,12 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import "./PlayersPreview.css";
 
+import { subscribeToPlayersPreview } from "../../actions/WebSocketAction";
+
 export default class PlayersPreview extends React.Component {
-	static propTypes = {
-		subscribeToPlayersPreview: PropTypes.func
-	};
 	state = {
 		src: undefined,
 		alt: undefined,
@@ -17,12 +15,10 @@ export default class PlayersPreview extends React.Component {
 	componentDidMount() {
 		this.setState({ status: "subscribed" });
 
-		this.props.subscribeToPlayersPreview(
-			(err, { src, alt, width = "100vw", height = "100vh" } = {}) => {
-				this.setState({ status: "retrieved" });
-				this.setState({ src, alt, width });
-			}
-		);
+		subscribeToPlayersPreview((err, { src, alt, width = "100vw", height = "100vh" } = {}) => {
+			this.setState({ status: "retrieved" });
+			this.setState({ src, alt, width });
+		});
 	}
 
 	// center scroll

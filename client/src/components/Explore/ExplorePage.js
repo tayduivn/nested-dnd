@@ -1,5 +1,4 @@
 import React from "react";
-//import { TransitionGroup, CSSTransition } from "react-transition-group";
 import ReactSortable from "react-sortablejs";
 
 import Child from "./Child";
@@ -9,12 +8,6 @@ import { MixedKeyValue } from "../Form/MixedThing";
 import IconSelectModal from "./ModalIconSelect";
 import MoveModal from "./MoveModal";
 import PatternSelectModal from "./PatternSelectModal";
-
-/*const TRANSITION_OPTIONS = {
-	classNames: "slide-up",
-	appear: true,
-	exit: true
-};*/
 
 const LOADING = (
 	<div className="child col">
@@ -93,39 +86,6 @@ const TRANSITION_GROUP_SETTINGS = {
 	animation: 10
 };
 
-/*class Children2 extends React.PureComponent {
-	handleDeleteLink(remove) {
-		return this.props.handle.change(this.props.index, "deleteLink", remove);
-	}
-	render() {
-		const { isUniverse, index, inArr = [], cssClass, handle, highlightColor } = this.props;
-		return (
-			<TransitionGroup
-				{...{ index, ...TRANSITION_GROUP_SETTINGS }}
-				handlechange={isUniverse ? handle.change : undefined}
-				component={isUniverse ? SortableList : "div"}
-			>
-				{inArr.map((c, i) => (
-					<CSSTransition
-						key={c.index || i}
-						timeout={{ enter: 30 * i + 500, exit: 1 }}
-						{...TRANSITION_OPTIONS}
-					>
-						<Child
-							{...{ i, highlight: highlightColor, ...c }}
-							in={c.in || isUniverse ? [] : undefined}
-							transparentBG={c.cssClass === cssClass}
-							handleClick={c.isNew ? handle.add : handle.click}
-							handleDeleteLink={this.handleDeleteLink}
-							isLink={c.up && c.up[0] && c.up[0].index !== index}
-						/>
-					</CSSTransition>
-				))}
-			</TransitionGroup>
-		);
-	}
-}*/
-
 class Children extends React.Component {
 	handleDeleteLink(remove) {
 		return this.props.handle.change(this.props.index, "deleteLink", remove);
@@ -157,8 +117,6 @@ class Children extends React.Component {
 	}
 	render() {
 		const { isUniverse, index, inArr = [], handle } = this.props;
-		//const inArr2 = inArr.filter(child => !child.isNew);
-		//const newChild = inArr2.length !== inArr.length ? inArr[inArr.length - 1] : null;
 		return (
 			<div>
 				<SortableList
@@ -166,7 +124,7 @@ class Children extends React.Component {
 					handlechange={isUniverse ? handle.change : undefined}
 				>
 					{inArr.map((c, i) => (
-						<Child key={`${c.index}_${i}`} {...this._getProps(c, i)} />
+						<Child key={`${c.isNew ? "isNew" : c.index}_${i}`} {...this._getProps(c, i)} />
 					))}
 				</SortableList>
 			</div>

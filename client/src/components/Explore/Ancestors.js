@@ -3,13 +3,15 @@ import PropTypes from "prop-types";
 
 import "./Ancestors.css";
 
-const AncestorDropdown = ({ a, cssclass, onClick }) => (
+import { splitClass } from "../../util";
+
+const AncestorDropdownItem = ({ a, cssclass, onClick }) => (
 	<a className={"ancestors__dropdown-item " + cssclass} href={`#${a.index}`}>
 		{a.name || a.isa}
 	</a>
 );
 
-const SplitButton = ({ parentInst, style, ancestors, onClick, cssclass, border }) => (
+const SplitButton = ({ parentInst, style, ancestors, onClick, cssclass, border, bg, ptn }) => (
 	<div
 		id="Ancestors"
 		className={`ancestors parent col btn-group dropdown ${cssclass}`}
@@ -29,7 +31,7 @@ const SplitButton = ({ parentInst, style, ancestors, onClick, cssclass, border }
 		<div className={"ancestors__menu dropdown-menu " + cssclass}>
 			{ancestors.map((a, i) => {
 				if (i === 0 || !a) return null;
-				return <AncestorDropdown key={i} {...{ a, cssclass, onClick }} />;
+				return <AncestorDropdownItem key={i} {...{ a, bg, onClick }} />;
 			})}
 		</div>
 	</div>
@@ -93,6 +95,7 @@ export default class Ancestors extends Component {
 			<SplitButton
 				parentInst={parent}
 				cssclass={cssClass}
+				{...splitClass(cssClass)}
 				style={{
 					color: parent.txt
 				}}

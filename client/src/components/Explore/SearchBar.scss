@@ -3,6 +3,14 @@
 
 .search-bar {
 	@include dropdown();
+	font-size: 1rem;
+
+	&__input {
+		@include input-transparent();
+		&:focus {
+			background-color: var(--parent-theme);
+		}
+	}
 
 	a {
 		color: inherit;

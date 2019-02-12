@@ -158,6 +158,8 @@
 		background: transparent;
 		color: currentColor;
 		padding: 0;
+		resize: none;
+		overflow: hidden;
 	}
 	&__btn-collection {
 		display: flex;
@@ -177,7 +179,6 @@
 		line-height: 1.8;
 		align-items: flex-start;
 		border: 0;
-		border-bottom: 1px solid transparent;
 		position: relative;
 		padding-left: 0.35em;
 		padding-right: 0.35em;
@@ -185,6 +186,7 @@
 		cursor: pointer;
 		min-height: 2.7rem;
 		color: inherit;
+		background: transparent;
 
 		&:hover,
 		&:focus {

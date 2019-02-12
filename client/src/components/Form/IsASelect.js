@@ -109,8 +109,8 @@ class IsASelectComponent extends React.PureComponent {
 		e.target.focus();
 	};
 	handleClick = e => {
-		this.submit(e.target.dataset.value);
 		this.setState({ input: e.target.dataset.value });
+		this.submit(e.target.dataset.value);
 	};
 	submit = value => {
 		const gens = this.props.options.split(",");
@@ -122,18 +122,19 @@ class IsASelectComponent extends React.PureComponent {
 		const { handleChange, handleKeyDown, handleFocus, handleBlur } = this;
 		return (
 			<div className="isa">
-				<ul
-					className="isa__dropdown"
-					onMouseEnter={this.handleHover}
-					onMouseDown={this.handleClick}
-				>
+				<ul className="isa__dropdown" onMouseEnter={this.handleHover}>
 					{this.state.open &&
 						this.state.matches.map((match, i) => {
 							const selected = match === this.state.selected ? "isa__option--selected" : "";
 							return (
-								<div key={i} className={`isa__option ${selected}`} data-value={match}>
+								<li
+									key={i}
+									className={`isa__option ${selected}`}
+									data-value={match}
+									onClick={this.handleClick}
+								>
 									{match}
-								</div>
+								</li>
 							);
 						})}
 				</ul>
