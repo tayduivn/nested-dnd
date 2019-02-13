@@ -104,7 +104,7 @@ const changeUp = (index, universeId, newUp) => {
 
 	// add to new parent
 	const newParent = universe.array[newUp];
-	changes[newUp] = { in: [...newParent.in, index] };
+	changes[newUp] = { in: [...(newParent.in || []), index] };
 
 	return changes;
 };
