@@ -157,7 +157,7 @@ const checkAlreadyInArr = (oldIn, index) => {
 };
 
 const addLink = (universe, index, child) => {
-	const oldIn = [...universe.array[index].in] || [];
+	const oldIn = [...(universe.array[index].in || [])];
 
 	// move to the end if it's already in the array
 	checkAlreadyInArr(oldIn, child.index);
