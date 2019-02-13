@@ -2,7 +2,6 @@ import React from "react";
 import Link from "../Util/Link";
 
 import "./Packs.css";
-import { connect } from "react-redux";
 
 import { LOADING_GIF } from "../App/App";
 import { loadFonts } from "../App/store";
@@ -14,7 +13,8 @@ const EDIT_BUTTON = (
 	</h2>
 );
 
-const EDITBTN_CLS = "edit btn col-xs-auto d-flex align-items-center justify-content-center";
+const EDITBTN_CLS =
+	"edit btn col-xs-auto d-flex align-items-center justify-content-center packlink__btn";
 
 class PackLink extends React.PureComponent {
 	render() {
@@ -22,11 +22,11 @@ class PackLink extends React.PureComponent {
 		const { dependencies, lastSaw, cssClass = "bg-grey-900" } = this.props;
 		const URL = isUniverse ? `/universes/${_id}` : `/packs/${url}`;
 		const style = { color: txt };
-
+		console.log("PackLink render " + font);
 		return (
 			<li className={`col`}>
 				<div className="btn-group">
-					<Link to={`${URL}/explore`} className={`btn col ${cssClass}`} style={style}>
+					<Link to={`${URL}/explore`} className={`btn col packlink__btn ${cssClass}`}>
 						<h1 style={{ fontFamily: font ? `'${font}', serif` : "inherit" }}>{title || name}</h1>
 						{description && <p>{description}</p>}
 						{isUniverse && dependencies && dependencies.length && (
@@ -69,7 +69,7 @@ class PackInput extends React.PureComponent {
 						{description ? <p>{description}</p> : null}
 					</button>
 					{url ? (
-						<Link to={"/explore/" + url} className={exploreLinkClass} style={style}>
+						<Link to={"/explore/" + url} className={exploreLinkClass}>
 							<h2>
 								<i className="fas fa-eye" />
 								<small>preview</small>
@@ -85,13 +85,14 @@ class PackInput extends React.PureComponent {
 const ADD_BUTTON_CLASSNAME =
 	"create col btn btn-outline-primary d-flex align-items-center justify-content-center";
 
-class PackULInner extends React.Component {
+class PackUL extends React.Component {
 	componentDidMount() {
 		if (this.props.list) this.loadFonts(this.props.list);
 	}
 
 	shouldComponentUpdate(nextProps) {
-		return JSON.stringify(this.props) !== JSON.stringify(nextProps);
+		const updated = JSON.stringify(this.props) !== JSON.stringify(nextProps);
+		return updated;
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -100,12 +101,12 @@ class PackULInner extends React.Component {
 
 	loadFonts(list) {
 		var fonts = [];
-		list.forEach(pack => {
+		list.forEach((pack = {}) => {
 			if (!pack.font) return;
 			if (!fonts.includes(pack.font)) fonts.push(pack.font);
 		});
 
-		if (fonts.length) this.props.loadFonts(fonts);
+		if (fonts.length) loadFonts(fonts);
 	}
 	render() {
 		const list = this.props.list || [],
@@ -118,11 +119,12 @@ class PackULInner extends React.Component {
 
 		return (
 			<ul className="row packs">
-				{list.map(p => {
+				{list.map((p = {}) => {
+					console.log("PackUL render " + p.font);
 					return selectable ? (
 						<PackInput key={p._id} {...p} selected={selected === p._id} onSelect={onSelect} />
 					) : (
-						<PackLink key={p._id} {...p.pack} {...p} isUniverse={isUniverse} />
+						<PackLink key={p._id} {...p} isUniverse={isUniverse} />
 					);
 				})}
 				{addButton ? (
@@ -139,14 +141,7 @@ class PackULInner extends React.Component {
 	}
 }
 
-const PackUL = connect(
-	state => ({}),
-	dispatch => ({
-		loadFonts: (fonts, source) => dispatch(loadFonts(fonts, source))
-	})
-)(PackULInner);
-
-const MyPacks = ({ myPacks }) => (
+const MyPacks = ({ myPacks = [] }) => (
 	<div>
 		<h2>My Packs</h2>
 		{myPacks === null && LOADING_GIF}

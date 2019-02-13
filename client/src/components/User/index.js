@@ -4,7 +4,7 @@ import Login from "./Login";
 import { doLogin } from "./actions";
 import { connect } from "react-redux";
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
 	loggedIn: state.user.loggedIn,
 	error: state.user.error
 });

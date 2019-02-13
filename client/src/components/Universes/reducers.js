@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 import {
 	ADD,
 	FETCH,
-	SET,
+	UNIVERSES_SET,
 	ERROR,
 	UNIVERSE_SET,
 	INSTANCE_SET,
@@ -62,7 +62,7 @@ function normalize(state = {}, action) {
 	const lastSaw = u.lastSaw;
 	const array = (state.array && [...state.array]) || [];
 	switch (action.type) {
-		case SET:
+		case UNIVERSES_SET:
 			if (lastSaw.up && lastSaw.up.length) {
 				lastSaw.up.forEach(i => (array[i.index] = i));
 				lastSaw.up = lastSaw.up[0].index;
@@ -90,10 +90,11 @@ function byId(state = {}, action) {
 		case UNIVERSE_SET:
 			copy[action.data._id] = universe(copy[action.data._id], action);
 			return copy;
-		case SET:
-			action.data.forEach(u => {
+		case UNIVERSES_SET:
+			for (let id in action.data) {
+				const u = action.data[id];
 				copy[u._id] = normalize(copy[u._id], { ...action, data: u });
-			});
+			}
 			return copy;
 		default:
 			return state;
@@ -104,8 +105,8 @@ function myUniverses(state = myUniversesInitial, action) {
 	switch (action.type) {
 		case ADD:
 			return { ...state, array: state.array.concat([action.created]) };
-		case SET:
-			return { loaded: true, array: action.data.map(u => u._id) };
+		case UNIVERSES_SET:
+			return { loaded: true, array: Object.values(action.data).map(u => u._id) };
 		case ERROR:
 			return { ...myUniversesInitial, loaded: true, error: action.error };
 		case FETCH:
@@ -119,13 +120,14 @@ export default combineReducers({
 	myUniverses: myUniverses
 });
 
-const selectMyUniverses = state => ({
-	...state.myUniverses,
-	array: state.myUniverses.array.map(_id => {
-		const u = state.byId[_id];
+const selectMyUniverses = ({ universes, packs }) => ({
+	...universes.myUniverses,
+	array: universes.myUniverses.array.map(_id => {
+		const u = universes.byId[_id];
 		if (!u) return { _id };
 		const lastSaw = (u.array && u.array[u.lastSaw]) || u.array[0];
-		return { ...u, lastSaw: lastSaw.name || lastSaw.isa };
+		const pack = packs.byId[u.pack] || {};
+		return { ...u, font: pack.font, lastSaw: lastSaw.name || lastSaw.isa };
 	})
 });
 

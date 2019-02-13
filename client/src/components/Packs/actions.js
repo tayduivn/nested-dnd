@@ -3,7 +3,7 @@ import DB from "../../actions/CRUDAction";
 export const ADD = "PACKS_ADD";
 export const FETCH = "PACKS_FETCH";
 export const FETCH_PACK = "PACKS_FETCH_PACK";
-export const SET = "PACKS_SET";
+export const PACKS_SET = "PACKS_SET";
 export const SET_PACK = "PACKS_SET_PACK";
 export const ERROR = "PACKS_ERROR";
 export const REBUILD_PACK = "PACK_REBUILD";
@@ -16,11 +16,10 @@ export const fetch = (dispatch, loaded) => {
 			if (error) {
 				dispatch(setError(error));
 			} else {
-				dispatch(set(data));
+				dispatch(packsSet(data));
 			}
 		});
 	}
-	return { type: FETCH };
 };
 
 export const fetchPack = (dispatch, id, loaded) => {
@@ -41,7 +40,7 @@ export const fetchPack = (dispatch, id, loaded) => {
 
 const setError = error => ({ type: ERROR, error });
 
-export const set = data => ({ type: SET, data });
+export const packsSet = data => ({ type: PACKS_SET, data });
 
 export const setPack = pack => ({
 	type: SET_PACK,
@@ -65,6 +64,6 @@ export default {
 	add,
 	fetch,
 	fetchPack,
-	set,
+	packsSet,
 	fetchRebuild
 };

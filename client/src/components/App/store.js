@@ -28,7 +28,7 @@ const errorHandle = store => next => action => {
 
 const middleWareArr = [thunk, routerMiddleware(history), errorHandle];
 
-if (process.env.NODE_ENV !== "test") {
+if (!["test", "production"].includes(process.env.NODE_ENV)) {
 	middleWareArr.push(logger);
 }
 
@@ -38,11 +38,16 @@ function loadFonts(fonts = [], source = "google") {
 	if (!fonts) return;
 	if (!(fonts instanceof Array)) fonts = [fonts];
 
-	return {
-		type: "LOAD_FONTS",
-		fonts: fonts,
-		source
-	};
+	// remove fonts already loaded
+	const trimmedFonts = fonts.filter(d => !store.getState().fonts.includes(d));
+
+	if (trimmedFonts.length) {
+		store.dispatch({
+			type: "LOAD_FONTS",
+			fonts: trimmedFonts,
+			source
+		});
+	}
 }
 
 const fonts = (state = [], action = {}) => {
@@ -50,8 +55,6 @@ const fonts = (state = [], action = {}) => {
 
 	switch (action.type) {
 		case "LOAD_FONTS":
-			// remove fonts already loaded
-
 			if (fonts.length) {
 				WebFont.load({
 					[action.source]: {
@@ -59,7 +62,7 @@ const fonts = (state = [], action = {}) => {
 					}
 				});
 			}
-			return [...state, action.fonts];
+			return [...state, ...action.fonts];
 		default:
 			return state;
 	}

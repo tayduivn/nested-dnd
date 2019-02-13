@@ -4,6 +4,13 @@ const Pack = require("../../models/pack");
 
 const pack = require("./pack");
 
+function normalizePackArray(byId, array) {
+	return array.map(pack => {
+		byId[pack._id] = pack;
+		return pack._id;
+	});
+}
+
 // Get All Packs
 // ---------------------------------
 router.get("/", (req, res, next) => {
@@ -19,15 +26,19 @@ router.get("/", (req, res, next) => {
 	Pack.find(publicPackSettings)
 		.exec()
 		.then(publicPacks => {
+			const byId = {};
+			publicPacks = normalizePackArray(byId, publicPacks);
+
 			if (!req.user) {
-				return res.json({ publicPacks });
+				return res.json({ byId, publicPacks });
 			}
 
 			// find packs I own
 			Pack.find({ _user: req.user._id })
 				.exec()
 				.then(myPacks => {
-					return res.json({ myPacks, publicPacks });
+					myPacks = normalizePackArray(byId, myPacks);
+					return res.json({ byId, myPacks, publicPacks });
 				})
 				.catch(next);
 		})

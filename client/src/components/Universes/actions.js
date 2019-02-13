@@ -1,8 +1,10 @@
 import DB from "../../actions/CRUDAction";
 
+import { packsSet } from "../Packs/actions";
+
 export const ADD = "UNIVERSES_ADD";
 export const FETCH = "UNIVERSES_FETCH";
-export const SET = "UNIVERSES_SET";
+export const UNIVERSES_SET = "UNIVERSES_SET";
 export const ERROR = "UNIVERSES_ERROR";
 
 export const UNIVERSE_SET = "UNIVERSE_SET";
@@ -22,21 +24,22 @@ export const fetch = (dispatch, loaded) => {
 			if (error) {
 				dispatch(setError(error));
 			} else {
-				dispatch(set(data));
+				dispatch(universesSet(data.universes));
+				dispatch(packsSet({ byId: data.packs }));
 			}
 		});
 	}
-	return { type: FETCH };
 };
 
 export const setError = error => ({ type: ERROR, error });
 
-export const set = data => ({ type: SET, data });
+// UNIVERSES_SET
+export const universesSet = data => ({ type: UNIVERSES_SET, data });
 
 export const universeSet = (id, data) => ({ type: UNIVERSE_SET, data: { _id: id, ...data } });
 
 export default {
 	fetch,
 	setError,
-	set
+	universesSet
 };

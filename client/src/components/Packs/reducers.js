@@ -1,4 +1,4 @@
-import { ADD, FETCH, FETCH_PACK, SET, SET_PACK, ERROR, REBUILD_PACK } from "./actions";
+import { ADD, FETCH, FETCH_PACK, PACKS_SET, SET_PACK, ERROR, REBUILD_PACK } from "./actions";
 
 const initialPacks = {
 	loaded: false,
@@ -24,14 +24,26 @@ const pack = (state = { loaded: false }, action) => {
 	}
 };
 
-function byUrl(state, action) {
+function byId(state = {}, action) {
+	switch (action.type) {
+		case PACKS_SET:
+			const obj = { ...state, ...action.data };
+			for (var packid in obj) {
+				if (!action.data[packid]) continue;
+				obj[packid] = pack(state[packid], { type: SET_PACK, data: action.data[packid] });
+			}
+			return obj;
+		default:
+			return state;
+	}
+}
+
+function byUrl(state = initialPacks, action) {
 	const newByUrl = action.data && action.data.url ? { [action.data.url]: action.id } : {};
 	return { ...state, ...newByUrl };
 }
 
-export default (state = initialPacks, act) => {
-	let action = act;
-
+export default (state = initialPacks, action) => {
 	switch (action.type) {
 		case FETCH_PACK:
 		case REBUILD_PACK:
@@ -43,8 +55,13 @@ export default (state = initialPacks, act) => {
 			};
 		case ADD:
 			return { ...state, myPacks: state.myPacks.concat([action.pack]) };
-		case SET:
-			return { loaded: true, ...initialPacks, ...action.data };
+		case PACKS_SET:
+			const packs = {
+				...state,
+				...action.data,
+				byId: byId(state.byId, { ...action, data: action.data.byId })
+			};
+			return packs;
 		case ERROR:
 			return { ...initialPacks, loaded: true, error: action.error };
 		case FETCH:

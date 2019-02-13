@@ -6,17 +6,14 @@ class Link extends React.Component {
 		return (
 			JSON.stringify(this.props.to) !== JSON.stringify(nextProps.to) ||
 			this.props.title !== nextProps.title ||
-			this.props.className !== nextProps.className
+			this.props.className !== nextProps.className ||
+			this.props.children !== nextProps.children
 		);
 	}
 
 	render() {
 		return (
-			<L
-				to={this.props.to}
-				title={this.props.title}
-				className={this.props.className}
-			>
+			<L to={this.props.to} title={this.props.title} className={this.props.className}>
 				{this.props.children}
 			</L>
 		);

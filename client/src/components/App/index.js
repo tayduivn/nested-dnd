@@ -7,7 +7,7 @@ import { doLogout } from "../User/actions";
 
 const mapStateToProps = state => ({ loggedIn: state.user.loggedIn });
 const mapDispatchToProps = dispatch => ({
-	loadFonts: (fonts, source) => dispatch(loadFonts(fonts, source)),
+	loadFonts: (fonts, source) => loadFonts(fonts, source),
 	handleLogout: () => doLogout(dispatch)
 });
 

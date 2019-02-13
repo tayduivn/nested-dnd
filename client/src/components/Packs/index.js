@@ -48,7 +48,8 @@ const routes = [
 const mapStateToProps = (state, ownProps) => {
 	return {
 		...ownProps,
-		...state.packs,
+		myPacks: state.myPacks.map(id => state.packs.byId[id]),
+		publicPacks: state.publicPacks.map(id => state.packs.byId[id]),
 		loggedIn: state.user.loggedIn,
 		// needs to be a function because this is Packs not Pack
 		getPack: packid => {

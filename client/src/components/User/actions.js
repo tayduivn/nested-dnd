@@ -7,6 +7,9 @@ export const ERROR = "USER_ERROR";
 export const CHECK_IS_LOGGEDIN = "USER_CHECK_IS_LOGGEDIN";
 export const SET_LOGGED_IN = "SET_LOGGED_IN";
 
+// Note:
+// do not import store because store imports this and it'll error
+
 export const checkLoggedIn = (dispatch, loggedIn = null) => {
 	const doLoad = loggedIn === null;
 

@@ -61,7 +61,7 @@ const DisplayLogin = ({
 }) => (
 	<div className="main ">
 		<div className="container mt-5 loginForm">
-			<h1 className="mb-1">{title}</h1>
+			<h1 className="mb-1"> {title} </h1>
 			<form onSubmit={handleSubmit}>
 				<Email {...{ email, emailValid, emailError, handleChange }} />
 				<Password {...{ password, passwordValid, passwordError, handleChange }} />
@@ -117,14 +117,6 @@ export default class Login extends Component {
 	}
 	render() {
 		const error = this.props.error || {};
-
-		if (
-			this.props.loggedIn ||
-			(!error.emailError && !error.passwordError && this.state.submitted)
-		) {
-			this.props.history.goBack();
-			return null;
-		}
 
 		return (
 			<DisplayLogin

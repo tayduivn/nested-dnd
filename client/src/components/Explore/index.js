@@ -12,7 +12,7 @@ import { getFavorites } from "../Universes/reducers";
 
 // TODO: use reselect so we don't calculate current every time
 const mapStateToProps = state => {
-	const { pack, universe, index, isUniverse } = getUniverse(state);
+	const { pack, universe = {}, index, isUniverse } = getUniverse(state);
 	const favorites = getFavorites(universe);
 	return {
 		universe,
@@ -27,7 +27,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, { match }) => ({
 	loadCurrent: (universe, index, isUniverse, isLite) =>
 		dispatch(loadCurrent(dispatch, universe, index, isUniverse, match.params.pack, isLite)),
-	loadFonts: font => font && dispatch(loadFonts([font])),
+	loadFonts: font => font && loadFonts([font]),
 	universeSet: (index, universe) => dispatch(universeSet(universe._id, { lastSaw: index })),
 	handleChange: (i, p, v, universe) => dispatch(changeInstance(i, p, v, universe._id, dispatch)),
 	setFavorite: (i, isFavorite, universe) => dispatch(setFavorite(i, isFavorite, universe)),

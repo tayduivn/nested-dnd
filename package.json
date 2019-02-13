@@ -15,14 +15,14 @@
 		"dev-client": "concurrently --kill-others-on-fail \"yarn _watch-css\" \"yarn _start-js\"",
 		"dev-server": "nodemon --inspect server/server.js",
 		"dev-db": "mongod --dbpath ./server/data",
-		"dev-test": "cross-env NODE_ENV=test mocha --exit --require ./.testSetup.js ./server/**/*.test.js ./client/**/*.test.js",
+		"dev-test": "cross-env NODE_ENV=test mocha --exit --require ./.testSetup.js \"server/**/*.test.js\" \"client/**/*.test.js\"",
 		"build-icon-options": "cd client/public/icons && dir /s/n/b *.svg > icons.txt && node gi_convert.js > ../../src/assets/icons.js",
 		"dev-test-debug": "yarn dev-test --inspect-brk",
 		"eject": "react-scripts eject --dir client",
 		"heroku-postbuild": "yarn build",
 		"report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
 		"start": "yarn babel && node server/server.js",
-		"test": "yarn build-css && cross-env NODE_ENV=test nyc mocha --exit --timeout=3000 ./server/**/*.test.js ./client/**/*.test.js",
+		"test": "yarn build-css && cross-env NODE_ENV=test nyc mocha --exit --timeout=3000 \"server/**/*.test.js\" \"client/**/*.test.js\"",
 		"babel": "rm -rf .tmp && babel server server/config server/app/** -d .tmp"
 	},
 	"dependencies": {

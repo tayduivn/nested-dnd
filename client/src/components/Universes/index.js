@@ -35,14 +35,17 @@ const routes = [
 ];
 
 const mapStateToProps = state => ({
-	packs: state.packs,
-	universes: selectMyUniverses(state.universes),
+	packs: {
+		myPacks: state.packs.myPacks.map(id => state.packs.byId[id]),
+		publicPacks: state.packs.publicPacks.map(id => state.packs.byId[id])
+	},
+	universes: selectMyUniverses(state),
 	loggedIn: state.user.loggedIn
 });
 const mapDispatchToProps = dispatch => ({
 	loadUniverses: ({ packs, universes }) => {
-		dispatch(packActions.fetch(dispatch, packs.loaded));
-		dispatch(actions.fetch(dispatch, universes.loaded));
+		packActions.fetch(dispatch, packs.loaded);
+		actions.fetch(dispatch, universes.loaded);
 	}
 });
 const Container = connect(

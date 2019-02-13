@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import { history } from "./App/store";
 
 function cleanProps(props) {
 	const p = { ...props };
@@ -17,9 +18,6 @@ class Private extends React.Component {
 	privateRender = routeProps => {
 		const { component: Component, redirectTo, path, exact, loggedIn, routes, ...rest } = this.props;
 		const props = cleanProps(rest);
-		if (!loggedIn && routeProps.location.pathname.startsWith(path)) {
-			window.history.pushState({}, "", routeProps.location.pathname);
-		}
 
 		return loggedIn ? (
 			<Component routes={routes} {...props} {...routeProps} />
@@ -46,6 +44,20 @@ class PropsRoute extends React.Component {
 	renderFunc = (routeProps = {}) => {
 		const { component: Component, routes, ...rest } = this.props;
 		const props = cleanProps(rest);
+
+		// if this is the login page and we are logged in, redirect
+		if (routeProps.location.pathname === "/login" && this.props.loggedIn) {
+			const redirectTo = routeProps.location.state && routeProps.location.state.from.pathname;
+			return (
+				<Redirect
+					to={{
+						pathname: redirectTo || "/",
+						state: { from: routeProps.location }
+					}}
+				/>
+			);
+		}
+
 		return <Component routes={routes} {...props} {...routeProps} />;
 	};
 	render() {

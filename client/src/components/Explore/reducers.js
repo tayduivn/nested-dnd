@@ -104,7 +104,7 @@ function setAncestors(current, universe) {
 	current.up = up;
 }
 
-function getCurrent(universe, index, isUniverse) {
+function getCurrent(universe = {}, index, isUniverse) {
 	if (!universe.array || !universe.array[index]) return { loading: true, index };
 
 	let current = { ...universe.array[index], index: index };
