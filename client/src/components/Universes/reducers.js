@@ -19,7 +19,7 @@ const myUniversesInitial = {
 function instance(state = {}, action) {
 	switch (action.type) {
 		case INSTANCE_ADD_CHILD:
-			return { ...state, in: [...state.in, "LOADING"] };
+			return { ...state, in: [...(state.in || []), "LOADING"] };
 		case INSTANCE_SET:
 			return { ...state, ...action.data };
 		default:

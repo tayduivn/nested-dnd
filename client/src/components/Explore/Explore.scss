@@ -109,7 +109,6 @@
 		font-weight: normal;
 		padding: $xPadding !important;
 		opacity: 0;
-		overflow: hidden;
 
 		&:not([class*="sortable-"]) {
 			animation: example 500ms ease;
@@ -290,6 +289,7 @@
 			transition-property: width, height, border-radius;
 			transition-timing-function: ease;
 			cursor: pointer;
+			overflow: hidden;
 			background-color: #000;
 
 			> div:first-child {
