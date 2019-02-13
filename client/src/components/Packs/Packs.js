@@ -22,7 +22,6 @@ class PackLink extends React.PureComponent {
 		const { dependencies, lastSaw, cssClass = "bg-grey-900" } = this.props;
 		const URL = isUniverse ? `/universes/${_id}` : `/packs/${url}`;
 		const style = { color: txt };
-		console.log("PackLink render " + font);
 		return (
 			<li className={`col`}>
 				<div className="btn-group">
@@ -120,7 +119,6 @@ class PackUL extends React.Component {
 		return (
 			<ul className="row packs">
 				{list.map((p = {}) => {
-					console.log("PackUL render " + p.font);
 					return selectable ? (
 						<PackInput key={p._id} {...p} selected={selected === p._id} onSelect={onSelect} />
 					) : (

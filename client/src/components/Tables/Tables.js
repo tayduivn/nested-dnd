@@ -44,26 +44,25 @@ export default class Tables extends Component {
 class TablesList extends Component {
 	static propTypes = {
 		isOwner: PropTypes.bool,
-		tables: PropTypes.array,
-		match: PropTypes.object
+		tables: PropTypes.array
 	};
 
 	render() {
-		const { isOwner, tables, match } = this.props;
-		const state = { packid: match.params.pack, tables };
+		const { isOwner, tables, packurl } = this.props;
+		const state = { packurl, tables };
 
 		return (
 			<div>
 				<h2>Tables</h2>
 				{!isOwner ? null : (
-					<Link to={`${match.url}/tables/create`} state={state}>
+					<Link to={`${packurl}/tables/create`} state={state}>
 						<button className="btn btn-primary">Add Table</button>
 					</Link>
 				)}
 				<ul>
 					{tables.map((t, i) => (
 						<li key={i}>
-							<Link to={`${match.url}/tables/${t._id}/edit`} state={state}>
+							<Link to={`${packurl}/tables/${t._id}/edit`} state={state}>
 								{t.title}{" "}
 							</Link>
 							<em>{t.returns}</em>

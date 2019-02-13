@@ -47,22 +47,18 @@ class ChildInner extends React.PureComponent {
 			this.setState({ showAdd: true });
 		}
 	};
+	handleAddNew = () => {};
 	hideAdd = () => {
 		this.setState({ showAdd: false });
 	};
 	render() {
-		const { name, isa, icon, isNew, index, handleClick, style } = this.props;
+		const { name, isa, icon, isNew, index, style } = this.props;
 		const { showAdd } = this.state;
 
 		if (isNew) {
 			return (
 				<div className="isNew">
-					<IsASelect
-						{...ISA_SELECT_OPTIONS}
-						onNewOptionClick={handleClick}
-						onChange={handleClick}
-						hideAdd={this.hideAdd}
-					/>
+					<IsASelect {...ISA_SELECT_OPTIONS} hideAdd={this.hideAdd} />
 				</div>
 			);
 		}
@@ -86,7 +82,7 @@ class ChildInner extends React.PureComponent {
 class Child extends React.PureComponent {
 	handleDeleteLink = e => {
 		e.stopPropagation();
-		this.props.handleDeleteLink(this.props.child.index);
+		this.props.handleDeleteLink(this.props.index);
 	};
 	render() {
 		const { handleClick, i, isLink, highlight, generators, isNew, ...child } = this.props;

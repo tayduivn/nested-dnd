@@ -159,9 +159,7 @@ export default class Explore extends Component {
 	setIndex = (index, isDeleting) => {
 		if (isNaN(index)) return;
 
-		if (index === 0) {
-			if (this.props.location.hash !== "") this.props.history.push(this.props.location.pathname);
-		} else if (this.props.location.hash !== "#" + index) {
+		if (this.props.location.hash !== "#" + index) {
 			this.props.history.push("#" + index);
 		}
 	};
@@ -191,7 +189,7 @@ export default class Explore extends Component {
 		//let index = current.index;
 		let parentIndex = current.up && current.up[0] && current.up[0].index;
 
-		this.setIndex(parentIndex);
+		this.setIndex(parentIndex || 0);
 
 		this.props.handleDelete(this.props.index);
 	};
@@ -242,17 +240,6 @@ export default class Explore extends Component {
 		// do the move
 		inArr.splice(value.from, 1);
 		inArr.splice(value.to, 0, child);
-
-		var currentInArr = this.props.current.in.filter(c => c);
-		this.setState(state => {
-			state = Object.assign({}, state);
-			this.props.current = Object.assign({}, this.props.current);
-			this.props.current.in = inArr.map(ind => {
-				return currentInArr.find(c => c.index === ind);
-			});
-			this.props.current.in.push(currentInArr.find(c => typeof c.index === "string"));
-			return state;
-		});
 		return inArr;
 	}
 
@@ -308,7 +295,7 @@ export default class Explore extends Component {
 			index = this.props.index;
 		}
 
-		var inArr = [].concat(this.props.current.in) || [];
+		var inArr = [].concat(this.props.current.in.filter(child => child && !child.isNew)) || [];
 		index = parseInt(index, 10);
 
 		if (property instanceof Array) {
@@ -327,6 +314,8 @@ export default class Explore extends Component {
 			property = "in";
 		} else if (property === "in") {
 			value = value.filter(i => i !== null);
+		} else if (property === "up") {
+			value = parseInt(value);
 		}
 
 		return { index, property, value };
@@ -340,30 +329,6 @@ export default class Explore extends Component {
 			// reset to parent value if reset
 			this.props.handleChange(index, "txt", null);
 		}
-	};
-
-	handleChange2 = (i, p, v) => {
-		let universe = this.props.match.params.universe;
-		const { index, property, value } = this.handleChangeClean(i, p, v);
-
-		let payload = { universe, index, property, value };
-
-		if (property === "cssClass") {
-			// reset to parent value if reset
-			this.handleChange(index, "txt", null);
-		}
-
-		var saveFunc = ["name", "desc", "data"].includes(property) ? this.saveDebounced : this.save;
-
-		// don't update the name field -- may mess up current typing
-		// don't update the up field -- wrong format and may not have parent data
-		// dont' update in field -- wrong format and changes have already taken effect
-		if (!["name", "in", "up"].includes(property) && index === this.props.current.index) {
-			this.setState(oldState => this.handleChangeState(oldState, index, property, value));
-		}
-
-		// call the debounced versions if typing
-		saveFunc(index, property, universe, payload);
 	};
 
 	makeUrlMatchCurrent(nextState, nextProps) {
@@ -390,9 +355,9 @@ export default class Explore extends Component {
 		};
 	}
 	_getChildrenProps() {
-		const { isUniverse, index, current, handleChange } = this.props;
+		const { isUniverse, index, current } = this.props;
 		const { cssClass, highlightColor, in: inArr } = current;
-		const { handleAdd, handleClick } = this;
+		const { handleAdd, handleClick, handleChange } = this;
 		const handle = { change: handleChange, add: handleAdd, click: handleClick };
 		const { generators, tables } = getGensTables(this.props.pack);
 		return { isUniverse, index, cssClass, highlightColor, inArr, handle, generators, tables };

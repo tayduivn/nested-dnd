@@ -3,12 +3,10 @@ import React from "react";
 import { ModalHeader } from "./ModalIconSelect";
 
 export default class MoveModal extends React.PureComponent {
-	componentDidMount() {
-		document.getElementById("moveModal").addEventListener("hide.bs.modal", this.handleClose);
-	}
-	handleClose = () => {
-		const newUp = document.getElementById("moveIndex").value;
+	handleSave = e => {
+		const newUp = parseInt(e.target.moveIndex.value);
 		this.props.handleChange(this.props.index, "up", newUp);
+		e.preventDefault(0);
 	};
 	render() {
 		return (
@@ -17,10 +15,14 @@ export default class MoveModal extends React.PureComponent {
 					<div className="modal-content">
 						{ModalHeader}
 						<div className="modal-body">
-							<div className="form-group">
+							<form className="form-group" onSubmit={this.handleSave}>
 								<label>Parent Index</label>
-								<input className="form-control" id="moveIndex" defaultValue={this.props.up} />
-							</div>
+								<input name="moveIndex" className="form-control" defaultValue={this.props.up} />
+								<button className="btn btn-primary" data-dismiss="modal">
+									Cancel
+								</button>
+								<input type="submit" className="btn btn-success" value="Save" />
+							</form>
 						</div>
 					</div>
 				</div>

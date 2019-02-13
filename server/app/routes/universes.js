@@ -7,8 +7,18 @@ const Maker = require("../models/generator/make");
 const Nested = require("./packs/nested");
 
 function saveInstance(index, newValues, universe) {
+	const newChanges = {};
+
 	if (typeof newValues.up !== "undefined") {
+		const oldUp = universe.array[index].up;
+
+		//do the move
 		universe.moveInstance(index, newValues.up);
+
+		// return changed instances
+		newChanges[newValues.up] = universe.array[newValues.up].toJSON();
+		newChanges[oldUp] = universe.array[oldUp].toJSON();
+
 		delete newValues.up;
 	}
 	if (typeof newValues.isFavorite !== "undefined") {
@@ -17,7 +27,12 @@ function saveInstance(index, newValues, universe) {
 	}
 
 	if (newValues.delete) universe.deleteInstance(index);
-	else universe.array.set(index, Object.assign({}, universe.array[index].toJSON(), newValues));
+	else if (universe.array[index]) {
+		universe.array.set(index, Object.assign({}, universe.array[index].toJSON(), newValues));
+		// if it's not deleted, send the result
+		newChanges[index] = universe.array[index].toJSON();
+	}
+	return newChanges;
 }
 
 router
@@ -113,8 +128,8 @@ router
 					for (var index in toSave.array) {
 						index = parseInt(index, 10);
 						var newValues = toSave.array[index];
-						saveInstance(index, newValues, universe);
-						result.array[index] = universe.array[index];
+						const newChanges = saveInstance(index, newValues, universe, result);
+						result.array = { ...result.array, ...newChanges };
 					}
 					delete toSave.array;
 				}
@@ -164,6 +179,29 @@ router.get("/:universe/explore/:index?", MW.ownsUniverse, (req, res, next) => {
 		.catch(next);
 });
 
+const generateNew = async (universe, index, isa, name) => {
+	let ancestorData = universe.getAncestorData(index);
+	let parent = universe.array[index];
+	var nestedParent = parent.expand(1);
+	const pack = universe.pack;
+	var builtpack = await BuiltPack.findOrBuild(pack);
+	var generator = builtpack.getGen(isa || name);
+	var generated = generator
+		? await Maker.make(generator, 0, builtpack, undefined, ancestorData)
+		: new Nested(name);
+
+	nestedParent.index = index;
+	generated.setUp(nestedParent.makeAncestorArray());
+	generated.setIndex(universe);
+	if (!(parent.in instanceof Array)) parent.in = [];
+	if (!(nestedParent.in instanceof Array)) nestedParent.in = [];
+	parent.in.push(generated.index);
+	nestedParent.in.push(generated);
+
+	// save to universe
+	generated.flatten(universe);
+};
+
 // Make a new node
 // ---------------------------------
 router.post("/:universe/explore/:index", (req, res, next) => {
@@ -175,31 +213,21 @@ router.post("/:universe/explore/:index", (req, res, next) => {
 			if (!universe) return res.status(404);
 			if (universe.user_id.toString() !== req.user.id) return res.status(401);
 
-			const parentIndex = index;
-			const pack = universe.pack;
-			var parent = universe.array[parentIndex];
-			if (!parent) return res.status(404);
+			if (!universe.array[index]) return res.status(404);
 
-			let ancestorData = universe.getAncestorData(index);
-			var nestedParent = parent.expand(1);
-			var builtpack = await BuiltPack.findOrBuild(pack);
-			var generator = builtpack.getGen(req.body.isa || req.body.name);
-			var generated = generator
-				? await Maker.make(generator, 0, builtpack, undefined, ancestorData)
-				: new Nested(req.body.name);
-
-			nestedParent.index = parentIndex;
-			generated.setUp(nestedParent.makeAncestorArray());
-			generated.setIndex(universe);
-			if (!(parent.in instanceof Array)) parent.in = [];
-			if (!(nestedParent.in instanceof Array)) nestedParent.in = [];
-			parent.in.push(generated.index);
-			nestedParent.in.push(generated);
-
-			// var newNested = generated.flatten(universe);
+			await generateNew(universe, index, req.body.isa, req.body.name);
 
 			universe.save();
-			res.json({ current: nestedParent, pack: universe.pack });
+
+			const parent = universe.array[index];
+			const instances = {
+				[index]: parent
+			};
+			parent.in.forEach(i => {
+				if (i !== null) instances[i] = universe.array[i];
+			});
+
+			res.json({ instances, pack: universe.pack });
 		})
 		.catch(next);
 });

@@ -115,7 +115,10 @@ class IsASelectComponent extends React.PureComponent {
 	submit = value => {
 		const gens = this.props.options.split(",");
 		const isGen = gens.includes(value);
-		this.props.addChild({ [isGen ? "isa" : "name"]: value });
+		const isNum = !isNaN(value);
+		const prop = isGen ? "isa" : isNum ? "index" : "name";
+		this.props.addChild({ [prop]: value });
+		this.setState({ input: "" });
 	};
 	render() {
 		const { input } = this.state;

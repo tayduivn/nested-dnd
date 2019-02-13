@@ -68,6 +68,8 @@ function normalize(state = {}, action) {
 				lastSaw.up = lastSaw.up[0].index;
 			}
 			if (lastSaw.in && lastSaw.in.length) {
+				// filter out null children
+				lastSaw.in = lastSaw.in.filter(child => child);
 				lastSaw.in.forEach(i => (array[i.index] = { ...i, up: lastSaw.index }));
 				lastSaw.in = lastSaw.in.map(c => c.index);
 			}

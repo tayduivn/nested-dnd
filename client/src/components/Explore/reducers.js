@@ -3,6 +3,7 @@ import { createMatchSelector } from "connected-react-router";
 
 const universePath = createMatchSelector({ path: "/universes/:universe/explore" });
 const packPath = createMatchSelector({ path: "/packs/:pack/explore" });
+const explorePath = createMatchSelector({ path: "/explore/:pack" });
 
 const NEW_ITEM = {
 	isNew: true,
@@ -116,7 +117,7 @@ function getCurrent(universe = {}, index, isUniverse) {
 	// get in
 	if (current.in && current.in.filter)
 		current.in = current.in
-			.filter(c => c)
+			.filter(c => c !== null && !isNaN(c))
 			// LOADING indicates just added, waiting for save result
 			.map(i => (i === "LOADING" ? LOADING_CHILD : getChild(current, i, universe.array[i])));
 	else current.in = [];
@@ -137,11 +138,22 @@ const LOADING = "";
 
 const getIndexFromHash = hash => (hash ? parseInt(hash.substr(1), 10) : LOADING);
 
-const getUniverse = state => {
+const getUrlInfo = state => {
 	const location = state.router.location;
-	const isUniverse = location.pathname.includes("universe");
-	const match = isUniverse ? universePath(state) : packPath(state);
-	let index = getIndexFromHash(location.hash);
+	const pathname = location.pathname;
+	const isUniverse = pathname.includes("universe");
+	const match = pathname.includes("universe")
+		? universePath(state)
+		: state.router.location.pathname.startsWith("/explore")
+		? explorePath(state)
+		: packPath(state);
+	const index = getIndexFromHash(location.hash);
+
+	return { index, match, isUniverse };
+};
+
+const getUniverse = state => {
+	let { index, match, isUniverse } = getUrlInfo(state);
 	let universe, pack;
 
 	if (!match) return {};

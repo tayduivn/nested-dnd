@@ -9,6 +9,7 @@ import Pack from "./Pack";
 import Packs from "./Packs";
 import { PropsRoute } from "../Routes";
 import EditPack from "./EditPack";
+
 import { store } from "../App";
 
 describe("<PacksList />", () => {
@@ -81,19 +82,21 @@ describe("<Pack />", () => {
 			var history = createMemoryHistory("/dnd");
 			history.push("/dnd");
 			wrap = enzyme.mount(
-				<Router history={history}>
-					<PropsRoute
-						path="/dnd"
-						component={Pack}
-						match={{
-							path: "/dnd",
-							url: "/dnd",
-							params: { pack: "dnd" },
-							isExact: true
-						}}
-						fetchPack={() => {}}
-					/>
-				</Router>
+				<Provider store={store}>
+					<Router history={history}>
+						<PropsRoute
+							path="/dnd"
+							component={Pack}
+							match={{
+								path: "/dnd",
+								url: "/dnd",
+								params: { pack: "dnd" },
+								isExact: true
+							}}
+							fetchPack={() => {}}
+						/>
+					</Router>
+				</Provider>
 			);
 		});
 

@@ -87,7 +87,7 @@ const TRANSITION_GROUP_SETTINGS = {
 };
 
 class Children extends React.Component {
-	handleDeleteLink(remove) {
+	handleDeleteLink = (remove) => {
 		return this.props.handle.change(this.props.index, "deleteLink", remove);
 	}
 	shouldComponentUpdate(nextProps) {

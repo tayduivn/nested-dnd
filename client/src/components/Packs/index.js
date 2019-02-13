@@ -18,7 +18,7 @@ const routes = [
 			{
 				path: "/edit",
 				private: true,
-				component: EditPack
+				component: Pack
 			},
 			{
 				path: "/explore",

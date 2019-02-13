@@ -40,12 +40,13 @@ const mapStateToProps = state => ({
 		publicPacks: state.packs.publicPacks.map(id => state.packs.byId[id])
 	},
 	universes: selectMyUniverses(state),
+	loaded: state.universes.myUniverses.loaded,
 	loggedIn: state.user.loggedIn
 });
 const mapDispatchToProps = dispatch => ({
-	loadUniverses: ({ packs, universes }) => {
+	loadUniverses: ({ packs, universes, loaded }) => {
 		packActions.fetch(dispatch, packs.loaded);
-		actions.fetch(dispatch, universes.loaded);
+		actions.fetch(dispatch, loaded);
 	}
 });
 const Container = connect(

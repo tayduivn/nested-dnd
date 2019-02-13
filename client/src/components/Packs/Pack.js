@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Link, Switch } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 import { LOADING_GIF } from "../App/App";
-import { PropsRoute } from "../Routes";
 import { GeneratorsList } from "../Generators";
 import { TablesList } from "../Tables/Tables";
 
 import "./Pack.css";
+import actions from "./actions";
 
 const LOADING = (
 	<div className="main">
@@ -84,7 +85,7 @@ class PackInfo extends React.PureComponent {
 
 class TabContent extends React.PureComponent {
 	render() {
-		const { gens, isOwner, match, tables } = this.props;
+		const { gens, isOwner, tables, packurl } = this.props;
 		return (
 			<div className="tab-content" id="packComponentsContent">
 				<div
@@ -93,10 +94,10 @@ class TabContent extends React.PureComponent {
 					role="tabpanel"
 					aria-labelledby="generators-tab"
 				>
-					<GeneratorsList generators={gens} {...{ isOwner, match }} />
+					<GeneratorsList generators={gens} {...{ isOwner, packurl }} />
 				</div>
 				<div className="tab-pane fade" id="tables" role="tabpanel" aria-labelledby="tables-tab">
-					<TablesList {...{ tables, isOwner, match }} />
+					<TablesList {...{ tables, isOwner, packurl }} />
 				</div>
 			</div>
 		);
@@ -109,7 +110,7 @@ class TabContent extends React.PureComponent {
 class ViewPack extends Component {
 	render() {
 		const { name, _id, _user: user = {}, url, defaultSeed, isOwner, public: isPublic } = this.props;
-		const { gens = {}, tables = [], font, handleRebuild, match } = this.props;
+		const { gens = {}, tables = [], font, handleRebuild } = this.props;
 		return (
 			<div className="main" id="view-pack">
 				<div className="container mt-5">
@@ -132,45 +133,26 @@ class ViewPack extends Component {
 
 					{TABS}
 
-					<TabContent {...{ gens, isOwner, match, tables }} />
+					<TabContent {...{ gens, isOwner, packurl: url, tables }} />
 				</div>
 			</div>
 		);
 	}
 }
 
-export default class Pack extends React.PureComponent {
-	render() {
-		const { match, pack = {}, loggedIn, handleRebuild } = this.props;
-		return (
-			<div id="Pack">
-				<Switch>
-					<PropsRoute
-						component={PackPage}
-						{...{ exact: true, path: match.path, gens: pack.generators }}
-						{...{ pack, loggedIn, handleRebuild }}
-					/>
-				</Switch>
-			</div>
-		);
-	}
-}
-//{makeSubRoutes(routes, match.path, { pack, handleRenameGen })}
-
 /**
  * Wrapper Component for Pack pages
  */
-class PackPage extends Component {
+class PackInner extends Component {
 	state = {
 		filters: {}
 	};
 	static defaultProps = {
-		fetchPack: () => {},
-		getPack: () => {}
+		fetchPack: () => {}
 	};
 	constructor(props) {
 		super(props);
-		props.fetchPack(props.match.params.pack);
+		props.fetchPack();
 	}
 
 	handleRebuild = () => {
@@ -182,8 +164,7 @@ class PackPage extends Component {
 	};
 
 	render() {
-		const { match, error, getPack } = this.props;
-		const pack = getPack(match.params.pack) || {};
+		const { error, pack = {} } = this.props;
 
 		if (error) return error.display;
 		if (!pack.loaded) {
@@ -193,3 +174,19 @@ class PackPage extends Component {
 		return <ViewPack {...pack} />;
 	}
 }
+
+const Pack = connect(
+	(state, { match }) => {
+		const packid = state.packs.byUrl[match.params.pack];
+		return {
+			pack: state.packs.byId[packid]
+		};
+	},
+	(dispatch, { match }) => {
+		return {
+			fetchPack: () => actions.fetchPack(dispatch, match.params.pack)
+		};
+	}
+)(PackInner);
+
+export default Pack;
