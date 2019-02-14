@@ -82,6 +82,10 @@ export const setFavorite = (i, isFavorite, universe) => {
 	} else {
 		if (position !== -1) favorites.splice(position, 1);
 	}
+
+	// save to DB
+	changeInstance(i, "isFavorite", isFavorite, universe._id, store.dispatch);
+
 	return {
 		type: UNIVERSE_SET,
 		data: {
