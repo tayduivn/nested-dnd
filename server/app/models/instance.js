@@ -48,6 +48,13 @@ const flatInstanceSchema = Schema(
 // clean up from old type
 flatInstanceSchema.pre("init", doc => {
 	if (typeof doc.icon === "string") {
+		if (doc.icon.startsWith("http")) {
+			doc.icon = {
+				category: "img",
+				value: doc.icon
+			};
+			return;
+		}
 		const parts = doc.icon.split(" ");
 		let type = parts[0];
 		let value = parts[1];
