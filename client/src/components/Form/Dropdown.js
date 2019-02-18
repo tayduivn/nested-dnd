@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Sifter from "sifter";
 import debounce from "debounce";
-import { FixedSizeList, areEqual } from "react-window";
+import { FixedSizeList } from "react-window";
 
 const NOT_FOUND_ERROR = "Can't find option";
 

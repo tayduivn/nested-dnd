@@ -15,7 +15,6 @@ import { splitClass } from "../../util";
 import "./Title.css";
 
 const CENTER_ALIGN = "d-flex align-items-center justify-content-center";
-const VERTICAL_ALIGN = "d-flex align-items-center";
 const COG_BUTTON_SETTINGS = {
 	type: "button",
 	id: "dropdownMenuButton",
@@ -133,10 +132,16 @@ class IconButton extends React.PureComponent {
 							name={icon.value || "far fa-plus-square"}
 							category={icon.category}
 							alignment={CENTER_ALIGN}
+							inlinesvg={true}
 						/>
 					</button>
 				) : (
-					<Icon name={icon.value} category={icon.category} alignment={CENTER_ALIGN} />
+					<Icon
+						name={icon.value}
+						category={icon.category}
+						alignment={CENTER_ALIGN}
+						inlinesvg={true}
+					/>
 				)}
 			</div>
 		);

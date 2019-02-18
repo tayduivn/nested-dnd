@@ -1,16 +1,12 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 
-import { FixedSizeList as List, areEqual } from "react-window";
+import { areEqual } from "react-window";
 import { Icon } from "../Explore/ExplorePage";
 import iconOptions from "../../assets/icons.js";
 import Dropdown from "./Dropdown";
 
 import "./IconSelect.css";
-
-const height = 30;
-
-const DEBUG = false;
 
 const animations = [
 	"spin",
@@ -33,48 +29,6 @@ const animationOptions = [<option key="placeholder" value="" />].concat(
 	))
 );
 
-class MenuList extends React.Component {
-	render() {
-		const { options, children, maxHeight, getValue } = this.props;
-		const [value] = getValue();
-		const initialOffset = options.indexOf(value) * height;
-		return (
-			<List
-				height={isNaN(maxHeight) ? height : maxHeight}
-				itemCount={children.length}
-				itemSize={height}
-				initialScrollOffset={initialOffset}
-				itemData={options}
-			>
-				{Option}
-			</List>
-		);
-	}
-}
-
-/*
-{({ index, style }) => {
-	//delete children[index].props.innerProps.onMouseMove; //FIX LAG!!
-	delete children[index].props.innerProps.onMouseOver; //FIX LAG!!
-	return <Option />;
-}}
-*/
-
-// The item renderer is declared outside of the list-rendering component.
-// So it has no way to directly access the items array.
-class ItemRenderer extends React.PureComponent {
-	render() {
-		// Access the items array using the "data" prop:
-		const item = this.props.data[this.props.index];
-
-		return <div style={this.props.style}>{item.name}</div>;
-	}
-}
-/*
-<div className="text-option" style={style}>
-	{children[index]}
-</div>
-*/
 const Option = memo(
 	({
 		data: { matches, selected, clickEvent, handleClick, className },

@@ -1,15 +1,24 @@
 import React from "react";
+import SVG from "react-inlinesvg";
 
 class SVGWrap extends React.PureComponent {
 	render() {
-		const { alignment, fadeIn, part1, part2 } = this.props;
+		const { alignment, fadeIn, part1, part2, inlinesvg } = this.props;
 		return (
 			<span className={alignment + (fadeIn ? " animated fadeIn" : "")}>
-				<img
-					className={`icon animated infinite ${part2} ${part1}`}
-					alt={`/icons/${part1}.svg`} //for debugging
-					src={`/icons/${part1}.svg`}
-				/>
+				{inlinesvg ? (
+					<SVG
+						className={`icon animated infinite ${part2} ${part1}`}
+						alt={`/icons/${part1}.svg`} //for debugging
+						src={`/icons/${part1}.svg`}
+					/>
+				) : (
+					<img
+						className={`icon animated infinite ${part2} ${part1}`}
+						alt={`/icons/${part1}.svg`} //for debugging
+						src={`/icons/${part1}.svg`}
+					/>
+				)}
 			</span>
 		);
 	}
@@ -36,13 +45,13 @@ class Icon extends React.PureComponent {
 		return { c: category, v: value, a: animation };
 	}
 	render() {
-		let { name = false, category, alignment = "", fadeIn } = this.props;
+		let { name = false, category, alignment = "", fadeIn, inlinesvg } = this.props;
 
 		if (!name || !name.trim || !name.split) return null;
 
 		let value = name;
 		if (!category) {
-			let { c, v, a } = this.determineCategory();
+			let { c, v } = this.determineCategory();
 			category = c;
 			value = v;
 		}
@@ -51,7 +60,7 @@ class Icon extends React.PureComponent {
 			if (value.startsWith("svg "))
 				return (
 					<SVGWrap
-						{...{ alignment, fadeIn }}
+						{...{ alignment, fadeIn, inlinesvg }}
 						part1={value.split(" ")[1]}
 						part2={value.split(" ")[2]}
 					/>

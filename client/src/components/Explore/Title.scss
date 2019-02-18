@@ -41,18 +41,29 @@
 	}
 
 	.icon {
-		height: 1em;
-		width: 1em;
+		height: 1em !important;
+		width: 1em !important;
 		padding: 0;
 		vertical-align: top;
+
+		&.loading {
+			font-size: inherit;
+			svg {
+				display: none;
+
+				height: 100% !important;
+				width: 100% !important;
+			}
+		}
 	}
 
 	.icon-wrap {
 		$fontSize: 6rem;
 		$padding: 0.75rem;
+		overflow: hidden;
 
 		max-height: $fontSize + ($padding * 2);
-		font-size: $fontSize;
+		font-size: $fontSize !important;
 
 		.btn {
 			padding: $padding;

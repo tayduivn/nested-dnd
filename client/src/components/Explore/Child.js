@@ -58,7 +58,7 @@ class ChildInner extends React.PureComponent {
 	};
 	_getIconProps() {
 		const { name, isa, icon = {} } = this.props;
-		return { name: icon.value, category: icon.category, txt: name ? name : isa };
+		return { name: icon.value, category: icon.category, txt: name ? name : isa, inlinesvg: true };
 	}
 	render() {
 		const { name, isa, icon, isNew, index, style } = this.props;
