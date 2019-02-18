@@ -30,7 +30,7 @@ var childSchema = Schema(
 		},
 		isEmbedded: Boolean
 	},
-	{ typeKey: "$type", _id: false }
+	{ typeKey: "$type" }
 );
 
 /**

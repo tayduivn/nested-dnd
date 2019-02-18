@@ -21,6 +21,8 @@ function instance(state = {}, action) {
 		case INSTANCE_ADD_CHILD:
 			return { ...state, in: [...(state.in || []), "LOADING"] };
 		case INSTANCE_SET:
+			// deleted
+			if (!action.data) return null;
 			return { ...state, ...action.data };
 		default:
 			return state;
@@ -35,7 +37,7 @@ function universe(state = {}, action) {
 		case INSTANCE_DELETE:
 			const toDelete = array[action.index];
 
-			if (toDelete.up) {
+			if (toDelete.up !== undefined) {
 				const inArr = [...array[toDelete.up].in];
 				inArr.splice(inArr.indexOf(action.index), 1);
 				array[toDelete.up].in = inArr;
@@ -118,8 +120,8 @@ function myUniverses(state = myUniversesInitial, action) {
 }
 
 export default combineReducers({
-	byId: byId,
-	myUniverses: myUniverses
+	byId,
+	myUniverses
 });
 
 const selectMyUniverses = ({ universes, packs }) => ({

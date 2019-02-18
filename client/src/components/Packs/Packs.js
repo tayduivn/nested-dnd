@@ -82,7 +82,7 @@ class PackInput extends React.PureComponent {
 }
 
 const ADD_BUTTON_CLASSNAME =
-	"create col btn btn-outline-primary d-flex align-items-center justify-content-center";
+	"create col btn btn-outline-dark d-flex align-items-center justify-content-center";
 
 class PackUL extends React.Component {
 	componentDidMount() {

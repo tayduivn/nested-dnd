@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../Util";
 import { connect } from "react-redux";
 
 import { LOADING_GIF } from "../App/App";
@@ -110,7 +110,7 @@ class TabContent extends React.PureComponent {
 class ViewPack extends Component {
 	render() {
 		const { name, _id, _user: user = {}, url, defaultSeed, isOwner, public: isPublic } = this.props;
-		const { gens = {}, tables = [], font, handleRebuild } = this.props;
+		const { generators = {}, tables = [], font, handleRebuild } = this.props;
 		return (
 			<div className="main" id="view-pack">
 				<div className="container mt-5">
@@ -133,7 +133,7 @@ class ViewPack extends Component {
 
 					{TABS}
 
-					<TabContent {...{ gens, isOwner, packurl: url, tables }} />
+					<TabContent {...{ gens: generators, isOwner, packurl: url, tables }} />
 				</div>
 			</div>
 		);
@@ -171,7 +171,7 @@ class PackInner extends Component {
 			return LOADING;
 		}
 
-		return <ViewPack {...pack} />;
+		return <ViewPack {...pack} handleRebuild={this.handleRebuild} />;
 	}
 }
 
@@ -184,7 +184,16 @@ const Pack = connect(
 	},
 	(dispatch, { match }) => {
 		return {
-			fetchPack: () => actions.fetchPack(dispatch, match.params.pack)
+			fetchPack: () => actions.fetchPack(dispatch, match.params.pack),
+			fetchRebuild: () => actions.fetchRebuild(dispatch, match.params.pack),
+			dispatch
+		};
+	},
+	(s, d, o) => {
+		return {
+			...o,
+			...s,
+			...d
 		};
 	}
 )(PackInner);

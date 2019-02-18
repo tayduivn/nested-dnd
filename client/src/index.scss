@@ -20,9 +20,9 @@
 @import "../../node_modules/bootstrap/scss/input-group";
 
 // App global css--------------------------
-@import "./colors.scss";
 @import "./textures.scss";
 @import "./animations.scss";
+@import "./switch.scss";
 
 //RESETS
 *,
@@ -83,6 +83,12 @@ button,
 .form-check-input,
 .nav-link {
 	cursor: pointer;
+}
+
+.isvg {
+	&.loading {
+		margin: 0;
+	}
 }
 
 button.nav-link {
@@ -234,17 +240,37 @@ i.fi {
 	}
 }
 
-/* floating */
-.sortable-drag {
-	.child-inner {
-		//border: 3px solid currentColor;
+.form-control {
+	&:focus {
+		border: 1px solid $primary;
+	}
+	&:invalid {
+		border: 1px solid $warning;
 
-		//color: white;
+		&:focus {
+			box-shadow: 0 0 0 0.2rem rgba($warning, 0.25);
+		}
+
+		+ .feedback-icon {
+			position: absolute;
+			top: 0.3em;
+			right: 1em;
+			width: 1em;
+			height: 1em;
+			z-index: 3;
+			&::before {
+				content: "⚠";
+			}
+		}
 	}
 }
 
-/* placeholder */
-.sortable-ghost {
-	.child-inner {
-	}
+.invalid-feedback {
+	display: block;
+	color: $warning;
 }
+@import "./components/App/App.scss";
+@import "./components/Form/Dropdown.scss";
+
+// needs to come after App.scss so we can override with bg- styles
+@import "./colors.scss";

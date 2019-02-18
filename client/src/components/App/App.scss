@@ -225,16 +225,20 @@ body {
  * ------------------------------
  */
 
+.container,
+.container-fluid {
+	--parent-theme: white;
+	--contrast: #{$body-bg};
+	--active-theme: #{$gray-600};
+	--hover-theme: #{$gray-300};
+
+	background-color: rgba(255, 255, 255, 0.9);
+	color: $body-bg;
+	padding: 2rem;
+}
+
 .main {
 	padding-top: ($navbar-brand-height + $navbar-brand-padding-y * 2)+ ($navbar-padding-y * 2);
-
-	.container,
-	&.container,
-	.container-fluid {
-		background-color: rgba(255, 255, 255, 0.9);
-		color: $body-bg;
-		padding: 2rem;
-	}
 
 	&.whiteBG:before {
 		content: "";

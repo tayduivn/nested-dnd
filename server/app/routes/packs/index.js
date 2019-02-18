@@ -4,12 +4,19 @@ const Pack = require("../../models/pack");
 
 const pack = require("./pack");
 
-function normalizePackArray(byId, array) {
-	return array.map(pack => {
-		byId[pack._id] = pack;
-		return pack._id;
-	});
-}
+const normalizePackArray = async (byId, array) => {
+	return Promise.all(
+		array.map(async pack => {
+			// this is a sanity check for url changed
+			if (pack.isModified && pack.isModified()) {
+				await pack.save();
+			}
+
+			byId[pack._id] = pack;
+			return pack._id;
+		})
+	);
+};
 
 // Get All Packs
 // ---------------------------------
@@ -25,9 +32,9 @@ router.get("/", (req, res, next) => {
 	//get public packs
 	Pack.find(publicPackSettings)
 		.exec()
-		.then(publicPacks => {
+		.then(async publicPacks => {
 			const byId = {};
-			publicPacks = normalizePackArray(byId, publicPacks);
+			publicPacks = await normalizePackArray(byId, publicPacks);
 
 			if (!req.user) {
 				return res.json({ byId, publicPacks });
@@ -36,8 +43,8 @@ router.get("/", (req, res, next) => {
 			// find packs I own
 			Pack.find({ _user: req.user._id })
 				.exec()
-				.then(myPacks => {
-					myPacks = normalizePackArray(byId, myPacks);
+				.then(async myPacks => {
+					myPacks = await normalizePackArray(byId, myPacks);
 					return res.json({ byId, myPacks, publicPacks });
 				})
 				.catch(next);

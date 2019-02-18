@@ -6,7 +6,7 @@ import DocumentTitle from "react-document-title";
 import DB from "../../actions/CRUDAction";
 import ExplorePage, { LOADING, Data, Modals, Children } from "./ExplorePage";
 import Title from "./Title";
-import { handleNestedPropertyValue } from "../Generators/EditGenerator";
+import { handleNestedPropertyValue } from "../../util";
 
 import "./Explore.css";
 const NEW_ITEM = {

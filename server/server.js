@@ -34,7 +34,6 @@ if (process.env.NODE_ENV !== "test") {
 		err
 	) {
 		if (err) {
-			console.log(err);
 			throw new Error("Couldn't connect to mongo database");
 		} else {
 			// launch ======================================================================

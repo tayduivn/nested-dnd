@@ -146,7 +146,8 @@ module.exports = {
 		return res.json({
 			error: {
 				message: err.message,
-				stack: err.stack
+				stack: err.stack,
+				data: err.data
 			}
 		});
 	},
@@ -172,10 +173,8 @@ module.exports = {
 function getPack(req, res, next) {
 	var packGetter;
 
-	//	if (req.params.pack)
-	//		packGetter = Pack.findOne({ _id: req.params.pack || req.params. }).populate("_user", "name id");
-	if (req.params.url)
-		packGetter = Pack.findOne({ url: req.params.url }).populate("_user", "name id");
+	const url = req.params.url || req.params.pack;
+	if (url) packGetter = Pack.findOne({ url }).populate("_user", "name id");
 	else return res.status(412).json({ error: "Missing pack id" });
 
 	return packGetter

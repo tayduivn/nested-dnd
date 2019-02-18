@@ -24,7 +24,7 @@ router.get("/pack/:pack/", utils.canViewPack, (req, res) => {
 
 		// temp data clean
 		tables.forEach(t => {
-			if (!t.pack) t.set({ pack: packs[0] });
+			if (!t.pack) t.set({ pack: t.packs[0] });
 			t.save();
 		});
 
@@ -35,7 +35,7 @@ router.get("/pack/:pack/", utils.canViewPack, (req, res) => {
 
 // Read Table
 // ---------------------------------
-router.get("/:table", utils.canViewTable, (req, res, next) => {
+router.get("/:table", utils.canViewTable, (req, res) => {
 	if (req.table && req.table.roll) {
 		req.table.roll().then(result => {
 			return res.json(Object.assign({}, req.table.toJSON(), { roll: result }));

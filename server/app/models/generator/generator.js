@@ -60,6 +60,17 @@ var schema = Schema({
 	source: sourceSchema
 });
 
+// clean up from when we had an img attribute
+schema.pre("init", doc => {
+	if (doc.style && doc.style.img) {
+		doc.style.icon = {
+			...doc.style.img,
+			category: "img"
+		};
+		delete doc.style.img;
+	}
+});
+
 schema.post("remove", Maintainer.cleanAfterRemove);
 
 // ----------------------- VIRTUALS
@@ -71,7 +82,7 @@ schema.methods.makeStyle = async function(name) {
 		this.style.makeTextColor(),
 		this.style.makeBackgroundColor(),
 		this.style.noAutoColor ? false : this.style.strToColor(name),
-		this.style.useImg ? this.style.makeImage() : this.style.makeIcon(),
+		this.style.makeIcon(),
 		this.style.makePattern()
 	]);
 

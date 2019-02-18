@@ -47,3 +47,9 @@ https://github.com/seiyria/gameicons-font
 
 // get FNG
 node client/public/getFNG.js
+
+## Instance names that aren't favorites
+
+const results = {};
+temp1.array.forEach((instance, index) => !temp1.favorites.includes(index) && instance.name && (results[instance.name] = index));
+Object.keys(results).map(r=>`${r} | ${results[r]}`).sort().join('\n');

@@ -1,12 +1,14 @@
-import React from "react";
-import Select from "react-select";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
 
+import { FixedSizeList as List, areEqual } from "react-window";
 import { Icon } from "../Explore/ExplorePage";
 import iconOptions from "../../assets/icons.js";
-import { MenuList } from "./IsASelect";
+import Dropdown from "./Dropdown";
 
 import "./IconSelect.css";
+
+const height = 30;
 
 const DEBUG = false;
 
@@ -31,79 +33,159 @@ const animationOptions = [<option key="placeholder" value="" />].concat(
 	))
 );
 
-const Option = ({ innerRef, innerProps, label, value }) => {
-	return (
-		<div className="icon-option" ref={innerRef} {...innerProps}>
-			<Icon name={value} fadeIn={false} /> {label}
-		</div>
-	);
-};
+class MenuList extends React.Component {
+	render() {
+		const { options, children, maxHeight, getValue } = this.props;
+		const [value] = getValue();
+		const initialOffset = options.indexOf(value) * height;
+		return (
+			<List
+				height={isNaN(maxHeight) ? height : maxHeight}
+				itemCount={children.length}
+				itemSize={height}
+				initialScrollOffset={initialOffset}
+				itemData={options}
+			>
+				{Option}
+			</List>
+		);
+	}
+}
 
-const IconSelectDisplay = ({
-	status = {},
-	validationState,
-	iconArr = [],
-	virtualSelect,
-	handleChange,
-	handleChangeAnim,
-	handleClickChosen,
-	animArr = [],
-	multi = false,
-	cssClass,
-	style
-}) => (
-	<div className={status.isEnabled ? "" : "fake-disabled"}>
-		<div className="row">
-			<div className="col-md">
-				<div validationstate={validationState} className="form-group">
-					<Select
-						name="icon"
-						components={{ MenuList, Option }}
-						value={multi ? iconArr : iconArr[0]}
-						options={iconOptions}
-						onChange={v => handleChange(multi ? v : [v], animArr)}
-						isClearable={false}
-						isMulti={multi}
-					/>
+/*
+{({ index, style }) => {
+	//delete children[index].props.innerProps.onMouseMove; //FIX LAG!!
+	delete children[index].props.innerProps.onMouseOver; //FIX LAG!!
+	return <Option />;
+}}
+*/
+
+// The item renderer is declared outside of the list-rendering component.
+// So it has no way to directly access the items array.
+class ItemRenderer extends React.PureComponent {
+	render() {
+		// Access the items array using the "data" prop:
+		const item = this.props.data[this.props.index];
+
+		return <div style={this.props.style}>{item.name}</div>;
+	}
+}
+/*
+<div className="text-option" style={style}>
+	{children[index]}
+</div>
+*/
+const Option = memo(
+	({
+		data: { matches, selected, clickEvent, handleClick, className },
+		index,
+		isScrolling,
+		style
+	}) => {
+		const item = matches[index];
+		const isSelected = item === selected ? `--selected` : "";
+
+		if (!item) return null;
+		return (
+			<li
+				className={`dropdown__option ${className}__option ${isSelected}`}
+				data-value={item.value}
+				data-label={item.label}
+				style={style}
+				{...{ [clickEvent]: handleClick }}
+			>
+				<Icon name={item.value} fadeIn={false} /> {item.label}
+			</li>
+		);
+	},
+	areEqual
+);
+
+class IconPreview extends React.PureComponent {
+	render() {
+		const { handleChangeAnim, animArr = [], index, icon, cssClass, style } = this.props;
+		return (
+			<div className="col icon-wrap" key={index}>
+				<div className={"form-group icon " + cssClass} style={style} name={"icon" + index}>
+					<label>
+						<Icon name={icon + " " + animArr[index]} />
+					</label>
+					<select
+						onChange={handleChangeAnim}
+						value={animArr[index]}
+						data-index={index}
+						data-icon={icon}
+					>
+						{animationOptions}
+					</select>
 				</div>
 			</div>
-			<div id="icons-preview" className="col-md-auto row">
-				{iconArr.map(({ label, value: icon }, index) => (
-					<div className="col icon-wrap" key={index}>
-						<div
-							className={"form-group icon " + cssClass}
-							style={style}
-							name={"icon" + index}
-						>
-							<label>
-								<Icon name={icon + " " + animArr[index]} />
-							</label>
-							<select
-								onChange={handleChangeAnim}
-								value={animArr[index]}
-								data-index={index}
-								data-icon={icon}
-							>
-								{animationOptions}
-							</select>
+		);
+	}
+}
+
+class IconSelectDisplay extends React.PureComponent {
+	handleChange = v => {
+		this.props.handleChange(v.isa, this.props.animArr);
+	};
+	_getSelectProps() {
+		const { multi = false, iconArr = [] } = this.props;
+		return {
+			name: "icon",
+			className: "iconDropdown",
+			value: multi ? iconArr : iconArr[0],
+			fixedOptions: iconOptions,
+			onChange: this.handleChange,
+			isClearable: false,
+			isSearchable: true,
+			isMulti: multi,
+			rows: 1,
+			limit: 300,
+			itemHeight: 40, //px
+			OptionComponent: Option
+		};
+	}
+	render() {
+		const { status = {}, validationState, iconArr = [] } = this.props;
+		const { handleChangeAnim, animArr = [], cssClass, style } = this.props;
+		return (
+			<div className={status.isEnabled ? "" : "fake-disabled"}>
+				<div className="row">
+					<div className="col-md">
+						<div validationstate={validationState} className="form-group">
+							<Dropdown {...this._getSelectProps()} />
 						</div>
 					</div>
-				))}
+					<div id="icons-preview" className="col-md-auto row">
+						{iconArr.map(({ label, value: icon }, index) => (
+							<IconPreview
+								key={index}
+								{...{ handleChangeAnim, animArr, index, icon, cssClass, style }}
+							/>
+						))}
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-);
+		);
+	}
+}
 
 class IconSelect extends React.Component {
 	static propTypes = {
+		multi: PropTypes.bool,
 		setPreview: PropTypes.func,
 		saveProperty: PropTypes.func
 	};
 	shouldComponentUpdate(nextProps) {
-		return (
-			nextProps.value !== this.props.value ||
-			nextProps.status.isUpdated !== this.props.status.isUpdated
-		);
+		let diffVal = typeof nextProps.value !== typeof this.props.value;
+		if (diffVal) return true;
+
+		if (typeof nextProps.value == "object") {
+			diffVal = JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value);
+		} else {
+			diffVal = nextProps.value !== this.props.value;
+		}
+		return diffVal || nextProps.status.isUpdated !== this.props.status.isUpdated;
 	}
 	handleChange = (value = [], animArr = []) => {
 		var { iconArr, animArr: anims } = this._parseIconArr(this.props.value);
@@ -114,24 +196,19 @@ class IconSelect extends React.Component {
 			return this.props.saveProperty(null);
 		}
 
-		value = value.map(v => v.value);
+		//value = value.map(v => v.value);
 
 		//is delete, remove animArr option
 		if (value.length < iconArr.length) {
-			if (DEBUG) console.log("\t\t\t was deletion ");
 			for (var i = 0; i < iconArr.length; i++) {
 				if (!value.includes(iconArr[i])) {
 					animArr.splice(i, 1);
-					if (DEBUG) console.log("\t\t\t removed option " + (i + 1));
 				}
 			}
 		}
 
 		// put the spin classes back into the values
-		value = value.map(
-			(val, i) =>
-				animArr[i] && animArr[i] !== "" ? val + " " + animArr[i] : val
-		);
+		value = value.map((val, i) => (animArr[i] && animArr[i] !== "" ? val + " " + animArr[i] : val));
 
 		//re-flatten
 		if (value.length === 1) {
@@ -146,7 +223,6 @@ class IconSelect extends React.Component {
 		}
 		if (value === "") value = null;
 
-		if (DEBUG) console.log("\t\t\t save icon: " + value);
 		return this.props.saveProperty(value);
 	};
 	handleChangeAnim = event => {
@@ -169,6 +245,11 @@ class IconSelect extends React.Component {
 	_parseIconArr(value) {
 		var iconArr = [];
 		var animArr = [];
+
+		// todo: this shit is confuuusinggg
+		if (value && value.value) {
+			value = value.value.rows;
+		}
 
 		if (!value) {
 			return { iconArr, animArr };
@@ -213,8 +294,6 @@ function findAnim(value) {
 
 	var matches = value.match("^.*\\s(" + animations.join("|") + ")\\s.*$");
 	if (matches && matches[1]) {
-		if (DEBUG)
-			console.log("\t\t IconSelect.findAnim -- " + value + ": " + matches[1]);
 		return matches[1];
 	}
 }
@@ -224,8 +303,6 @@ function replaceAnim(value, anim) {
 		.replace(/ infinite /g, " ")
 		.replace(" " + anim + " ", " ")
 		.trim();
-	if (DEBUG && anim)
-		console.log("\t\t IconSelect.replaceAnim -- " + value + ": " + str);
 	return str;
 }
 

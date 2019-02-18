@@ -19,8 +19,9 @@ var universeSchema = Schema({
 	lastSaw: {
 		type: Number,
 		default: 0,
-		get: function(value) {
-			return this.array && this.array[value] ? value : 0;
+		set: function(value) {
+			const index = isNaN(value) ? 0 : parseInt(value, 10);
+			return this.array[index] ? index : 0;
 		}
 	},
 	emptyIndexes: [Number],
@@ -32,12 +33,10 @@ var universeSchema = Schema({
 });
 
 universeSchema.methods.setLastSaw = function(index = 0) {
-	var rootIndex = this.array[index]
-		? parseInt(index, 10)
-		: typeof this.lastSaw !== undefined
-			? this.lastSaw
-			: 0;
+	const i = parseInt(index, 10);
+	var rootIndex = this.array[i] ? i : typeof this.lastSaw !== undefined ? this.lastSaw : 0;
 	this.lastSaw = parseInt(rootIndex, 10);
+	return this.lastSaw;
 };
 
 universeSchema.methods.getAncestorData = function(index, ancestorData = {}) {
@@ -74,23 +73,49 @@ universeSchema.methods.moveInstance = function(index, newUp) {
 	this.array.set(index, instance);
 };
 
+function deleteEverything() {
+	//delete everyhing
+	const oldLength = this.array.length;
+	this.array = [{ name: this.title }];
+	this.lastSaw = 0;
+	const empties = {};
+	for (var i = 1; i < oldLength; i++) {
+		empties[i] = null;
+	}
+	return empties;
+}
+
+function addToEmpties(index, empties, length) {
+	if (!empties.includes(index)) empties.push(index);
+
+	// validate empty indexes if out of order
+	if (index < empties[empties.length - 2]) {
+		empties.sort((a, b) => a - b);
+		for (var i = empties.length - 1; i >= 0; i--) {
+			if (empties[i] >= length) empties.splice(i, 1);
+			else break;
+		}
+	}
+	return empties;
+}
+
+universeSchema.methods.doDelete = function(index) {
+	if (index === this.array.length - 1) this.array.splice(index, 1);
+	else {
+		this.array.set(index, null);
+		this.emptyIndexes = addToEmpties(index, this.emptyIndexes, this.array.length);
+	}
+};
+
 universeSchema.methods.deleteInstance = function(index, willDeleteParent) {
 	index = parseInt(index, 10);
-	if (isNaN(index)) {
-		return;
-	}
+	let instance = this.array[index];
 
-	if (index === 0) {
-		//delete everyhing
-		this.array = [{ name: this.title }];
-		this.lastSaw = 0;
-		return;
-	}
-	var instance = this.array[index];
+	if (isNaN(index)) return;
+	if (index === 0) return deleteEverything.call(this);
+	if (!instance) return;
 
-	if (!instance) {
-		return;
-	}
+	if (!this.emptyIndexes) this.emptyIndexes = [];
 
 	// has children, recurse
 	if (instance.in) {
@@ -99,50 +124,33 @@ universeSchema.methods.deleteInstance = function(index, willDeleteParent) {
 		});
 	}
 
+	// remove from parent
+	if (!willDeleteParent && typeof instance.up === "number") {
+		var inArr = this.array[instance.up].in || [];
+		inArr.splice(inArr.indexOf(index), 1);
+	}
+
+	// delete this index
+	this.doDelete(index);
+
 	// fix lastSaw
 	if (this.lastSaw === index) {
 		this.lastSaw = instance.up;
 	}
-
-	// remove from parent
-	if (!willDeleteParent && typeof instance.up === "number") {
-		var inArr = this.array[instance.up].in;
-		inArr.splice(inArr.indexOf(index), 1);
-	}
-
-	//delete
-	if (index === this.array.length - 1) this.array.splice(index, 1);
-	else {
-		if (!this.emptyIndexes) this.emptyIndexes = [];
-
-		var empties = this.emptyIndexes;
-		if (!empties.includes(index)) empties.push(index);
-
-		// validate empty indexes if out of order
-		if (index < empties[empties.length - 2]) {
-			empties.sort((a, b) => a - b);
-			for (var i = empties.length - 1; i >= 0; i--) {
-				if (empties[i] >= this.array.length) empties.splice(i, 1);
-				else break;
-			}
-		}
-		this.emptyIndexes = empties;
-
-		this.array.set(index, null);
-	}
+	return {
+		emptyIndexes: this.emptyIndexes,
+		length: this.array.length
+	};
 };
 
 universeSchema.methods.getNested = async function(index, pack) {
-	var rootIndex =
-		index !== undefined && this.array[index]
-			? parseInt(index, 10)
-			: typeof this.lastSaw !== undefined
-				? this.lastSaw
-				: 0;
-	this.lastSaw = parseInt(rootIndex, 10);
+	this.lastSaw = index;
+	var flatInstance = this.array && this.array[this.lastSaw];
 
-	var flatInstance = this.array && this.array[rootIndex];
-	if (!flatInstance) return new Nested(this.title).toJSON();
+	// doesn't exist, generate seed node
+	if (!flatInstance) {
+		flatInstance = new Nested({ name: this.title, index: 0 });
+	}
 
 	// -------- restore missing children -----------
 	// TODO: TEMP
@@ -167,17 +175,16 @@ universeSchema.methods.getNested = async function(index, pack) {
 		}
 	}
 	if(changed){
-		console.log("NEEDED TO RESTORE "+changed);
 		this.save();
 	}
 	*/
 	// -------- restore missing children -----------
 
 	var nested = flatInstance.expand ? flatInstance.expand(1) : flatInstance;
-	nested.index = rootIndex;
+	nested.index = this.lastSaw;
 	nested.savedCssClass = flatInstance.cssClass;
 	nested.savedTxt = flatInstance.txt;
-	nested.isFavorite = this.favorites.includes(rootIndex);
+	nested.isFavorite = this.favorites.includes(this.lastSaw);
 
 	if (flatInstance.todo !== true) {
 		return nested;
@@ -191,10 +198,10 @@ universeSchema.methods.getNested = async function(index, pack) {
 	const builtpack = await this.model("BuiltPack").findOrBuild(pack);
 
 	var generated = await this.model("Generator").makeAsNode(nested, this, builtpack);
-	generated.index = rootIndex;
+	generated.index = this.lastSaw;
 	var tree = generated.flatten(this);
 
-	this.array[rootIndex].todo = undefined;
+	this.array[this.lastSaw].todo = undefined;
 
 	return tree;
 };
@@ -211,11 +218,10 @@ universeSchema.statics.build = async function(pack) {
 
 	// save to universe
 	// TODO get from DB if logged in
-	var nested = generated.flatten(universe);
+	generated.flatten(universe);
 	pack.save(); // save new style of seed
 	await universe.save();
 	//universe.lastSaw = nestedSeed.index;
-
 	return { universe, nested: universe.getNested(undefined, pack) };
 };
 
@@ -225,11 +231,11 @@ universeSchema.statics.getTemp = async function(session_id, pack, index) {
 		session_id: session_id
 	};
 	var universes = await this.find(query);
-	var universe;
+	let universe;
 
 	// universes stored in this session, find the one for this pack
 	for (var i = 0, u; (u = universes[i]); i++) {
-		var found = u.pack && u.pack.toString() === pack.id;
+		let found = u.pack && u.pack.toString() === pack.id;
 		if (found) {
 			universe = u;
 			universes.splice(i, 1);
@@ -250,7 +256,6 @@ universeSchema.statics.getTemp = async function(session_id, pack, index) {
 
 	universe.session_id = session_id;
 	universe.expires = Date.now();
-	universe.save();
 	return universe;
 };
 

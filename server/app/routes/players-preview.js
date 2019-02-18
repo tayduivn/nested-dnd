@@ -3,7 +3,6 @@ const router = require("express").Router();
 router
 	.route("/")
 	.put((req, res) => {
-		console.log("test");
 		req.session.playersPreview = req.body;
 		res.json(req.body);
 	})

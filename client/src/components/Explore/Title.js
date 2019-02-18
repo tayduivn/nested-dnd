@@ -119,7 +119,7 @@ const className = isUniverse =>
 
 class IconButton extends React.PureComponent {
 	render() {
-		const { isUniverse, cssClass, icon, txt } = this.props;
+		const { isUniverse, cssClass, icon = {}, txt } = this.props;
 		return (
 			<div className={className(isUniverse)}>
 				{isUniverse ? (
@@ -129,10 +129,14 @@ class IconButton extends React.PureComponent {
 						data-target="#iconSelectModal"
 						style={{ color: txt }}
 					>
-						<Icon name={icon || "far fa-plus-square"} alignment={CENTER_ALIGN} />
+						<Icon
+							name={icon.value || "far fa-plus-square"}
+							category={icon.category}
+							alignment={CENTER_ALIGN}
+						/>
 					</button>
 				) : (
-					<Icon name={icon} alignment={CENTER_ALIGN} />
+					<Icon name={icon.value} category={icon.category} alignment={CENTER_ALIGN} />
 				)}
 			</div>
 		);
@@ -191,7 +195,20 @@ class TheTitleComponent extends React.Component {
 
 	componentDidMount() {
 		const textarea = this.textareaRef.current;
-		textarea.style.height = `${textarea.scrollHeight}px`;
+		let lineHeight = window.getComputedStyle(textarea).lineHeight;
+		this.lineHeight = parseFloat(lineHeight.substring(0, lineHeight.length - 2));
+		this.setHeight();
+	}
+
+	componentDidUpdate() {
+		this.setHeight();
+	}
+
+	setHeight() {
+		const textarea = this.textareaRef.current;
+		let rows = Math.round(textarea.scrollHeight / this.lineHeight);
+		if (rows === 0) rows = 1;
+		textarea.rows = rows || 1;
 	}
 
 	handleChange = e => {
@@ -199,26 +216,24 @@ class TheTitleComponent extends React.Component {
 		this.setState({ title: val });
 		// todo debounce
 		this.props.handleChange(val);
-		const textarea = this.textareaRef.current;
-		textarea.style.height = `${textarea.scrollHeight}px`;
 	};
 
 	render() {
 		const { name, font, txt, isa, isEditable } = this.props;
+		const style = { color: txt };
+		if (font) style.fontFamily = `'${font}', sans-serif`;
+
 		return (
-			<div className={"col col-lg-12 px-2 justify-content-lg-center " + VERTICAL_ALIGN}>
-				<div id="name" style={{ color: txt }}>
-					<textarea
-						rows="1"
-						ref={this.textareaRef}
-						className="title__input webfont"
-						value={this.state.title}
-						disabled={!isEditable}
-						style={font ? { fontFamily: `'${font}', sans-serif` } : {}}
-						onChange={this.handleChange}
-					/>
-					<Isa name={name} isa={isa} />
-				</div>
+			<div className="title__header" style={style}>
+				<textarea
+					rows="1"
+					ref={this.textareaRef}
+					className="title__input webfont"
+					value={this.state.title}
+					disabled={!isEditable}
+					onChange={this.handleChange}
+				/>
+				<Isa name={name} isa={isa} />
 			</div>
 		);
 	}
@@ -232,7 +247,8 @@ const TheTitle = connect(
 			name: current.name,
 			txt: current.txt,
 			isa: current.isa,
-			font: pack.font
+			font: pack.font,
+			fontState: pack.font ? state.fonts[pack.font] : "loaded"
 		};
 	},
 	function mapDispatchToProps(dispatch, { index, universeId, isEditable }) {

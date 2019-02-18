@@ -16,8 +16,18 @@ const flatInstanceSchema = Schema(
 			set: v => (!v ? undefined : v),
 			get: v => (!v ? undefined : v)
 		},
-		img: String,
-		icon: String,
+		icon: {
+			type: {
+				category: {
+					$type: String,
+					enum: ["icon", "img", "char"],
+					default: "icon"
+				},
+				value: {
+					type: String
+				}
+			}
+		},
 		up: Number,
 		todo: Boolean,
 		desc: [String],
@@ -34,6 +44,32 @@ const flatInstanceSchema = Schema(
 	},
 	{ _id: false }
 );
+
+// clean up from old type
+flatInstanceSchema.pre("init", doc => {
+	if (typeof doc.icon === "string") {
+		const parts = doc.icon.split(" ");
+		let type = parts[0];
+		let value = parts[1];
+		if (parts[0] !== "svg" && parts[0] !== "text") {
+			type = "svg";
+			value = doc.icon;
+		}
+		doc.icon = {
+			category: type === "svg" ? "icon" : "char",
+			value: value
+		};
+	}
+	// fix icon is actually a url
+	else if (doc.icon && doc.icon.value && doc.icon.value.startsWith("http")) {
+		doc.icon.category = "img";
+	}
+	if (doc.img)
+		doc.icon = {
+			category: "img",
+			value: doc.img
+		};
+});
 
 /**
  * Should return a Nested

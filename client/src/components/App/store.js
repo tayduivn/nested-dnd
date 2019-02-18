@@ -8,6 +8,7 @@ import { createBrowserHistory } from "history";
 import packs from "../Packs/reducers";
 import universes from "../Universes/reducers";
 import user from "../User/reducers";
+import generators from "../Generators/reducers";
 
 import { checkLoggedIn } from "../User/actions";
 
@@ -39,30 +40,35 @@ function loadFonts(fonts = [], source = "google") {
 	if (!(fonts instanceof Array)) fonts = [fonts];
 
 	// remove fonts already loaded
-	const trimmedFonts = fonts.filter(d => !store.getState().fonts.includes(d));
+	const loadedFonts = Object.keys(store.getState().fonts);
+	const trimmedFonts = fonts.filter(d => !loadedFonts.includes(d));
+	const newState = {};
+	trimmedFonts.forEach(f => (newState[f] = "loading"));
 
 	if (trimmedFonts.length) {
+		WebFont.load({
+			[source]: {
+				families: fonts
+			},
+			active: function() {
+				trimmedFonts.forEach(f => (newState[f] = "loaded"));
+				store.dispatch({
+					type: "LOAD_FONTS",
+					fonts: newState
+				});
+			}
+		});
 		store.dispatch({
 			type: "LOAD_FONTS",
-			fonts: trimmedFonts,
-			source
+			fonts: newState
 		});
 	}
 }
 
-const fonts = (state = [], action = {}) => {
-	const fonts = action.fonts && action.fonts.filter(f => !state.includes(f));
-
+const fonts = (state = {}, action = {}) => {
 	switch (action.type) {
 		case "LOAD_FONTS":
-			if (fonts.length) {
-				WebFont.load({
-					[action.source]: {
-						families: fonts
-					}
-				});
-			}
-			return [...state, ...action.fonts];
+			return { ...state, ...action.fonts };
 		default:
 			return state;
 	}
@@ -70,6 +76,7 @@ const fonts = (state = [], action = {}) => {
 
 const app = combineReducers({
 	packs,
+	generators,
 	universes,
 	user,
 	fonts,

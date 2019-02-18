@@ -1,10 +1,10 @@
 import React from "react";
-import { Link } from "../Util";
-import Sortable from "react-sortablejs";
+import ReactSortable from "react-sortablejs";
 
-import IsASelect from "../Form/IsASelect";
+import Value from "./MixedThingValue";
+import MixedThingMods from "./MixedThingMods";
 
-const TYPE = {
+export const TYPE = {
 	generator: {
 		value: "generator",
 		toString: (id, { generators }) => {
@@ -50,437 +50,255 @@ const TYPE = {
 	}
 };
 
-const TypeChoose = ({ type = "string", options, handleChange, property }) => (
+class TypeChoose extends React.PureComponent {
+	handleChange = e => {
+		this.props.handleChange({ [this.props.property]: e.target.value });
+	};
+	render() {
+		const { type = "string", options = "" } = this.props;
+		return (
+			<div className="col-auto">
+				<select className="form-control" value={type} onChange={this.handleChange}>
+					{options.split(",").map((o, i) => {
+						const type = TYPE[o] || {};
+						return (
+							<option key={i} value={o || type.label}>
+								{type.label || o}
+							</option>
+						);
+					})}
+				</select>
+			</div>
+		);
+	}
+}
+
+const DRAGGER = (
 	<div className="col-auto">
-		<select
-			className="form-control"
-			value={type}
-			onChange={e => handleChange(property, e.target.value)}
-		>
-			{options.map((o, i) => {
-				const type = TYPE[o] || {};
-				return (
-					<option key={i} value={o || type.label}>
-						{type.label || o}
-					</option>
-				);
-			})}
-		</select>
+		<div className="handle btn btn-light btn-sm">
+			<i className="fas fa-arrows-alt" />
+		</div>
 	</div>
 );
 
-const Value = ({
-	property,
-	type,
-	value,
-	tables = [],
-	generators = {},
-	handleChange,
-	location = "",
-	isTextarea,
-	setState
-}) => {
-	switch (
-		type //'string','generator','table','embed','table_id'
-	) {
-		case "table_id":
-			return (
-				<select
-					className="form-control"
-					value={value || ""}
-					onChange={e => handleChange(property, e.target.value)}
-				>
-					<option value={null} />
-					{tables.map(t => (
-						<option key={t._id} value={t._id}>
-							{t.title}
-						</option>
-					))}
-				</select>
-			);
-		case "generator":
-			return (
-				<IsASelect
-					options={generators}
-					defaultValue={{ label: value || "", value: value || "" }}
-					openOnFocus={true}
-					optionHeight={30}
-					onChange={o => handleChange(property, o && o.value)}
-				/>
-			);
-		case "table":
-			var endUrl = window.location.href.split("/");
-			endUrl = endUrl[endUrl.length - 1];
-			var preview = "";
-
-			if (!value) value = { rows: [] };
-			else if (value.rows) {
-				//make a preview
-				preview = value.rows.map(r =>
-					TYPE[r.type || "string"].toString(r.value, { tables, generators })
-				);
-				preview = value.concat ? preview.join("") : preview.join(" | ");
-				if (preview.length > 100) preview = preview.substr(0, 100) + "...";
-			}
-
-			return (
-				<Link
-					to={{
-						pathname: endUrl + "/" + property[0] + "/" + property[1],
-						state: { table: value }
-					}}
-					onClick={() => {
-						if (setState)
-							setState({ showEmbedded: value, embeddedPath: property });
-					}}
-				>
-					({(value && value.rows && value.rows.length) || 0} rows): {preview}
-				</Link>
-			);
-		case "json":
-			value = JSON.stringify(value, 2);
-			return (
-				<textarea
-					className="form-control"
-					placeholder="value"
-					onChange={e => handleChange(property, e.target.value)}
-					value={value}
-				/>
-			);
-		case "embed":
-		case "string":
-		case "data":
-		case "dice":
-		default:
-			if (isTextarea && type !== "dice") {
-				return (
-					<textarea
-						className="form-control"
-						placeholder="value"
-						onChange={e => handleChange(property, e.target.value)}
-						value={value}
-					/>
-				);
-			} else
-				return (
-					<input
-						className="form-control"
-						placeholder="value"
-						value={value}
-						onChange={e => handleChange(property, e.target.value)}
-					/>
-				);
-	}
-};
-
-const MixedThing = ({
-	options = {},
-	i,
-	label,
-	map,
-	type,
-	value,
-	array,
-	amount: { min = 1, max = 1 } = {},
-	chance,
-	weight,
-	handleChange = () => {},
-	tables,
-	...rest
-}) => (
-	<div className="row">
-		{/* DRAGGER */}
-		{options.sortable ? (
-			<div className="col-auto">
-				<div className="handle btn btn-default">
-					<i className="fas fa-arrows-alt" />
-				</div>
-			</div>
-		) : null}
-
-		{/* KEY */}
-		{options.hasKey ? (
+class Key extends React.PureComponent {
+	handleChange = e => {
+		var d = { ...this.props.map };
+		d[e.target.value] = d[this.props.label];
+		d[this.props.label] = undefined;
+		this.props.handleChange(d);
+	};
+	render() {
+		const { label } = this.props;
+		return (
 			<div className="col-auto">
 				<input
+					data-lpignore="true"
 					className="form-control"
 					placeholder="id"
 					value={label}
-					onChange={e => {
-						var d = { ...map };
-						d[e.target.value] = d[label];
-						delete d[label];
-						handleChange(options.property[0], d);
-					}}
+					onChange={this.handleChange}
 				/>
 			</div>
-		) : null}
+		);
+	}
+}
 
-		{/* TYPE */}
-		<TypeChoose
-			options={options.types}
-			type={
-				typeof value === "object" && (!type || type === "string")
-					? "json"
-					: type
+class Delete extends React.PureComponent {
+	deleteOne = () => {
+		this.props.handleChange("name", null);
+	};
+	deleteKey = () => {
+		this.props.handleChange(undefined);
+	};
+	deleteIndex = () => {
+		this.props.handleChange(undefined);
+	};
+	render() {
+		const { i, hasKey, deleteOne } = this.props;
+		const deleteFunc =
+			i !== undefined ? this.deleteIndex : hasKey ? this.deleteKey : this.deleteOne;
+		return (
+			<div className="col-auto">
+				{i !== undefined ? (
+					<button className="btn btn-danger" onClick={deleteFunc}>
+						<i className="far fa-trash-alt" />
+					</button>
+				) : null}
+				{hasKey ? (
+					<button className="btn btn-danger" onClick={deleteFunc}>
+						<i className="far fa-trash-alt" />
+					</button>
+				) : null}
+				{deleteOne ? (
+					<button className="btn btn-danger" onClick={deleteFunc}>
+						<i className="far fa-trash-alt" />
+					</button>
+				) : null}
+			</div>
+		);
+	}
+}
+
+class MixedThing extends React.PureComponent {
+	handleChange = changed => {
+		// deleting
+		if (!changed) {
+			return this.props.handleChange({
+				[this.props.options.property]: changed
+			});
+		}
+		// editing
+		this.props.handleChange({
+			[this.props.options.property]: {
+				_id: this.props._id,
+				type: this.props.type,
+				value: this.props.value,
+				...changed
 			}
-			{...{ handleChange }}
-			property={options.property.concat(["type"])}
-		/>
+		});
+	};
+	render() {
+		const { options = {}, i, label, map } = this.props;
+		const { weight, array, amount: { min = 1, max = 1 } = {}, chance, ...rest } = this.props;
+		const { type, value, tables } = this.props;
+		const { handleChange } = this;
+		const { hasKey, deleteOne, property, isTextarea } = options;
 
-		{/* VALUE */}
-		<div className="col">
-			<Value
-				{...rest}
-				{...{ type, tables, value, i, handleChange }}
-				isTextarea={options.isTextarea}
-				property={options.property.concat(["value"])}
-			/>
-		</div>
+		return (
+			<div className="row">
+				{options.sortable ? DRAGGER : null}
 
-		{/* AMOUNT */}
-		{options.showAmount ? (
-			<div className="col-auto">
-				{(min !== undefined && min !== 1) || (max && max > 1) ? (
-					<div className="row">
-						<input
-							type="number"
-							min="0"
-							max={max}
-							className="col form-control"
-							value={min}
-							onChange={e =>
-								handleChange(
-									options.property.concat(["amount", "min"]),
-									e.target.value
-								)
-							}
-						/>
-						<span className="col-auto">-</span>
-						<input
-							type="number"
-							min={min}
-							className="col form-control"
-							value={max}
-							defaultValue={1}
-							onChange={e =>
-								handleChange(
-									options.property.concat(["amount", "max"]),
-									e.target.value
-								)
-							}
-						/>
-					</div>
-				) : (
-					<div
-						className="btn btn-default"
-						onClick={() =>
-							handleChange(options.property.concat(["amount", "max"]), 2)
-						}
-					>
-						1
-					</div>
-				)}
-			</div>
-		) : null}
+				{options.hasKey ? (
+					<Key {...{ handleChange: this.props.handleChange, label, map, property }} />
+				) : null}
 
-		{/* WEIGHT */}
-		{options.showWeight ? (
-			<div className="col-auto">
-				{weight && weight !== 1 ? (
-					<div className="input-group">
-						<input
-							type="number"
-							min="1"
-							max="1000"
-							placeholder="100"
-							className="form-control"
-							defaultValue={1}
-							value={weight}
-							onChange={e =>
-								handleChange(
-									options.property.concat(["weight"]),
-									e.target.value
-								)
-							}
-						/>
-						<div className="input-group-append">
-							<span className="input-group-text">
-								<i className="fas fa-weight-hanging" />
-							</span>
-						</div>
-					</div>
-				) : (
-					<div
-						className="btn btn-default"
-						onClick={() => handleChange(options.property.concat(["weight"]), 2)}
-					>
-						1
-					</div>
-				)}
-			</div>
-		) : null}
+				<TypeChoose
+					options={options.types.join(",")}
+					type={typeof value === "object" && (!type || type === "string") ? "json" : type}
+					{...{ handleChange }}
+					property="type"
+				/>
 
-		{/* CHANCE */}
-		{options.showChance ? (
-			<div className="col-auto">
-				{chance && chance < 100 ? (
-					<div className="input-group">
-						<input
-							type="number"
-							min="1"
-							max="100"
-							placeholder="100"
-							className="form-control"
-							defaultValue={100}
-							value={chance}
-							onChange={e =>
-								handleChange(
-									options.property.concat(["chance"]),
-									e.target.value
-								)
-							}
-						/>
-						<div className="input-group-append">
-							<span className="input-group-text">
-								<i className="fas fa-percentage" />
-							</span>
-						</div>
-					</div>
-				) : (
-					<div
-						className="btn btn-default"
-						onClick={() =>
-							handleChange(options.property.concat(["chance"]), 99)
-						}
-					>
-						100 <i className="fas fa-percentage" />
-					</div>
-				)}
-			</div>
-		) : null}
-
-		{/* DELETE */}
-		<div className="col-auto">
-			{i !== undefined ? (
-				<button
-					className="btn btn-danger"
-					onClick={() => {
-						var r = array.concat([]);
-						r.splice(i, 1);
-						handleChange(options.property[0], r);
-					}}
-				>
-					<i className="far fa-trash-alt" />
-				</button>
-			) : null}
-			{options.hasKey ? (
-				<button
-					className="btn btn-danger"
-					onClick={() => {
-						delete map[label];
-						handleChange(options.property[0], map);
-					}}
-				>
-					<i className="far fa-trash-alt" />
-				</button>
-			) : null}
-			{options.deleteOne ? (
-				<button
-					className="btn btn-danger"
-					onClick={() => {
-						handleChange("name", null);
-					}}
-				>
-					<i className="far fa-trash-alt" />
-				</button>
-			) : null}
-		</div>
-	</div>
-);
-
-const MixedKeyValue = ({
-	options = {},
-	map = {},
-	handleChange = () => {},
-	...rest
-}) => (
-	<div>
-		{Object.keys(map).length ? (
-			<ul className="p-0">
-				{Object.keys(map).map((key, i) => {
-					if (map[key] === undefined) return null;
-					var { type, value } = map[key];
-
-					//not properly stored, clean data
-					if (type === undefined && value === undefined) {
-						value = map[key];
-						type =
-							typeof value === "object"
-								? value instanceof Array
-									? "table"
-									: "json"
-								: "string";
-						if (type === "table")
-							value = { rows: value.map(v => ({ value: v })) };
-					}
-					return (
-						<MixedThing
-							key={i}
-							label={key}
-							options={{
-								...options,
-								property: [options.property, key],
-								hasKey: true,
-								types: options.types
-							}}
-							{...{ handleChange, map, type, value }}
-							{...rest}
-						/>
-					);
-				})}
-			</ul>
-		) : null}
-		{map[""] === undefined ? (
-			<button
-				className="btn btn-primary"
-				onClick={() => handleChange(["data", ""], "")}
-			>
-				<i className="fas fa-plus" /> add
-			</button>
-		) : null}
-	</div>
-);
-
-const MixedSortable = ({
-	options = {},
-	array = [],
-	handleChange = () => {},
-	...rest
-}) => (
-	<ul className="p-0">
-		<Sortable
-			options={{ handle: ".handle" }}
-			onChange={(order, sortable, { oldIndex, newIndex }) => {
-				handleChange(options.property.concat([oldIndex, "sort"]), newIndex);
-			}}
-		>
-			{array &&
-				array.map((c, i) => (
-					<MixedThing
-						options={{
-							...options,
-							sortable: true,
-							property: options.property.concat([i])
-						}}
-						{...c}
-						key={c._id || i}
-						{...{ i, array, handleChange }}
-						{...rest}
+				<div className="col">
+					<Value
+						{...{ ...rest, type, tables, value, i, handleChange, property: "value", isTextarea }}
 					/>
-				))}
-		</Sortable>
-	</ul>
-);
+				</div>
+
+				<MixedThingMods
+					{...{ ...options, min, max, weight, chance, handleChange, types: undefined }}
+				/>
+
+				<Delete {...{ i, array, handleChange, map, label, hasKey, deleteOne }} />
+			</div>
+		);
+	}
+}
+
+class MixedKeyValueItem extends React.PureComponent {
+	handleChange = val => {
+		this.props.handleChange({ [this.props.options.property]: val });
+	};
+	render() {
+		const { map, k, options, rest, handleChange } = this.props;
+		if (map[k] === undefined) return null;
+		var { type, value } = map[k];
+
+		//not properly stored, clean data
+		if (type === undefined && value === undefined) {
+			value = map[k];
+			type = typeof value === "object" ? (value instanceof Array ? "table" : "json") : "string";
+			if (type === "table") value = { rows: value.map(v => ({ value: v })) };
+		}
+		return (
+			<MixedThing
+				label={k}
+				options={{
+					...options,
+					property: k,
+					hasKey: true,
+					types: options.types
+				}}
+				{...{ handleChange, map, type, value }}
+				{...rest}
+			/>
+		);
+	}
+}
+
+class MixedKeyValue extends React.PureComponent {
+	handleAdd = () => {
+		this.props.handleChange({ "": "" });
+	};
+	render() {
+		const { options = {}, map = {}, handleChange = () => {}, disabled, ...rest } = this.props;
+		return (
+			<React.Fragment>
+				{Object.keys(map).length ? (
+					<ul className="p-0">
+						{Object.keys(map).map((k, i) => (
+							<MixedKeyValueItem key={i} {...{ map, k, options, rest, handleChange }} />
+						))}
+					</ul>
+				) : null}
+				{map[""] === undefined && !disabled ? (
+					<button className="btn btn-light btn-sm" onClick={this.handleAdd}>
+						<i className="fas fa-plus" /> add
+					</button>
+				) : null}
+			</React.Fragment>
+		);
+	}
+}
+
+class MixedSortable extends React.Component {
+	shouldComponentUpdate(nextProps) {
+		const changedArray = JSON.stringify(this.props.array) !== JSON.stringify(nextProps.array);
+		return changedArray;
+	}
+	handleSort = (order, sortable, { oldIndex, newIndex }) => {
+		const arr = [...this.props.array];
+
+		// do sort
+		const temp = arr[newIndex];
+		arr[newIndex] = arr[oldIndex];
+		arr[oldIndex] = temp;
+		this.props.handleChange({
+			[this.props.options.property]: arr
+		});
+	};
+	handleChange = changed => {
+		const arr = [...this.props.array];
+		for (let index in changed) {
+			let newRow = changed[index];
+			if (!newRow) {
+				arr.splice(index, 1);
+			} else arr[index] = newRow;
+		}
+		this.props.handleChange({ [this.props.options.property]: arr });
+	};
+	render() {
+		const { options = {}, array = [], ...rest } = this.props;
+		return (
+			<ul className="p-0">
+				<ReactSortable options={{ handle: ".handle" }} onChange={this.handleSort}>
+					{array &&
+						array.map &&
+						array.map((c = {}, i) => (
+							<MixedThing
+								options={{ ...options, sortable: true, property: i }}
+								{...c}
+								key={(c && c._id) || Math.random()}
+								{...{ i, array, ...rest }}
+								handleChange={this.handleChange}
+							/>
+						))}
+				</ReactSortable>
+			</ul>
+		);
+	}
+}
 
 export default MixedThing;
 export { MixedKeyValue, MixedSortable };

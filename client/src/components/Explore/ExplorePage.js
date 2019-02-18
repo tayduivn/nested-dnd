@@ -24,18 +24,22 @@ class Modals extends React.Component {
 		return JSON.stringify(next) !== JSON.stringify(current);
 	}
 	render() {
-		const { handleChange, index, icon, cssClass = "", txt, parent } = this.props;
+		const { handleChange, index, icon = {}, cssClass = "", txt, parent } = this.props;
 		return (
-			<div>
-				<MoveModal handleChange={handleChange} index={index} up={parent} />
-				<IconSelectModal {...{ handleChange, icon, cssClass, txt, index }} />
+			<React.Fragment>
+				<MoveModal key={index + "move"} handleChange={handleChange} index={index} up={parent} />
+				<IconSelectModal
+					key={index + "icon"}
+					{...{ ...icon, handleChange, cssClass, txt, index }}
+				/>
 				<PatternSelectModal
+					key={index + "pattern"}
 					handleChange={handleChange}
 					bg={cssClass.split(" ").find(c => c.startsWith("bg-"))}
 					ptn={cssClass.split(" ").find(c => c.startsWith("ptn-"))}
 					index={index}
 				/>
-			</div>
+			</React.Fragment>
 		);
 	}
 }
@@ -87,9 +91,9 @@ const TRANSITION_GROUP_SETTINGS = {
 };
 
 class Children extends React.Component {
-	handleDeleteLink = (remove) => {
+	handleDeleteLink = remove => {
 		return this.props.handle.change(this.props.index, "deleteLink", remove);
-	}
+	};
 	shouldComponentUpdate(nextProps) {
 		const current = { ...this.props, generators: undefined };
 		const next = { ...nextProps, generators: undefined };

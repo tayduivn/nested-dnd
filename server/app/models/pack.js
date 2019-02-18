@@ -1,6 +1,7 @@
 "use strict";
 
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 const Schema = mongoose.Schema;
 
 const SEED_DELIM = ">";
@@ -25,7 +26,8 @@ var packSchema = Schema({
 	},
 	url: {
 		type: String,
-		required: true
+		required: true,
+		unique: true
 	},
 	font: String,
 	cssClass: String,
@@ -65,9 +67,33 @@ packSchema.pre("save", () => {
 	this.updated = Date.now();
 });
 
-packSchema.pre("validate", function(next) {
+async function ensureUnique(newUrl, pack, count = 0) {
+	const str = count ? `${newUrl}-${count}` : newUrl;
+	const existingPack = await pack.model("Pack").findOne({ url: str });
+	if (existingPack && existingPack.id !== pack.id) {
+		return ensureUnique(str, pack, count + 1);
+	}
+	return str;
+}
+
+packSchema.post("init", pack => {
+	if (!pack.url) {
+		pack.url = slugify(pack.name, { lower: true });
+		pack.markModified("url");
+	}
+});
+
+packSchema.pre("validate", async function(next) {
 	if (this.isModified("created")) {
 		this.invalidate("created");
+	}
+	if (this.isModified("name") || !this.url) {
+		const newSlug = slugify(this.name, { lower: true });
+		this.set("url", await ensureUnique(newSlug, this));
+		this.markModified("url");
+	} else if (this.isModified("url")) {
+		this.set("url", await ensureUnique(this.url, this));
+		this.markModified("url");
 	}
 	next();
 });

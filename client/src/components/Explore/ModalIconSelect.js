@@ -16,62 +16,62 @@ const MODAL_SETTINGS = {
 
 class TypeChanger extends React.PureComponent {
 	render() {
-		const { type, handleChangeType } = this.props;
+		const { category = "icon", handleChange } = this.props;
 		return (
-			<select value={type} onChange={handleChangeType}>
-				<option value={false}>Icon</option>
-				<option value="text">Text</option>
-				<option value={true}>Image</option>
+			<select value={category} onChange={handleChange} name="category">
+				<option value="icon">Icon</option>
+				<option value="char">Character</option>
+				<option value="img">Image</option>
 			</select>
 		);
 	}
 }
 
-const TextBox = ({ newValue, handleChange }) => (
+const TextBox = ({ value, handleChange }) => (
 	<div>
-		<input className="form-control" value={newValue} onChange={e => handleChange(e.target.value)} />
+		<input className="form-control" name="value" value={value} onChange={handleChange} />
 	</div>
 );
 
-const ImageInput = ({ setPreview, icon, newValue, handleChange }) => (
+const ImageInput = ({ setPreview, value, handleChange }) => (
 	<div>
 		<button className="btn btn-default" onClick={setPreview}>
 			Show to players
 		</button>
 		<a href="/players-preview">Player view</a>
 		<br />
-		<input className="form-control" value={newValue} onChange={e => handleChange(e.target.value)} />
+		<input className="form-control" name="value" value={value} onChange={handleChange} />
 		<div className="iconSelectModal__img-wrap">
-			<img className="iconSelectModal__img" src={icon} alt="Preview" />
+			<img className="iconSelectModal__img" src={value} alt="Preview" />
 		</div>
 	</div>
 );
 
 const ModalBody = ({
-	type,
-	useImg,
-	icon,
+	value,
+	category,
 	index,
 	cssClass,
 	txt,
 	handleChange,
-	handleChangeType,
-	setPreview = () => {},
-	newValue,
-	showTextBox
+	handleSubmit,
+	setPreview = () => {}
 }) => (
 	<div className="iconSelectModal__body modal-body">
-		<TypeChanger {...{ type, handleChangeType }} />
-		{useImg ? (
-			<ImageInput {...{ setPreview, icon, newValue, handleChange }} />
-		) : showTextBox ? (
-			<TextBox {...{ newValue, handleChange }} />
+		<button data-dismiss="modal" className="btn btn-success" onMouseDown={handleSubmit}>
+			Save
+		</button>
+		<TypeChanger {...{ category, handleChange }} />
+		{category === "img" ? (
+			<ImageInput {...{ setPreview, value, handleChange }} />
+		) : category === "char" ? (
+			<TextBox {...{ value, handleChange }} />
 		) : (
 			<IconSelect
 				status={{ isEnabled: true }}
 				saveProperty={handleChange}
 				style={{ color: txt }}
-				{...{ cssClass, key: index, value: newValue, setPreview }}
+				{...{ cssClass, key: index, value, setPreview }}
 			/>
 		)}
 	</div>
@@ -100,67 +100,41 @@ const ModalIconsComponent = props => (
 );
 
 export default class IconSelectModal extends React.PureComponent {
-	state = {
-		newValue: null,
-		useImg: null,
-		showTextBox: null
-	};
 	constructor(props) {
 		super(props);
 		this.modalRef = React.createRef();
+		this.state = {
+			value: props.value,
+			category: props.category
+		};
 	}
-	componentDidMount() {
-		const modal = document.getElementById("iconSelectModal");
-
-		window.$(modal).on("hide.bs.modal", this.handleClose);
-		window.$(modal).on("show.bs.modal", this.handleOpen);
-	}
-	handleChange = value => {
-		this.setState({ newValue: value });
-	};
-	handleChangeType = e => {
-		this.setState({
-			useImg: e.target.value === "true",
-			showTextBox: e.target.value === "text",
-			newValue: ""
-		});
-	};
-	handleOpen = () => {
-		var icon = this.props.icon || "";
-
-		this.setState({
-			useImg: !(icon.startsWith("fa") || icon.startsWith("svg ")),
-			showTextBox: icon.startsWith("text "),
-			newValue: icon.replace("text ", "")
-		});
-	};
-	handleClose = () => {
-		if (this.state.newValue !== null) {
-			var newValue = this.state.newValue;
-			if (this.state.showTextBox) newValue = "text " + newValue;
-			this.props.handleChange(this.props.index, "icon", newValue);
+	handleChange = e => {
+		if(typeof e === 'string'){
+			this.setState({ value: e });
 		}
-
-		if (this.state.useImg !== null)
-			this.props.handleChange(this.props.index, "useImg", this.state.useImg);
-
-		this.setState({ newValue: null, useImg: null });
+		else this.setState({ [e.target.name]: e.target.value });
 	};
 	setPreview = () => {
-		var icon = this.state.newValue !== null ? this.state.newValue : this.props.icon;
-		sendPlayersPreview({ src: icon });
+		if (this.state.category === "img" && this.state.value) {
+			sendPlayersPreview({ src: this.state.value });
+		}
+	};
+	handleSubmit = () => {
+		this.props.handleChange(this.props.index, "icon", {
+			category: this.state.category,
+			value: this.state.value
+		});
 	};
 	render() {
-		var { icon, cssClass, txt } = this.props;
-		const { handleChange, handleChangeType, setPreview } = this;
-		const { useImg, newValue, showTextBox } = this.state;
-		var type = this.state.showTextBox ? "text" : !!useImg;
+		var { cssClass, txt } = this.props;
+		const { handleChange, setPreview, handleSubmit } = this;
+		const { value, category } = this.state;
 
 		return (
 			<div {...MODAL_SETTINGS} ref={this.modalRef}>
 				<ModalIconsComponent
-					{...{ setPreview, useImg, type, icon, cssClass, txt, newValue, showTextBox }}
-					{...{ handleChange, handleChangeType }}
+					{...{ setPreview, value, category, cssClass, txt }}
+					{...{ handleChange, handleSubmit }}
 				/>
 			</div>
 		);

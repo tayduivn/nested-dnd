@@ -6,7 +6,7 @@ const { stringify, normalUniverseResponse, setLastSaw } = require("./utils");
 
 router.get("/:url/:index?", MW.canViewPack, async (req, res, next) => {
 	Universe.getTemp(req.sessionID, req.pack, req.params.index)
-		.then(universe => {
+		.then(async universe => {
 			const index = setLastSaw(req.params.index, universe);
 			const firstBatch = normalUniverseResponse(universe, index);
 
@@ -29,6 +29,7 @@ router.get("/:url/:index?", MW.canViewPack, async (req, res, next) => {
 			// send the whole universe
 			res.write(stringify("Universe", universe.toObject(), meta));
 
+			await universe.save();
 			res.end();
 		})
 		.catch(next);
@@ -37,12 +38,14 @@ router.get("/:url/:index?", MW.canViewPack, async (req, res, next) => {
 // only give me the node, not everything else
 router.get("/:url/:index/lite", MW.canViewPack, async (req, res, next) => {
 	Universe.getTemp(req.sessionID, req.pack, req.params.index)
-		.then(universe => {
+		.then(async universe => {
 			const index = setLastSaw(req.params.index, universe);
 			const firstBatch = normalUniverseResponse(universe, index);
 
 			// send the first batch to display crucial info
 			res.write(stringify("Instance", firstBatch, { universeId: universe._id }));
+
+			await universe.save();
 
 			res.end();
 		})

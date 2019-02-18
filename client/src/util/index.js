@@ -1,3 +1,5 @@
+import handleNestedPropertyValue from "./handleNestedPropertyValue";
+
 // eslint-disable-next-line
 Array.prototype.equals = function(array) {
 	// eslint-disable-line
@@ -153,5 +155,6 @@ export {
 	downloadJSON,
 	getQueryParams,
 	toUpper,
-	setBodyStyle
+	setBodyStyle,
+	handleNestedPropertyValue
 };

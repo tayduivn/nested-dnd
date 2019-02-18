@@ -2,27 +2,37 @@
 // ----------------------------------------
 $fa-font-path: "../../node_modules/@fortawesome/fontawesome-free-webfonts/webfonts";
 
+@import "../../node_modules/sass-material-colors/sass/_sass-material-colors";
+
+$blue: material-color("teal", "a700");
+$indigo: material-color("indigo", "600");
+$purple: material-color("purple", "600");
+$pink: material-color("pink", "600");
+$red: material-color("red", "600");
+$orange: material-color("orange", "600");
+$yellow: material-color("yellow", "600");
+$green: material-color("green", "a700");
+$teal: material-color("teal", "600");
+$cyan: material-color("cyan", "600");
+
+$primary: $blue;
+$secondary: material-color("grey", "200");
+$success: $green;
+$info: $cyan;
+$warning: $orange;
+$danger: $red;
+$light: material-color("grey", "100");
+$dark: material-color("grey", "700");
+
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/mixins";
-@import "../../node_modules/sass-material-colors/sass/_sass-material-colors";
 
 $totalNavHeight: ($navbar-brand-height + $navbar-brand-padding-y * 2)+ ($navbar-padding-y * 2);
 
 $body-bg: material-color("grey", "900");
 $body-color: #fff;
 $yiq-text-dark: #000000;
-
-$theme-colors: (
-	"primary": material-color("grey"),
-	"secondary": material-color("blue-grey"),
-	"success": material-color("green"),
-	"danger": material-color("red"),
-	"warning": material-color("amber"),
-	"info": material-color("cyan"),
-	"light": material-color("grey", "100"),
-	"dark": material-color("grey", "900")
-);
 
 $more-colors: (
 	"wood": (
@@ -92,40 +102,6 @@ $material-colors: map-merge($more-colors, $material-colors);
 
 		&::placeholder {
 			opacity: 0.35;
-		}
-	}
-}
-
-@mixin dropdown() {
-	position: relative;
-	width: 100%;
-
-	//ul
-	&__dropdown {
-		width: 100%;
-		position: absolute;
-		padding: 0;
-		left: 0;
-		top: 100%;
-		z-index: 1;
-		max-height: 75vh;
-		overflow-y: auto;
-
-		margin: 0;
-		box-shadow: 0px 0px 5px var(--active-theme);
-		background-color: var(--parent-theme);
-		cursor: pointer;
-	}
-
-	//li
-	&__option {
-		padding: 0.5em 0.5em;
-		line-height: 1.1em;
-		//border-bottom: 1px solid var(--hover-theme);
-
-		&:hover,
-		&--selected {
-			background-color: var(--hover-theme);
 		}
 	}
 }

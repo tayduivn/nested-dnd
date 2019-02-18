@@ -44,7 +44,7 @@ const saver = async.cargo((tasks, callback) => {
 	var promises = [];
 
 	for (var id in universes) {
-		var promise = DB.set(`universes`, id, universes[id]).then(({ error, data }) => {
+		var promise = DB.set(`universes`, id, universes[id]).then(({ error, data = {} }) => {
 			return data.result;
 			//if (error).result this.setState({ error });
 		});
@@ -73,6 +73,20 @@ export const setLastSaw = (index, universeId) => {
 	});
 	return universeSet(universeId, { lastSaw: index });
 };
+
+function dispatchChanges(results, universeId) {
+	results.forEach(({ array = {} } = {}) => {
+		// save any affected instances other than the one I'm on.
+		// I don't want to save the one I'm on because it may mess with my current changes.
+		const current = parseInt(store.getState().router.location.hash.substr(1));
+		const changed = { ...array };
+		delete changed[current];
+
+		if (Object.keys(changed).length) {
+			store.dispatch({ type: INSTANCE_SET, data: changed, universeId });
+		}
+	});
+}
 
 export const setFavorite = (i, isFavorite, universe) => {
 	const favorites = [...universe.favorites];
@@ -130,19 +144,7 @@ export const changeInstance = (index, property, value, universeId, dispatch) => 
 		property,
 		universeId,
 		{ index, property, value, universe: universeId },
-		(results = []) => {
-			results.forEach(({ array = {} } = {}) => {
-				// save any affected instances other than the one I'm on.
-				// I don't want to save the one I'm on because it may mess with my current changes.
-				const current = parseInt(store.getState().router.location.hash.substr(1));
-				const changed = { ...array };
-				delete changed[current];
-
-				if (Object.keys(changed).length) {
-					dispatch({ type: INSTANCE_SET, data: changed, universeId });
-				}
-			});
-		}
+		(results = []) => dispatchChanges(results, universeId)
 	);
 
 	return {
@@ -245,7 +247,7 @@ export const deleteInstance = (index, universeId, dispatch) => {
 			property: "delete",
 			value: true
 		},
-		() => {}
+		(results = []) => dispatchChanges(results, universeId)
 	);
 	return {
 		type: INSTANCE_DELETE,

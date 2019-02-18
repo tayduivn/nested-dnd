@@ -10,10 +10,9 @@ import { PropsRoute, makeSubRoutes } from "../Routes";
 import Universes, { routes as universes } from "../Universes";
 import { ConnectedRouter } from "connected-react-router";
 import { history } from "./store";
+import { LoadingIcon } from "../Util/Loading";
 
 import { sendPlayersPreview, subscribeToPlayersPreview } from "../../actions/WebSocketAction";
-
-import "./App.css";
 
 // monkey patch
 if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
@@ -31,7 +30,7 @@ const NotFound = () => (
 
 // Create an enhanced history that syncs navigation events with the store
 
-const LOADING_GIF = <i className="loading fa fa-spinner fa-spin" />;
+const LOADING_GIF = LoadingIcon;
 
 const routes = [
 	{

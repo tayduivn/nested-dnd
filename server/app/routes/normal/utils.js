@@ -17,7 +17,7 @@ function normalUniverseResponse(u, index) {
 	const universe = u.toObject();
 
 	// send requested index
-	const current = universe.array[index];
+	const current = universe.array[index] || {};
 	// we have generated the containing elements already
 	current.todo = false;
 	firstBatch[index] = current;

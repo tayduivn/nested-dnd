@@ -11,7 +11,12 @@ const CHILD_CLASSES = "child col-xl-2 col-lg-3 col-md-4 col-sm-4 col-xs-6 ";
 
 const ISA_SELECT_OPTIONS = {
 	autoFocus: true,
-	optionHeight: 30
+	optionHeight: 30,
+	className: "isa",
+	classTextarea: "isa__addChild",
+	placeholder: "✚",
+	clearOnSubmit: true,
+	allowCustom: true
 };
 
 const DEFAULT_OPTIONS = {
@@ -51,10 +56,13 @@ class ChildInner extends React.PureComponent {
 	hideAdd = () => {
 		this.setState({ showAdd: false });
 	};
+	_getIconProps() {
+		const { name, isa, icon = {} } = this.props;
+		return { name: icon.value, category: icon.category, txt: name ? name : isa };
+	}
 	render() {
 		const { name, isa, icon, isNew, index, style } = this.props;
 		const { showAdd } = this.state;
-
 		if (isNew) {
 			return (
 				<div className="isNew">
@@ -70,7 +78,7 @@ class ChildInner extends React.PureComponent {
 				onClick={this.clickBox}
 			>
 				<div className="wrap">
-					{!isNew && <Icon name={icon} txt={name ? name : isa} />}
+					{!isNew && <Icon {...this._getIconProps()} />}
 					<h1>{name ? name : isa}</h1>
 					<Isa name={name} isa={isa} />
 				</div>

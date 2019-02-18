@@ -24,7 +24,26 @@ var mixedTypeSchema = Schema(
 	{
 		type: {
 			$type: String,
-			enum: ["table_id", "string", "table", "data"] // if no type, it's a string
+			enum: ["table_id", "string", "table", "data"], // if no type, it's a string
+			default: "string"
+		},
+		value: Schema.Types.Mixed
+	},
+	{ typeKey: "$type" }
+);
+
+// extends the mixedTypeSchema to add an icon type
+const iconSchema = Schema(
+	{
+		category: {
+			$type: String,
+			enum: ["icon", "img", "char"],
+			default: "icon"
+		},
+		type: {
+			$type: String,
+			enum: ["table_id", "string", "table", "data"], // if no type, it's a string
+			default: "string"
 		},
 		value: Schema.Types.Mixed
 	},
@@ -34,15 +53,11 @@ var mixedTypeSchema = Schema(
 var styleSchema = Schema(
 	{
 		icon: {
-			type: mixedTypeSchema,
+			type: iconSchema,
 			set: validateMixedThing
 		},
 
-		img: {
-			type: mixedTypeSchema,
-			set: validateMixedThing
-		},
-
+		// deprecated
 		useImg: Boolean,
 
 		// todo: check hex or valid color name
@@ -80,11 +95,11 @@ styleSchema.methods.makeBackgroundColor = async function() {
 };
 
 styleSchema.methods.makeIcon = async function() {
-	return makeIt.call(this, this.icon);
-};
-
-styleSchema.methods.makeImage = async function() {
-	return makeIt.call(this, this.img);
+	if (!this.icon) return undefined;
+	return {
+		category: this.icon && this.icon.category,
+		value: await makeIt.call(this, this.icon)
+	};
 };
 
 styleSchema.methods.makePattern = async function() {
@@ -136,11 +151,7 @@ function validateMixedThing(input) {
 	if (input.type === "table") {
 		if (typeof input.value === "string") {
 			input.type = "string";
-		} else if (
-			input.rows &&
-			input.rows.length === 1 &&
-			typeof input.rows[0] === "string"
-		) {
+		} else if (input.rows && input.rows.length === 1 && typeof input.rows[0] === "string") {
 			input = { type: "string", value: input.rows[0] };
 		} else {
 			// validate against table schema

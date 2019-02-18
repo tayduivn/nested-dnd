@@ -11,6 +11,7 @@ async function getById(id) {
 	if (!gen) {
 		var err = new Error("Couldn't find generator " + id);
 		err.status = 404;
+		err.data = { id };
 		throw err;
 	}
 	return gen;
@@ -29,6 +30,10 @@ async function getByIsa(isa, pack) {
 	if (!gen) {
 		var err = new Error("Can't find a generator that is a " + isa);
 		err.status = 404;
+		err.data = {
+			pack,
+			builtpack
+		};
 		throw err;
 	}
 

@@ -40,21 +40,21 @@ const DB = {
 			.then(r => getResponse(r, cb))
 			.catch(handleError);
 	},
-	create: function(url, payload, abortController) {
-		return this.fetch(url, "POST", { body: payload }, abortController);
+	create: function(url, payload) {
+		return this.fetch(url, "POST", { body: payload });
 	},
-	get: function(url, id, abortController) {
-		if (id !== undefined) return this.fetch(url + "/" + id);
-		else return this.fetch(url, undefined, undefined, abortController);
+	get: function(url, id) {
+		if (id !== undefined) return this.fetch(url + "/" + encodeURIComponent(id));
+		else return this.fetch(url, undefined, undefined);
 	},
 	getNormal: function(url, cb) {
-		return this.fetch(`/normal${url}`, "GET", HEADERS_NORMAL, cb);
+		return this.fetch(`/normal${encodeURI(url)}`, "GET", HEADERS_NORMAL, cb);
 	},
-	set: function(url, id, payload, abortController) {
-		return this.fetch(url + "/" + id, "PUT", { body: payload }, abortController);
+	set: function(url, id, payload) {
+		return this.fetch(url + "/" + encodeURIComponent(id), "PUT", { body: payload });
 	},
-	delete: function(url, id, abortController) {
-		return this.fetch(url + "/" + id, "DELETE", undefined, abortController);
+	delete: function(url, id) {
+		return this.fetch(url + "/" + encodeURIComponent(id), "DELETE", undefined);
 	}
 };
 

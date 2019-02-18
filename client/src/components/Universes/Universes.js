@@ -3,7 +3,7 @@ import { Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import DB from "../../actions/CRUDAction";
-import { LOADING_GIF } from "../App/App";
+import { LoadingIcon } from "../Util/Loading";
 import { PacksList, PackUL } from "../Packs";
 import { PropsRoute } from "../Routes";
 
@@ -16,7 +16,7 @@ const UniverseListDisplay = ({ universes: { loaded, array, error } = {}, packs, 
 				<div className="universes">
 					<h1>Universes</h1>
 					{!loaded ? (
-						LOADING_GIF
+						<LoadingIcon />
 					) : error ? (
 						error.display
 					) : (

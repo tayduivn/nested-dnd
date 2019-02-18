@@ -1,42 +1,44 @@
 import React, { Component } from "react";
 import PropType from "prop-types";
-import { Link, Switch } from "react-router-dom";
+import { Link } from "react-router-dom";
 import async from "async";
 import debounce from "debounce";
 
 import DB from "../../actions/CRUDAction";
-import { PropsRoute } from "../Routes";
-import { LOADING_GIF } from "../App/App";
+import { LoadingIcon } from "../Util/Loading";
 
-class ViewGenerator extends Component {
+export class ViewGenerator extends Component {
 	render() {
-		const gen = this.props.built;
-		const { pack: packid, generator: isa } = this.props.match.params;
+		const { built: gen, packurl } = this.props;
+		const isa = gen.isa;
 
 		if (!gen) return null;
 
 		return (
-			<div>
-				<Link to={"/packs/" + packid}>⬑ Pack</Link>
-				<h1>{isa}</h1>
+			<div className="main">
+				<div className="container mt-5">
+					{!gen.loaded ? <LoadingIcon /> : null}
+					<Link to={"/packs/" + packurl}>⬑ Pack</Link>
+					<h1>{isa}</h1>
 
-				{/* --------- Edit Button ------------ */}
-				{this.props.loggedIn ? (
-					<Link to={"/packs/" + packid + "/generators/" + isa + "/edit"}>
-						<button className="btn btn-primary">Edit Generator</button>
-					</Link>
-				) : null}
+					{/* --------- Edit Button ------------ */}
+					{this.props.loggedIn ? (
+						<Link to={"/packs/" + packurl + "/generators/" + isa + "/edit"}>
+							<button className="btn btn-primary">Edit Generator</button>
+						</Link>
+					) : null}
 
-				<ul>
-					{Object.keys(gen).map((k, i) => {
-						return (
-							<li key={i}>
-								<strong>{k}</strong>:{" "}
-								{gen[k] instanceof Object ? <pre>{JSON.stringify(gen[k], null, 2)}</pre> : gen[k]}
-							</li>
-						);
-					})}
-				</ul>
+					<ul>
+						{Object.keys(gen).map((k, i) => {
+							return (
+								<li key={i}>
+									<strong>{k}</strong>:{" "}
+									{gen[k] instanceof Object ? <pre>{JSON.stringify(gen[k], null, 2)}</pre> : gen[k]}
+								</li>
+							);
+						})}
+					</ul>
+				</div>
 			</div>
 		);
 	}
@@ -100,7 +102,6 @@ export default class Generator extends Component {
 		/*const urlChanged = this.props.match.params.generator !== prevProps.match.params.generator;
 		const isaDifferentThanSaved = this.props.match.params.generator !== generator.built.isa;
 		if (urlChanged && isaDifferentThanSaved) {
-			console.log("test");
 		}*/
 	}
 
@@ -144,16 +145,12 @@ export default class Generator extends Component {
 
 		var content;
 		if (error) content = error.display;
-		else if (!generator && match.params.generator) content = LOADING_GIF;
+		else if (!generator && match.params.generator) content = LoadingIcon;
 		else {
-			content = (
-				<Switch>
-					<PropsRoute exact path={match.path} component={ViewGenerator} {...generator} />
-				</Switch>
-			);
+			content = <ViewGenerator {...generator} />;
 		}
 
-		return <div id="Generator">{content}</div>;
+		return { content };
 	}
 }
 

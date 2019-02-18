@@ -50,7 +50,7 @@ export const setPack = pack => ({
 });
 
 export const fetchRebuild = (dispatch, id) => {
-	DB.set("builtpacks", id + "/rebuild", {}).then(({ error, data }) => {
+	DB.set(`builtpacks/${id}/rebuild`, "", {}).then(({ error, data }) => {
 		if (error) dispatch(setError(error));
 		else dispatch(setPack(data));
 	});

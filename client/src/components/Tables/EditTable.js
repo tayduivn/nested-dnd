@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import debounce from "debounce";
 import Select from "react-select";
 
-import { handleNestedPropertyValue } from "../Generators/EditGenerator";
+import { handleNestedPropertyValue } from "../../util";
 import MixedThing from "../Form/MixedThing";
 import { PropsRoute } from "../Routes";
 
@@ -349,8 +349,7 @@ export default class EditTable extends Component {
 	handleChangeEmbedded = () => {};
 
 	handleDelete = () => {
-		if (this.props.isEmbedded) console.log("test");
-		else this.props.handleDelete();
+		if (!this.props.isEmbedded) this.props.handleDelete();
 	};
 
 	getTotalWeight = (rows = []) => {

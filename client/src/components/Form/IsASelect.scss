@@ -3,10 +3,16 @@
 
 .isa {
 	height: 100%;
-
-	@include dropdown();
+	position: relative;
 
 	&__input {
+		resize: none;
+		position: relative;
+		z-index: 2;
+		display: block;
+	}
+
+	&__addChild {
 		@include input-transparent();
 		width: 100%;
 		height: 100%;

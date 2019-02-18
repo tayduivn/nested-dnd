@@ -30,13 +30,12 @@ router.get("/", MW.canViewPack, (req, res, next) => {
 				.exec();
 			tables.sort((a, b) => a.title.localeCompare(b.title));
 
-			return res.json(
-				Object.assign({}, req.pack.toJSON(), {
-					generators: generators,
-					tables: tables,
-					isOwner: isOwner
-				})
-			);
+			return res.json({
+				...req.pack.toJSON(),
+				generators,
+				tables,
+				isOwner
+			});
 		})
 		.catch(next);
 });

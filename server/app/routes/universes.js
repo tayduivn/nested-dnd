@@ -9,6 +9,7 @@ const Nested = require("./packs/nested");
 function saveInstance(index, newValues, universe) {
 	const newChanges = {};
 
+	// move
 	if (typeof newValues.up !== "undefined") {
 		const oldUp = universe.array[index].up;
 
@@ -21,47 +22,42 @@ function saveInstance(index, newValues, universe) {
 
 		delete newValues.up;
 	}
+
+	// set favorite
 	if (typeof newValues.isFavorite !== "undefined") {
 		universe.setFavorite(index, newValues.isFavorite);
 		delete newValues.isFavorite;
 	}
 
-	if (newValues.delete) universe.deleteInstance(index);
+	// delete
+	if (newValues.delete) {
+		const oldLength = universe.array.length;
+		const { length, emptyIndexes } = universe.deleteInstance(index);
+
+		// send all the empties that are now null
+		emptyIndexes.forEach(i => (newChanges[i] = null));
+		// send all the stripped off from the end are null
+		for (let i = length; i < oldLength; i++) newChanges[i] = null;
+	}
+
+	// edit
 	else if (universe.array[index]) {
-		universe.array.set(index, Object.assign({}, universe.array[index].toJSON(), newValues));
+		const newInstance = { ...universe.array[index].toJSON(), ...newValues };
+		universe.array.set(index, newInstance);
 		// if it's not deleted, send the result
 		newChanges[index] = universe.array[index].toJSON();
 	}
+
 	return newChanges;
 }
 
 router
 	.route("/")
-	// Create Universe
-	// ---------------------------------
-	// TODO: Multiple packs
-	.post((req, res, next) => {
-		req.params.pack = req.body.pack;
-
-		MW.canViewPack(req, res, async err => {
-			if (err) throw err;
-
-			if (res.headersSent) return;
-
-			var { universe } = await Universe.build(req.pack);
-			universe.title = req.body.title;
-			universe.user_id = req.user.id;
-
-			universe.save();
-
-			res.json(universe);
-		}).catch(next);
-	})
 	// Get All Universes
 	// ---------------------------------
 	.get((req, res, next) => {
 		Universe.find({ user_id: req.user.id })
-			.populate("pack", "name dependencies font")
+			.populate("pack", "name dependencies font url public desc txt cssClass")
 			.then(async uniArray => {
 				const packs = {};
 				const universes = {};
@@ -88,6 +84,26 @@ router
 				);
 			})
 			.catch(next);
+	})
+	// Create Universe
+	// ---------------------------------
+	// TODO: Multiple packs
+	.post((req, res, next) => {
+		req.params.pack = req.body.pack;
+
+		MW.canViewPack(req, res, async err => {
+			if (err) throw err;
+
+			if (res.headersSent) return;
+
+			var { universe } = await Universe.build(req.pack);
+			universe.title = req.body.title;
+			universe.user_id = req.user.id;
+
+			universe.save();
+
+			res.json(universe);
+		}).catch(next);
 	});
 
 router
@@ -118,7 +134,8 @@ router
 			.populate("pack")
 			.then(async universe => {
 				if (!universe) return res.status(404);
-				if (universe.user_id.toString() !== req.user.id) return res.status(401);
+				if (!universe.user_id || universe.user_id.toString() !== req.user.id)
+					return res.status(401);
 
 				//check if array
 				if (toSave.array) {

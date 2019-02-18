@@ -25,9 +25,9 @@ router.post("/", MW.canEditPack, (req, res, next) => {
 // ---------------------------------
 router.get("/:isa", MW.canViewPack, (req, res, next) => {
 	getByIsa(req.params.isa, req.pack)
-		.then(async ({ gen }) => {
+		.then(async ({ gen, builtpack }) => {
 			var unbuilt = await Generator.findById(gen.gen_ids[0].toString());
-			res.json({ built: gen, unbuilt: unbuilt });
+			res.json({ built: gen, unbuilt: unbuilt, pack: req.pack, builtpack });
 		})
 		.catch(next);
 });
@@ -64,7 +64,8 @@ router.put("/:id", MW.canEditPack, (req, res, next) => {
 			}
 
 			// rebuild
-			builtpack.rebuildGenerator(generator.isa);
+			await builtpack.rebuildGenerator(generator.isa);
+			builtpack.save();
 
 			res.json({
 				unbuilt: generator,

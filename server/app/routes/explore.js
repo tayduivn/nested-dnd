@@ -8,7 +8,10 @@ const Universe = require("../models/universe");
 
 router.get("/:url/:index?", MW.canViewPack, (req, res, next) => {
 	Universe.getTemp(req.sessionID, req.pack, req.params.index)
-		.then(nested => res.json({ current: nested, pack: req.pack }))
+		.then(async nested => {
+			res.json({ current: nested, pack: req.pack });
+			await req.universe.save();
+		})
 		.catch(next);
 });
 

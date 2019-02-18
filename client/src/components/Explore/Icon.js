@@ -1,17 +1,14 @@
 import React from "react";
-import SVG from "react-inlinesvg";
 
 class SVGWrap extends React.PureComponent {
 	render() {
 		const { alignment, fadeIn, part1, part2 } = this.props;
 		return (
 			<span className={alignment + (fadeIn ? " animated fadeIn" : "")}>
-				<SVG
+				<img
 					className={`icon animated infinite ${part2} ${part1}`}
 					alt={`/icons/${part1}.svg`} //for debugging
 					src={`/icons/${part1}.svg`}
-					cacheGetRequests={true}
-					preloader={<span />}
 				/>
 			</span>
 		);
@@ -19,20 +16,50 @@ class SVGWrap extends React.PureComponent {
 }
 
 class Icon extends React.PureComponent {
+	determineCategory() {
+		let displayName = this.props.name.trim();
+		let parts = displayName.split(" ");
+		let category = "icon";
+		let value = this.props.name;
+		let animation = "";
+
+		if (parts[0] === "svg" || displayName.startsWith("fa")) {
+			category = "icon";
+			value = displayName;
+		} else if (parts[0] === "text") {
+			category = "char";
+			value = parts[1];
+		} else if (displayName && displayName.length && displayName !== "undefined") {
+			category = "img";
+			value = displayName;
+		}
+		return { c: category, v: value, a: animation };
+	}
 	render() {
-		const { name = false, alignment = "", fadeIn } = this.props;
+		let { name = false, category, alignment = "", fadeIn } = this.props;
 
 		if (!name || !name.trim || !name.split) return null;
-		let displayName = name.trim();
-		var parts = name.split(" ");
-		if (parts[0] === "svg") {
-			displayName = displayName.substr(4);
-			return <SVGWrap {...{ alignment, fadeIn }} part1={parts[1]} part2={parts[2]} />;
-		} else if (parts[0] === "text") {
-			return <div className="icon text">{parts[1]}</div>;
-		} else if (displayName.startsWith("fa")) {
-			return <i className={"icon animated infinite " + displayName + " " + alignment} />;
-		} else if (displayName && displayName.length && displayName !== "undefined") {
+
+		let value = name;
+		if (!category) {
+			let { c, v, a } = this.determineCategory();
+			category = c;
+			value = v;
+		}
+
+		if (category === "icon") {
+			if (value.startsWith("svg "))
+				return (
+					<SVGWrap
+						{...{ alignment, fadeIn }}
+						part1={value.split(" ")[1]}
+						part2={value.split(" ")[2]}
+					/>
+				);
+			else return <i className={"icon animated infinite " + value + " " + alignment} />;
+		} else if (category === "char") {
+			return <div className="icon text">{value}</div>;
+		} else if (category === "img") {
 			return <div className="icon" style={{ backgroundImage: `url(${name})` }} />;
 		} else return <span className="icon" />;
 	}
