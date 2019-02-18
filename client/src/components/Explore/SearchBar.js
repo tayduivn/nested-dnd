@@ -46,7 +46,7 @@ export default class SearchBar extends React.Component {
 					onChange={this.handleChange}
 					placeholder="★ search favorites"
 				/>
-				<ul className={`dropdown__menu search-bar__dropdown`}>
+				<ul className={`dropdown__menu search-bar__dropdown --open`}>
 					{this.state.query &&
 						this.state.matches.map(f => (
 							<a key={f.index} href={"#" + f.index} onClick={this.clearQuery}>
