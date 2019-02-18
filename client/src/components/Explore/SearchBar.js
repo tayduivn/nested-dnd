@@ -39,18 +39,18 @@ export default class SearchBar extends React.Component {
 	};
 	render() {
 		return (
-			<div className="search-bar">
+			<div className="dropdown search-bar">
 				<input
 					value={this.state.query}
-					className="form-control search-bar__input"
+					className="form-control dropdown__input search-bar__input"
 					onChange={this.handleChange}
 					placeholder="★ search favorites"
 				/>
-				<ul className={`search-bar__dropdown`}>
+				<ul className={`dropdown__menu search-bar__dropdown`}>
 					{this.state.query &&
 						this.state.matches.map(f => (
 							<a key={f.index} href={"#" + f.index} onClick={this.clearQuery}>
-								<li className="search-bar__option">{f.name}</li>
+								<li className="dropdown__option search-bar__option">{f.name}</li>
 							</a>
 						))}
 				</ul>

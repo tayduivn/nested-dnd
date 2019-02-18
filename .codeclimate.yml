@@ -13,6 +13,9 @@ checks:
 plugins:
   eslint:
     enabled: true
+    checks:
+      max-lines-per-function:
+        enabled: false
 exclude_patterns:
   - "config/"
   - "db/"

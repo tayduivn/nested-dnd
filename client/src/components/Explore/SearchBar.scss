@@ -2,7 +2,6 @@
 @import "../../variables.scss";
 
 .search-bar {
-	@include dropdown();
 	font-size: 1rem;
 
 	&__input {
