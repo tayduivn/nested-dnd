@@ -24,10 +24,10 @@ mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 mongoose.set("useNewUrlParser", true);
 
-app.use(enforce.HTTPS({ trustProtoHeader: true }));
-
-// serve static files in production
+// serve static files in production and enforce https
 if (process.env.NODE_ENV === "production") {
+	app.use(enforce.HTTPS({ trustProtoHeader: true }));
+
 	const staticPath = path.join(__dirname, "/../client/build");
 	app.use(express.static(staticPath));
 }
