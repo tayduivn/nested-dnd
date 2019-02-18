@@ -57,12 +57,20 @@ class Icon extends React.PureComponent {
 		}
 
 		if (category === "icon") {
-			if (value.startsWith("svg "))
+			if (value.startsWith("svg"))
 				return (
 					<SVGWrap
 						{...{ alignment, fadeIn, inlinesvg }}
 						part1={value.split(" ")[1]}
 						part2={value.split(" ")[2]}
+					/>
+				);
+			else if (!value.startsWith("fa"))
+				return (
+					<SVGWrap
+						{...{ alignment, fadeIn, inlinesvg }}
+						part1={value.split(" ")[0]}
+						part2={value.split(" ")[1]}
 					/>
 				);
 			else return <i className={"icon animated infinite " + value + " " + alignment} />;
