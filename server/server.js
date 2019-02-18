@@ -11,6 +11,7 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const flash = require("connect-flash");
 const morgan = require("morgan");
+const enforce = require("express-sslify");
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -27,6 +28,7 @@ mongoose.set("useNewUrlParser", true);
 if (process.env.NODE_ENV === "production") {
 	const staticPath = path.join(__dirname, "/../client/build");
 	app.use(express.static(staticPath));
+	app.use(enforce.HTTPS({ trustProtoHeader: true }));
 }
 
 if (process.env.NODE_ENV !== "test") {

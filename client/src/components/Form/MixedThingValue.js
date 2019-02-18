@@ -105,7 +105,7 @@ const TableId = ({ value, handleChange, property, tables }) => (
 	<select
 		className="form-control"
 		value={value || ""}
-		onChange={e => handleChange(property, e.target.value)}
+		onChange={e => handleChange({[property]: e.target.value})}
 	>
 		<option value={null} />
 		{tables.map(t => (

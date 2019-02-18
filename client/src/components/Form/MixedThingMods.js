@@ -5,14 +5,8 @@ class Num extends React.PureComponent {
 		this.props.handleChange({ [this.props.property]: e.target.value });
 	};
 	render() {
-		const { min, max, value, defaultValue, className } = this.props;
-		return (
-			<input
-				type="number"
-				{...{ min, max, value, defaultValue, className }}
-				onChange={this.handleChange}
-			/>
-		);
+		const { min, max, value, className } = this.props;
+		return <input type="number" {...{ min, max, value, className }} onChange={this.handleChange} />;
 	}
 }
 
@@ -34,7 +28,7 @@ class Amount extends React.PureComponent {
 					<div className="row">
 						<Num value={min} property="min" min="0" max={max} {...numProps} />
 						<span className="col-auto">-</span>
-						<Num value={max} property="max" min={min} defaultValue={1} {...numProps} />
+						<Num value={max || 1} property="max" min={min} {...numProps} />
 					</div>
 				) : (
 					<div className="btn btn-light btn-sm">1</div>

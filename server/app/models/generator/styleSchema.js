@@ -143,11 +143,11 @@ function validateMixedThing(input) {
 		input.value = undefined;
 		return input;
 	}
-
 	if (typeof input === "string") {
 		return { type: "string", value: input };
 	}
 
+	// table
 	if (input.type === "table") {
 		if (typeof input.value === "string") {
 			input.type = "string";
@@ -161,8 +161,11 @@ function validateMixedThing(input) {
 			delete input.value.pack;
 			delete input.value.public;
 		}
-	} else if (
-		input.type === "string" &&
+	}
+
+	// string or table_id
+	else if (
+		(input.type === "string" || input.type === "table_id") &&
 		typeof input.value !== "string" &&
 		input.value !== undefined
 	) {

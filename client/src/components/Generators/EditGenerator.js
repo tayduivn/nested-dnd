@@ -121,9 +121,10 @@ const EditGenerator = connect(
 	},
 	function mapDispatchToProps(dispatch, ownProps) {
 		const packurl = ownProps.match.params.pack;
+		const isa = decodeURIComponent(ownProps.match.params.generator);
 
 		return {
-			fetchGenerator: () => fetchGenerator(dispatch, packurl, ownProps.match.params.generator),
+			fetchGenerator: () => fetchGenerator(dispatch, packurl, isa),
 			clearErrors: () => dispatch({ type: CLEAR_GENERATOR_ERRORS }),
 			changeGenerator,
 			createGenerator

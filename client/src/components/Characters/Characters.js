@@ -71,7 +71,7 @@ export default class Characters extends React.Component {
 	};
 
 	componentDidMount() {
-		DB.fetch("/universes/" + this.props.universe_id + "/characters").then(r => this.setState(r));
+		//DB.fetch("/universes/" + this.props.universe_id + "/characters").then(r => this.setState(r));
 	}
 	render() {
 		if (this.state.error) return this.state.error.display;

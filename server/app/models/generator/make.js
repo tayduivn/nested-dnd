@@ -1,4 +1,5 @@
 const DiceExpression = require("dice-expression-evaluator");
+const mongoose = require("mongoose");
 
 const Nested = require("../../routes/packs/nested");
 
@@ -122,6 +123,10 @@ var Maker = {
 		if (!Table && type.includes("table")) Table = getTableModel(thing, Table);
 		switch (type) {
 			case "table_id":
+				// value is not an id
+				if (!(value instanceof mongoose.Types.ObjectId || typeof value === "string")) {
+					break;
+				}
 				var table = await Table.findById(value); // TODO
 				if (table) value = await table.roll(data);
 				else value = undefined;

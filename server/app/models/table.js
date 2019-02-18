@@ -5,22 +5,13 @@ const fng = require("fantasy-names");
 const Maker = require("./generator/make");
 const Util = require("./utils");
 const sourceSchema = require("./source");
-const validateMixedThing = require("./generator/styleSchema")
-	.validateMixedThing;
+const validateMixedThing = require("./generator/styleSchema").validateMixedThing;
 
 var rowSchema = Schema(
 	{
 		type: {
 			$type: String,
-			enum: [
-				"string",
-				"generator",
-				"table",
-				"embed",
-				"table_id",
-				"data",
-				"dice"
-			],
+			enum: ["string", "generator", "table", "embed", "table_id", "data", "dice"],
 			default: "string"
 		},
 		value: Schema.Types.Mixed,
@@ -50,7 +41,7 @@ var tableSchema = Schema({
 		type: [rowSchema],
 		set: input =>
 			input.map(row => {
-				return typeof row === "string" ? { value: row } : row;
+				return validateMixedThing(row);
 			})
 	},
 	concat: Boolean,
@@ -137,8 +128,7 @@ function weightedChoose(arr, weightChoose) {
 	//Returns an element from an array at random according to a weight.
 	//A weight of 2 means the first element will be picked roughly twice as often as the second; a weight of 0.5 means half as often. A weight of 1 gives a flat, even distribution.
 	if (weightChoose <= 0 || weightChoose === undefined) weightChoose = 1;
-	var result =
-		arr[Math.floor(Math.pow(Math.random(), weightChoose) * arr.length)];
+	var result = arr[Math.floor(Math.pow(Math.random(), weightChoose) * arr.length)];
 
 	return result;
 }

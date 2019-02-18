@@ -102,10 +102,7 @@ const defaultCharacterData = data => ({
 	spellcasting: null
 });
 
-const getGearCard = (
-	{ definition: { isConsumable, weight, description } },
-	name
-) => ({
+const getGearCard = ({ definition: { isConsumable, weight, description } }, name) => ({
 	category: "item",
 	name: name,
 	consumable: isConsumable,
@@ -210,9 +207,7 @@ function getInventory({
 
 	var magic = makeContainer(
 		"Magical",
-		gear.filter(
-			({ definition: { magic, subType } }) => magic || subType === "Potion"
-		)
+		gear.filter(({ definition: { magic, subType } }) => magic || subType === "Potion")
 	);
 	var tools = makeContainer(
 		"Tools",
@@ -222,10 +217,7 @@ function getInventory({
 		"Backpack",
 		gear.filter(
 			({ definition: { magic, subType, name } }) =>
-				subType !== "Tool" &&
-				subType !== "Potion" &&
-				!magic &&
-				name !== "Backpack"
+				subType !== "Tool" && subType !== "Potion" && !magic && name !== "Backpack"
 		)
 	);
 
@@ -239,8 +231,7 @@ function getInventory({
 		cards.push(getGearCard(e, swapComma(e.definition.name)));
 	});
 
-	if (personalPossessions)
-		equipment.containers.push({ content: [personalPossessions] });
+	if (personalPossessions) equipment.containers.push({ content: [personalPossessions] });
 
 	return { equipment, cards };
 }
@@ -257,8 +248,16 @@ function getIcon(name) {
 const getFeatureCard = (definition, limit) => {
 	var abil = limit.find(a => a.name === definition.name);
 	var activation = definition.activationType && definition.activationTime;
-	const shortRange =
-		definition.range && definition.range > 5 ? definition.range : undefined;
+	const shortRange = definition.range && definition.range > 5 ? definition.range : undefined;
+	const dmg = {
+		diceString: definition.damage.diceString,
+		damageType: definition.damageType,
+		addModifier: true
+	};
+	const uses = {
+		count: abil.maxUses,
+		reset: abil.resetType.toLowerCase()
+	};
 	return {
 		name: definition.name,
 		category: "spell",
@@ -266,9 +265,7 @@ const getFeatureCard = (definition, limit) => {
 		weight: definition.weight,
 		attackType: definition.attackType,
 		castTime: activation
-			? definition.activationTime +
-			  " " +
-			  definition.activationType.toLowerCase()
+			? definition.activationTime + " " + definition.activationType.toLowerCase()
 			: "Modifier",
 		range: shortRange,
 		isFeature: true,
@@ -276,19 +273,8 @@ const getFeatureCard = (definition, limit) => {
 		description: definition.description.replace("</p>", "").split("<p>"),
 		longRange: shortRange ? definition.longRange : undefined,
 		properties: definition.properties,
-		damage: !definition.damage
-			? undefined
-			: {
-					diceString: definition.damage.diceString,
-					damageType: definition.damageType,
-					addModifier: true
-			  },
-		uses: !abil
-			? undefined
-			: {
-					count: abil.maxUses,
-					reset: abil.resetType.toLowerCase()
-			  },
+		damage: !definition.damage ? undefined : dmg,
+		uses: !abil ? undefined : uses,
 		...CARD_DATA[definition.name]
 	};
 };

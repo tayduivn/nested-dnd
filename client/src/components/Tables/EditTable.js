@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 import debounce from "debounce";
-import Select from "react-select";
+import Dropdown from "../Form/Dropdown";
 
 import { handleNestedPropertyValue } from "../../util";
 import MixedThing from "../Form/MixedThing";
@@ -32,7 +32,7 @@ function toLabel(val) {
 
 const FNG = ({ handleChange, rows }) => (
 	<div>
-		<Select
+		<Dropdown
 			value={wrapOption(rows[0] && rows[0].value, rows[1] && rows[1].value)}
 			onChange={({ value }) => {
 				handleChange(["rows", 0, "value"], value[0]);
