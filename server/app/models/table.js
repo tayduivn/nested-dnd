@@ -5,7 +5,6 @@ const fng = require("fantasy-names");
 const Maker = require("./generator/make");
 const Util = require("./utils");
 const sourceSchema = require("./source");
-const validateMixedThing = require("./generator/styleSchema").validateMixedThing;
 
 var rowSchema = Schema(
 	{
@@ -41,7 +40,7 @@ var tableSchema = Schema({
 		type: [rowSchema],
 		set: input =>
 			input.map(row => {
-				return validateMixedThing(row);
+				return typeof row === "string" ? { value: row } : row;
 			})
 	},
 	concat: Boolean,
