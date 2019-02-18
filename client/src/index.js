@@ -5,7 +5,6 @@ import registerServiceWorker from "./registerServiceWorker";
 import "animate.css";
 
 import "./index.css";
-import "react-virtualized/styles.css";
 
 import App from "./components/App";
 
