@@ -24,11 +24,12 @@ mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 mongoose.set("useNewUrlParser", true);
 
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
+
 // serve static files in production
 if (process.env.NODE_ENV === "production") {
 	const staticPath = path.join(__dirname, "/../client/build");
 	app.use(express.static(staticPath));
-	app.use(enforce.HTTPS({ trustProtoHeader: true }));
 }
 
 if (process.env.NODE_ENV !== "test") {

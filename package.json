@@ -12,7 +12,7 @@
 		"_watch-css": "node-sass-chokidar client/src/ -o client/src/ --watch --recursive",
 		"build": "yarn build-css && react-scripts build --dir client",
 		"build-css": "npx node-sass client/src/ -o client/src/",
-		"dev-client": "concurrently --kill-others-on-fail \"yarn _watch-css\" \"yarn _start-js\"",
+		"dev-client": "set HTTPS=true && concurrently --kill-others-on-fail \"yarn _watch-css\" \"yarn _start-js\"",
 		"dev-server": "nodemon --inspect server/server.js",
 		"dev-db": "mongod --dbpath ./server/data",
 		"dev-test": "cross-env NODE_ENV=test mocha --exit --require ./.testSetup.js \"server/**/*.test.js\" \"client/**/*.test.js\"",
