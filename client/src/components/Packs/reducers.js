@@ -37,7 +37,9 @@ const pack = (state = { loaded: false, generators: {} }, action = {}) => {
 			return { ...state, ...action.data, loaded: true };
 		case FETCH_PACK:
 		default:
-			return { ...state, generators: generators(state.generators, action) };
+			const newGens = generators(state.generators, action);
+			if (newGens !== state.generators) return { ...state, generators: newGens };
+			else return state;
 	}
 };
 
@@ -118,36 +120,3 @@ function myPacks(state = [], action) {
 	}
 }
 export default combineReducers({ loaded, byId, byUrl, publicPacks, myPacks });
-
-/* (state = initialPacks, action) => {
-	switch (action.type) {
-		case GENERATOR_RENAME:
-				const id = state.packs.byUrl[action.packurl];
-				return {
-					...state,
-					byId: { ... state.byId, }
-				}
-		case FETCH_PACK:
-		case REBUILD_PACK:
-		case SET_PACK:
-			return {
-				...state,
-				byId: { ...state.byId, [action.id]: pack(state.byId[action.id], action) },
-				byUrl: byUrl(state.byUrl, action)
-			};
-		case ADD:
-			return { ...state, myPacks: state.myPacks.concat([action.pack]) };
-		case PACKS_SET:
-			const packs = {
-				...state,
-				...action.data,
-				byId: byId(state.byId, { ...action, data: action.data.byId })
-			};
-			return packs;
-		case ERROR:
-			return { ...initialPacks, loaded: true, error: action.error };
-		case FETCH:
-		default:
-			return state;
-	}
-}*/

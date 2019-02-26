@@ -1,18 +1,19 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router";
+import { ConnectedRouter } from "connected-react-router";
 
 import { Login } from "../User";
 import Nav from "./Nav";
-import Characters, { Character } from "../Characters";
 import Explore, { Splash, PlayersPreview } from "../Explore";
 import Packs, { routes as packs } from "../Packs";
 import { PropsRoute, makeSubRoutes } from "../Routes";
 import Universes, { routes as universes } from "../Universes";
-import { ConnectedRouter } from "connected-react-router";
 import { history } from "./store";
 import { LoadingIcon } from "../Util/Loading";
-
 import { sendPlayersPreview, subscribeToPlayersPreview } from "../../actions/WebSocketAction";
+
+const Characters = React.lazy(() => import("./../Characters"));
+const Character = Characters.Character;
 
 // monkey patch
 if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {

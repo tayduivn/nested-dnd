@@ -58,6 +58,12 @@ export default class Explore extends Component {
 		//var index = this.getIndexFromHash(this.props);
 		//setBodyStyle(this.props.current);
 		this.props.loadFonts();
+		this.setTitle();
+	}
+
+	setTitle() {
+		const { isa, name } = this.props.current;
+		document.title = isa || name || "Explore";
 	}
 
 	componentDidUpdate({ pack = {}, index, ...prevProps }) {
@@ -76,6 +82,7 @@ export default class Explore extends Component {
 			}
 		}
 		//setBodyStyle(this.props.current);
+		this.setTitle();
 	}
 
 	determineChange = (props, nextProps) => {
@@ -91,6 +98,7 @@ export default class Explore extends Component {
 	};
 
 	shouldComponentUpdate(nextProps, nextState) {
+		// TODO: this is no bueno - store shouldn't change if it didn't change, shallow compare should be enough
 		const newCurrent = JSON.stringify(this.props.current) !== JSON.stringify(nextProps.current);
 		const newIn = JSON.stringify(this.props.current.in) !== JSON.stringify(nextProps.current.in);
 		const changedError = this.state.error !== nextState.error;
@@ -119,42 +127,6 @@ export default class Explore extends Component {
 		//setBodyStyle({ cssClass: "" });
 	}
 
-	pushCurrent = (props, index, { error, data }) => {
-		// component unmounted, return
-		if (!this._mounted) return;
-
-		if (error) {
-			return this.setState({ error: error.display });
-		}
-
-		const isUniverse = props.isUniverse;
-
-		var { current = {} } = data;
-
-		current.index = parseInt(current.index, 10);
-		var lookup = this.state.lookup;
-		lookup[current.index] = current;
-		const oldCurrent = this.props.current;
-		const oldIndex = oldCurrent && oldCurrent.index;
-
-		var isVisible = !oldCurrent || typeof oldIndex === "undefined" || oldIndex === current.index;
-
-		var newState = { lookup };
-		if (data.pack) newState.pack = data.pack;
-
-		if (isVisible) {
-			if (isUniverse) {
-				if (!(current.in instanceof Array)) current.in = [];
-
-				current.in.push({ ...NEW_ITEM, index: index + "NEW" });
-			}
-
-			newState = { current, ...newState };
-		}
-
-		this.setState(newState);
-	};
-
 	// will set the history, and component will recieve the new props
 	setIndex = (index, isDeleting) => {
 		if (isNaN(index)) return;
@@ -165,19 +137,16 @@ export default class Explore extends Component {
 	};
 
 	handleRestartExplore = () => {
-		this.setCurrent({ current: null, lookup: {}, error: null });
-		this.setIndex(0);
-
 		// reset universe
+		// TODO: Do as action
+		/*
 		DB.fetch("explore", "DELETE")
 			.then(() => DB.fetch(this.props.location.pathname))
 			.then(({ err, data }) => {
-				var { current = {}, pack } = data;
-				this.setState({ current, pack, lookup: { [data.index]: data } });
 
 				this.setIndex(data.index);
 			});
-		return;
+		return;*/
 	};
 
 	handleRestartUniverse = (doRegenerate, universe) => {
@@ -247,44 +216,10 @@ export default class Explore extends Component {
 		//const currentInArr = [...inArr];
 		var deleteIndex = value;
 
-		this.setState(state => {
-			state = Object.assign({}, state);
-			return state;
-		});
-
 		return inArr
 			.map(c => c && c.index)
 			.filter(c => c && typeof c !== "string" && c !== deleteIndex);
 	}
-
-	handleChangeState = (oldState, index, property, value) => {
-		const props = this.props;
-		var state = {
-			...oldState
-		};
-		var displayValue = value;
-
-		// reset to parent value if reset
-		if (property === "cssClass") {
-			if (value === null) {
-				var up = props.current.up;
-				displayValue = up && up[0] && up[0][property];
-				props.current.txt = up[0].txt;
-			}
-			props.current.savedCssClass = value ? value : undefined;
-		}
-
-		//always pass cssClass with txt unless resetting
-		else if (property === "txt" && value !== null) {
-			props.current.savedTxt = value;
-
-			this.handleChange(index, "cssClass", props.current.cssClass);
-		}
-
-		props.current[property] = displayValue;
-
-		return state;
-	};
 
 	handleChangeClean = (i, p, v) => {
 		let index = i,
@@ -363,7 +298,6 @@ export default class Explore extends Component {
 		return { isUniverse, index, cssClass, highlightColor, inArr, handle, generators, tables };
 	}
 	render() {
-		if (this.state.error) return <div className="main">{this.state.error.display}</div>;
 		if (this.props.current.loading) return <div className="main pt-5">{LOADING}</div>;
 
 		// get props
@@ -375,20 +309,19 @@ export default class Explore extends Component {
 			isLoading = current.todo === true,
 			parent = up[0] && up[0].index;
 
+		// TODO: Don't wrap document title, just do it on change.
 		return (
-			<DocumentTitle title={title ? title : "Explore"}>
-				<ExplorePage cssClass={current.cssClass} txt={current.txt}>
-					<div className="row">
-						<Title {...{ current, title, isUniverse, ...this._getTitleProps() }} />
-						<div className="col">
-							{showData && <Data {...{ data, generators, tables, handleChange, index }} />}
-							{isLoading && LOADING}
-							<Children {...this._getChildrenProps()} />
-						</div>
+			<ExplorePage cssClass={current.cssClass} txt={current.txt}>
+				<div className="row">
+					<Title {...{ current, title, isUniverse, ...this._getTitleProps() }} />
+					<div className="col">
+						{showData && <Data {...{ data, generators, tables, handleChange, index }} />}
+						{isLoading && LOADING}
+						<Children {...this._getChildrenProps()} />
 					</div>
-					{isUniverse && <Modals {...{ handleChange, index, icon, cssClass, txt, parent }} />}
-				</ExplorePage>
-			</DocumentTitle>
+				</div>
+				{isUniverse && <Modals {...{ handleChange, index, icon, cssClass, txt, parent }} />}
+			</ExplorePage>
 		);
 	}
 }

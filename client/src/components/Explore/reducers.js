@@ -160,10 +160,10 @@ const getUniverse = state => {
 
 	if (isUniverse) {
 		universe = state.universes.byId[match.params.universe] || {
-			loaded: false
+			loaded: false,
+			_id: match.params.universe
 		};
 		pack = state.packs.byId[universe.pack];
-		universe._id = match.params.universe;
 	} else {
 		const packid = match && state.packs.byUrl[match.params.pack];
 		pack = state.packs.byId[packid] || (match && { url: match.params.pack });

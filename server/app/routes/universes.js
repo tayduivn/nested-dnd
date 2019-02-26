@@ -63,7 +63,7 @@ router
 				const universes = {};
 				Promise.all(
 					uniArray.map(async u => {
-						let lastSaw = (await u.getNested(undefined, u.pack)) || {};
+						let lastSaw = (await u.getNested(u.lastSaw, u.pack)) || {};
 						packs[u.pack._id] = u.pack.toJSON();
 						let style = {
 							txt: lastSaw.txt,

@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { produce } from "immer";
 
 import {
 	ADD,
@@ -11,6 +12,8 @@ import {
 	INSTANCE_DELETE
 } from "./actions";
 
+const spread = produce(Object.assign);
+
 const myUniversesInitial = {
 	loaded: false,
 	array: []
@@ -18,46 +21,69 @@ const myUniversesInitial = {
 
 function instance(state = {}, action) {
 	switch (action.type) {
+		case "REMOVE CHILD":
+			return;
 		case INSTANCE_ADD_CHILD:
 			return { ...state, in: [...(state.in || []), "LOADING"] };
 		case INSTANCE_SET:
 			// deleted
 			if (!action.data) return null;
-			return { ...state, ...action.data };
+			return spread(state, action.data);
 		default:
 			return state;
 	}
 }
 
-// todo handle update other
-function universe(state = {}, action) {
-	const array = state.array ? [...state.array] : [];
+function deleteInstance(array, index) {
+	const toDelete = array[index];
+	const parent = array[toDelete.up];
 
+	if (toDelete.up !== undefined) {
+		const inArr = parent.in;
+		inArr.splice(inArr.indexOf(index), 1);
+		array[toDelete.up].in = inArr;
+	}
+	array[index] = undefined;
+}
+
+const array = produce((array, action) => {
 	switch (action.type) {
 		case INSTANCE_DELETE:
-			const toDelete = array[action.index];
-
-			if (toDelete.up !== undefined) {
-				const inArr = [...array[toDelete.up].in];
-				inArr.splice(inArr.indexOf(action.index), 1);
-				array[toDelete.up].in = inArr;
-			}
-			delete array[action.index];
-			return { ...state, array };
-		case INSTANCE_ADD_CHILD:
-			array[action.index] = instance(array[action.index], action);
-			return { ...state, array };
-		case INSTANCE_SET:
-			for (let index in action.data) {
-				array[index] = instance(array[index], { ...action, data: action.data[index] });
-			}
-			return { ...state, array };
-		case UNIVERSE_SET:
-			return { ...state, ...action.data };
-		default:
-			return state;
+			return deleteInstance(array, action.index);
 	}
-}
+}, []);
+
+// todo handle update other
+const universe = produce(
+	(d, action) => {
+		switch (action.type) {
+			case INSTANCE_DELETE:
+				return deleteInstance(d.array, action.index);
+			case INSTANCE_ADD_CHILD:
+				return (d.array[action.index] = instance(d.array[action.index], action));
+			case INSTANCE_SET:
+				for (let index in action.data) {
+					d.array[index] = instance(d.array[index], {
+						...action,
+						data: action.data[index]
+					});
+				}
+				break;
+			case UNIVERSE_SET:
+				const origArray = d.array || [];
+				if (action.data.array) {
+					d.array = action.data.array.map((data, i) => {
+						const result = instance(origArray[i], { type: INSTANCE_SET, data });
+						return result;
+					});
+				}
+				console.log(d);
+				break;
+			default:
+		}
+	},
+	{ array: [] }
+);
 
 function normalize(state = {}, action) {
 	const u = action.data || { array: [] };
@@ -82,28 +108,25 @@ function normalize(state = {}, action) {
 	}
 }
 
-function byId(state = {}, action) {
-	const copy = { ...state };
-
+const byId = produce((copy, action) => {
 	switch (action.type) {
 		case INSTANCE_DELETE:
 		case INSTANCE_ADD_CHILD:
 		case INSTANCE_SET:
 			copy[action.universeId] = universe(copy[action.universeId], action);
-			return copy;
+			return;
 		case UNIVERSE_SET:
 			copy[action.data._id] = universe(copy[action.data._id], action);
-			return copy;
+			return;
 		case UNIVERSES_SET:
 			for (let id in action.data) {
 				const u = action.data[id];
 				copy[u._id] = normalize(copy[u._id], { ...action, data: u });
 			}
-			return copy;
+			return;
 		default:
-			return state;
 	}
-}
+}, {});
 
 function myUniverses(state = myUniversesInitial, action) {
 	switch (action.type) {
