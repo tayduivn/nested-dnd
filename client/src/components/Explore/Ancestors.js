@@ -79,9 +79,6 @@ export default class Ancestors extends Component {
 		ancestor.in = true;
 		this.props.handleClick(ancestor);
 	}
-	shouldComponentUpdate(nextProps) {
-		//return JSON.stringify(this.props) !== JSON.stringify(nextProps);
-	}
 	render() {
 		const a = this.props.ancestors;
 		const parent = a[0] || {};
