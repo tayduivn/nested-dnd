@@ -7,31 +7,26 @@ import { connect } from "react-redux";
 
 import actions from "./actions";
 
-const Form = ({
-	isCreate,
-	name,
-	public: isPublic,
-	url,
-	seed,
-	font,
-	handleSubmit,
-	handleDelete
-}) => (
-	<div className="main">
-		<div className="container mt-5 loginForm">
-			<h1>{isCreate ? "Create" : "Edit"} Pack</h1>
-			<form onSubmit={handleSubmit}>
-				{/* --------- Name ------------ */}
-				<div className="form-group">
-					<label>Name</label>
-					<input defaultValue={name} required name="name" className="form-control" />
-				</div>
-				{/* --------- Public ------------ */}
+class Name extends React.PureComponent {
+	render() {
+		return (
+			<div className="form-group">
+				<label>Name</label>
+				<input defaultValue={this.props.name} required name="name" className="form-control" />
+			</div>
+		);
+	}
+}
+
+class Public extends React.PureComponent {
+	render() {
+		return (
+			<>
 				<div className="form-check">
 					<label className="form-check-label">
 						<input
 							type="checkbox"
-							defaultChecked={isPublic}
+							defaultChecked={this.props.isPublic}
 							name="public"
 							className="form-check-input"
 						/>
@@ -40,32 +35,60 @@ const Form = ({
 				</div>
 				<div className="form-group">
 					<label>URL</label>
-					<input defaultValue={url} name="url" className="form-control" />
+					<input defaultValue={this.props.url} name="url" className="form-control" />
 				</div>
-				{/* --------- Font ------------ */}
-				<div className="form-group">
-					<label>Font</label>
-					<input defaultValue={font} name="font" className="form-control" />
-				</div>
-				{/* --------- Default Seed ------------ */}
-				<div className="form-group">
-					<label>Default Seed</label>
-					<input defaultValue={seed} name="seed" className="form-control" />
-				</div>
-				{/* --------- Dependencies: TODO ------------ */}
-				<button type="submit" className="btn btn-primary">
+			</>
+		);
+	}
+}
+
+class Dependencies extends React.PureComponent {
+	render() {
+		return (
+			<>
+				<button type="submit" className="btn btn-light">
 					Save
 				</button>
 				&nbsp;&nbsp;
-				{!isCreate ? null : (
-					<button type="button" className="btn btn-outline-danger" onClick={handleDelete}>
+				{!this.props.isCreate ? null : (
+					<button
+						type="button"
+						className="btn btn-outline-danger"
+						onClick={this.props.handleDelete}
+					>
 						<i className="fas fa-trash" /> Delete Pack
 					</button>
 				)}
-			</form>
-		</div>
-	</div>
-);
+			</>
+		);
+	}
+}
+
+class Form extends React.PureComponent {
+	render() {
+		const { isCreate, seed, font, handleSubmit, handleDelete } = this.props;
+		return (
+			<div className="main">
+				<div className="container mt-5 loginForm">
+					<h1>{isCreate ? "Create" : "Edit"} Pack</h1>
+					<form onSubmit={handleSubmit}>
+						<Name name={this.props.name} />
+						<Public isPublic={this.props.isPublic} url={this.props.url} />
+						<div className="form-group">
+							<label>Font</label>
+							<input defaultValue={font} name="font" className="form-control" />
+						</div>
+						<div className="form-group">
+							<label>Default Seed</label>
+							<input defaultValue={seed} name="seed" className="form-control" />
+						</div>
+						<Dependencies {...{ isCreate, handleDelete }} />
+					</form>
+				</div>
+			</div>
+		);
+	}
+}
 
 class EditPack extends Component {
 	static propTypes = {

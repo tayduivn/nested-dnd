@@ -244,7 +244,7 @@ i.fi {
 	&:focus {
 		border: 1px solid $primary;
 	}
-	&:invalid {
+	&:invalid.dirty {
 		border: 1px solid $warning;
 
 		&:focus {

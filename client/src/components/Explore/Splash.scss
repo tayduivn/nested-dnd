@@ -1,67 +1,67 @@
-@import '../../variables.scss';
+@import "../../variables.scss";
 
-.fullscreen{
+.fullscreen {
 	height: 100vh;
 	font-size: 6vw;
+	margin: 0;
 
-	.nested{ 
+	.nested {
 		color: white;
-		font-family: 'Press Start 2P', serif;
+		font-family: "Press Start 2P", serif;
 
-		&:hover{
+		&:hover {
 			color: antiquewhite;
 			background-color: #111;
 		}
 	}
-	.dnd{
+	.dnd {
 		color: darkred;
-		font-family: 'IM Fell English SC', serif;
+		font-family: "IM Fell English SC", serif;
 
-		&:hover{
+		&:hover {
 			color: saddlebrown;
 			background-color: tan;
 		}
 	}
-	.nested, .dnd{
+	.nested,
+	.dnd {
 		height: 100%;
 		vertical-align: middle;
 		text-align: center;
 		position: relative;
 		overflow: hidden;
 
-		> div{
+		> div {
 			margin-top: $totalNavHeight;
 			padding: 2.5rem;
-			z-index:1;
-			position:absolute;
-	    top:0;
-	    bottom:0;
-	    left:0;
-	    right:0;
+			z-index: 1;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
 
-			p{
+			p {
 				position: relative;
-		    top: 50%;
-		    transform: translateY(-50%);
+				top: 50%;
+				transform: translateY(-50%);
 			}
 		}
-
-
 	}
 }
 
-
 // large and lower
-@media (max-width: map-get($grid-breakpoints, "lg")) { 
-	.fullscreen{
+@media (max-width: map-get($grid-breakpoints, "lg")) {
+	.fullscreen {
 		font-size: 12vw;
 
-		.nested, .dnd{
+		.nested,
+		.dnd {
 			height: 50%;
 
-			> div{
+			> div {
 				padding: 1rem;
 			}
 		}
-	} 
+	}
 }

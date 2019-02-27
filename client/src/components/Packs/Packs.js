@@ -24,8 +24,8 @@ class PackLink extends React.PureComponent {
 		const style = { color: txt };
 		return (
 			<li className={`col`}>
-				<div className="btn-group">
-					<Link to={`${URL}/explore`} className={`btn col packlink__btn ${cssClass}`}>
+				<div className="packlink btn-group">
+					<Link to={`${URL}/explore`} className={`btn col packlink__btn btn-${cssClass}`}>
 						<h1 style={{ fontFamily: font ? `'${font}', serif` : "inherit" }}>{title || name}</h1>
 						{description && <p>{description}</p>}
 						{isUniverse && dependencies && dependencies.length && (
@@ -39,7 +39,7 @@ class PackLink extends React.PureComponent {
 							</p>
 						)}
 					</Link>
-					<Link to={`${URL}/edit`} className={`${EDITBTN_CLS} ${cssClass}`} style={style}>
+					<Link to={`${URL}/edit`} className={`${EDITBTN_CLS} btn-${cssClass}`} style={style}>
 						{EDIT_BUTTON}
 					</Link>
 				</div>
@@ -52,12 +52,12 @@ class PackInput extends React.PureComponent {
 	render() {
 		const { _id, name, txt, font, cssClass, description, selected, url } = this.props;
 		const { onSelect } = this.props;
-		const exploreLinkClass = `explore btn col-xs-auto ${cssClass}`;
+		const exploreLinkClass = `explore btn col-xs-auto btn-${cssClass}`;
 		const style = { color: txt };
 		return (
 			<li className={`col`}>
-				<div className="btn-group">
-					<button {...{ onClick: onSelect, _id, style }} className={`btn col ${cssClass}`}>
+				<div className="packlink btn-group">
+					<button {...{ onClick: onSelect, _id, style }} className={`btn col btn-${cssClass}`}>
 						<h1 className="webfont" style={{ fontFamily: font ? `'${font}', serif` : "inherit" }}>
 							<span className={`fa-stack ${selected ? "selected" : ""}`}>
 								<i className="fas fa-circle fa-2x" />
@@ -82,7 +82,7 @@ class PackInput extends React.PureComponent {
 }
 
 const ADD_BUTTON_CLASSNAME =
-	"create col btn btn-outline-dark d-flex align-items-center justify-content-center";
+	"create col btn btn-outline-dark d-flex align-items-center justify-content-center packlink";
 
 class PackUL extends React.Component {
 	componentDidMount() {
