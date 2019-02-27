@@ -87,7 +87,7 @@ class IconSelectDisplay extends React.PureComponent {
 		return {
 			name: "icon",
 			className: "iconDropdown",
-			value: multi ? iconArr : iconArr[0],
+			defaultValue: multi ? iconArr.label : iconArr[0].label,
 			fixedOptions: iconOptions,
 			onChange: this.handleChange,
 			isClearable: false,
@@ -162,6 +162,9 @@ class IconSelect extends React.Component {
 		}
 
 		// put the spin classes back into the values
+		if (!value.map) {
+			value = [value];
+		}
 		value = value.map((val, i) => (animArr[i] && animArr[i] !== "" ? val + " " + animArr[i] : val));
 
 		//re-flatten
