@@ -3,47 +3,82 @@ import PropTypes from "prop-types";
 
 import "./Login.css";
 
-const Email = ({ email, emailError, handleChange }) => (
-	<div className="form-group" name="email">
-		<label htmlFor="login_email">Email</label>
-		<input
-			id="login_email"
-			name="email"
-			className={`form-control ${emailError ? "is-invalid" : ""}`}
-			type="email"
-			aria-describedby="emailHelp"
-			placeholder="email"
-			value={email}
-			onChange={handleChange}
-			required
-		/>
-		<small id="emailHelp" className="invalid-feedback">
-			{emailError}
-		</small>
-	</div>
-);
+class Email extends React.PureComponent {
+	state = {
+		dirty: false
+	};
+	handleChange = e => {
+		this.setState({ dirty: true });
+		this.props.handleChange(e);
+	};
+	_getClassName = () => {
+		const invalid = this.props.emailError ? "is-invalid" : "";
+		const dirty = this.state.dirty ? "dirty" : "";
+		return `form-control ${invalid} ${dirty}`;
+	};
+	render() {
+		const { email, emailError } = this.props;
+		return (
+			<div className="form-group" name="email">
+				<label htmlFor="login_email">Email</label>
+				<input
+					id="login_email"
+					name="email"
+					className={this._getClassName()}
+					type="email"
+					aria-describedby="emailHelp"
+					placeholder="email"
+					value={email}
+					onChange={this.handleChange}
+					required
+				/>
+				<small id="emailHelp" className="invalid-feedback">
+					{emailError}
+				</small>
+			</div>
+		);
+	}
+}
 
-const Password = ({ password, passwordError, handleChange, isConfirm }) => (
-	<div className="form-group" name="password">
-		<label htmlFor={`password${isConfirm ? "_confirm" : ""}`}>Password</label>
-		<input
-			id={`password${isConfirm ? "_confirm" : ""}`}
-			type="password"
-			placeholder="password"
-			name={`password${isConfirm ? "2" : ""}`}
-			className={`form-control ${passwordError ? "is-invalid" : ""}`}
-			autoComplete="new-password"
-			aria-describedby="pwHelp"
-			value={password}
-			onChange={handleChange}
-			minLength="8"
-			required
-		/>
-		<small id="pwHelp" className="invalid-feedback">
-			{passwordError}
-		</small>
-	</div>
-);
+class Password extends React.PureComponent {
+	state = {
+		dirty: false
+	};
+	handleChange = e => {
+		this.setState({ dirty: true });
+		this.props.handleChange(e);
+	};
+	_getClassName = () => {
+		const invalid = this.props.passwordError ? "is-invalid" : "";
+		const dirty = this.state.dirty ? "dirty" : "";
+		return `form-control ${invalid} ${dirty}`;
+	};
+	render() {
+		const { password, passwordError, isConfirm } = this.props;
+
+		return (
+			<div className="form-group" name="password">
+				<label htmlFor={`password${isConfirm ? "_confirm" : ""}`}>Password</label>
+				<input
+					id={`password${isConfirm ? "_confirm" : ""}`}
+					type="password"
+					placeholder="password"
+					name={`password${isConfirm ? "2" : ""}`}
+					className={this._getClassName()}
+					autoComplete="new-password"
+					aria-describedby="pwHelp"
+					value={password}
+					onChange={this.handleChange}
+					minLength="8"
+					required
+				/>
+				<small id="pwHelp" className="invalid-feedback">
+					{passwordError}
+				</small>
+			</div>
+		);
+	}
+}
 
 const DisplayLogin = ({
 	title,

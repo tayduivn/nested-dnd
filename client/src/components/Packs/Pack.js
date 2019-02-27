@@ -119,10 +119,11 @@ class ViewPack extends Component {
 					{isOwner && (
 						<div>
 							<Link to={"/packs/" + _id + "/edit"}>
-								<button className="btn btn-primary">
+								<button className="btn btn-outline-dark">
 									<i className="fa fa-pencil-alt" /> Edit Pack
 								</button>
 							</Link>
+							&nbsp;
 							<button className="btn btn-danger" onClick={handleRebuild}>
 								Rebuild
 							</button>

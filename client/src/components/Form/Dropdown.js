@@ -11,7 +11,7 @@ class Input extends React.PureComponent {
 		return (
 			<textarea
 				ref={this.props.htmlRef}
-				className={`dropdown__input ${this.props.classTextarea}`}
+				className={`dropdown__input ${this.props.classTextarea} ${this.props.dirty ? "dirty" : ""}`}
 				type="text"
 				rows={this.props.rows}
 				onChange={this.props.handleChange}
@@ -95,7 +95,8 @@ export default class Dropdown extends React.PureComponent {
 			matches: [],
 			selected: false,
 			open: false,
-			error: false
+			error: false,
+			dirty: false
 		};
 		this.ref = React.createRef();
 
@@ -152,7 +153,7 @@ export default class Dropdown extends React.PureComponent {
 	handleChange = e => {
 		const input = e.target.value;
 
-		this.setState({ input }, this.sift);
+		this.setState({ input, dirty: true }, this.sift);
 	};
 	handleBlur = e => {
 		this.setState({ open: false, selected: false });
@@ -216,7 +217,7 @@ export default class Dropdown extends React.PureComponent {
 		};
 	}
 	render() {
-		const { input } = this.state;
+		const { input, dirty } = this.state;
 		const { handleChange, handleKeyDown, handleFocus, handleBlur } = this;
 		const { disabled, className, rows, placeholder, classTextarea } = this.props;
 		const { OptionComponent } = this.props;
@@ -226,7 +227,7 @@ export default class Dropdown extends React.PureComponent {
 					<div className="feedback-icon" />
 					<Input
 						{...{ input, handleChange, handleFocus, handleBlur, handleKeyDown }}
-						{...{ rows, placeholder, htmlRef: this.ref, className, disabled, classTextarea }}
+						{...{ rows, placeholder, htmlRef: this.ref, className, disabled, classTextarea, dirty }}
 						handleClick={this.handleClickTextarea}
 					/>
 					<div

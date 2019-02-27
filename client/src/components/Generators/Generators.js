@@ -4,6 +4,25 @@ import PropTypes from "prop-types";
 
 import DB from "../../actions/CRUDAction";
 
+const SEARCH_ICON = (
+	<div className="input-group-append">
+		<span className="input-group-text">
+			<i className="fa fa-search" />
+		</span>
+	</div>
+);
+
+const ADD_GENERATOR = (
+	<button className="btn btn-outline-dark">
+		<i className="fa fa-plus" /> Add Generator
+	</button>
+);
+
+/**
+ * Display the filters
+ * @param {Object} [filters={}]       [description]
+ * @param {[type]} handleFilterToggle [description]
+ */
 const Filters = ({ filters = {}, handleFilterToggle }) => (
 	<div className="filters col-auto">
 		<div className="form-check">
@@ -21,7 +40,11 @@ const Filters = ({ filters = {}, handleFilterToggle }) => (
 	</div>
 );
 
-const FiltersToString = ({ filters = {} }) => (
+/**
+ * List the currently selected filters as a string
+ * @param {Array} [filters=[] }] [description]
+ */
+const FiltersToString = ({ filters = [] }) => (
 	<div>
 		{filters.length ? (
 			<span>
@@ -32,47 +55,21 @@ const FiltersToString = ({ filters = {} }) => (
 	</div>
 );
 
-const SEARCH_ICON = (
-	<div className="input-group-append">
-		<span className="input-group-text">
-			<i className="fa fa-search" />
-		</span>
-	</div>
-);
-
-const ADD_GENERATOR = (
-	<button className="btn btn-primary">
-		<i className="fa fa-plus" /> Add Generator
-	</button>
-);
-
-class GeneratorsDisplay extends React.PureComponent {
+class OpenButton extends React.PureComponent {
 	render() {
-		const { query, filters, isOwner, packurl, handleQuery, ...rest } = this.props;
-		const { handleFilterToggle } = this.props;
+		const { handleGeneratorToggle, isOpen, isa } = this.props;
 		return (
-			<div>
-				<h2>Generators</h2>
-				<div className="input-group">
-					<input className="form-control" value={query} onChange={handleQuery} />
-					{SEARCH_ICON}
-				</div>
-				<div className="row">
-					<Filters filters={filters} handleFilterToggle={handleFilterToggle} />
-					<div className="col">
-						{!isOwner ? null : (
-							<Link to={"/packs/" + packurl + "/generators/create"}>{ADD_GENERATOR}</Link>
-						)}
-						<FiltersToString filters={filters} />
-						<hr />
-						<NestedGenerators {...rest} {...{ isOwner, packurl }} />
-					</div>
-				</div>
-			</div>
+			<button className="mr-1" onClick={() => handleGeneratorToggle(isa)}>
+				<i className={`fas fa-${isOpen ? "minus" : "plus"}-circle`} />
+			</button>
 		);
 	}
 }
 
+/**
+ * A link and its recursive nested tree beneath
+ * @extends React
+ */
 class GenLink extends React.PureComponent {
 	_getLink() {
 		const isa = (this.props.gen && this.props.gen.isa) || "";
@@ -100,9 +97,7 @@ class GenLink extends React.PureComponent {
 			<React.Fragment>
 				<li>
 					{Object.keys(genTree).length ? (
-						<button className="mr-1" onClick={() => handleGeneratorToggle(gen.isa)}>
-							<i className={`fas fa-${isOpen ? "minus" : "plus"}-circle`} />
-						</button>
+						<OpenButton {...{ handleGeneratorToggle, isOpen, isa: gen.isa }} />
 					) : null}
 					<Link to={this._getLink()}>{gen.isa}</Link>
 					{gen.extends ? <em className="ml-2">{gen.extends}</em> : null}
@@ -119,6 +114,10 @@ class GenLink extends React.PureComponent {
 	}
 }
 
+/**
+ * Renders the list
+ * @extends React
+ */
 class NestedGenerators extends React.PureComponent {
 	_getProps(isa) {
 		const { generatorTree = {}, generators, packurl, isOwner = false } = this.props;
@@ -152,6 +151,41 @@ class NestedGenerators extends React.PureComponent {
 	}
 }
 
+/**
+ * Display the generators tab
+ * @extends React
+ */
+class GeneratorsDisplay extends React.PureComponent {
+	render() {
+		const { query, filters, isOwner, packurl, handleQuery, ...rest } = this.props;
+		const { handleFilterToggle } = this.props;
+		return (
+			<div>
+				<h2>Generators</h2>
+				<div className="input-group">
+					<input className="form-control" value={query} onChange={handleQuery} />
+					{SEARCH_ICON}
+				</div>
+				<div className="row">
+					<Filters filters={filters} handleFilterToggle={handleFilterToggle} />
+					<div className="col">
+						{!isOwner ? null : (
+							<Link to={"/packs/" + packurl + "/generators/create"}>{ADD_GENERATOR}</Link>
+						)}
+						<FiltersToString filters={filters} />
+						<hr />
+						<NestedGenerators {...rest} {...{ isOwner, packurl }} />
+					</div>
+				</div>
+			</div>
+		);
+	}
+}
+
+/**
+ * Handles building the tree and filtering
+ * @extends React
+ */
 class GeneratorsList extends React.Component {
 	static propTypes = {
 		generators: PropTypes.object,
@@ -211,8 +245,8 @@ class GeneratorsList extends React.Component {
 
 		if (
 			(query && !isa.includes(query)) ||
-			(filters.unique && !gen.isUnique) ||
-			(filters.notUnique && gen.isUnique)
+			(filters.unique && gen.isUnique) ||
+			(filters.notUnique && !gen.isUnique)
 		) {
 			include = false;
 		}
@@ -281,6 +315,11 @@ class GeneratorsList extends React.Component {
 	}
 }
 
+/**
+ * Handles DB call
+ * TODO: connect
+ * @extends React
+ */
 class Generators extends React.Component {
 	static propTypes = {
 		handleRenameGen: PropTypes.func
@@ -294,6 +333,7 @@ class Generators extends React.Component {
 		var payload = { isa: isa };
 		const packid = this.props.match.params.pack;
 
+		// TODO: Do as action
 		DB.create("packs/" + packid + "/generators", payload).then(({ error, data: generator }) => {
 			if (error) return this.setState({ error });
 			this.setState({ generator }, () => {
@@ -318,8 +358,6 @@ class Generators extends React.Component {
 		);
 	}
 }
-
-//{makeSubRoutes(routes, match.path, { handleAdd, pack })}
 
 export default Generators;
 export { GeneratorsList };

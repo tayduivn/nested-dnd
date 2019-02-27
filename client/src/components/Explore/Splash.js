@@ -48,7 +48,7 @@ class Splash extends React.Component {
 	}
 	render() {
 		return (
-			<div className="container-fluid">
+			<div className="container-fluid p-0">
 				<div className="row fullscreen">
 					<Pack pack={nested} />
 					<Pack pack={dnd} />

@@ -70,7 +70,8 @@ body {
 		$hoverBG: slightlyOff($color);
 		$activeBG: moreOff($color);
 
-		.bg-#{$name}-#{$variant} {
+		.bg-#{$name}-#{$variant},
+		.btn-bg-#{$name}-#{$variant} {
 			--parent-theme: #{$color};
 			--hover-theme: #{$hoverBG};
 			--contrast: #{$contrast};
@@ -79,18 +80,21 @@ body {
 			background-color: $color;
 			color: $contrast;
 		}
-	}
-}
 
-[class*="bg-"] {
-	// overrides <a> styles
-	&.link:active {
-		background-color: var(--hover-theme);
-	}
-}
+		.btn-bg-#{$name}-#{$variant} {
+			cursor: pointer;
 
-[class*="bg-"].btn {
-	@include colored-button();
+			&:hover {
+				background-color: $hoverBG;
+				color: getContrastText($hoverBG);
+			}
+
+			&:active {
+				background-color: $activeBG;
+				color: getContrastText($activeBG);
+			}
+		}
+	}
 }
 
 /* Apply these in a certain order so they take precendence */
