@@ -30,14 +30,14 @@ const DEFAULT_OPTIONS = {
 };
 
 const className = (icon, showAdd, cssClass, isNew) =>
-	`child-inner d-flex align-items-center justify-content-center link ${cssClass}
+	`child-inner d-flex  child-inner--link ${cssClass}
 	 ${icon ? "" : " no-icon"} ${showAdd ? " showAdd" : ""} ${isNew ? "isNew" : ""}`;
 
-const style = ({ in: inArr, transparentBG, highlight, txt }) => {
+const style = ({ in: inArr, transparentBG, highlight, txt }, isUniverse) => {
 	var style = {
 		color: txt
 	};
-	if (transparentBG) style.background = "transparent";
+	if (!isUniverse && transparentBG) style.background = "transparent";
 	if (inArr) style.boxShadow = "0px 0px 5px " + highlight;
 	return style;
 };
@@ -77,7 +77,8 @@ class ChildInner extends React.PureComponent {
 				href={`#${index}`}
 				onClick={this.clickBox}
 			>
-				<div className="wrap">
+				<div className="child__wrap">
+					<div />
 					{!isNew && <Icon {...this._getIconProps()} />}
 					<h1>{name ? name : isa}</h1>
 					<Isa name={name} isa={isa} />
@@ -108,7 +109,7 @@ class Child extends React.PureComponent {
 				) : null}
 				<ChildInner
 					{...{ ...child, handleClick, highlight, generators, isNew }}
-					style={style(child)}
+					style={style(child, this.props.isUniverse)}
 				/>
 				{isLink ? (
 					<button className="deleteLink btn btn-danger" onClick={this.handleDeleteLink}>

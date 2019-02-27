@@ -61,7 +61,7 @@ const Data = ({ data, generators, tables, handleChange, index }) => (
 const ExplorePage = ({ cssClass, txt, children }) => (
 	<div
 		id="explorePage"
-		className={`main container-fluid ${cssClass}`}
+		className={`explorePage main container-fluid ${cssClass}`}
 		data-bg={cssClass}
 		style={{ color: txt }}
 	>
@@ -104,7 +104,7 @@ class Children extends React.Component {
 		);
 	}
 	_getProps(c, i) {
-		const { cssClass, handle, highlightColor } = this.props;
+		const { cssClass, handle, highlightColor, isUniverse } = this.props;
 		const { generators } = this.props;
 
 		return {
@@ -116,22 +116,21 @@ class Children extends React.Component {
 			handleDeleteLink: this.handleDeleteLink,
 			in: c.in && c.in.join && c.in.join(","),
 			desc: c.desc && c.desc.join("\n"),
-			i
+			i,
+			isUniverse
 		};
 	}
 	render() {
 		const { isUniverse, index, inArr = [], handle } = this.props;
 		return (
-			<div>
-				<SortableList
-					{...{ index, ...TRANSITION_GROUP_SETTINGS }}
-					handlechange={isUniverse ? handle.change : undefined}
-				>
-					{inArr.map((c, i) => (
-						<Child key={`${c.isNew ? "isNew" : c.index}_${i}`} {...this._getProps(c, i)} />
-					))}
-				</SortableList>
-			</div>
+			<SortableList
+				{...{ index, ...TRANSITION_GROUP_SETTINGS }}
+				handlechange={isUniverse ? handle.change : undefined}
+			>
+				{inArr.map((c, i) => (
+					<Child key={`${c.isNew ? "isNew" : c.index}_${i}`} {...this._getProps(c, i)} />
+				))}
+			</SortableList>
 		);
 	}
 }

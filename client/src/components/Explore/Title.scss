@@ -45,6 +45,8 @@
 		width: 1em !important;
 		padding: 0;
 		vertical-align: top;
+		background-position: center top;
+		background-size: cover;
 
 		&.loading {
 			font-size: inherit;

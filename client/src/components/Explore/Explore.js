@@ -314,7 +314,7 @@ export default class Explore extends Component {
 			<ExplorePage cssClass={current.cssClass} txt={current.txt}>
 				<div className="row">
 					<Title {...{ current, title, isUniverse, ...this._getTitleProps() }} />
-					<div className="col">
+					<div className={`children col ${isUniverse ? "children--universe" : ""}`}>
 						{showData && <Data {...{ data, generators, tables, handleChange, index }} />}
 						{isLoading && LOADING}
 						<Children {...this._getChildrenProps()} />
