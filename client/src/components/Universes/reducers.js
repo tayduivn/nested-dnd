@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { spread } from "../../util";
 
 import {
 	ADD,
@@ -23,7 +24,7 @@ function instance(state = {}, action) {
 		case INSTANCE_SET:
 			// deleted
 			if (!action.data) return null;
-			return { ...state, ...action.data };
+			return spread(state, action.data);
 		default:
 			return state;
 	}
@@ -43,17 +44,17 @@ function universe(state = {}, action) {
 				array[toDelete.up].in = inArr;
 			}
 			delete array[action.index];
-			return { ...state, array };
+			return spread(state, { array });
 		case INSTANCE_ADD_CHILD:
 			array[action.index] = instance(array[action.index], action);
-			return { ...state, array };
+			return spread(state, { array });
 		case INSTANCE_SET:
 			for (let index in action.data) {
 				array[index] = instance(array[index], { ...action, data: action.data[index] });
 			}
-			return { ...state, array };
+			return spread(state, { array });
 		case UNIVERSE_SET:
-			return { ...state, ...action.data };
+			return spread(state, action.data);
 		default:
 			return state;
 	}
@@ -63,6 +64,7 @@ function normalize(state = {}, action) {
 	const u = action.data || { array: [] };
 	const lastSaw = u.lastSaw;
 	const array = (state.array && [...state.array]) || [];
+
 	switch (action.type) {
 		case UNIVERSES_SET:
 			if (lastSaw.up && lastSaw.up.length) {
@@ -76,7 +78,7 @@ function normalize(state = {}, action) {
 				lastSaw.in = lastSaw.in.map(c => c.index);
 			}
 			array[lastSaw.index] = lastSaw;
-			return { ...state, ...u, array: array, lastSaw: lastSaw.index };
+			return spread(state, u, { array, lastSaw: lastSaw.index });
 		default:
 			return state;
 	}
@@ -89,11 +91,9 @@ function byId(state = {}, action) {
 		case INSTANCE_DELETE:
 		case INSTANCE_ADD_CHILD:
 		case INSTANCE_SET:
-			copy[action.universeId] = universe(copy[action.universeId], action);
-			return copy;
+			return spread(state, { [action.universeId]: universe(copy[action.universeId], action) });
 		case UNIVERSE_SET:
-			copy[action.data._id] = universe(copy[action.data._id], action);
-			return copy;
+			return spread(state, { [action.data._id]: universe(copy[action.data._id], action) });
 		case UNIVERSES_SET:
 			for (let id in action.data) {
 				const u = action.data[id];
@@ -108,11 +108,11 @@ function byId(state = {}, action) {
 function myUniverses(state = myUniversesInitial, action) {
 	switch (action.type) {
 		case ADD:
-			return { ...state, array: state.array.concat([action.created]) };
+			return spread(state, { array: state.array.concat([action.created]) });
 		case UNIVERSES_SET:
 			return { loaded: true, array: Object.values(action.data).map(u => u._id) };
 		case ERROR:
-			return { ...myUniversesInitial, loaded: true, error: action.error };
+			return spread(myUniversesInitial, { loaded: true, error: action.error });
 		case FETCH:
 		default:
 			return state;

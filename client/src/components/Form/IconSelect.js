@@ -87,7 +87,7 @@ class IconSelectDisplay extends React.PureComponent {
 		return {
 			name: "icon",
 			className: "iconDropdown",
-			defaultValue: multi ? iconArr.label : iconArr[0].label,
+			defaultValue: multi ? iconArr.label : iconArr[0] && iconArr[0].label,
 			fixedOptions: iconOptions,
 			onChange: this.handleChange,
 			isClearable: false,
