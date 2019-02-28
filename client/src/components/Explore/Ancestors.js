@@ -20,7 +20,7 @@ const SplitButton = ({ parentInst, style, ancestors, onClick, cssclass, border, 
 	>
 		<a
 			type="button"
-			className={`ancestors__split-parent btn immediate ${cssclass}`}
+			className={`ancestors__split-parent btn immediate btn-${cssclass}`}
 			onClick={() => onClick(parentInst)}
 			style={style}
 			href={`#${parentInst.index}`}
@@ -40,7 +40,7 @@ const SplitButton = ({ parentInst, style, ancestors, onClick, cssclass, border, 
 const SplitButtonToggle = ({ style, cssclass }) => (
 	<button
 		type="button"
-		className={`ancestors__toggler btn dropdown-toggle dropdown-toggle-split btn-bg- ${cssclass}`}
+		className={`ancestors__toggler btn dropdown-toggle dropdown-toggle-split btn-${cssclass}`}
 		data-toggle="dropdown"
 		aria-haspopup="true"
 		aria-expanded="false"

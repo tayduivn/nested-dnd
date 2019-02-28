@@ -30,7 +30,7 @@ const DEFAULT_OPTIONS = {
 };
 
 const className = (icon, showAdd, cssClass, isNew) =>
-	`child-inner d-flex  child-inner--link ${cssClass}
+	`child-inner child-inner--link btn-${cssClass}
 	 ${icon ? "" : " no-icon"} ${showAdd ? " showAdd" : ""} ${isNew ? "isNew" : ""}`;
 
 const style = ({ in: inArr, transparentBG, highlight, txt }, isUniverse) => {
@@ -61,8 +61,9 @@ class ChildInner extends React.PureComponent {
 		return { name: icon.value, category: icon.category, txt: name ? name : isa, inlinesvg: true };
 	}
 	render() {
-		const { name, isa, icon, isNew, index, style } = this.props;
+		const { name, isa, icon, isNew, index, style, desc = "" } = this.props;
 		const { showAdd } = this.state;
+		const tweet = desc.split("\n")[0];
 		if (isNew) {
 			return (
 				<div className="isNew">
@@ -77,12 +78,12 @@ class ChildInner extends React.PureComponent {
 				href={`#${index}`}
 				onClick={this.clickBox}
 			>
-				<div className="child__wrap">
-					<div />
-					{!isNew && <Icon {...this._getIconProps()} />}
-					<h1>{name ? name : isa}</h1>
+				{!isNew && <Icon {...this._getIconProps()} />}
+				<div className="child__header">
+					<h1 className="child__title">{name ? name : isa}</h1>
 					<Isa name={name} isa={isa} />
 				</div>
+				{tweet ? <p className="child__desc">{tweet.substr(0, 140)}</p> : null}
 			</a>
 		);
 	}

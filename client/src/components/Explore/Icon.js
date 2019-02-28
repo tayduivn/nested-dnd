@@ -4,22 +4,18 @@ import SVG from "react-inlinesvg";
 class SVGWrap extends React.PureComponent {
 	render() {
 		const { alignment, fadeIn, part1, part2, inlinesvg } = this.props;
-		return (
-			<span className={alignment + (fadeIn ? " animated fadeIn" : "")}>
-				{inlinesvg ? (
-					<SVG
-						className={`icon animated infinite ${part2} ${part1}`}
-						alt={`/icons/${part1}.svg`} //for debugging
-						src={`/icons/${part1}.svg`}
-					/>
-				) : (
-					<img
-						className={`icon animated infinite ${part2} ${part1}`}
-						alt={`/icons/${part1}.svg`} //for debugging
-						src={`/icons/${part1}.svg`}
-					/>
-				)}
-			</span>
+		return inlinesvg ? (
+			<SVG
+				className={`icon animated infinite ${part2} ${part1}`}
+				alt={`/icons/${part1}.svg`} //for debugging
+				src={`/icons/${part1}.svg`}
+			/>
+		) : (
+			<img
+				className={`icon animated infinite ${part2} ${part1}`}
+				alt={`/icons/${part1}.svg`} //for debugging
+				src={`/icons/${part1}.svg`}
+			/>
 		);
 	}
 }

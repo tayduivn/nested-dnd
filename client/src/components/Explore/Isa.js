@@ -18,7 +18,7 @@ class Isa extends React.PureComponent {
 			!capName.startsWith(capIsa) &&
 			!capIsa.startsWith(capName)
 		) {
-			return <h2>{isa}</h2>;
+			return <h2 className="child__isa">{isa}</h2>;
 		}
 
 		return null;
