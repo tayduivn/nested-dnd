@@ -29,15 +29,14 @@ const DEFAULT_OPTIONS = {
 	}
 };
 
-const className = (icon, showAdd, cssClass, isNew) =>
+const className = (icon = {}, showAdd, cssClass, isNew) =>
 	`child-inner child-inner--link btn-${cssClass}
 	 ${icon ? "" : " no-icon"} ${showAdd ? " showAdd" : ""} ${isNew ? "isNew" : ""}`;
 
-const style = ({ in: inArr, transparentBG, highlight, txt }, isUniverse) => {
+const style = ({ in: inArr, highlight, txt }, isUniverse) => {
 	var style = {
 		color: txt
 	};
-	if (!isUniverse && transparentBG) style.background = "transparent";
 	if (inArr) style.boxShadow = "0px 0px 5px " + highlight;
 	return style;
 };
@@ -58,7 +57,13 @@ class ChildInner extends React.PureComponent {
 	};
 	_getIconProps() {
 		const { name, isa, icon = {} } = this.props;
-		return { name: icon.value, category: icon.category, txt: name ? name : isa, inlinesvg: true };
+		return {
+			name: icon.value,
+			category: icon.category,
+			txt: name ? name : isa,
+			inlinesvg: true,
+			className: "child__icon"
+		};
 	}
 	render() {
 		const { name, isa, icon, isNew, index, style, desc = "" } = this.props;
@@ -66,7 +71,7 @@ class ChildInner extends React.PureComponent {
 		const tweet = desc.split("\n")[0];
 		if (isNew) {
 			return (
-				<div className="isNew">
+				<div className="isNew bg-grey-50">
 					<IsASelect {...ISA_SELECT_OPTIONS} hideAdd={this.hideAdd} />
 				</div>
 			);

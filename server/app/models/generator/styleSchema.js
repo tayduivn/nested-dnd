@@ -37,7 +37,7 @@ const iconSchema = Schema(
 	{
 		category: {
 			$type: String,
-			enum: ["icon", "img", "char"],
+			enum: ["icon", "img", "char", "video"],
 			default: "icon"
 		},
 		type: {
@@ -45,6 +45,7 @@ const iconSchema = Schema(
 			enum: ["table_id", "string", "table", "data"], // if no type, it's a string
 			default: "string"
 		},
+		doHue: Boolean,
 		value: Schema.Types.Mixed
 	},
 	{ typeKey: "$type", _id: false }

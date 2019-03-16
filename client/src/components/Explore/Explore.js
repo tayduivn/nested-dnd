@@ -258,11 +258,11 @@ export default class Explore extends Component {
 
 	handleChange = (i, p, v) => {
 		const { index, property, value } = this.handleChangeClean(i, p, v);
-		this.props.handleChange(index, property, value);
+		this.props.handleChange(index, property, value, this.props.universe._id);
 
 		if (property === "cssClass") {
 			// reset to parent value if reset
-			this.props.handleChange(index, "txt", null);
+			this.props.handleChange(index, "txt", null, this.props.universe._id);
 		}
 	};
 
@@ -301,7 +301,8 @@ export default class Explore extends Component {
 		if (this.props.current.loading) return <div className="main pt-5">{LOADING}</div>;
 
 		// get props
-		const { current, isUniverse, handleChange, index } = this.props,
+		const { current, isUniverse, index } = this.props,
+			{ handleChange } = this,
 			{ showData } = this.state,
 			{ data, cssClass, up = [], icon, txt } = current,
 			{ generators, tables } = getGensTables(this.props.pack),
@@ -311,17 +312,19 @@ export default class Explore extends Component {
 
 		// TODO: Don't wrap document title, just do it on change.
 		return (
-			<ExplorePage cssClass={current.cssClass} txt={current.txt}>
-				<div className="row">
-					<Title {...{ current, title, isUniverse, ...this._getTitleProps() }} />
-					<div className={`children col ${isUniverse ? "children--universe" : ""}`}>
-						{showData && <Data {...{ data, generators, tables, handleChange, index }} />}
-						{isLoading && LOADING}
-						<Children {...this._getChildrenProps()} />
+			<>
+				<ExplorePage cssClass={current.cssClass} txt={current.txt}>
+					<div className="row">
+						<Title {...{ current, title, isUniverse, ...this._getTitleProps() }} />
+						<div className={`children col ${isUniverse ? "children--universe" : ""}`}>
+							{showData && <Data {...{ data, generators, tables, handleChange, index }} />}
+							{isLoading && LOADING}
+							<Children {...this._getChildrenProps()} />
+						</div>
 					</div>
-				</div>
+				</ExplorePage>
 				{isUniverse && <Modals {...{ handleChange, index, icon, cssClass, txt, parent }} />}
-			</ExplorePage>
+			</>
 		);
 	}
 }

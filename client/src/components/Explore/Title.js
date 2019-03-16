@@ -1,7 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "../Util";
 
+import { sendPlayersPreview } from "../../actions/WebSocketAction";
+import { Link } from "../Util";
 import Ancestors from "./Ancestors";
 import { HexColorPicker } from "../Form/HexColorPicker";
 import { Icon, Isa } from "./ExplorePage";
@@ -113,35 +114,49 @@ class StyleOptions extends React.PureComponent {
 		);
 	}
 }
-const className = isUniverse =>
-	`icon-wrap col-auto col-lg-12 px-0 mb-lg-1 ${isUniverse ? "universe " : ""} ${CENTER_ALIGN}`;
+const className = (isUniverse, category = "icon") =>
+	`title__iconWrap ${isUniverse ? "universe " : ""} --${category} ${CENTER_ALIGN}`;
+
+const ShowToPlayers = ({ cssClass, setPreview }) => (
+	<button className={`btn btn-${cssClass} btn-sm title__showBtn`} onClick={setPreview}>
+		Show to players
+	</button>
+);
 
 class IconButton extends React.PureComponent {
+	setPreview = e => {
+		e.stopPropagation();
+		e.preventDefault();
+		const i = this.props.icon;
+		sendPlayersPreview({
+			...i,
+			src: i.value,
+			hueOverlay: i.doHue ? this.props.cssClass : ""
+		});
+	};
 	render() {
-		const { isUniverse, cssClass, icon = {}, txt } = this.props;
+		const { isUniverse, icon = {}, txt, cssClass } = this.props;
 		return (
-			<div className={className(isUniverse)}>
+			<div className={className(isUniverse, icon.category)}>
 				{isUniverse ? (
-					<button
-						className={"btn btn-outline " + cssClass + " " + (!icon ? "addNew" : "")}
-						data-toggle="modal"
-						data-target="#iconSelectModal"
-						style={{ color: txt }}
-					>
-						<Icon
-							name={icon.value || "far fa-plus-square"}
-							category={icon.category}
-							alignment={CENTER_ALIGN}
-							inlinesvg={true}
-						/>
-					</button>
+					<>
+						<button
+							className={`title__iconBtn ${!icon ? "addNew" : ""} ${cssClass}`}
+							data-toggle="modal"
+							data-target="#iconSelectModal"
+							style={{ color: txt }}
+						>
+							<Icon
+								name={icon.value || "far fa-plus-square"}
+								{...{ ...icon, inlinesvg: true, className: "title__icon" }}
+							/>
+						</button>
+						{["img", "video"].includes(icon.category) ? (
+							<ShowToPlayers {...{ cssClass, setPreview: this.setPreview }} />
+						) : null}
+					</>
 				) : (
-					<Icon
-						name={icon.value}
-						category={icon.category}
-						alignment={CENTER_ALIGN}
-						inlinesvg={true}
-					/>
+					<Icon {...{ ...icon, name: icon.value, inlinesvg: true, className: cssClass }} />
 				)}
 			</div>
 		);
@@ -271,7 +286,7 @@ class Title extends React.PureComponent {
 		const { _id: packid } = pack;
 		return (
 			<div id="Title" className="col-lg">
-				<div className="name mt-3 mb-2 row animated fadeIn no-gutters">
+				<div className="name mb-2 row animated fadeIn">
 					<IconButton {...{ isUniverse, cssClass, icon, txt }} />
 					<TheTitle key={index + loaded} {...{ isEditable: isUniverse, index, universeId }} />
 				</div>

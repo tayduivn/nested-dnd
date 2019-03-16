@@ -39,64 +39,6 @@
 	h2 {
 		text-align: center;
 	}
-
-	.icon {
-		height: 1em !important;
-		width: 1em !important;
-		padding: 0;
-		vertical-align: top;
-		background-position: center top;
-		background-size: cover;
-
-		&.loading {
-			font-size: inherit;
-			svg {
-				display: none;
-
-				height: 100% !important;
-				width: 100% !important;
-			}
-		}
-	}
-
-	.icon-wrap {
-		$fontSize: 6rem;
-		$padding: 0.75rem;
-		overflow: hidden;
-
-		max-height: $fontSize + ($padding * 2);
-		font-size: $fontSize !important;
-
-		.btn {
-			padding: $padding;
-			overflow: hidden;
-			color: inherit;
-			text-align: center;
-			font-size: $fontSize;
-			height: $fontSize + ($padding * 2);
-			width: $fontSize + ($padding * 2);
-
-			&:not(:hover) {
-				background: transparent;
-				border-color: transparent;
-			}
-
-			.icon {
-				margin: 0;
-				padding: 0;
-			}
-
-			&.addNew {
-				opacity: 0.25;
-
-				&:hover,
-				&.showAdd {
-					opacity: 1;
-				}
-			}
-		}
-	}
-
 	/* Up to large */
 	@media (max-width: map-get($grid-breakpoints, "lg")) {
 		font-size: 4vw;
@@ -105,18 +47,6 @@
 
 		.resetBtn {
 			float: none;
-		}
-
-		.icon-wrap,
-		#name,
-		h1,
-		h2 {
-			text-align: left;
-		}
-
-		.icon-wrap,
-		.icon-wrap .btn {
-			font-size: 2.75rem;
 		}
 	}
 
@@ -163,6 +93,8 @@
 .title {
 	&__header {
 		width: 100%;
+		padding: 0 15px;
+		min-height: 1rem;
 	}
 	&__input {
 		font-family: inherit;
@@ -221,6 +153,79 @@
 	&__btn-icon {
 		// helps to center icons like the swatches
 		vertical-align: baseline;
+	}
+
+	&__iconWrap {
+		width: 100%;
+		height: 9rem;
+		padding: 0;
+		position: relative;
+
+		&.--img {
+			padding: 56.25% 0 0 0; /* 16:9 Aspect Ratio */
+			height: 0;
+		}
+
+		&.--video {
+			background: black;
+			color: white;
+			padding: 56.25% 0 0 0; /* 16:9 Aspect Ratio */
+			height: 0;
+
+			.title__iconBtn {
+				color: white !important;
+			}
+		}
+	}
+
+	&__iconBtn {
+		width: 100%;
+		border: 0;
+		background: transparent;
+		position: absolute;
+		top: 0;
+
+		cursor: pointer;
+		padding: 0;
+		height: 100%;
+		font-size: 6rem;
+
+		&:hover {
+			opacity: 0.9;
+		}
+
+		&:focus {
+			outline: none;
+			filter: saturate(2);
+		}
+	}
+
+	&__icon {
+		width: 100%;
+		height: 100%;
+		background-position: center;
+		background-size: cover;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		// prevent the icon from resizing all big while it's loading
+		&.loading {
+			font-size: inherit;
+			svg {
+				// display: none;
+
+				height: 1em !important;
+				width: 1em !important;
+			}
+		}
+	}
+
+	&__showBtn {
+		position: absolute;
+		bottom: 1rem;
+		right: 1rem;
 	}
 }
 

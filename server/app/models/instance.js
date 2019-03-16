@@ -25,6 +25,9 @@ const flatInstanceSchema = Schema(
 				},
 				value: {
 					type: String
+				},
+				hue: {
+					type: Boolean
 				}
 			}
 		},
@@ -96,7 +99,6 @@ flatInstanceSchema.methods.expand = function(generations) {
 	var arr = this.parent().array;
 
 	var node = Nested.copy(this);
-	let cTree;
 
 	node.up = expandUp.call(this);
 
@@ -118,7 +120,7 @@ flatInstanceSchema.methods.expand = function(generations) {
 		var cInst = arr[c];
 		if (!cInst) return;
 
-		cTree = cInst.expand(generations - 1);
+		let cTree = cInst.expand(generations - 1);
 		cTree.index = c;
 		cTree.up = expandUp.call(cInst);
 

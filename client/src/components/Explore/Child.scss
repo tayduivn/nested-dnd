@@ -19,44 +19,65 @@ $linkHeight: 2.5rem;
 	}
 }
 
-.child__header {
-	//border-bottom: 1px solid currentColor;
-	margin: 0.6rem 0 0.3rem 0;
-}
+.child {
+	&__header {
+		//border-bottom: 1px solid currentColor;
+		margin: 0.6rem 0 0.3rem 0;
+	}
+	&__desc {
+		margin: 0 0 0.5rem 0;
+		padding: 0 $xPadding;
+		font-size: 0.75rem;
+		line-height: 1.2em;
+		overflow: hidden;
+		-webkit-line-clamp: 3;
+		display: -webkit-box;
+		text-overflow: ellipsis;
+		-webkit-box-orient: vertical;
+	}
+	&__title {
+		font-weight: 500;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		line-height: 1.3em;
+		padding: 0 $xPadding;
+		font-size: 1rem;
+		margin: 0;
+	}
+	&__isa {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		line-height: 1.3em;
+		padding: 0 $xPadding;
+		font-size: 0.85rem;
+		margin: 0.15rem 0 0 0;
+		opacity: 0.8;
+		font-weight: 400;
+	}
 
-.child__desc {
-	margin: 0 0 0.5rem 0;
-	padding: 0 $xPadding;
-	font-size: 0.75rem;
-	line-height: 1.2em;
-	overflow: hidden;
-	-webkit-line-clamp: 3;
-	display: -webkit-box;
-	text-overflow: ellipsis;
-	-webkit-box-orient: vertical;
-}
+	&__icon {
+		flex-grow: 1;
+		line-height: 1em;
+		width: 100%;
+		background-size: cover;
+		background-position: center top;
+		font-size: 4rem;
+		min-height: 5rem;
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
-// h1
-.child__title {
-	font-weight: 500;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	line-height: 1.3em;
-	padding: 0 $xPadding;
-	font-size: 1rem;
-	margin: 0;
-}
+		svg {
+			margin-bottom: -0.5rem;
+		}
 
-// h2
-.child__isa {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	line-height: 1.3em;
-	padding: 0 $xPadding;
-	font-size: 0.85rem;
-	margin: 0.15rem 0 0 0;
-	opacity: 0.8;
-	font-weight: 400;
+		&.--video {
+			height: 7rem;
+			background: black;
+			color: white !important;
+		}
+	}
 }
 
 .child-inner {
@@ -79,25 +100,6 @@ $linkHeight: 2.5rem;
 	width: 100%;
 	height: 100%;
 	padding-bottom: 0.25rem;
-
-	.icon {
-		flex-grow: 1;
-		line-height: 1em;
-		width: 100%;
-		background-size: cover;
-		background-position: center top;
-		font-size: 4rem;
-		min-height: 5rem;
-		text-align: center;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.isvg,
-	.icon svg {
-		margin-bottom: -0.5rem;
-	}
 
 	&--link {
 		cursor: pointer;

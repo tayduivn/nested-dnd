@@ -127,7 +127,7 @@ const changeUp = (index, universeId, newUp) => {
 	return changes;
 };
 
-export const changeInstance = (index, property, value, universeId, dispatch) => {
+export const changeInstance = (index, property, value, universeId) => {
 	//debounce these properties
 	const saveFunc = ["name", "desc", "data"].includes(property) ? saveDebounced : save;
 
@@ -147,11 +147,11 @@ export const changeInstance = (index, property, value, universeId, dispatch) => 
 		(results = []) => dispatchChanges(results, universeId)
 	);
 
-	return {
+	store.dispatch({
 		type: INSTANCE_SET,
 		data,
 		universeId
-	};
+	});
 };
 
 const checkAlreadyInArr = (oldIn, index) => {

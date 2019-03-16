@@ -35,7 +35,7 @@ class PackLink extends React.PureComponent {
 						)}
 						{lastSaw && (
 							<p>
-								<strong>Currently viewing:</strong> {lastSaw}
+								<strong>Currently viewing:</strong> {lastSaw.name}
 							</p>
 						)}
 					</Link>

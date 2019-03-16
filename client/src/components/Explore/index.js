@@ -25,6 +25,7 @@ const mapStateToProps = state => {
 	};
 };
 const mapDispatchToProps = (dispatch, { match }) => ({
+	handleChange: changeInstance,
 	loadCurrent: (universe, index, isUniverse, isLite) =>
 		dispatch(
 			loadCurrent(
@@ -37,9 +38,10 @@ const mapDispatchToProps = (dispatch, { match }) => ({
 			)
 		),
 	loadFonts: font => font && loadFonts([font]),
-	handleChange: (i, p, v, universe) => dispatch(changeInstance(i, p, v, universe._id, dispatch)),
 	setFavorite: (i, isFavorite, universe) => dispatch(setFavorite(i, isFavorite, universe)),
-	setLastSaw: (i, universe) => dispatch(setLastSaw(i, universe._id)),
+	setLastSaw: (i, universe) => {
+		if (universe._id) dispatch(setLastSaw(i, universe._id));
+	},
 	dispatch
 });
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
@@ -60,7 +62,6 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 			dispatchProps.loadCurrent(stateProps.universe, index, stateProps.isUniverse, true),
 		loadFonts: () => stateProps.pack && dispatchProps.loadFonts(stateProps.pack.font),
 		setLastSaw: () => dispatchProps.setLastSaw(stateProps.index, stateProps.universe),
-		handleChange: (i, p, v) => dispatchProps.handleChange(i, p, v, stateProps.universe),
 		toggleFavorite: () =>
 			dispatchProps.setFavorite(
 				stateProps.index,

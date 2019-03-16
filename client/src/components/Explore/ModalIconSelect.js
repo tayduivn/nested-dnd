@@ -3,6 +3,7 @@ import React from "react";
 import IconSelect from "../Form/IconSelect";
 
 import "./ModalIconSelect.css";
+import "./PlayersPreview.css";
 
 import { sendPlayersPreview } from "../../actions/WebSocketAction";
 
@@ -20,6 +21,7 @@ class TypeChanger extends React.PureComponent {
 		return (
 			<select value={category} onChange={handleChange} name="category">
 				<option value="icon">Icon</option>
+				<option value="video">Video</option>
 				<option value="char">Character</option>
 				<option value="img">Image</option>
 			</select>
@@ -47,11 +49,48 @@ const ImageInput = ({ setPreview, value, handleChange }) => (
 	</div>
 );
 
+const DoHue = ({ doHue, handleChange }) => (
+	<label className="form-group">
+		<div className="switch">
+			<input
+				id="generatorIsUnique"
+				type="checkbox"
+				className="switch-input"
+				name="doHue"
+				checked={doHue}
+				onChange={handleChange}
+			/>
+			<span className="switch-label" data-on="On" data-off="Off" />
+			<span className="switch-handle" />
+		</div>
+		&nbsp; Color with background
+	</label>
+);
+
+const VideoInput = ({ setPreview, doHue, cssClass, value, handleChange }) => (
+	<div>
+		<button className="btn btn-default" onClick={setPreview}>
+			Show to players
+		</button>
+		<a href="/players-preview">Player view</a>
+		<br />
+		<DoHue {...{ doHue, handleChange }} />
+		<input className="form-control" name="value" value={value} onChange={handleChange} />
+		<div className="iconSelectModal__video-wrap video__wrapper">
+			<div className={`video__hueOverlay ${doHue ? cssClass : ""}`} />
+			<video controls width="100%" loop preload="true" mute="true">
+				<source src={value} type="video/mp4" />
+			</video>
+		</div>
+	</div>
+);
+
 const ModalBody = ({
 	value,
 	category,
 	index,
 	cssClass,
+	doHue,
 	txt,
 	handleChange,
 	handleSubmit,
@@ -64,14 +103,14 @@ const ModalBody = ({
 		<TypeChanger {...{ category, handleChange }} />
 		{category === "img" ? (
 			<ImageInput {...{ setPreview, value, handleChange }} />
+		) : category === "video" ? (
+			<VideoInput {...{ setPreview, value, handleChange, cssClass, doHue }} />
 		) : category === "char" ? (
 			<TextBox {...{ value, handleChange }} />
 		) : (
 			<IconSelect
-				status={{ isEnabled: true }}
-				saveProperty={handleChange}
-				style={{ color: txt }}
-				{...{ cssClass, key: index, value, setPreview }}
+				{...{ style: { color: txt }, status: { isEnabled: true } }}
+				{...{ cssClass, key: index, value, setPreview, saveProperty: handleChange }}
 			/>
 		)}
 	</div>
@@ -105,35 +144,43 @@ export default class IconSelectModal extends React.PureComponent {
 		this.modalRef = React.createRef();
 		this.state = {
 			value: props.value,
-			category: props.category
+			category: props.category,
+			doHue: props.doHue
 		};
 	}
+
 	handleChange = e => {
-		if(typeof e === 'string'){
+		if (typeof e === "string") {
 			this.setState({ value: e });
-		}
-		else this.setState({ [e.target.name]: e.target.value });
+		} else if (e.target.name === "doHue") {
+			this.setState({ doHue: e.target.checked });
+		} else this.setState({ [e.target.name]: e.target.value });
 	};
 	setPreview = () => {
-		if (this.state.category === "img" && this.state.value) {
-			sendPlayersPreview({ src: this.state.value });
+		if (this.state.value && ["img", "video"].includes(this.state.category)) {
+			sendPlayersPreview({
+				src: this.state.value,
+				category: this.state.category,
+				hueOverlay: this.state.doHue ? this.props.cssClass : ""
+			});
 		}
 	};
 	handleSubmit = () => {
 		this.props.handleChange(this.props.index, "icon", {
 			category: this.state.category,
-			value: this.state.value
+			value: this.state.value,
+			doHue: this.state.doHue
 		});
 	};
 	render() {
 		var { cssClass, txt } = this.props;
 		const { handleChange, setPreview, handleSubmit } = this;
-		const { value, category } = this.state;
+		const { value, category, doHue } = this.state;
 
 		return (
 			<div {...MODAL_SETTINGS} ref={this.modalRef}>
 				<ModalIconsComponent
-					{...{ setPreview, value, category, cssClass, txt }}
+					{...{ setPreview, value, category, cssClass, txt, doHue }}
 					{...{ handleChange, handleSubmit }}
 				/>
 			</div>
