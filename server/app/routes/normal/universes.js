@@ -9,11 +9,12 @@ const { stringify, normalUniverseResponse, setLastSaw } = require("./utils");
 router.use("/:universe", MW.ownsUniverse);
 
 router.get("/:universe/explore/:index?", (req, res, next) => {
+	const sentIndex = req.params.index !== undefined ? req.params.index : req.universe.lastSaw;
 	req.universe
 		// generate if we need to
-		.getNested(req.params.index, req.universe.pack)
-		.then(async () => {
-			const index = setLastSaw(req.params.index, req.universe);
+		.getNested(sentIndex, req.universe.pack)
+		.then(async nested => {
+			const index = setLastSaw(nested.index, req.universe);
 			const firstBatch = normalUniverseResponse(req.universe, index);
 			const pack = req.universe.pack;
 

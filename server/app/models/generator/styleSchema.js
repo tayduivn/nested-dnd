@@ -37,7 +37,7 @@ const iconSchema = Schema(
 	{
 		category: {
 			$type: String,
-			enum: ["icon", "img", "char"],
+			enum: ["icon", "img", "char", "video"],
 			default: "icon"
 		},
 		type: {

@@ -20,6 +20,7 @@ class TypeChanger extends React.PureComponent {
 		return (
 			<select value={category} onChange={handleChange} name="category">
 				<option value="icon">Icon</option>
+				<option value="video">Video</option>
 				<option value="char">Character</option>
 				<option value="img">Image</option>
 			</select>
@@ -47,6 +48,26 @@ const ImageInput = ({ setPreview, value, handleChange }) => (
 	</div>
 );
 
+const VideoInput = ({ setPreview, value, handleChange }) => (
+	<div>
+		<button className="btn btn-default" onClick={setPreview}>
+			Show to players
+		</button>
+		<a href="/players-preview">Player view</a>
+		<br />
+		<input className="form-control" name="value" value={value} onChange={handleChange} />
+		<div className="iconSelectModal__img-wrap">
+			<video controls width="100%" loop preload="true" mute="true">
+				<source
+					src="https://onedrive.live.com/download?cid=7E69AF32F993976F&resid=7E69AF32F993976F%21115162&authkey=AEwWDqqRDEKz3nY"
+					type="video/mp4"
+				/>
+				Your browser does not support the video tag.
+			</video>
+		</div>
+	</div>
+);
+
 const ModalBody = ({
 	value,
 	category,
@@ -64,14 +85,15 @@ const ModalBody = ({
 		<TypeChanger {...{ category, handleChange }} />
 		{category === "img" ? (
 			<ImageInput {...{ setPreview, value, handleChange }} />
+		) : category === "video" ? (
+			<VideoInput {...{ setPreview, value, handleChange }} />
 		) : category === "char" ? (
 			<TextBox {...{ value, handleChange }} />
 		) : (
 			<IconSelect
 				status={{ isEnabled: true }}
-				saveProperty={handleChange}
 				style={{ color: txt }}
-				{...{ cssClass, key: index, value, setPreview }}
+				{...{ cssClass, key: index, value, setPreview, saveProperty: handleChange }}
 			/>
 		)}
 	</div>
@@ -109,10 +131,9 @@ export default class IconSelectModal extends React.PureComponent {
 		};
 	}
 	handleChange = e => {
-		if(typeof e === 'string'){
+		if (typeof e === "string") {
 			this.setState({ value: e });
-		}
-		else this.setState({ [e.target.name]: e.target.value });
+		} else this.setState({ [e.target.name]: e.target.value });
 	};
 	setPreview = () => {
 		if (this.state.category === "img" && this.state.value) {

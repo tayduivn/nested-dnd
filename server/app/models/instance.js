@@ -20,7 +20,7 @@ const flatInstanceSchema = Schema(
 			type: {
 				category: {
 					$type: String,
-					enum: ["icon", "img", "char"],
+					enum: ["icon", "img", "char", "video"],
 					default: "icon"
 				},
 				value: {
@@ -45,6 +45,11 @@ const flatInstanceSchema = Schema(
 	{ _id: false }
 );
 
+const isUrl = function(doc) {
+	const isNotUrlCatgory = doc.icon.category !== "img" && doc.icon.category !== "video";
+	return doc.icon && doc.icon.value && doc.icon.value.startsWith("http") && isNotUrlCatgory;
+};
+
 // clean up from old type
 flatInstanceSchema.pre("init", doc => {
 	if (typeof doc.icon === "string") {
@@ -68,7 +73,7 @@ flatInstanceSchema.pre("init", doc => {
 		};
 	}
 	// fix icon is actually a url
-	else if (doc.icon && doc.icon.value && doc.icon.value.startsWith("http")) {
+	else if (isUrl(doc)) {
 		doc.icon.category = "img";
 	}
 	if (doc.img)
@@ -108,7 +113,7 @@ flatInstanceSchema.methods.expand = function(generations) {
 		var cInst = arr[c];
 		if (!cInst) return;
 
-		cTree = cInst.expand(generations - 1);
+		let cTree = cInst.expand(generations - 1);
 		cTree.index = c;
 		cTree.up = expandUp.call(cInst);
 

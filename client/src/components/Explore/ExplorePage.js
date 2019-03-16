@@ -111,7 +111,6 @@ class Children extends React.Component {
 			highlight: highlightColor,
 			generators: c.isNew ? generators : undefined,
 			...c,
-			transparentBG: c.cssClass === cssClass && cssClass && cssClass.includes("ptn-"),
 			handleClick: c.isNew ? handle.add : handle.click,
 			handleDeleteLink: this.handleDeleteLink,
 			in: c.in && c.in.join && c.in.join(","),
