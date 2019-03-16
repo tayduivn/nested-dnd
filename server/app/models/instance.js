@@ -20,7 +20,7 @@ const flatInstanceSchema = Schema(
 			type: {
 				category: {
 					$type: String,
-					enum: ["icon", "img", "char"],
+					enum: ["icon", "img", "char", "video"],
 					default: "icon"
 				},
 				value: {
@@ -45,6 +45,11 @@ const flatInstanceSchema = Schema(
 	{ _id: false }
 );
 
+const isUrl = function({ category, value } = {}) {
+	const isNotUrlCatgory = category !== "img" && category !== "video";
+	return value && value.startsWith("http") && isNotUrlCatgory;
+};
+
 // clean up from old type
 flatInstanceSchema.pre("init", doc => {
 	if (typeof doc.icon === "string") {
@@ -68,8 +73,11 @@ flatInstanceSchema.pre("init", doc => {
 		};
 	}
 	// fix icon is actually a url
-	else if (doc.icon && doc.icon.value && doc.icon.value.startsWith("http")) {
-		doc.icon.category = "img";
+	else if (isUrl(doc.icon)) {
+		doc.icon = {
+			category: "img",
+			value: doc.icon && doc.icon.value
+		};
 	}
 	if (doc.img)
 		doc.icon = {
@@ -88,6 +96,8 @@ flatInstanceSchema.methods.expand = function(generations) {
 	var arr = this.parent().array;
 
 	var node = Nested.copy(this);
+	let cTree;
+
 	node.up = expandUp.call(this);
 
 	// copy style from parent if it is the currently displayed node
