@@ -6,6 +6,7 @@ import { Login } from "../User";
 import Nav from "./Nav";
 import Explore, { Splash, PlayersPreview } from "../Explore";
 import Packs, { routes as packs } from "../Packs";
+import Map from "../Map";
 import { PropsRoute, makeSubRoutes } from "../Routes";
 import Universes, { routes as universes } from "../Universes";
 import { history } from "./store";
@@ -34,6 +35,10 @@ const NotFound = () => (
 const LOADING_GIF = LoadingIcon;
 
 const routes = [
+	{
+		path: "/map",
+		component: Map
+	},
 	{
 		path: "/packs",
 		component: Packs,
