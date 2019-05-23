@@ -65,7 +65,7 @@
 		"popper.js": "^1.14.1",
 		"prop-types": "^15.6.0",
 		"react": "^16.7.0",
-		"react-color": "^2.14.0",
+		"react-color": "^2.17.3",
 		"react-document-title": "^2.0.3",
 		"react-dom": "^16.7.0",
 		"react-inlinesvg": "^0.8.1",
