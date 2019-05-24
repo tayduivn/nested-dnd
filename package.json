@@ -107,7 +107,7 @@
 		"nyc": "^13.1.0",
 		"redux-devtools": "^3.5.0",
 		"sinon": "^6.3.5",
-		"sinon-mongoose": "^2.1.1",
+		"sinon-mongoose": "^2.3.0",
 		"stylelint": "^9.10.0",
 		"stylelint-config-recommended-scss": "^3.2.0",
 		"stylelint-scss": "^3.5.1",
