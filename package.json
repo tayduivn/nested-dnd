@@ -54,7 +54,7 @@
 		"fantasy-names": "https://github.com/cattegy/fantasy-names.git",
 		"game-icons-font": "^0.1.2",
 		"history": "^4.7.2",
-		"jquery": "^3.3.1",
+		"jquery": "^3.4.0",
 		"jsdom": "^13.2.0",
 		"material-colors": "^1.2.5",
 		"mongoose": "^5.2.10",
