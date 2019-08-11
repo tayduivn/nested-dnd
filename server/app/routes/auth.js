@@ -23,8 +23,7 @@ router.delete("/account", md.isLoggedIn, function(req, res, next) {
 		.then(async user => {
 			if (!user)
 				return res.status(404).json({
-					errorMessage: "Could not find logged in user",
-					error: err
+					errorMessage: "Could not find logged in user"
 				});
 
 			var deletedObjects = await user.remove();

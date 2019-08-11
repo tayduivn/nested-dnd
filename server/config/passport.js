@@ -9,26 +9,8 @@ var User = require("../app/models/user");
 const PASSWORD_MIN_LENGTH = 8;
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-// expose this function to our app using module.exports
-module.exports = function(passport) {
-	// =========================================================================
-	// passport session setup ==================================================
-	// =========================================================================
-	// required for persistent login sessions
-	// passport needs ability to serialize and unserialize users out of session
-
-	// used to serialize the user for the session
-	passport.serializeUser(function(user, done) {
-		done(null, user.id);
-	});
-
-	// used to deserialize the user
-	passport.deserializeUser(function(id, done) {
-		User.findById(id, function(err, user) {
-			done(err, user);
-		});
-	});
-
+// eslint-disable-next-line max-lines-per-function
+function local(passport) {
 	// =========================================================================
 	// LOCAL SIGNUP ============================================================
 	// =========================================================================
@@ -52,8 +34,7 @@ module.exports = function(passport) {
 
 					// validate password min length
 					if (password.length < PASSWORD_MIN_LENGTH) {
-						errorMessages.passwordError =
-							"Password must be at least 8 characters long.";
+						errorMessages.passwordError = "Password must be at least 8 characters long.";
 					}
 
 					// validate email format
@@ -131,4 +112,28 @@ module.exports = function(passport) {
 			}
 		)
 	); //"local-login"
+}
+
+// expose this function to our app using module.exports
+// eslint-disable-next-line max-lines-per-function
+module.exports = function(passport) {
+	// =========================================================================
+	// passport session setup ==================================================
+	// =========================================================================
+	// required for persistent login sessions
+	// passport needs ability to serialize and unserialize users out of session
+
+	// used to serialize the user for the session
+	passport.serializeUser(function(user, done) {
+		done(null, user.id);
+	});
+
+	// used to deserialize the user
+	passport.deserializeUser(function(id, done) {
+		User.findById(id, function(err, user) {
+			done(err, user);
+		});
+	});
+
+	local(passport);
 };
