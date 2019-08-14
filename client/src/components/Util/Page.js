@@ -1,8 +1,8 @@
 import React from "react";
 
-const Page = props => (
-	<div className="main">
-		<div className="container mt-5">{props.children}</div>
+const Page = ({children, id}) => (
+	<div className="main" id={id}>
+		<div className="container mt-5">{children}</div>
 	</div>
 );
 export default Page;

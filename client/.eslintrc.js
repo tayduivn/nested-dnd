@@ -20,7 +20,8 @@ const config = {
 		"no-process-env": 0,
 		"react/prop-types": "off",
 		"no-console": "off",
-		"no-case-declarations": "off"
+		"no-case-declarations": "off",
+		"max-lines-per-function": "off"
 	},
 	overrides: [
 		{
@@ -35,6 +36,6 @@ const config = {
 	]
 };
 
-config.rules = Object.assign({}, config.rules, techdebt);
+config.rules = Object.assign({}, techdebt, config.rules);
 
 module.exports = config;

@@ -3,7 +3,7 @@ import Link from "../Util/Link";
 
 import "./Packs.css";
 
-import { LOADING_GIF } from "../App/App";
+import { LoadingIcon } from "../Util/Loading";
 import { loadFonts } from "../App/store";
 
 const EDIT_BUTTON = (
@@ -142,7 +142,7 @@ class PackUL extends React.Component {
 const MyPacks = ({ myPacks = [] }) => (
 	<div>
 		<h2>My Packs</h2>
-		{myPacks === null && LOADING_GIF}
+		{myPacks === null && LoadingIcon}
 		{myPacks && myPacks.length === 0 && <p>You have not created any packs yet</p>}
 		{myPacks && <PackUL list={myPacks} addButton={true} />}
 	</div>
@@ -154,7 +154,7 @@ const PacksList = ({ loggedIn, error, myPacks, publicPacks }) => (
 
 		<h2>Public Packs</h2>
 
-		{myPacks === null && LOADING_GIF}
+		{myPacks === null && LoadingIcon}
 		{error && error.display}
 
 		{publicPacks && publicPacks.length === 0 && <p>There are no public packs to display</p>}

@@ -32,9 +32,20 @@ const config = {
 		],
 		"node/no-unpublished-require": "off",
 		"no-case-declarations": "off"
-	}
+	},
+	overrides: [
+		{
+			files: ["*.test.js"],
+			env: {
+				mocha: true
+			},
+			rules: {
+				"max-lines-per-function": "off"
+			}
+		}
+	]
 };
 
-config.rules = Object.assign({}, config.rules, techdebt);
+config.rules = Object.assign({}, techdebt, config.rules);
 
 module.exports = config;

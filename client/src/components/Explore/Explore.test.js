@@ -33,10 +33,10 @@ const current = {
 
 spy(Explore.prototype, "componentDidMount");
 
-describe("<Explore />", () => {
-	var wrap;
+var wrap;
 
-	before(() => {
+describe("<Explore />", () => {
+	beforeAll(() => {
 		const history = createMemoryHistory();
 		history.location.state = current;
 		wrap = mount(
@@ -50,7 +50,7 @@ describe("<Explore />", () => {
 		global.fetchReturn = current;
 	});
 
-	after(() => {
+	afterAll(() => {
 		global.fetchReturn = {};
 	});
 

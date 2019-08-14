@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function  */
+
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
@@ -107,6 +109,7 @@ const DisplayLogin = ({
 					Submit
 				</button>
 			</form>
+			<a href="/api/auth/spotify">Login with Spotify</a>
 		</div>
 	</div>
 );

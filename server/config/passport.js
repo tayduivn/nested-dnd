@@ -1,7 +1,9 @@
 "use strict";
+const { getExpiration } = require("../app/util/spotify");
 
 // load all the things we need
 var LocalStrategy = require("passport-local").Strategy;
+const SpotifyStrategy = require("passport-spotify").Strategy;
 
 // load up the user model
 var User = require("../app/models/user");
@@ -9,26 +11,53 @@ var User = require("../app/models/user");
 const PASSWORD_MIN_LENGTH = 8;
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-// expose this function to our app using module.exports
-module.exports = function(passport) {
-	// =========================================================================
-	// passport session setup ==================================================
-	// =========================================================================
-	// required for persistent login sessions
-	// passport needs ability to serialize and unserialize users out of session
+// eslint-disable-next-line max-lines-per-function
+function spotify(passport) {
+	passport.use(
+		new SpotifyStrategy(
+			{
+				clientID: process.env.SPOTIFY_CLIENT_ID,
+				clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+				callbackURL: "/api/auth/spotify/callback",
+				passReqToCallback: true
+			},
+			async function(req, accessToken, refreshToken, expires_in, profile, done) {
+				let user;
+				const doc = {
+					accessToken,
+					refreshToken,
+					id: profile.id,
+					expires: getExpiration(expires_in)
+				};
 
-	// used to serialize the user for the session
-	passport.serializeUser(function(user, done) {
-		done(null, user.id);
-	});
+				if (!req.user) {
+					// not logged-in
+					user = await User.findOneAndUpdate(
+						{ $or: [{ "spotify.id": profile.id }, { "local.email": profile._json.email }] },
+						{
+							spotify: doc
+						},
+						{ upsert: true, new: true }
+					).exec();
 
-	// used to deserialize the user
-	passport.deserializeUser(function(id, done) {
-		User.findById(id, function(err, user) {
-			done(err, user);
-		});
-	});
+					// the user still couldn't be created
+					if (!user) {
+						done(new Error("could not create user"));
+					}
+					console.log(user);
+					done(null, user);
+				} else {
+					req.user.spotify = doc;
+					await req.user.save();
+					done(null, req.user);
+				}
+			}
+		)
+	);
+}
 
+// eslint-disable-next-line max-lines-per-function
+function local(passport) {
 	// =========================================================================
 	// LOCAL SIGNUP ============================================================
 	// =========================================================================
@@ -52,8 +81,7 @@ module.exports = function(passport) {
 
 					// validate password min length
 					if (password.length < PASSWORD_MIN_LENGTH) {
-						errorMessages.passwordError =
-							"Password must be at least 8 characters long.";
+						errorMessages.passwordError = "Password must be at least 8 characters long.";
 					}
 
 					// validate email format
@@ -131,4 +159,29 @@ module.exports = function(passport) {
 			}
 		)
 	); //"local-login"
+}
+
+// expose this function to our app using module.exports
+// eslint-disable-next-line max-lines-per-function
+module.exports = function(passport) {
+	// =========================================================================
+	// passport session setup ==================================================
+	// =========================================================================
+	// required for persistent login sessions
+	// passport needs ability to serialize and unserialize users out of session
+
+	// used to serialize the user for the session
+	passport.serializeUser(function(user, done) {
+		done(null, user.id);
+	});
+
+	// used to deserialize the user
+	passport.deserializeUser(function(id, done) {
+		User.findById(id, function(err, user) {
+			done(err, user);
+		});
+	});
+
+	local(passport);
+	spotify(passport);
 };

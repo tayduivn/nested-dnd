@@ -3,6 +3,35 @@ import { Link } from "../Util";
 
 import "./Nav.css";
 
+const LoggedOut = ({ handleLogout }) => (
+	<>
+		<li className="nav-item">
+			<Link className="nav-link mx-3" to="/login">
+				Login
+			</Link>
+		</li>
+		<li className="nav-item">
+			<Link to={"/signup"}>
+				<button className="btn btn-dark">Sign up</button>
+			</Link>
+		</li>
+	</>
+);
+const LoggedIn = ({ handleLogout }) => (
+	<>
+		<li className="nav-item">
+			<Link to="/account" className="nav-link">
+				Account
+			</Link>
+		</li>
+		<li className="nav-item">
+			<button className="nav-link" onClick={handleLogout}>
+				Logout
+			</button>
+		</li>
+	</>
+);
+
 const Nav = ({ loggedIn, handleLogout }) => (
 	<nav className="navbar navbar-dark navbar-expand-lg">
 		<Link className="navbar-brand" to="/">
@@ -25,27 +54,8 @@ const Nav = ({ loggedIn, handleLogout }) => (
 			<ul className="navbar-nav mr-auto" />
 
 			<ul className="navbar-nav">
-				{!loggedIn ? (
-					<li className="nav-item">
-						<Link className="nav-link mx-3" to={"/login"}>
-							Login
-						</Link>
-					</li>
-				) : (
-					<li className="nav-item">
-						<button className="nav-link" onClick={handleLogout}>
-							Logout
-						</button>
-					</li>
-				)}
+				{!loggedIn ? <LoggedOut handleLogout={handleLogout} /> : <LoggedIn />}
 			</ul>
-			{!loggedIn ? (
-				<form className="form-inline">
-					<Link to={"/signup"}>
-						<button className="btn btn-dark">Sign up</button>
-					</Link>
-				</form>
-			) : null}
 		</div>
 	</nav>
 );
