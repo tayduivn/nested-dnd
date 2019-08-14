@@ -1,0 +1,66 @@
+{
+	"name": "server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.js",
+	"engines": {
+		"node": "10.16.0"
+	},
+	"directories": {
+		"test": "test"
+	},
+	"scripts": {
+		"babel": "rm -rf .tmp && babel . ./config ./app/** -d .tmp",
+		"test": "cross-env NODE_ENV=test nyc mocha --exit --require ./.testSetup.js --timeout=3000 \"**/*.test.js\"",
+		"start-prod": "node server.js",
+		"start": "nodemon --inspect server.js"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@babel/cli": "^7.2.3",
+		"@babel/core": "^7.2.2",
+		"@babel/preset-env": "^7.2.3",
+		"@babel/register": "^7.0.0",
+		"babel-plugin-istanbul": "^5.1.0",
+		"babel-plugin-transform-class-properties": "^6.24.1",
+		"babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+		"babel-polyfill": "^6.26.0",
+		"body-parser": "^1.19.0",
+		"chai": "^4.1.2",
+		"chai-as-promised": "^7.1.1",
+		"connect-flash": "^0.1.1",
+		"connect-mongo": "^2.0.1",
+		"cookie-parser": "^1.4.3",
+		"cross-env": "^5.1.4",
+		"express": "^4.16.2",
+		"express-session": "^1.15.6",
+		"express-sslify": "^1.2.0",
+		"mocha": "^6.2.0",
+		"mongoose": "^5.2.10",
+		"morgan": "^1.9.0",
+		"nyc": "^14.1.1",
+		"passport": "^0.4.0",
+		"passport-local": "^1.0.0",
+		"passport-spotify": "^1.1.0",
+		"request": "^2.88.0",
+		"sinon-mongoose": "^2.3.0"
+	},
+	"devDependencies": {
+		"http-proxy-middleware": "^0.19.1"
+	},
+	"nyc": {
+		"all": true,
+		"cache": true,
+		"require": [
+			"@babel/register",
+			"./.testSetup.js"
+		],
+		"reporter": [
+			"lcov",
+			"text"
+		],
+		"sourceMap": false,
+		"instrument": false
+	}
+}

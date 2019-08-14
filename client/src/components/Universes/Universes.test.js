@@ -1,13 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import chai from "chai";
 import enzyme from "enzyme";
 import { spy } from "sinon";
 
 import Universes from "./Universes";
 
 describe("<Universes />", () => {
-	before(() => {
+	beforeAll(() => {
 		spy(console, "error");
 		spy(enzyme, "mount");
 
@@ -19,7 +18,7 @@ describe("<Universes />", () => {
 		];
 	});
 
-	after(() => {
+	afterAll(() => {
 		global.fetchReturn = {};
 		console.error.restore();
 		enzyme.mount.restore();

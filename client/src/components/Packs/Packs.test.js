@@ -15,7 +15,7 @@ import { store } from "../App";
 describe("<PacksList />", () => {
 	var wrap;
 
-	before(() => {
+	beforeAll(() => {
 		spy(console, "error");
 		spy(enzyme, "mount");
 
@@ -42,7 +42,7 @@ describe("<PacksList />", () => {
 		);
 	});
 
-	after(() => {
+	afterAll(() => {
 		global.fetchReturn = {};
 		console.error.restore();
 		enzyme.mount.restore();
@@ -57,7 +57,7 @@ describe("<PacksList />", () => {
 });
 
 describe("<Pack />", () => {
-	before(() => {
+	beforeAll(() => {
 		spy(console, "error");
 		spy(enzyme, "mount");
 
@@ -69,7 +69,7 @@ describe("<Pack />", () => {
 		};
 	});
 
-	after(() => {
+	afterAll(() => {
 		global.fetchReturn = {};
 		console.error.restore();
 		enzyme.mount.restore();
@@ -78,7 +78,7 @@ describe("<Pack />", () => {
 	describe("<ViewPack />", () => {
 		var wrap;
 
-		before(() => {
+		beforeAll(() => {
 			var history = createMemoryHistory("/dnd");
 			history.push("/dnd");
 			wrap = enzyme.mount(

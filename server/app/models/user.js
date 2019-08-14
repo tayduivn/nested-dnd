@@ -28,6 +28,12 @@ var userSchema = mongoose.Schema({
 		token: String,
 		email: String,
 		name: String
+	},
+	spotify: {
+		id: String,
+		accessToken: String,
+		refreshToken: String,
+		expires: Date
 	}
 });
 

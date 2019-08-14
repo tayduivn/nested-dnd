@@ -3,6 +3,7 @@ const router = require("express").Router();
 
 const User = require("../models/user");
 const md = require("./middleware.js");
+const { SCOPE } = require("../util/spotify");
 
 router.post("/login", function(req, res, next) {
 	passport.authenticate("local", function(err, user, info) {
@@ -15,6 +16,32 @@ router.post("/signup", function(req, res, next) {
 		login(err, user, info, req, res, next);
 	})(req, res, next);
 });
+
+router.get(
+	"/auth/spotify",
+	passport.authenticate("spotify", {
+		scope: SCOPE
+	})
+);
+
+router.get(
+	"/auth/spotify/callback",
+	passport.authenticate("spotify", { failureRedirect: "/login" }),
+	function(req, res) {
+		// Successful authentication, redirect home.
+		res.redirect("/");
+	}
+);
+
+router.get("/connect/spotify", passport.authorize("spotify", { failureRedirect: "/account" }));
+
+router.get(
+	"/connect/spotify/callback",
+	passport.authorize("spotify", { failureRedirect: "/account" }),
+	function(req, res) {
+		res.redirect("/account");
+	}
+);
 
 router.delete("/account", md.isLoggedIn, function(req, res, next) {
 	// TODO: Delete all their stuff

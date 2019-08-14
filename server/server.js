@@ -90,6 +90,7 @@ const playersPreview = require("./app/routes/players-preview");
 const tables = require("./app/routes/tables");
 const universes = require("./app/routes/universes");
 const normal = require("./app/routes/normal");
+const spotify = require("./app/routes/spotify");
 
 // load our routes and pass in our app and fully configured passport
 app.use("/api", auth);
@@ -102,6 +103,7 @@ app.use("/api/players-preview", playersPreview);
 app.use("/api/tables", tables);
 app.use("/api/universes", MW.isLoggedIn, universes);
 app.use("/api/normal", normal);
+app.use("/api/spotify", spotify);
 
 // 404 error handler returns json
 app.use("/api", function(req, res) {

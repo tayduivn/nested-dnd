@@ -3,7 +3,7 @@ import { Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import DB from "../../actions/CRUDAction";
-import { LOADING_GIF } from "../App/App";
+import { LoadingIcon } from "../Util/Loading";
 
 import async from "async";
 
@@ -64,7 +64,12 @@ export default class Table extends Component {
 		var content;
 
 		if (this.state.error) content = <div className="main">{this.state.error.display}</div>;
-		else if (!table && !isCreate) content = <div className="main">{LOADING_GIF}</div>;
+		else if (!table && !isCreate)
+			content = (
+				<div className="main">
+					<LoadingIcon />
+				</div>
+			);
 		else {
 			content = <Switch />;
 		}

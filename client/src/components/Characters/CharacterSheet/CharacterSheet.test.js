@@ -1,5 +1,4 @@
 import React from "react";
-import chai from "chai";
 import { mount } from "enzyme";
 
 import Character from "../../../stores/Character";
@@ -48,12 +47,10 @@ var char = {
 	advantages: [],
 	background: {
 		alignment: "Chaotic Neutral",
-		bond:
-			"I suffer awful visions of a coming disaster and will do anything to prevent it.",
+		bond: "I suffer awful visions of a coming disaster and will do anything to prevent it.",
 		flaw:
 			"I remember every insult I’ve received and nurse a silent resentment toward anyone who’s ever wronged me.",
-		ideal:
-			"The natural world is more important than all the constructs of civilization.",
+		ideal: "The natural world is more important than all the constructs of civilization.",
 		name: "Outlander",
 		personality:
 			"I have a lesson for every situation, drawn from observing nature. I once ran twenty-five miles without stopping to warn to my clan of an approaching horde. I’d do it again if I had to.",

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "../Util";
 import { connect } from "react-redux";
 
-import { LOADING_GIF } from "../App/App";
+import { LoadingIcon } from "../Util/Loading";
 import { GeneratorsList } from "../Generators";
 import { TablesList } from "../Tables/Tables";
 
@@ -11,7 +11,9 @@ import actions from "./actions";
 
 const LOADING = (
 	<div className="main">
-		<div className="container mt-5">{LOADING_GIF}</div>
+		<div className="container mt-5">
+			<LoadingIcon />
+		</div>
 	</div>
 );
 

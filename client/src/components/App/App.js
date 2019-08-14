@@ -7,6 +7,7 @@ import Nav from "./Nav";
 import Explore, { Splash, PlayersPreview } from "../Explore";
 import Packs, { routes as packs } from "../Packs";
 import Map from "../Map";
+import Account from "../Account";
 import { PropsRoute, makeSubRoutes } from "../Routes";
 import Universes, { routes as universes } from "../Universes";
 import { history } from "./store";
@@ -17,10 +18,10 @@ const Characters = React.lazy(() => import("./../Characters"));
 const Character = Characters.Character;
 
 // monkey patch
-if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
+/*if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
 	const { whyDidYouUpdate } = require("why-did-you-update");
 	whyDidYouUpdate(React);
-}
+}*/
 
 const NotFound = () => (
 	<div className="main">
@@ -35,6 +36,10 @@ const NotFound = () => (
 const LOADING_GIF = LoadingIcon;
 
 const routes = [
+	{
+		path: "/account",
+		component: Account
+	},
 	{
 		path: "/map",
 		component: Map

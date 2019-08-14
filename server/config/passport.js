@@ -1,13 +1,60 @@
 "use strict";
+const { getExpiration } = require("../app/util/spotify");
 
 // load all the things we need
 var LocalStrategy = require("passport-local").Strategy;
+const SpotifyStrategy = require("passport-spotify").Strategy;
 
 // load up the user model
 var User = require("../app/models/user");
 
 const PASSWORD_MIN_LENGTH = 8;
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+// eslint-disable-next-line max-lines-per-function
+function spotify(passport) {
+	passport.use(
+		new SpotifyStrategy(
+			{
+				clientID: process.env.SPOTIFY_CLIENT_ID,
+				clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+				callbackURL: "/api/auth/spotify/callback",
+				passReqToCallback: true
+			},
+			async function(req, accessToken, refreshToken, expires_in, profile, done) {
+				let user;
+				const doc = {
+					accessToken,
+					refreshToken,
+					id: profile.id,
+					expires: getExpiration(expires_in)
+				};
+
+				if (!req.user) {
+					// not logged-in
+					user = await User.findOneAndUpdate(
+						{ $or: [{ "spotify.id": profile.id }, { "local.email": profile._json.email }] },
+						{
+							spotify: doc
+						},
+						{ upsert: true, new: true }
+					).exec();
+
+					// the user still couldn't be created
+					if (!user) {
+						done(new Error("could not create user"));
+					}
+					console.log(user);
+					done(null, user);
+				} else {
+					req.user.spotify = doc;
+					await req.user.save();
+					done(null, req.user);
+				}
+			}
+		)
+	);
+}
 
 // eslint-disable-next-line max-lines-per-function
 function local(passport) {
@@ -136,4 +183,5 @@ module.exports = function(passport) {
 	});
 
 	local(passport);
+	spotify(passport);
 };
