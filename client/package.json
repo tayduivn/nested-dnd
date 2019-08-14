@@ -12,7 +12,7 @@
 		"start": "set HTTPS=true && concurrently --kill-others-on-fail \"yarn _watch-css\" \"yarn _start-js\"",
 		"build": "yarn build-css && react-scripts build",
 		"build-css": "npx node-sass src/ -o src/",
-		"test": "react-scripts test --watchAll=false",
+		"test": "yarn build-css && react-scripts test --watchAll=false",
 		"eject": "react-scripts eject"
 	},
 	"author": "",
