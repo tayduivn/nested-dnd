@@ -270,7 +270,8 @@ class MixedSortable extends React.Component {
 	};
 	handleChange = changed => {
 		const arr = [...this.props.array];
-		for (let index in changed) {
+		let index;
+		for (index in changed) {
 			let newRow = changed[index];
 			if (!newRow) {
 				arr.splice(index, 1);

@@ -1,20 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import DocumentTitle from "react-document-title";
-
-import DB from "../../actions/CRUDAction";
 import ExplorePage, { LOADING, Data, Modals, Children } from "./ExplorePage";
 import Title from "./Title";
 import { handleNestedPropertyValue } from "../../util";
 
 import "./Explore.css";
-const NEW_ITEM = {
-	isNew: true,
-	cssClass: "addNew",
-	icon: "fas fa-plus",
-	in: []
-};
 
 /**
  * This manages the tree data

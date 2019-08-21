@@ -156,7 +156,14 @@ class IconButton extends React.PureComponent {
 						) : null}
 					</>
 				) : (
-					<Icon {...{ ...icon, name: icon.value, inlinesvg: true, className: cssClass }} />
+					<Icon
+						{...{
+							...icon,
+							name: icon.value,
+							inlinesvg: true,
+							className: `${cssClass} title__icon`
+						}}
+					/>
 				)}
 			</div>
 		);

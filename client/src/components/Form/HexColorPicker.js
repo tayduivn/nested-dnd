@@ -12,7 +12,7 @@ import debounce from "debounce";
 function rgbToHex(r, g, b) {
 	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
- 
+
 function getTextColor() {
 	var arr = document.body.style.color;
 	if (!arr) return;
@@ -139,14 +139,15 @@ class HexColorPickerInner extends React.Component {
 const HexColorPickerComponent = CustomPicker(HexColorPickerInner);
 // we need to wrap this so we can have a corrent shouldComponentUpdate
 class HexColorPicker extends HexColorPickerComponent {
-	shouldComponentUpdate(nextProps, nextState) {
+	// TODO fix
+	/*shouldComponentUpdate(nextProps, nextState) {
 		return (
 			this.props.index !== nextProps.index ||
 			this.props.cssClass !== nextProps.cssClass ||
 			this.state.display !== nextState.display ||
 			this.state.color !== nextState.color
 		);
-	}
+	}*/
 }
 
 export { HexColorPicker };

@@ -72,7 +72,8 @@ function setHeader(method, headers) {
 function formDataTOJson(formData) {
 	let jsonObject = {};
 
-	for (const [key, value] of formData.entries()) {
+	let key, value;
+	for ([key, value] of formData.entries()) {
 		jsonObject[key] = value;
 	}
 	return jsonObject;

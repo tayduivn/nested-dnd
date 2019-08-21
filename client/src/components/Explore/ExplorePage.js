@@ -1,5 +1,4 @@
 import React from "react";
-import ReactSortable from "react-sortablejs";
 
 import Child from "./Child";
 import Icon from "./Icon";
@@ -69,27 +68,6 @@ const ExplorePage = ({ cssClass, txt, children }) => (
 	</div>
 );
 
-const SortableList = ({ handlechange, index, ...props }) => (
-	<ReactSortable
-		{...props}
-		options={{
-			animation: 300,
-			delay: 100,
-			group: "children",
-			filter: ".isNew", //ignore
-			onEnd: evt => {
-				handlechange(index, "sort", { from: evt.oldIndex, to: evt.newIndex });
-			}
-		}}
-	/>
-);
-
-const TRANSITION_GROUP_SETTINGS = {
-	id: "childrenGrid",
-	className: "row no-gutters",
-	animation: 10
-};
-
 class Children extends React.Component {
 	handleDeleteLink = remove => {
 		return this.props.handle.change(this.props.index, "deleteLink", remove);
@@ -104,7 +82,7 @@ class Children extends React.Component {
 		);
 	}
 	_getProps(c, i) {
-		const { cssClass, handle, highlightColor, isUniverse } = this.props;
+		const { handle, highlightColor, isUniverse } = this.props;
 		const { generators } = this.props;
 
 		return {
@@ -120,16 +98,15 @@ class Children extends React.Component {
 		};
 	}
 	render() {
-		const { isUniverse, index, inArr = [], handle } = this.props;
+		const { index, inArr = [] } = this.props;
+		// TODO: Sortablejs
+		// const {isUniverse, handle}
 		return (
-			<SortableList
-				{...{ index, ...TRANSITION_GROUP_SETTINGS }}
-				handlechange={isUniverse ? handle.change : undefined}
-			>
+			<div id="childrenGrid" className="row no-gutters" index={index}>
 				{inArr.map((c, i) => (
 					<Child key={`${c.isNew ? "isNew" : c.index}_${i}`} {...this._getProps(c, i)} />
 				))}
-			</SortableList>
+			</div>
 		);
 	}
 }

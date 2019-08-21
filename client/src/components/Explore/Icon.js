@@ -5,11 +5,12 @@ class SVGWrap extends React.PureComponent {
 	render() {
 		const { part1, part2, inlinesvg, className } = this.props;
 		return inlinesvg ? (
-			<SVG
-				className={`icon animated infinite ${part2} ${part1} ${className}`}
-				alt={`/icons/${part1}.svg`} //for debugging
-				src={`/icons/${part1}.svg`}
-			/>
+			<span className={`icon animated infinite ${part2} ${part1} ${className}`}>
+				<SVG
+					alt={`/icons/${part1}.svg`} //for debugging
+					src={`/icons/${part1}.svg`}
+				/>
+			</span>
 		) : (
 			<img
 				className={`icon animated infinite ${part2} ${part1} ${className}`}

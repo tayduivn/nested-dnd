@@ -49,7 +49,8 @@ function universe(state = {}, action) {
 			array[action.index] = instance(array[action.index], action);
 			return spread(state, { array });
 		case INSTANCE_SET:
-			for (let index in action.data) {
+			let index;
+			for (index in action.data) {
 				array[index] = instance(array[index], { ...action, data: action.data[index] });
 			}
 			return spread(state, { array });
@@ -95,7 +96,8 @@ function byId(state = {}, action) {
 		case UNIVERSE_SET:
 			return spread(state, { [action.data._id]: universe(copy[action.data._id], action) });
 		case UNIVERSES_SET:
-			for (let id in action.data) {
+			let id;
+			for (id in action.data) {
 				const u = action.data[id];
 				copy[u._id] = normalize(copy[u._id], { ...action, data: u });
 			}

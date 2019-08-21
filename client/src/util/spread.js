@@ -46,7 +46,8 @@ export default function spread(into, ...rest) {
 	let combined = {};
 	rest.forEach(o => (combined = { ...combined, ...o }));
 
-	for (let key in combined) {
+	let key;
+	for (key in combined) {
 		if (isDifferent(obj[key], combined[key])) {
 			diff = true;
 			obj[key] = combined[key];

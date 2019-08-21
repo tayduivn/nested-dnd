@@ -14,7 +14,8 @@ class Data extends React.PureComponent {
 		const data = { ...this.props.data, ...changes };
 
 		// clear all deleted
-		for (let key in data) {
+		let key;
+		for (key in data) {
 			if (!data[key]) delete data[key];
 		}
 		this.props.handleChange({ data });

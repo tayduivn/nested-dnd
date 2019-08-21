@@ -94,7 +94,8 @@ class PackUL extends React.Component {
 		return updated;
 	}
 
-	componentWillReceiveProps(nextProps) {
+	// TODO
+	UNSAFE_componentWillReceiveProps(nextProps) {
 		if (nextProps.list) this.loadFonts(nextProps.list);
 	}
 
