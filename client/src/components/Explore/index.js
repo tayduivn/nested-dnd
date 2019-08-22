@@ -6,9 +6,8 @@ import PlayersPreview from "./PlayersPreview";
 
 import { loadFonts } from "../App/store";
 import { loadCurrent, changeInstance, setFavorite, deleteInstance, setLastSaw } from "./actions";
-import { getCurrent, getUniverse } from "./reducers";
-
-import { getFavorites } from "../Universes/reducers";
+import { getGeneratorTables, getCurrent } from "./selectors";
+import { getFavorites, getUniverse } from "../Universes/selectors";
 
 // TODO: use reselect so we don't calculate current every time
 const mapStateToProps = state => {
@@ -21,7 +20,8 @@ const mapStateToProps = state => {
 		pack,
 		index,
 		current: getCurrent(universe, index, isUniverse),
-		isUniverse
+		isUniverse,
+		tables: getGeneratorTables(state, pack && pack.builtpack)
 	};
 };
 const mapDispatchToProps = (dispatch, { match }) => ({

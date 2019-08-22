@@ -34,7 +34,7 @@ const pack = (state = { loaded: false, generators: {} }, action = {}) => {
 				loaded: false
 			};
 		case SET_PACK:
-			return { ...state, ...action.data, loaded: true };
+			return { ...state, ...action.data, loaded: true, isFetching: false };
 		case FETCH_PACK:
 		default:
 			const newGens = generators(state.generators, action);
@@ -82,6 +82,9 @@ function byUrl(state = {}, action) {
 			return state;
 		case FETCH_PACK:
 		case REBUILD_PACK:
+		case PACKS_SET:
+			if (action.data) return { ...state, ...action.data.byUrl };
+			else return state;
 		case SET_PACK:
 			const newByUrl = action.data && action.data.url ? { [action.data.url]: action.id } : {};
 			return { ...state, ...newByUrl };

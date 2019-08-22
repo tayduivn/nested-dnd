@@ -153,13 +153,3 @@ export default class Generator extends Component {
 		return { content };
 	}
 }
-
-/*
-{makeSubRoutes(routes, match.path, {
-	...generator,
-	pack,
-	handleChange,
-	handleDelete,
-	id: generator._id
-})}
-*/

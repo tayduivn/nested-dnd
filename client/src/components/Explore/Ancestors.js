@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import "./Ancestors.css";
-
 import { splitClass } from "../../util";
 
 const AncestorDropdownItem = ({ a, cssclass, onClick }) => (

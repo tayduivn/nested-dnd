@@ -62,7 +62,13 @@ function shiftColor(variant) {
 	return variant;
 }
 
-function getChild(current, i, child = {}) {
+function getChild(current, i, child) {
+	// couldn't find in array, it hasn't loaded yet.
+	if (child === undefined) {
+		child = { up: current.index, loaded: false };
+	}
+
+	// add index into object
 	const c = { ...child, index: i };
 
 	c.isLink = c.up !== current.index;
@@ -105,7 +111,7 @@ function setAncestors(current, universe) {
 	current.up = up;
 }
 
-function getCurrent(universe = {}, index, isUniverse) {
+export function getCurrent(universe = {}, index, isUniverse) {
 	if (!universe.array || !universe.array[index]) return { loading: true, index };
 
 	let current = { ...universe.array[index], index: index };
@@ -138,7 +144,7 @@ const LOADING = "";
 
 const getIndexFromHash = hash => (hash ? parseInt(hash.substr(1), 10) : LOADING);
 
-const getUrlInfo = state => {
+export const getUrlInfo = state => {
 	const location = state.router.location;
 	const pathname = location.pathname;
 	const isUniverse = pathname.includes("universe");
@@ -152,27 +158,23 @@ const getUrlInfo = state => {
 	return { index, match, isUniverse };
 };
 
-const getUniverse = state => {
-	let { index, match, isUniverse } = getUrlInfo(state);
-	let universe, pack;
+export function getIsaOptions(state, builtpack = {}) {
+	const tables = getGeneratorTables(state, builtpack);
+	const gens = builtpack.generators || {};
+	const genOpts = Object.keys(gens)
+		.sort()
+		.map(g => ({ label: g, value: g }));
+	const tableOpt = tables.map(t => ({ label: t.title, value: `${t._id}`, table: true }));
+	return genOpts.concat(tableOpt);
+}
 
-	if (!match) return {};
+export function getGeneratorTables(state, builtpack) {
+	const tables = [];
+	if (!builtpack || !builtpack.tables) return tables;
+	builtpack.tables.forEach(id => {
+		const table = state.tables.byId[id];
 
-	if (isUniverse) {
-		universe = state.universes.byId[match.params.universe] || {
-			loaded: false,
-			_id: match.params.universe
-		};
-		pack = state.packs.byId[universe.pack];
-	} else {
-		const packid = match && state.packs.byUrl[match.params.pack];
-		pack = state.packs.byId[packid] || (match && { url: match.params.pack });
-		universe = (pack && state.universes.byId[pack.tempUniverse]) || { pack: pack._id };
-	}
-
-	if (index === LOADING) index = universe.lastSaw;
-
-	return { pack, universe, index, isUniverse };
-};
-
-export { getCurrent, getUniverse };
+		if (table && table.returns === "generator") tables.push(table);
+	});
+	return tables;
+}

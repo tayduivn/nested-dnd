@@ -10,6 +10,8 @@ const Maker = require("./make");
 const Nested = require("../../routes/packs/nested");
 const Universe = require("../universe");
 
+const merge = require("../../util/merge");
+
 const GENERATE_LEVELS = 1;
 
 var schema = Schema({
@@ -229,7 +231,9 @@ schema.methods.extend = function(builtpack, extended = []) {
 	var extendsStyle = new Generator({ style: extendsGen.style }).style;
 	if (this.style) {
 		// if this has a style, override
-		extendsStyle ? extendsStyle.set(this.style) : (extendsStyle = this.style);
+		extendsStyle
+			? extendsStyle.set(merge(extendsStyle.toJSON(), this.style.toJSON()))
+			: (extendsStyle = this.style);
 		extendsGen.set({ style: extendsStyle });
 	}
 

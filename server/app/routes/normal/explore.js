@@ -3,6 +3,7 @@ const router = require("express").Router();
 const MW = require("../middleware");
 const Universe = require("../../models/universe");
 const { stringify, normalUniverseResponse, setLastSaw } = require("./utils");
+const normalizePack = require("../../util/normalizePack");
 
 router.get("/:url/:index?", MW.canViewPack, async (req, res, next) => {
 	Universe.getTemp(req.sessionID, req.pack, req.params.index)
@@ -15,8 +16,11 @@ router.get("/:url/:index?", MW.canViewPack, async (req, res, next) => {
 				packId: req.pack._id,
 				packUrl: req.params.url
 			};
+			const { packs, tables, generators } = normalizePack(req.pack);
 
-			res.write(stringify("Pack", req.pack.toObject(), meta));
+			res.write(stringify("Pack", packs, meta));
+			if (tables) res.write(stringify("Table", tables, meta));
+			if (generators) res.write(stringify("Generator", generators, meta));
 
 			// send the metatdata about the universe
 			const metaUni = universe.toObject();

@@ -1,10 +1,13 @@
 import React from "react";
+import PropTypes from "prop-types";
 import debounce from "debounce";
 
 import { Link } from "../Util";
 import Dropdown from "../Form/Dropdown";
-import MixedThing, { MixedKeyValue, MixedSortable } from "../Form/MixedThing";
+import { MixedThing, MixedKeyValue, MixedSortable } from "../Form";
 import IconOrImage from "./IconOrImage";
+
+import { NOOP } from "../../util";
 
 class Data extends React.PureComponent {
 	handleChange = changes => {
@@ -214,8 +217,11 @@ class DisplayName extends React.PureComponent {
 }
 
 class Description extends React.PureComponent {
+	static defaultProps = {
+		desc: []
+	};
 	handleAdd = () => {
-		const desc = [...this.props.desc] || [];
+		const desc = [...this.props.desc];
 		desc[desc.length] = { type: "string" };
 		this.props.handleChange({ desc });
 	};
@@ -310,31 +316,61 @@ class DeleteButton extends React.PureComponent {
 	}
 }
 
+const ToggleOptions = ({ chooseRandom, isUnique, handleChange, disabled, isa }) => (
+	<>
+		{!chooseRandom ? <IsUnique {...{ isUnique, handleChange, disabled }} /> : null}
+		{!isUnique ? <ChooseRandom {...{ chooseRandom, isa, handleChange, disabled }} /> : null}
+	</>
+);
+
 export default class EditGeneratorDisplay extends React.PureComponent {
+	static propTypes = {
+		isEmbedded: PropTypes.bool,
+		index: PropTypes.number,
+		handleChange: PropTypes.func,
+		generators: PropTypes.array
+	};
+	static defaultProps = {
+		url: "",
+		generators: [],
+		handleChange: () => {}
+	};
 	handleSubmit = e => {
 		e.preventDefault();
 		e.target.blur();
 	};
 	render() {
-		const { inherits, isCreate, isa, extends: xtends, name, desc, icon, _id, match } = this.props;
+		const { inherits, isCreate, isa, extends: xtends, name, desc, icon, _id, url } = this.props;
 		const { in: inArr = [], tables = [], generators = [], source = {}, isUnique } = this.props;
 		const { handleChange, handleDelete, chooseRandom, data = {}, readOnly: disabled } = this.props;
-		const url = match.url;
+
 		return (
 			<form className="editGen container mt-5" onSubmit={this.handleSubmit} autoComplete="off">
-				<Name {...{ inherits, isa, isCreate, handleChange, disabled }} />
+				{this.props.isEmbedded ? (
+					<h3>↳ Row {this.props.index}</h3>
+				) : (
+					<Name {...{ inherits, isa, isCreate, handleChange, disabled }} />
+				)}
 
 				{!isCreate ? (
 					<React.Fragment>
-						{!chooseRandom ? <IsUnique {...{ isUnique, handleChange, disabled }} /> : null}
-						{!isUnique ? <ChooseRandom {...{ chooseRandom, isa, handleChange, disabled }} /> : null}
+						{!this.props.isEmbedded ? (
+							<ToggleOptions {...{ chooseRandom, isUnique, handleChange, disabled, isa }} />
+						) : null}
+
 						<Extends key={_id} {...{ xtends, isa, generators, url, handleChange, disabled }} />
-						<DisplayName {...{ name, tables, generators, handleChange, disabled }} />
-						<IconOrImage {...{ icon, handleChange, disabled }} />
-						<Description {...{ desc, handleChange, tables, generators, disabled }} />
-						<InArr {...{ inArr, tables, handleChange, generators, disabled }} />
-						<Data {...{ data, handleChange, tables, generators, disabled }} />
-						<Source {...{ source, handleChange, disabled }} />
+
+						{!chooseRandom ? (
+							<>
+								<DisplayName {...{ name, tables, generators, handleChange, disabled }} />
+								<IconOrImage {...{ icon, handleChange, disabled }} />
+								<Description {...{ desc, handleChange, tables, generators, disabled }} />
+								<InArr {...{ inArr, tables, handleChange, generators, disabled }} />
+								<Data {...{ data, handleChange, tables, generators, disabled }} />
+								<Source {...{ source, handleChange, disabled }} />
+							</>
+						) : null}
+
 						{!disabled ? <DeleteButton {...{ handleDelete, disabled }} /> : null}
 					</React.Fragment>
 				) : (

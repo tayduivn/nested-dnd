@@ -18,10 +18,10 @@ const Characters = React.lazy(() => import("./../Characters"));
 const Character = Characters.Character;
 
 // monkey patch
-/*if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
-	const { whyDidYouUpdate } = require("why-did-you-update");
-	whyDidYouUpdate(React);
-}*/
+if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
+	const whyDidYouRender = require("@welldone-software/why-did-you-render/dist/no-classes-transpile/umd/whyDidYouRender.min.js");
+	whyDidYouRender(React);
+}
 
 const NotFound = () => (
 	<div className="main">

@@ -30,7 +30,7 @@ class ColorRow extends React.PureComponent {
 	}
 }
 
-class ColorPicker extends React.PureComponent {
+export default class ColorPicker extends React.PureComponent {
 	render() {
 		const { hex } = this.props;
 		return (

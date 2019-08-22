@@ -2,12 +2,13 @@ const router = require("express").Router();
 
 const Table = require("../models/table");
 const utils = require("./middleware.js");
+const merge = require("../util/merge");
 
 // Create Table
 // ---------------------------------
 router.post("/create/:pack/", utils.canEditPack, (req, res, next) => {
 	var newTable = req.body;
-	newTable.pack = req.params.pack;
+	newTable.pack = req.pack._id;
 	newTable.user = req.user.id;
 
 	Table.create(newTable)
@@ -45,6 +46,17 @@ router.get("/:table", utils.canViewTable, (req, res) => {
 
 // Update Table
 // ---------------------------------
+function updateRows(table, newRows) {
+	for (let i in newRows) {
+		const oldRow = (table.rows[i] && table.rows[i].toJSON()) || {};
+		table.set(`rows.${i}`, newRows[i] ? merge(oldRow, newRows[i]) : null);
+	}
+	// loop through and remove null (deleted) rows
+	let i = table.rows.length;
+	while (i--) {
+		if (!table.rows[i]) table.rows.splice(i, 1);
+	}
+}
 
 // TODO: When renaming, fix references in all table in, as well as seed
 router.put("/:table", utils.canEditTable, (req, res, next) => {
@@ -55,6 +67,12 @@ router.put("/:table", utils.canEditTable, (req, res, next) => {
 	delete newVals.id; //can't modify id
 
 	newVals.updated = Date.now();
+
+	// rows is array, but newVals.rows comes in as an object. We need to iterate it
+	if (newVals.rows) {
+		updateRows(req.table, newVals.rows);
+		delete newVals.rows;
+	}
 
 	req.table.set(newVals);
 	req.table

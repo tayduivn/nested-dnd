@@ -150,4 +150,6 @@ class HexColorPicker extends HexColorPickerComponent {
 	}*/
 }
 
+export default HexColorPicker;
+
 export { HexColorPicker };

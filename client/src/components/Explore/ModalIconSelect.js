@@ -2,9 +2,6 @@ import React from "react";
 
 import IconSelect from "../Form/IconSelect";
 
-import "./ModalIconSelect.css";
-import "./PlayersPreview.css";
-
 import { sendPlayersPreview } from "../../actions/WebSocketAction";
 
 const MODAL_SETTINGS = {

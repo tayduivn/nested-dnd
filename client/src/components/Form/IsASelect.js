@@ -1,17 +1,17 @@
 import { connect } from "react-redux";
 
-import { getUniverse } from "../Explore/reducers";
+import { getUniverse } from "../Universes/selectors";
 import { addChild } from "../Explore/actions";
 import Dropdown from "./Dropdown";
 import "./IsASelect.css";
+import { getIsaOptions } from "../Explore/selectors";
 
 // IN EXPLORE
 const IsASelect = connect(
 	function mapStateToProps(state) {
 		const { pack = {}, universe = {}, index } = getUniverse(state);
-		const gens = (pack.builtpack && Object.keys(pack.builtpack.generators)) || [];
 		return {
-			options: gens.join(","),
+			fixedOptions: getIsaOptions(state, pack.builtpack),
 			universeId: universe._id,
 			index,
 			notFoundError: "Can't find generator",

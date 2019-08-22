@@ -1,5 +1,8 @@
 import handleNestedPropertyValue from "./handleNestedPropertyValue";
 import spread from "./spread";
+import fngArrayOptions from "./fngArrayOptions";
+import reduceObjToArray from "./reduceObjToArray";
+import merge from "./merge";
 import "./polyfills";
 
 function clean(obj) {
@@ -126,6 +129,8 @@ const splitClass = (cssClass = "") => {
 	};
 };
 
+const NOOP = () => {};
+
 export {
 	uniq,
 	splitClass,
@@ -138,5 +143,9 @@ export {
 	toUpper,
 	setBodyStyle,
 	handleNestedPropertyValue,
-	spread
+	spread,
+	fngArrayOptions,
+	reduceObjToArray,
+	NOOP,
+	merge
 };

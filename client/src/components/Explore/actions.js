@@ -12,10 +12,12 @@ import async from "async";
 import store from "../App/store";
 
 import { universeSet } from "../Universes/actions";
+import { receiveTables } from "../Tables/redux/actions";
 
 const INSTANCE = "Instance";
 const UNIVERSE = "Universe";
-const Pack = "Pack";
+const TABLE = "Table";
+const PACK = "Pack";
 
 const LOAD_EXPLORE = "LOAD_EXPLORE";
 
@@ -184,6 +186,7 @@ export const addChild = (universeId, index, child) => {
 		child.name = "" + child.index;
 		delete child.index;
 	}
+
 	DB.create(`/universes/${universeId}/explore/${index}`, child).then(({ error, data = {} }) => {
 		if (error) return;
 		store.dispatch({ type: INSTANCE_SET, data: data.instances, universeId });
@@ -203,7 +206,7 @@ const processChunk = (chunk, dispatch, universeId, packUrl) => {
 			type: UNIVERSE_SET,
 			data: { ...chunk.data, loaded: true }
 		});
-	} else if (chunk.type === Pack) {
+	} else if (chunk.type === PACK) {
 		dispatch({
 			type: SET_PACK,
 			data: {
@@ -212,6 +215,8 @@ const processChunk = (chunk, dispatch, universeId, packUrl) => {
 			},
 			id: chunk.data._id
 		});
+	} else if (chunk.type === TABLE) {
+		dispatch(receiveTables(chunk.data));
 	}
 };
 

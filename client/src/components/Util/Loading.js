@@ -9,3 +9,8 @@ export const LoadingPage = () => (
 		<LoadingIcon />
 	</Page>
 );
+
+export default {
+	Icon: LoadingIcon,
+	Page: LoadingPage
+};

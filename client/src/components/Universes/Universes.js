@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import { Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import DB from "../../actions/CRUDAction";
 import { LoadingIcon } from "../Util/Loading";
 import { PacksList, PackUL } from "../Packs";
-import { PropsRoute } from "../Routes";
 
 const UniverseListDisplay = ({ universes: { loaded, array, error } = {}, packs, loggedIn }) => {
 	if (error) return error.display;
@@ -140,18 +138,10 @@ class Universes extends Component {
 	render() {
 		const { universes, packs, loggedIn } = this.props;
 
-		var content = (
-			<div id="Universes">
-				<Switch>
-					<PropsRoute {...{ universes, packs, loggedIn }} component={UniverseListDisplay} />
-				</Switch>
-			</div>
-		);
+		var content = <UniverseListDisplay {...{ universes, packs, loggedIn }} />;
 
 		return content;
 	}
 }
-
-//{makeSubRoutes(routes, match.path, this.getData())}
 
 export default Universes;

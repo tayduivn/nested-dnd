@@ -9,8 +9,10 @@ import {
 	createGenerator,
 	CLEAR_GENERATOR_ERRORS
 } from "./actions";
+import { fetchPackIfNeeded } from "../Packs/actions";
 import { genPathSelector } from "./reducers";
 import Page from "../Util/Page";
+import { tablesSelect } from "../Tables/redux/selectors";
 
 import "./EditGenerator.css";
 
@@ -19,19 +21,20 @@ class EditGeneratorComponent extends Component {
 		built: PropTypes.object,
 		unbuilt: PropTypes.object,
 		pack: PropTypes.object,
-		handleChange: PropTypes.func
+		handleChange: PropTypes.func,
+		tables: PropTypes.array
 	};
 
 	static defaultProps = {
 		unbuilt: {},
-		pack: {}
+		pack: {},
+		url: ""
 	};
 
-	constructor(props) {
-		super(props);
-		props.fetchGenerator();
+	componentDidMount() {
+		this.props.dispatch(fetchGenerator(this.props.match.params));
+		this.props.dispatch(fetchPackIfNeeded(this.props.match.params.pack));
 	}
-
 	shouldComponentUpdate(nextProps) {
 		const built = JSON.stringify(this.props.built) !== JSON.stringify(nextProps.built);
 		const unbuilt = JSON.stringify(this.props.unbuilt) !== JSON.stringify(nextProps.unbuilt);
@@ -46,12 +49,14 @@ class EditGeneratorComponent extends Component {
 
 	handleAdd = () => {
 		const isa = document.getElementById("generatorIsa").value;
-		this.props.createGenerator(this.props.pack.url, isa);
+		this.props.dispatch(this.props.createGenerator(this.props.pack.url, isa));
 	};
 
 	handleChange = change => {
 		const { pack, id, isa } = this.props;
-		if (!this.props.isCreate) this.props.changeGenerator(pack.url, pack.id, id, isa, change);
+		if (!this.props.isCreate) {
+			this.props.dispatch(this.props.changeGenerator(pack.url, pack.id, id, isa, change));
+		}
 	};
 	_getProps() {
 		const { isCreate, match, pack, unbuilt = {}, inherits } = this.props;
@@ -62,12 +67,13 @@ class EditGeneratorComponent extends Component {
 			readOnly: unbuilt.loading,
 			handleChange: this.handleChange,
 			generators: pack.generators,
-			tables: pack.tables,
+			tables: this.props.tables,
 			isCreate,
 			match,
 			inherits,
 			key: unbuilt.id,
-			handleAdd: this.handleAdd
+			handleAdd: this.handleAdd,
+			url: match.params.pack
 		};
 	}
 
@@ -116,15 +122,12 @@ const EditGenerator = connect(
 			unbuilt,
 			builtGenerator: pack.generators[ownProps.match.params.generator],
 			isCreate,
-			inherits: built.gen_ids && built.gen_ids.length > 1
+			inherits: built.gen_ids && built.gen_ids.length > 1,
+			tables: tablesSelect(state, pack)
 		};
 	},
 	function mapDispatchToProps(dispatch, ownProps) {
-		const packurl = ownProps.match.params.pack;
-		const isa = decodeURIComponent(ownProps.match.params.generator);
-
 		return {
-			fetchGenerator: () => fetchGenerator(dispatch, packurl, isa),
 			clearErrors: () => dispatch({ type: CLEAR_GENERATOR_ERRORS }),
 			changeGenerator,
 			createGenerator

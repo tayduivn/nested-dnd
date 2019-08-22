@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import Lottie from "react-lottie";
 import worldLocations from "../../assets/lottiefiles/world_locations.json";
 
 import IsASelect from "../Form/IsASelect";
 import { Icon, Isa } from "./ExplorePage";
-
-import "./Child.css";
 
 const CHILD_CLASSES = "child col-xl-2 col-lg-3 col-md-4 col-sm-4 col-xs-6 ";
 
@@ -33,98 +31,118 @@ const className = (icon = {}, showAdd, cssClass, isNew) =>
 	`child-inner child-inner--link btn-${cssClass}
 	 ${icon ? "" : " no-icon"} ${showAdd ? " showAdd" : ""} ${isNew ? "isNew" : ""}`;
 
-const style = ({ in: inArr, highlight, txt }, isUniverse) => {
+const style = (hasInArr, highlight, txt, isUniverse) => {
 	var style = {
 		color: txt
 	};
-	if (inArr) style.boxShadow = "0px 0px 5px " + highlight;
+	if (hasInArr) style.boxShadow = "0px 0px 5px " + highlight;
 	return style;
 };
 
-class ChildInner extends React.PureComponent {
-	state = {
-		showAdd: false
-	};
-	clickBox = e => {
-		if (this.props.isNew) {
-			e.preventDefault();
-			this.setState({ showAdd: true });
-		}
-	};
-	handleAddNew = () => {};
-	hideAdd = () => {
-		this.setState({ showAdd: false });
-	};
-	_getIconProps() {
-		const { name, isa, icon = {} } = this.props;
-		return {
-			name: icon.value,
-			category: icon.category,
-			txt: name ? name : isa,
-			inlinesvg: true,
-			className: "child__icon"
-		};
-	}
-	render() {
-		const { name, isa, icon, isNew, index, style, desc = "" } = this.props;
-		const { showAdd } = this.state;
-		const tweet = desc.split("\n")[0];
-		if (isNew) {
-			return (
-				<div className="isNew bg-grey-50">
-					<IsASelect {...ISA_SELECT_OPTIONS} hideAdd={this.hideAdd} />
-				</div>
-			);
-		}
-		return (
-			<a
-				className={className(icon, showAdd, this.props.cssClass, isNew)}
-				style={style}
-				href={`#${index}`}
-				onClick={this.clickBox}
-			>
-				{!isNew && <Icon {...this._getIconProps()} />}
-				<div className="child__header">
-					<h1 className="child__title">{name ? name : isa}</h1>
-					<Isa name={name} isa={isa} />
-				</div>
-				{tweet ? <p className="child__desc">{tweet.substr(0, 140)}</p> : null}
-			</a>
-		);
-	}
-}
+const EMPTY_OBJ = {};
 
-class Child extends React.PureComponent {
-	handleDeleteLink = e => {
-		e.stopPropagation();
-		this.props.handleDeleteLink(this.props.index);
-	};
-	render() {
-		const { handleClick, i, isLink, highlight, generators, isNew, ...child } = this.props;
+const ChildInner = ({
+	child: { name, isa, icon = EMPTY_OBJ, isNew, highlightColor, txt, cssClass, index, isLink },
+	tweetDesc = "",
+	hasInArr,
+	isUniverse
+}) => {
+	const [showAdd, setShowAdd] = useState(false);
+
+	const clickBox = useCallback(
+		e => {
+			if (isNew) {
+				e.preventDefault();
+				setShowAdd(true);
+			}
+		},
+		[isNew]
+	);
+
+	const hideAdd = useCallback(() => {
+		setShowAdd(false);
+	}, []);
+
+	if (isNew) {
 		return (
-			<div
-				className={CHILD_CLASSES}
-				style={{ animationDelay: 50 * i + "ms" }}
-				onClick={e => !(child.isNew && child.showAdd) && handleClick(child, e)}
-			>
-				{isLink ? (
-					<a href={`#${child.index}`} className="badge badge-pill badge-dark linkLabel">
-						<Lottie width="150%" height="150%" options={DEFAULT_OPTIONS} />
-						<span> LINK</span>
-					</a>
-				) : null}
-				<ChildInner
-					{...{ ...child, handleClick, highlight, generators, isNew }}
-					style={style(child, this.props.isUniverse)}
-				/>
-				{isLink ? (
-					<button className="deleteLink btn btn-danger" onClick={this.handleDeleteLink}>
-						<i className="fa fa-trash-alt" />
-					</button>
-				) : null}
+			<div className="isNew bg-grey-50">
+				<IsASelect {...ISA_SELECT_OPTIONS} hideAdd={hideAdd} />
 			</div>
 		);
 	}
-}
+	return (
+		<a
+			className={className(icon, showAdd, cssClass, isNew)}
+			style={style(hasInArr, highlightColor, txt, isUniverse)}
+			href={`#${index}`}
+			onClick={clickBox}
+		>
+			{!isNew && (
+				<Icon
+					{...{
+						name: icon.value,
+						category: icon.category,
+						txt: name ? name : isa,
+						inlinesvg: true,
+						className: "child__icon"
+					}}
+				/>
+			)}
+			<div className="child__header">
+				<h1 className="child__title">
+					{isLink ? (
+						<>
+							<a href={`#${index}`} className="badge badge-pill badge-dark linkLabel">
+								<Lottie width="150%" height="150%" options={DEFAULT_OPTIONS} />
+								<i class="fas fa-external-link-alt"></i>
+							</a>
+							<span class="linkLabel__spacer"></span>
+						</>
+					) : null}
+
+					{name ? name : isa}
+				</h1>
+				<Isa name={name} isa={isa} />
+			</div>
+			{tweetDesc ? <p className="child__desc">{tweetDesc.substr(0, 140)}</p> : null}
+		</a>
+	);
+};
+
+const Child = ({
+	hasInArr,
+	tweetDesc,
+	handleAdd,
+	handleDeleteLink: handleDeleteLinkUp,
+	child,
+	i
+}) => {
+	const handleDeleteLink = useCallback(
+		e => {
+			e.stopPropagation();
+			handleDeleteLinkUp(child.index);
+		},
+		[handleDeleteLinkUp, child.index]
+	);
+
+	return (
+		<div className={CHILD_CLASSES} style={{ animationDelay: 50 * i + "ms" }}>
+			<ChildInner
+				{...{
+					hasInArr,
+					tweetDesc,
+					handleAdd,
+					handleDeleteLink,
+					child
+				}}
+			/>
+			{child.isLink ? (
+				<button className="deleteLink btn btn-danger" onClick={handleDeleteLink}>
+					<i className="fa fa-trash-alt" />
+				</button>
+			) : null}
+		</div>
+	);
+};
 
 export default Child;

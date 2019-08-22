@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "../Util";
 
-import "./Nav.css";
-
 const LoggedOut = ({ handleLogout }) => (
 	<>
 		<li className="nav-item">

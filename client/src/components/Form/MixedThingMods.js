@@ -2,7 +2,7 @@ import React from "react";
 
 class Num extends React.PureComponent {
 	handleChange = e => {
-		this.props.handleChange({ [this.props.property]: e.target.value });
+		this.props.handleChange({ [this.props.property]: parseInt(e.target.value, 10) });
 	};
 	render() {
 		const { min, max, value, className } = this.props;
@@ -11,27 +11,35 @@ class Num extends React.PureComponent {
 }
 
 class Amount extends React.PureComponent {
-	handleReset() {
+	state = {
+		open: false
+	};
+	handleOpen = () => {
+		this.setState({ open: true });
+	};
+	handleReset = () => {
 		this.props.handleChange({ amount: { max: 2 } });
-	}
-	handleChange(value) {
+	};
+	handleChange = value => {
 		const old = { min: this.props.min, max: this.props.max };
 		this.props.handleChange({ amount: { ...old, ...value } });
-	}
+	};
 	render() {
 		const { min, max } = this.props;
 		const { handleChange } = this;
 		const numProps = { handleChange, className: "col form-control" };
 		return (
 			<div className="col-auto">
-				{(min !== undefined && min !== 1) || (max && max > 1) ? (
+				{this.state.open || (min !== undefined && min !== 1) || (max && max > 1) ? (
 					<div className="row">
 						<Num value={min} property="min" min="0" max={max} {...numProps} />
 						<span className="col-auto">-</span>
 						<Num value={max || 1} property="max" min={min} {...numProps} />
 					</div>
 				) : (
-					<div className="btn btn-light btn-sm">1</div>
+					<div className="btn btn-light btn-sm" onClick={this.handleOpen}>
+						1
+					</div>
 				)}
 			</div>
 		);
@@ -43,16 +51,18 @@ const WEIGHT_DEFAULTS = {
 	min: "1",
 	max: "1000",
 	placeholder: "100",
-	className: "form-control",
-	defaultValue: 1
+	className: "form-control"
 };
 
 class Weight extends React.PureComponent {
+	static defaultProps = {
+		weight: 1
+	};
 	handleReset = () => {
 		this.props.handleChange({ weight: 2 });
 	};
 	handleChange = e => {
-		this.props.handleChange({ weight: e.target.value });
+		this.props.handleChange({ weight: parseInt(e.target.value, 10) });
 	};
 	render() {
 		const { weight } = this.props;

@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "../Util";
 
-import "./Splash.css";
-
 const nested = {
 	url: "nested",
 	in: true,

@@ -6,6 +6,11 @@ import { FixedSizeList } from "react-window";
 
 const NOT_FOUND_ERROR = "Can't find option";
 
+const VariableSizeList = ({ itemData }) =>
+	itemData.matches.map((match, index) => (
+		<Option key={match.value} data={itemData} index={index} />
+	));
+
 class Input extends React.PureComponent {
 	render() {
 		return (
@@ -54,7 +59,7 @@ class Option extends React.PureComponent {
 export default class Dropdown extends React.PureComponent {
 	static propTypes = {
 		// comma delimited options
-		options: PropTypes.string,
+		options: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 		disabled: PropTypes.bool,
 		className: PropTypes.string,
 		classTextarea: PropTypes.string,
@@ -77,7 +82,6 @@ export default class Dropdown extends React.PureComponent {
 		notFoundError: NOT_FOUND_ERROR,
 		classTextarea: "form-control",
 		limit: 20,
-		itemHeight: 30,
 		disabled: false,
 		saveOnBlur: false,
 		useOnClick: false,
@@ -113,8 +117,11 @@ export default class Dropdown extends React.PureComponent {
 		this.sifter = new Sifter(this.options);
 	}
 	componentDidUpdate(prevProps) {
-		if (this.props.options !== prevProps.options && !this.props.fixedOptions)
-			this.setSifter(this.props.options);
+		if (
+			this.props.options !== prevProps.options ||
+			this.props.fixedOptions !== prevProps.fixedOptions
+		)
+			this.setSifter(this.props.options, this.props.fixedOptions);
 	}
 	handleKeyDown = e => {
 		const { selected, matches } = this.state;
@@ -137,7 +144,7 @@ export default class Dropdown extends React.PureComponent {
 			if (this.state.selected) {
 				this.setState({ input: this.state.selected.label, open: false }, this.sift);
 			}
-			this.submit(this.state.selected.value || this.state.input);
+			this.submit((this.state.selected && this.state.selected.value) || this.state.input);
 			e.preventDefault();
 		}
 	};
@@ -172,13 +179,16 @@ export default class Dropdown extends React.PureComponent {
 	};
 	// fire on mousedown so it happens before blur event
 	handleClick = e => {
+		console.log("clicked");
 		if (e.button === 0) {
 			this.setState({ input: e.target.dataset.label }, this.sift);
 			this.submit(e.target.dataset.value);
 		}
 	};
 	submit = value => {
-		const isFound = this.optionValues.includes(value);
+		const foundIndex = this.optionValues.indexOf(value);
+		const isFound = foundIndex !== -1;
+		const option = this.options[foundIndex];
 
 		// check validity
 		if (value && !this.props.allowCustom && !isFound) {
@@ -192,20 +202,20 @@ export default class Dropdown extends React.PureComponent {
 
 		// todo: make generic
 		const isNum = value !== "" && !isNaN(value);
-		const prop = isFound ? "isa" : isNum ? "index" : "name";
+		const prop = isFound ? (option.table ? "table" : "isa") : isNum ? "index" : "name";
 		this.props.onChange({ [prop]: this.props.isMulti ? [value] : value });
 		if (this.props.clearOnSubmit) {
 			this.setState({ input: "" }, this.sift);
 		}
 	};
 	_getListProps() {
-		const itemSize = this.props.itemHeight;
+		const itemSize = this.props.itemHeight || 30;
 		const length = this.state.matches.length;
 		const height = length < 7 ? length * itemSize : 7 * itemSize;
-		return {
+		let result = {
 			height,
+			itemSize: this.props.itemHeight,
 			itemCount: this.state.matches.length,
-			itemSize: itemSize,
 			itemData: {
 				selected: this.state.selected,
 				clickEvent: this.props.useOnClick ? "onClick" : "onMouseDown",
@@ -215,12 +225,14 @@ export default class Dropdown extends React.PureComponent {
 				className: this.props.className
 			}
 		};
+		return result;
 	}
 	render() {
 		const { input, dirty } = this.state;
 		const { handleChange, handleKeyDown, handleFocus, handleBlur } = this;
 		const { disabled, className, rows, placeholder, classTextarea } = this.props;
 		const { OptionComponent } = this.props;
+		const List = this.props.itemHeight ? FixedSizeList : VariableSizeList;
 		return (
 			<React.Fragment>
 				<div className={`dropdown ${className}`}>
@@ -235,7 +247,7 @@ export default class Dropdown extends React.PureComponent {
 							this.state.open ? "--open" : ""
 						}`}
 					>
-						<FixedSizeList {...this._getListProps()}>{OptionComponent}</FixedSizeList>
+						<List {...this._getListProps()}>{OptionComponent}</List>
 					</div>
 				</div>
 				<div className="invalid-feedback">{this.state.error}</div>

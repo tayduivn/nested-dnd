@@ -6,8 +6,8 @@ import Universes from "./Universes";
 import Explore from "../Explore";
 
 import { actions as packActions } from "../Packs";
-import actions from "./actions";
-import { selectMyUniverses } from "./reducers";
+import { fetch } from "./actions";
+import { selectMyUniverses } from "./selectors";
 
 const routes = [
 	{
@@ -46,7 +46,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	loadUniverses: ({ packs, universes, loaded }) => {
 		packActions.fetch(dispatch, packs.loaded);
-		actions.fetch(dispatch, loaded);
+		fetch(dispatch, loaded);
 	}
 });
 const Container = connect(

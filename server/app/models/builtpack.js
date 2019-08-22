@@ -29,6 +29,7 @@ schema.statics.rebuild = async function(pack) {
 };
 
 schema.statics.findOrBuild = async function(pack) {
+	debugger;
 	var id = typeof pack === "string" ? pack : pack._id;
 	var builtpack = await this.findById(id).exec();
 	if (builtpack) return builtpack;
@@ -64,7 +65,9 @@ schema.statics.build = async function(pack, builtpack) {
 
 		// no generators, create pack
 		if (!gens || !gens.length) {
-			return await this.create(builtpack);
+			const bp = await this.create(builtpack);
+			bp.originalGen = [];
+			return bp;
 		}
 	}
 
@@ -88,7 +91,9 @@ schema.statics.build = async function(pack, builtpack) {
 		this.extend(isa, builtpack);
 	}
 
-	return isNew ? await this.create(builtpack) : builtpack.save();
+	const bp = isNew ? await this.create(builtpack) : await builtpack.save();
+	bp.originalGen = gens;
+	return bp;
 };
 
 schema.statics.extend = function(isa, builtpack, extendsThis = []) {

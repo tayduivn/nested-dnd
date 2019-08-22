@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import debounce from "debounce";
 
 import { Link } from "../Util";
@@ -89,7 +90,7 @@ class Table extends React.PureComponent {
 			<Link
 				to={{
 					pathname: endUrl + "/" + property[0] + "/" + property[1],
-					state: { table: value }
+					state: { table: value || {} }
 				}}
 				onClick={() => {
 					if (setState) setState({ showEmbedded: value, embeddedPath: property });
@@ -101,11 +102,29 @@ class Table extends React.PureComponent {
 	}
 }
 
+function getEmbeddedUrl(property, i) {
+	let endUrl = window.location.href.split("/");
+	endUrl = endUrl[endUrl.length - 1];
+
+	return endUrl + "/" + property + "/" + i;
+}
+
+const EmbeddedGenerator = ({ value, property, i }) => (
+	<Link
+		to={{
+			pathname: getEmbeddedUrl(property, i),
+			state: { generator: value || {}, index: i }
+		}}
+	>
+		{TYPE.embed.toString(value)}
+	</Link>
+);
+
 const TableId = ({ value, handleChange, property, tables }) => (
 	<select
 		className="form-control"
 		value={value || ""}
-		onChange={e => handleChange({[property]: e.target.value})}
+		onChange={e => handleChange({ [property]: e.target.value })}
 	>
 		<option value={null} />
 		{tables.map(t => (
@@ -116,7 +135,10 @@ const TableId = ({ value, handleChange, property, tables }) => (
 	</select>
 );
 
-export default class Value extends React.PureComponent {
+export default class MixedThingValue extends React.PureComponent {
+	static propTypes = {
+		i: PropTypes.number
+	};
 	handleChangeIsa = ({ isa } = {}) => {
 		this.props.handleChange({ [this.props.property]: isa });
 	};
@@ -133,7 +155,7 @@ export default class Value extends React.PureComponent {
 		};
 	}
 	render() {
-		const { property, type, value, tables = [] } = this.props;
+		const { property, type, value, tables = [], i } = this.props;
 		const { generators = {}, handleChange, isTextarea, setState } = this.props;
 
 		switch (
@@ -148,6 +170,7 @@ export default class Value extends React.PureComponent {
 			case "json":
 				return <JsonInput {...{ value, handleChange, property }} />;
 			case "embed":
+				return <EmbeddedGenerator {...{ value, property, i }} />;
 			case "string":
 			case "data":
 			case "dice":

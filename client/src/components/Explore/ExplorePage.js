@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import Child from "./Child";
 import Icon from "./Icon";
 import Isa from "./Isa";
-import { MixedKeyValue } from "../Form/MixedThing";
+import { MixedKeyValue } from "../Form";
 import IconSelectModal from "./ModalIconSelect";
 import MoveModal from "./MoveModal";
 import PatternSelectModal from "./PatternSelectModal";
@@ -68,48 +68,29 @@ const ExplorePage = ({ cssClass, txt, children }) => (
 	</div>
 );
 
-class Children extends React.Component {
-	handleDeleteLink = remove => {
-		return this.props.handle.change(this.props.index, "deleteLink", remove);
-	};
-	shouldComponentUpdate(nextProps) {
-		const current = { ...this.props, generators: undefined };
-		const next = { ...nextProps, generators: undefined };
-		return (
-			JSON.stringify(current) !== JSON.stringify(next) ||
-			JSON.stringify(current.inArr) !== JSON.stringify(next.inArr) ||
-			JSON.stringify(this.props.generators) !== JSON.stringify(nextProps.generators)
-		);
-	}
-	_getProps(c, i) {
-		const { handle, highlightColor, isUniverse } = this.props;
-		const { generators } = this.props;
+const Children = ({ isUniverse, index, inArr = [], handleAdd, handleChange }) => {
+	const handleDeleteLink = useCallback(
+		remove => {
+			return handleChange(index, "deleteLink", remove);
+		},
+		[handleChange, index]
+	);
 
-		return {
-			highlight: highlightColor,
-			generators: c.isNew ? generators : undefined,
-			...c,
-			handleClick: c.isNew ? handle.add : handle.click,
-			handleDeleteLink: this.handleDeleteLink,
-			in: c.in && c.in.join && c.in.join(","),
-			desc: c.desc && c.desc.join("\n"),
-			i,
-			isUniverse
-		};
-	}
-	render() {
-		const { index, inArr = [] } = this.props;
-		// TODO: Sortablejs
-		// const {isUniverse, handle}
-		return (
-			<div id="childrenGrid" className="row no-gutters" index={index}>
-				{inArr.map((c, i) => (
-					<Child key={`${c.isNew ? "isNew" : c.index}_${i}`} {...this._getProps(c, i)} />
-				))}
-			</div>
-		);
-	}
-}
+	// TODO: Sortablejs
+	// const {isUniverse, handle}
+	return (
+		<div id="childrenGrid" className="row no-gutters" index={index}>
+			{inArr.map((child, i) => (
+				<Child
+					key={`${child.isNew ? "isNew" : index}_${i}`}
+					hasInArr={!!inArr.length}
+					tweetDesc={child.desc && child.desc[0]}
+					{...{ handleAdd, handleDeleteLink, child, i }}
+				/>
+			))}
+		</div>
+	);
+};
 
 export default ExplorePage;
 export { LOADING, Icon, Isa, Data, Children, Modals };

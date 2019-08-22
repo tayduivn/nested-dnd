@@ -1,4 +1,4 @@
-@import "./variables.scss";
+@import "./variables";
 
 // BOOTSTRAP ------------------------------
 @import "../../node_modules/bootstrap/scss/type";
@@ -20,9 +20,9 @@
 @import "../../node_modules/bootstrap/scss/input-group";
 
 // App global css--------------------------
-@import "./textures.scss";
-@import "./animations.scss";
-@import "./switch.scss";
+@import "./textures";
+@import "./animations";
+@import "./switch";
 
 //RESETS
 *,
@@ -269,8 +269,8 @@ i.fi {
 	display: block;
 	color: $warning;
 }
-@import "./components/App/App.scss";
+@import "./components/App/App";
 @import "./components/Form/Dropdown.scss";
 
 // needs to come after App.scss so we can override with bg- styles
-@import "./colors.scss";
+@import "./colors";

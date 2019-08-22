@@ -1,7 +1,7 @@
 import React from "react";
-import ReactSortable from "react-sortablejs";
+import PropTypes from "prop-types";
 
-import Value from "./MixedThingValue";
+import MixedThingValue from "./MixedThingValue";
 import MixedThingMods from "./MixedThingMods";
 
 export const TYPE = {
@@ -16,11 +16,11 @@ export const TYPE = {
 	},
 	embed: {
 		label: "generator (embedded)",
-		toString: () => "[generator]"
+		toString: val => (val && `${TYPE[val.name.type].toString(val.name.value)}`) || "[generator]"
 	},
 	string: {
 		label: "text",
-		toString: val => '"' + val + '"'
+		toString: val => val
 	},
 	table_id: {
 		label: "table",
@@ -141,6 +141,11 @@ class Delete extends React.PureComponent {
 }
 
 class MixedThing extends React.PureComponent {
+	static propTypes = {
+		options: PropTypes.object,
+		i: PropTypes.number,
+		_id: PropTypes.string
+	};
 	handleChange = changed => {
 		// deleting
 		if (!changed) {
@@ -169,9 +174,7 @@ class MixedThing extends React.PureComponent {
 			<div className="row">
 				{options.sortable ? DRAGGER : null}
 
-				{options.hasKey ? (
-					<Key {...{ handleChange: this.props.handleChange, label, map, property }} />
-				) : null}
+				{options.hasKey ? <Key {...{ handleChange: this.props.handleChange, label, map }} /> : null}
 
 				<TypeChoose
 					options={options.types.join(",")}
@@ -181,7 +184,7 @@ class MixedThing extends React.PureComponent {
 				/>
 
 				<div className="col">
-					<Value
+					<MixedThingValue
 						{...{ ...rest, type, tables, value, i, handleChange, property: "value", isTextarea }}
 					/>
 				</div>
@@ -196,110 +199,4 @@ class MixedThing extends React.PureComponent {
 	}
 }
 
-class MixedKeyValueItem extends React.PureComponent {
-	handleChange = val => {
-		this.props.handleChange({ [this.props.options.property]: val });
-	};
-	render() {
-		const { map, k, options, rest, handleChange } = this.props;
-		if (map[k] === undefined) return null;
-		var { type, value } = map[k];
-
-		//not properly stored, clean data
-		if (type === undefined && value === undefined) {
-			value = map[k];
-			type = typeof value === "object" ? (value instanceof Array ? "table" : "json") : "string";
-			if (type === "table") value = { rows: value.map(v => ({ value: v })) };
-		}
-		return (
-			<MixedThing
-				label={k}
-				options={{
-					...options,
-					property: k,
-					hasKey: true,
-					types: options.types
-				}}
-				{...{ handleChange, map, type, value }}
-				{...rest}
-			/>
-		);
-	}
-}
-
-class MixedKeyValue extends React.PureComponent {
-	handleAdd = () => {
-		this.props.handleChange({ "": "" });
-	};
-	render() {
-		const { options = {}, map = {}, handleChange = () => {}, disabled, ...rest } = this.props;
-		return (
-			<React.Fragment>
-				{Object.keys(map).length ? (
-					<ul className="p-0">
-						{Object.keys(map).map((k, i) => (
-							<MixedKeyValueItem key={i} {...{ map, k, options, rest, handleChange }} />
-						))}
-					</ul>
-				) : null}
-				{map[""] === undefined && !disabled ? (
-					<button className="btn btn-light btn-sm" onClick={this.handleAdd}>
-						<i className="fas fa-plus" /> add
-					</button>
-				) : null}
-			</React.Fragment>
-		);
-	}
-}
-
-class MixedSortable extends React.Component {
-	shouldComponentUpdate(nextProps) {
-		const changedArray = JSON.stringify(this.props.array) !== JSON.stringify(nextProps.array);
-		return changedArray;
-	}
-	handleSort = (order, sortable, { oldIndex, newIndex }) => {
-		const arr = [...this.props.array];
-
-		// do sort
-		const temp = arr[newIndex];
-		arr[newIndex] = arr[oldIndex];
-		arr[oldIndex] = temp;
-		this.props.handleChange({
-			[this.props.options.property]: arr
-		});
-	};
-	handleChange = changed => {
-		const arr = [...this.props.array];
-		let index;
-		for (index in changed) {
-			let newRow = changed[index];
-			if (!newRow) {
-				arr.splice(index, 1);
-			} else arr[index] = newRow;
-		}
-		this.props.handleChange({ [this.props.options.property]: arr });
-	};
-	render() {
-		const { options = {}, array = [], ...rest } = this.props;
-		return (
-			<ul className="p-0">
-				<ReactSortable options={{ handle: ".handle" }} onChange={this.handleSort}>
-					{array &&
-						array.map &&
-						array.map((c = {}, i) => (
-							<MixedThing
-								options={{ ...options, sortable: true, property: i }}
-								{...c}
-								key={(c && c._id) || Math.random()}
-								{...{ i, array, ...rest }}
-								handleChange={this.handleChange}
-							/>
-						))}
-				</ReactSortable>
-			</ul>
-		);
-	}
-}
-
 export default MixedThing;
-export { MixedKeyValue, MixedSortable };

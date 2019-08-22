@@ -52,24 +52,23 @@ class TablesList extends Component {
 		const state = { packurl, tables };
 
 		return (
-			<div>
-				<h2>Tables</h2>
+			<>
 				{!isOwner ? null : (
-					<Link to={`${packurl}/tables/create`} state={state}>
+					<Link to={`/packs/${packurl}/tables/create`} state={state}>
 						<button className="btn btn-primary">Add Table</button>
 					</Link>
 				)}
 				<ul>
 					{tables.map((t, i) => (
 						<li key={i}>
-							<Link to={`${packurl}/tables/${t._id}/edit`} state={state}>
+							<Link to={`/packs/${packurl}/tables/${t._id}/edit`} state={state}>
 								{t.title}{" "}
 							</Link>
 							<em>{t.returns}</em>
 						</li>
 					))}
 				</ul>
-			</div>
+			</>
 		);
 	}
 }

@@ -45,11 +45,7 @@ class Nested {
 		_t.img = inst.img;
 		_t.icon = inst.icon;
 		_t.up = inst.up;
-		_t.in = inst.todo
-			? true
-			: inst.in && !inst.in.length && inst.in !== true
-				? undefined
-				: inst.in;
+		_t.in = inst.todo ? true : inst.in && !inst.in.length && inst.in !== true ? undefined : inst.in;
 		_t.desc = inst.desc;
 		_t.data = inst.data;
 
@@ -67,9 +63,7 @@ class Nested {
 		const length = universe.array ? universe.array.length : 0;
 
 		if (emptyIndexes.length) {
-			this.index = !universe.array[emptyIndexes[0]]
-				? emptyIndexes.shift()
-				: length;
+			this.index = !universe.array[emptyIndexes[0]] ? emptyIndexes.shift() : length;
 		} else {
 			this.index = length;
 		}
@@ -89,6 +83,10 @@ class Nested {
 		}*/
 
 		return this;
+	}
+
+	setIn(inArr) {
+		this.in = inArr;
 	}
 
 	/**

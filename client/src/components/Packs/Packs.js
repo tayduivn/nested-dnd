@@ -3,7 +3,7 @@ import Link from "../Util/Link";
 
 import "./Packs.css";
 
-import { LoadingIcon } from "../Util/Loading";
+import { Loading, Page } from "../Util";
 import { loadFonts } from "../App/store";
 
 const EDIT_BUTTON = (
@@ -35,7 +35,7 @@ class PackLink extends React.PureComponent {
 						)}
 						{lastSaw && (
 							<p>
-								<strong>Currently viewing:</strong> {lastSaw.name}
+								<strong>Currently viewing:</strong> {lastSaw}
 							</p>
 						)}
 					</Link>
@@ -143,7 +143,7 @@ class PackUL extends React.Component {
 const MyPacks = ({ myPacks = [] }) => (
 	<div>
 		<h2>My Packs</h2>
-		{myPacks === null && LoadingIcon}
+		{myPacks === null && Loading.Icon}
 		{myPacks && myPacks.length === 0 && <p>You have not created any packs yet</p>}
 		{myPacks && <PackUL list={myPacks} addButton={true} />}
 	</div>
@@ -155,7 +155,7 @@ const PacksList = ({ loggedIn, error, myPacks, publicPacks }) => (
 
 		<h2>Public Packs</h2>
 
-		{myPacks === null && LoadingIcon}
+		{myPacks === null && Loading.Icon}
 		{error && error.display}
 
 		{publicPacks && publicPacks.length === 0 && <p>There are no public packs to display</p>}
@@ -163,18 +163,10 @@ const PacksList = ({ loggedIn, error, myPacks, publicPacks }) => (
 	</div>
 );
 
-const PacksPageWrap = props => (
-	<div className="main">
-		<div className="container mt-5">
-			<PacksList {...props} />
-		</div>
-	</div>
-);
-
 const Packs = ({ routes, match = {}, ...props }) => (
-	<div id="Packs">
-		<PacksPageWrap {...props} match={match} />
-	</div>
+	<Page id="Packs">
+		<PacksList {...props} match={match} />
+	</Page>
 );
 
 export default Packs;

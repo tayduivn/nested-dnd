@@ -1,5 +1,6 @@
-import Generators, { GeneratorsList } from "./Generators";
+import Generators from "./Generators";
 import Generator from "./Generator";
+import GeneratorsList from "./GeneratorsList";
 import EditGenerator from "./EditGenerator";
 
 const routes = [

@@ -54,7 +54,7 @@
 		"enzyme": "^3.10.0",
 		"enzyme-adapter-react-16": "^1.14.0",
 		"redux-devtools": "^3.5.0",
-		"why-did-you-update": "^1.0.6"
+		"@welldone-software/why-did-you-render": "^3.3.3"
 	},
 	"stylelint": {
 		"extends": [

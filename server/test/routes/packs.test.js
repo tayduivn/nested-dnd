@@ -41,7 +41,7 @@ describe("/packs", () => {
 		it("returns ok signed out", () => {
 			PackMock.expects("find")
 				.chain("exec")
-				.resolves([{ url: "test" }, { url: "hello " }]);
+				.resolves([{ _id: 1, url: "test" }, { _id: 2, url: "hello " }]);
 
 			return request
 				.get("/api/packs")
@@ -57,11 +57,11 @@ describe("/packs", () => {
 		it("returns ok signed in", () => {
 			PackMock.expects("find")
 				.chain("exec")
-				.resolves([{ url: "test" }, { url: "hello " }]);
+				.resolves([{ _id: 1, url: "test" }, { _id: 2, url: "hello " }]);
 
 			PackMock.expects("find")
 				.chain("exec")
-				.resolves([{ url: "test" }, { url: "hello " }]);
+				.resolves([{ _id: 1, url: "test" }, { _id: 2, url: "hello " }]);
 
 			user = new User({ _id: USER_ID });
 
@@ -119,7 +119,7 @@ describe("/packs", () => {
 			pack._user = new User();
 
 			GenMock.expects("find")
-				.chain("select")
+				.chain("exec")
 				.resolves([]);
 
 			PackMock.expects("findOne")

@@ -3,20 +3,7 @@ const router = require("express").Router();
 const Pack = require("../../models/pack");
 
 const pack = require("./pack");
-
-const normalizePackArray = async (byId, array) => {
-	return Promise.all(
-		array.map(async pack => {
-			// this is a sanity check for url changed
-			if (pack.isModified && pack.isModified()) {
-				await pack.save();
-			}
-
-			byId[pack._id] = pack;
-			return pack._id;
-		})
-	);
-};
+const normalizePacks = require("../../util/normalizePacks");
 
 // Get All Packs
 // ---------------------------------
@@ -33,19 +20,24 @@ router.get("/", (req, res, next) => {
 	Pack.find(publicPackSettings)
 		.exec()
 		.then(async publicPacks => {
-			const byId = {};
-			publicPacks = await normalizePackArray(byId, publicPacks);
+			let publicNormal = normalizePacks(publicPacks);
 
 			if (!req.user) {
-				return res.json({ byId, publicPacks });
+				const { byId, byUrl, idArray } = publicNormal;
+				return res.json({ byId, byUrl, publicPacks: idArray });
 			}
 
 			// find packs I own
 			Pack.find({ _user: req.user._id })
 				.exec()
 				.then(async myPacks => {
-					myPacks = await normalizePackArray(byId, myPacks);
-					return res.json({ byId, myPacks, publicPacks });
+					let myNormal = normalizePacks(myPacks);
+					return res.json({
+						byId: { ...publicNormal.byId, ...myNormal.byId },
+						byUrl: { ...publicNormal.byUrl, ...myNormal.byUrl },
+						myPacks: myNormal.idArray,
+						publicPacks: publicNormal.idArray
+					});
 				})
 				.catch(next);
 		})

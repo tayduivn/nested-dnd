@@ -3,7 +3,9 @@ import { spread } from "../../util";
 
 import {
 	ADD,
-	FETCH,
+	FETCH_UNIVERSE_START,
+	FETCH_UNIVERSE_ERROR,
+	FETCH_UNIVERSE_SUCCESS,
 	UNIVERSES_SET,
 	ERROR,
 	UNIVERSE_SET,
@@ -30,11 +32,33 @@ function instance(state = {}, action) {
 	}
 }
 
+const DEFAULT_UNIVERSE = {
+	isFetching: false,
+	lastUpdated: undefined,
+	apiError: false
+};
+
 // todo handle update other
-function universe(state = {}, action) {
-	const array = state.array ? [...state.array] : [];
+function universe(state = DEFAULT_UNIVERSE, action) {
+	const array = state.array instanceof Array ? [...state.array] : [];
 
 	switch (action.type) {
+		case FETCH_UNIVERSE_START:
+			return { isFetching: true };
+		case FETCH_UNIVERSE_SUCCESS:
+			return {
+				isFetching: false,
+				apiError: false,
+				lastUpdated: action.lastUpdated,
+				...action.data
+			};
+		case FETCH_UNIVERSE_ERROR:
+			return {
+				...state,
+				isFetching: false,
+				lastUpdated: action.lastUpdated,
+				apiError: action.error
+			};
 		case INSTANCE_DELETE:
 			const toDelete = array[action.index];
 
@@ -63,23 +87,10 @@ function universe(state = {}, action) {
 
 function normalize(state = {}, action) {
 	const u = action.data || { array: [] };
-	const lastSaw = u.lastSaw;
-	const array = (state.array && [...state.array]) || [];
 
 	switch (action.type) {
 		case UNIVERSES_SET:
-			if (lastSaw.up && lastSaw.up.length) {
-				lastSaw.up.forEach(i => (array[i.index] = i));
-				lastSaw.up = lastSaw.up[0].index;
-			}
-			if (lastSaw.in && lastSaw.in.length) {
-				// filter out null children
-				lastSaw.in = lastSaw.in.filter(child => child);
-				lastSaw.in.forEach(i => (array[i.index] = { ...i, up: lastSaw.index }));
-				lastSaw.in = lastSaw.in.map(c => c.index);
-			}
-			array[lastSaw.index] = lastSaw;
-			return spread(state, u, { array, lastSaw: lastSaw.index });
+			return spread(state, u);
 		default:
 			return state;
 	}
@@ -89,6 +100,10 @@ function byId(state = {}, action) {
 	const copy = { ...state };
 
 	switch (action.type) {
+		case FETCH_UNIVERSE_ERROR:
+		case FETCH_UNIVERSE_START:
+		case FETCH_UNIVERSE_SUCCESS:
+			return { ...state, [action.id]: universe(state[action.id], action) };
 		case INSTANCE_DELETE:
 		case INSTANCE_ADD_CHILD:
 		case INSTANCE_SET:
@@ -115,7 +130,6 @@ function myUniverses(state = myUniversesInitial, action) {
 			return { loaded: true, array: Object.values(action.data).map(u => u._id) };
 		case ERROR:
 			return spread(myUniversesInitial, { loaded: true, error: action.error });
-		case FETCH:
 		default:
 			return state;
 	}
@@ -125,22 +139,3 @@ export default combineReducers({
 	byId,
 	myUniverses
 });
-
-const selectMyUniverses = ({ universes, packs }) => ({
-	...universes.myUniverses,
-	array: universes.myUniverses.array.map(_id => {
-		const u = universes.byId[_id];
-		if (!u) return { _id };
-		const lastSaw = (u.array && u.array[u.lastSaw]) || u.array[0];
-		const pack = packs.byId[u.pack] || {};
-		return { ...u, font: pack.font, lastSaw: lastSaw.name || lastSaw.isa };
-	})
-});
-
-export function getFavorites({ favorites = [], array = [] } = {}) {
-	return favorites
-		.filter(index => array[index])
-		.map(index => ({ index, name: array[index].name || array[index].isa }));
-}
-
-export { selectMyUniverses };

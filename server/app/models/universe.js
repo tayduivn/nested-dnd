@@ -79,10 +79,15 @@ function deleteEverything() {
 	this.array = [{ name: this.title }];
 	this.lastSaw = 0;
 	const empties = {};
+	const emptyIndexes = [];
 	for (var i = 1; i < oldLength; i++) {
 		empties[i] = null;
+		emptyIndexes.push(i);
 	}
-	return empties;
+	return {
+		emptyIndexes,
+		length: 0
+	};
 }
 
 function addToEmpties(index, empties, length) {
@@ -107,13 +112,23 @@ universeSchema.methods.doDelete = function(index) {
 	}
 };
 
+// TODO
+// eslint-disable-next-line
 universeSchema.methods.deleteInstance = function(index, willDeleteParent) {
 	index = parseInt(index, 10);
 	let instance = this.array[index];
 
-	if (isNaN(index)) return;
+	if (isNaN(index))
+		return {
+			emptyIndexes: this.emptyIndexes,
+			length: this.array.length
+		};
 	if (index === 0) return deleteEverything.call(this);
-	if (!instance) return;
+	if (!instance)
+		return {
+			emptyIndexes: this.emptyIndexes,
+			length: this.array.length
+		};
 
 	if (!this.emptyIndexes) this.emptyIndexes = [];
 

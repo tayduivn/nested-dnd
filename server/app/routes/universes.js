@@ -2,9 +2,14 @@ const router = require("express").Router();
 
 const MW = require("./middleware.js");
 const Universe = require("../models/universe");
+const Pack = require("../models/pack");
 const BuiltPack = require("../models/builtpack");
 const Maker = require("../models/generator/make");
 const Nested = require("./packs/nested");
+const Table = require("../models/table");
+
+const getPack = require("../queries/getPack");
+const normalizeUniverse = require("../util/normalizeUniverse");
 
 function saveInstance(index, newValues, universe) {
 	const newChanges = {};
@@ -32,7 +37,7 @@ function saveInstance(index, newValues, universe) {
 	// delete
 	if (newValues.delete) {
 		const oldLength = universe.array.length;
-		const { length, emptyIndexes } = universe.deleteInstance(index);
+		const { length, emptyIndexes } = universe.deleteInstance(index) || {};
 
 		// send all the empties that are now null
 		emptyIndexes.forEach(i => (newChanges[i] = null));
@@ -59,22 +64,19 @@ router
 		Universe.find({ user_id: req.user.id })
 			.populate("pack", "name dependencies font url public desc txt cssClass")
 			.then(async uniArray => {
-				const packs = {};
+				let packs = {};
 				const universes = {};
 				Promise.all(
 					uniArray.map(async u => {
 						let lastSaw = (await u.getNested(u.lastSaw, u.pack)) || {};
-						packs[u.pack._id] = u.pack.toJSON();
-						let style = {
-							txt: lastSaw.txt,
-							cssClass: lastSaw.cssClass,
-							lastSaw: lastSaw,
-							pack: u.pack._id,
-							array: undefined,
-							dependencies: [u.pack.name].concat(u.pack.dependencies)
-						};
 						// push the pack name into the dependencies for display
-						universes[u._id] = Object.assign({}, u.toJSON(), style);
+						const { universe, packs: morePacks } = normalizeUniverse({
+							...u.toJSON(),
+							array: { [u.lastSaw]: lastSaw }
+						});
+
+						universes[universe._id.toString()] = universe;
+						packs = { ...packs, ...morePacks };
 					})
 				).then(() =>
 					res.json({
@@ -110,19 +112,18 @@ router
 	.route("/:universe")
 	// Get universe
 	// ---------------------------------
-	.get(MW.ownsUniverse, (req, res) => {
-		var u = req.universe.toJSON();
+	.get(MW.ownsUniverse, async (req, res) => {
+		// populate the dependencies so we can see them
+		await req.universe.pack.populate({ path: "dependencies" }).execPopulate();
 
-		u.favorites = u.favorites.map(i => {
-			if (!u.array[i]) return {};
-			return {
-				name: u.array[i].name || u.array[i].isa,
-				index: i
-			};
+		const pack = await getPack(req.universe.pack, req.user);
+
+		const { universe, packs, generators, tables } = normalizeUniverse({
+			...req.universe.toJSON(),
+			pack
 		});
 
-		delete u.array;
-		res.json(u);
+		res.json({ universe, packs, generators, tables });
 	})
 	// Edit Universe
 	// ---------------------------------
@@ -202,7 +203,13 @@ const generateNew = async (universe, index, isa, name) => {
 	var nestedParent = parent.expand(1);
 	const pack = universe.pack;
 	var builtpack = await BuiltPack.findOrBuild(pack);
-	var generator = builtpack.getGen(isa || name);
+
+	let generator = false;
+	if (typeof isa === "string") {
+		generator = builtpack.getGen(isa || name);
+	} else if (typeof isa === "object" && isa) {
+		generator = isa;
+	}
 	var generated = generator
 		? await Maker.make(generator, 0, builtpack, undefined, ancestorData)
 		: new Nested(name);
@@ -217,7 +224,27 @@ const generateNew = async (universe, index, isa, name) => {
 
 	// save to universe
 	generated.flatten(universe);
+
+	return generated.index;
 };
+
+function getRelevantInstances(index, newIndex, universe) {
+	const parent = universe.array[index];
+	const instances = {
+		[index]: parent
+	};
+	parent.in.forEach(i => {
+		if (i === newIndex) {
+			instances[i] = universe.array[i];
+			// include child nodes if they were generated
+			if (instances[i].in instanceof Array) {
+				instances[i].in.forEach(childIndex => (instances[childIndex] = universe.array[childIndex]));
+			}
+		}
+		if (i !== null) instances[i] = universe.array[i];
+	});
+	return instances;
+}
 
 // Make a new node
 // ---------------------------------
@@ -232,21 +259,59 @@ router.post("/:universe/explore/:index", (req, res, next) => {
 
 			if (!universe.array[index]) return res.status(404);
 
-			await generateNew(universe, index, req.body.isa, req.body.name);
+			let isa = req.body.isa;
+
+			// table that returns a generator
+			if (req.body.table) {
+				let table = await Table.findById(req.body.table).exec();
+				if (table && table.returns === "generator") {
+					isa = await table.roll();
+				}
+			}
+
+			const newIndex = await generateNew(universe, index, isa, req.body.name);
 
 			universe.save();
 
-			const parent = universe.array[index];
-			const instances = {
-				[index]: parent
-			};
-			parent.in.forEach(i => {
-				if (i !== null) instances[i] = universe.array[i];
-			});
-
-			res.json({ instances, pack: universe.pack });
+			res.json({ instances: getRelevantInstances(index, newIndex, universe), pack: universe.pack });
 		})
 		.catch(next);
+});
+
+router.post("/:universe/pack/create", MW.ownsUniverse, async (req, res) => {
+	const id = req.params.universe;
+
+	// we already have a universe pack, bail
+	if (req.universe.pack.universe_id && req.universe.pack.universe_id.toString() === id) {
+		res.json(req.universe);
+	}
+
+	const { font, cssClass, txt, desc, seed } = req.universe.pack;
+
+	const newPack = new Pack({
+		_id: id,
+		universe_id: id,
+		name: req.universe.title,
+		url: id,
+		dependencies: [req.universe.pack.id],
+		public: false,
+		font,
+		cssClass,
+		txt,
+		desc,
+		seed
+	});
+
+	const oldPack = req.universe.pack;
+	req.universe.set("pack", id);
+	await newPack.save();
+	await req.universe.save();
+
+	let { universe, packs } = normalizeUniverse(req.universe);
+	packs[newPack._id.toString()] = newPack;
+	packs[oldPack._id.toString()] = oldPack;
+
+	res.json({ universe, packs });
 });
 
 module.exports = router;

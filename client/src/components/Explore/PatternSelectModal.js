@@ -3,8 +3,6 @@ import React from "react";
 import { ModalHeader } from "./ModalIconSelect";
 import textures from "../../stores/textures";
 
-import "./PatternSelectModal.css";
-
 const cols = "col-xl-2 col-lg-3 col-sm-4 col-xs-6";
 const MODAL_OPTIONS = {
 	className: "modal fade",

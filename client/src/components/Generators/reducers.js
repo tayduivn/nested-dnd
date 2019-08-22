@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import { createMatchSelector } from "connected-react-router";
 
-import { GENERATOR_SET, GENERATOR_RENAME } from "./actions";
+import { GENERATOR_SET, GENERATOR_RENAME, RECEIVE_GENERATORS } from "./actions";
 
 export const genPathSelector = createMatchSelector({ path: "/packs/:pack/generators/:generator" });
 
@@ -32,6 +32,8 @@ function generator(state = {}, action) {
 
 function byId(state = {}, action) {
 	switch (action.type) {
+		case RECEIVE_GENERATORS:
+			return { ...state, ...action.data.byId };
 		case GENERATOR_RENAME:
 			return {
 				...state,

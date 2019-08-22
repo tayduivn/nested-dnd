@@ -13,8 +13,6 @@ import BGSelectPopover from "./BGSelectPopover";
 import { changeInstance } from "./actions";
 import { splitClass } from "../../util";
 
-import "./Title.css";
-
 const CENTER_ALIGN = "d-flex align-items-center justify-content-center";
 const COG_BUTTON_SETTINGS = {
 	type: "button",

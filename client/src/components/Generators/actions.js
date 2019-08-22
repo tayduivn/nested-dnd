@@ -1,5 +1,3 @@
-import store from "../App/store";
-
 import { SET_PACK } from "../Packs/actions";
 import DB from "../../actions/CRUDAction";
 
@@ -10,9 +8,9 @@ export const GENERATOR_ADD = "GENERATOR_ADD";
 export const GENERATOR_FETCH = "GENERATOR_FETCH";
 export const CLEAR_GENERATOR_ERRORS = "CLEAR_GENERATOR_ERRORS";
 
-function handleError(packurl, isa, { data = {}, message, display }) {
+function handleError(dispatch, packurl, isa, { data = {}, message, display }) {
 	if (data.pack) {
-		store.dispatch({
+		dispatch({
 			type: SET_PACK,
 			id: data.pack._id,
 			data: {
@@ -26,8 +24,8 @@ function handleError(packurl, isa, { data = {}, message, display }) {
 	}
 }
 
-function handleChangeError(error, id, isa, packurl) {
-	store.dispatch({
+function handleChangeError(dispatch, error, id, isa, packurl) {
+	dispatch({
 		type: GENERATOR_SET,
 		id,
 		isa,
@@ -40,60 +38,67 @@ function handleChangeError(error, id, isa, packurl) {
 }
 
 export function createGenerator(packurl, isa) {
-	DB.create(`packs/${packurl}/generators`, { isa }).then(({ error, data }) => {
-		if (error) {
-			return handleError(packurl, isa, error);
-		}
+	return dispatch => {
+		DB.create(`packs/${packurl}/generators`, { isa }).then(({ error, data }) => {
+			if (error) {
+				return handleError(dispatch, packurl, isa, error);
+			}
 
-		// change url
-		window.history.replaceState({}, isa, `/packs/${packurl}/generators/${encodeURI(isa)}/edit`);
+			// change url
+			window.history.replaceState({}, isa, `/packs/${packurl}/generators/${encodeURI(isa)}/edit`);
 
-		store.dispatch({
-			type: GENERATOR_SET,
-			packurl,
-			id: data.unbuilt && data.unbuilt._id,
-			isa,
-			data: data,
-			loading: false
+			dispatch({
+				type: GENERATOR_SET,
+				packurl,
+				id: data.unbuilt && data.unbuilt._id,
+				isa,
+				data: data,
+				loading: false
+			});
 		});
-	});
 
-	store.dispatch({
-		type: GENERATOR_SET,
-		packurl,
-		isa,
-		data: { isa },
-		loading: true
-	});
-}
-
-export function fetchGenerator(dispatch, packurl, isa) {
-	//create page
-	if (!isa) return;
-	DB.get(`packs/${packurl}/generators`, isa).then(({ error, data }) => {
-		if (error) {
-			return handleError(packurl, isa, error);
-		}
 		dispatch({
 			type: GENERATOR_SET,
 			packurl,
-			id: data.unbuilt && data.unbuilt._id,
 			isa,
-			data: data,
-			loading: false
+			data: { isa },
+			loading: true
 		});
-	});
-
-	dispatch({
-		type: GENERATOR_SET,
-		packurl,
-		isa,
-		data: { isa },
-		loading: true
-	});
+	};
 }
 
-function changeIsa(packid, packurl, id, isa, change) {
+export function fetchGenerator(params) {
+	return dispatch => {
+		const packurl = params.pack;
+		const isa = params.generator ? decodeURIComponent(params.generator) : undefined;
+
+		//create page
+		if (!isa || isa === "create") return;
+		DB.get(`packs/${packurl}/generators`, isa).then(({ error, data }) => {
+			if (error) {
+				return handleError(dispatch, packurl, isa, error);
+			}
+			dispatch({
+				type: GENERATOR_SET,
+				packurl,
+				id: data.unbuilt && data.unbuilt._id,
+				isa,
+				data: data,
+				loading: false
+			});
+		});
+
+		dispatch({
+			type: GENERATOR_SET,
+			packurl,
+			isa,
+			data: { isa },
+			loading: true
+		});
+	};
+}
+
+function changeIsa(dispatch, packid, packurl, id, isa, change) {
 	// change url
 	window.history.replaceState(
 		{},
@@ -101,7 +106,7 @@ function changeIsa(packid, packurl, id, isa, change) {
 		`/packs/${packurl}/generators/${encodeURI(change.isa)}/edit`
 	);
 
-	store.dispatch({
+	dispatch({
 		type: GENERATOR_RENAME,
 		packid,
 		id,
@@ -127,9 +132,10 @@ function hasNewIds(prop, oldUnbuilt, newUnbuilt) {
 			.join(",");
 	return oldIds !== newIds;
 }
-function trimmedUpdate(newUnbuilt) {
+
+function trimmedUpdate(state, newUnbuilt) {
 	const send = {};
-	const oldUnbuilt = store.getState().generators.byId[newUnbuilt._id];
+	const oldUnbuilt = state.generators.byId[newUnbuilt._id];
 
 	// a new desc _id was added
 	if (hasNewIds("desc", oldUnbuilt, newUnbuilt)) {
@@ -142,18 +148,18 @@ function trimmedUpdate(newUnbuilt) {
 	return send;
 }
 
-function doChange(packurl, id, isa, change) {
+function doChange(dispatch, state, packurl, id, isa, change) {
 	DB.set(`packs/${packurl}/generators`, id, change).then(({ error, data }) => {
 		if (error) {
-			return handleChangeError(error, id, isa, packurl);
+			return handleChangeError(dispatch, error, id, isa, packurl);
 		} else {
 			// don't update unbuilt -- could interfere with what I'm doing
-			store.dispatch({
+			dispatch({
 				type: GENERATOR_SET,
 				packurl,
 				id: data.unbuilt && data.unbuilt._id,
 				isa: (data.built && data.built.isa) || (data.unbuilt && data.unbuilt.isa),
-				data: { built: data.built, unbuilt: trimmedUpdate(data.unbuilt) },
+				data: { built: data.built, unbuilt: trimmedUpdate(state, data.unbuilt) },
 				loaded: true
 			});
 		}
@@ -161,16 +167,26 @@ function doChange(packurl, id, isa, change) {
 }
 
 export function changeGenerator(packurl, packid, id, isa, change = {}) {
-	if (change.isa) {
-		changeIsa(packid, packurl, id, isa, change);
-	} else {
-		store.dispatch({
-			type: GENERATOR_SET,
-			packurl,
-			id: id,
-			isa,
-			data: { built: change, unbuilt: change }
-		});
-	}
-	doChange(packurl, id, isa, change);
+	return (dispatch, getState) => {
+		if (change.isa) {
+			changeIsa(dispatch, packid, packurl, id, isa, change);
+		} else {
+			dispatch({
+				type: GENERATOR_SET,
+				packurl,
+				id: id,
+				isa,
+				data: { built: change, unbuilt: change }
+			});
+		}
+		doChange(dispatch, getState(), packurl, id, isa, change);
+	};
+}
+
+export const RECEIVE_GENERATORS = "RECEIVE_GENERATORS";
+export function receiveGenerators(data) {
+	return {
+		type: RECEIVE_GENERATORS,
+		data
+	};
 }

@@ -1,52 +1,13 @@
 import React, { Component } from "react";
-import { Link } from "../Util";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { LoadingIcon } from "../Util/Loading";
+import { Loading, Tabs, Link } from "../Util";
 import { GeneratorsList } from "../Generators";
 import { TablesList } from "../Tables/Tables";
 
 import "./Pack.css";
 import actions from "./actions";
-
-const LOADING = (
-	<div className="main">
-		<div className="container mt-5">
-			<LoadingIcon />
-		</div>
-	</div>
-);
-
-const TABS = (
-	<ul className="nav nav-tabs" id="packComponents" role="tablist">
-		<li className="nav-item">
-			<a
-				className="nav-link active"
-				id="generators-tab"
-				data-toggle="tab"
-				href="#generators"
-				role="tab"
-				aria-controls="generators"
-				aria-selected="true"
-			>
-				Generators
-			</a>
-		</li>
-		<li className="nav-item">
-			<a
-				className="nav-link"
-				id="tables-tab"
-				data-toggle="tab"
-				href="#tables"
-				role="tab"
-				aria-controls="tables"
-				aria-selected="false"
-			>
-				Tables
-			</a>
-		</li>
-	</ul>
-);
 
 class PackInfo extends React.PureComponent {
 	render() {
@@ -85,26 +46,9 @@ class PackInfo extends React.PureComponent {
 	}
 }
 
-class TabContent extends React.PureComponent {
-	render() {
-		const { gens, isOwner, tables, packurl } = this.props;
-		return (
-			<div className="tab-content" id="packComponentsContent">
-				<div
-					className="tab-pane fade show active"
-					id="generators"
-					role="tabpanel"
-					aria-labelledby="generators-tab"
-				>
-					<GeneratorsList generators={gens} {...{ isOwner, packurl }} />
-				</div>
-				<div className="tab-pane fade" id="tables" role="tabpanel" aria-labelledby="tables-tab">
-					<TablesList {...{ tables, isOwner, packurl }} />
-				</div>
-			</div>
-		);
-	}
-}
+const GENERATORS = "generators";
+const TABLES = "tables";
+const TAB_LABELS = [GENERATORS, TABLES];
 
 /**
  * View a Pack
@@ -134,9 +78,14 @@ class ViewPack extends Component {
 
 					<PackInfo {...{ isOwner, user, isPublic, url, font, defaultSeed }} />
 
-					{TABS}
-
-					<TabContent {...{ gens: generators, isOwner, packurl: url, tables }} />
+					<Tabs labels={TAB_LABELS} active={GENERATORS}>
+						<Tabs.Pane label={GENERATORS} active={GENERATORS}>
+							<GeneratorsList generators={generators} {...{ isOwner, packurl: url }} />
+						</Tabs.Pane>
+						<Tabs.Pane label={TABLES} active={GENERATORS}>
+							<TablesList {...{ tables, isOwner, packurl: url }} />
+						</Tabs.Pane>
+					</Tabs>
 				</div>
 			</div>
 		);
@@ -146,11 +95,18 @@ class ViewPack extends Component {
 /**
  * Wrapper Component for Pack pages
  */
-class PackInner extends Component {
+class Pack extends Component {
 	state = {
 		filters: {}
 	};
+	static propTypes = {
+		fetchPack: PropTypes.func,
+		tables: PropTypes.array,
+		generators: PropTypes.object,
+		pack: PropTypes.object
+	};
 	static defaultProps = {
+		pack: {},
 		fetchPack: () => {}
 	};
 	constructor(props) {
@@ -167,22 +123,43 @@ class PackInner extends Component {
 	};
 
 	render() {
-		const { error, pack = {} } = this.props;
+		const { error, pack, tables, generators } = this.props;
 
 		if (error) return error.display;
 		if (!pack.loaded) {
-			return LOADING;
+			return <Loading.Page />;
 		}
 
-		return <ViewPack {...pack} handleRebuild={this.handleRebuild} />;
+		return <ViewPack {...{ ...pack, tables, generators }} handleRebuild={this.handleRebuild} />;
 	}
 }
 
-const Pack = connect(
+export default connect(
 	(state, { match }) => {
 		const packid = state.packs.byUrl[match.params.pack];
+		const pack = state.packs.byId[packid];
+
+		// TODO : memoize
+
+		let tables = [];
+		if (pack && pack.tables) {
+			tables = pack.tables.map(t => {
+				return state.tables.byId[t] || {};
+			});
+		}
+
+		let generators = {};
+		if (pack && pack.originalGen) {
+			pack.originalGen.forEach(id => {
+				const gen = state.generators.byId[id];
+				if (gen) generators[gen.isa] = gen;
+			});
+		}
+
 		return {
-			pack: state.packs.byId[packid]
+			pack,
+			tables,
+			generators
 		};
 	},
 	(dispatch, { match }) => {
@@ -199,6 +176,4 @@ const Pack = connect(
 			...d
 		};
 	}
-)(PackInner);
-
-export default Pack;
+)(Pack);

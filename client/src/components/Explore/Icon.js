@@ -45,7 +45,7 @@ class Icon extends React.PureComponent {
 
 	_getProps() {
 		let { name = false, category, alignment = "", inlinesvg, className = "" } = this.props;
-		let value = name;
+		let value = name || "";
 		if (!category) {
 			let { c, v } = this.determineCategory();
 			category = c;

@@ -1,8 +1,6 @@
 import React from "react";
 import Sifter from "sifter";
 
-import "./SearchBar.css";
-
 export default class SearchBar extends React.Component {
 	state = {
 		query: "",

@@ -9,6 +9,7 @@ import packs from "../Packs/reducers";
 import universes from "../Universes/reducers";
 import user from "../User/reducers";
 import generators from "../Generators/reducers";
+import tables from "../Tables/redux/reducers";
 
 import { checkLoggedIn } from "../User/actions";
 
@@ -80,6 +81,7 @@ const app = combineReducers({
 	universes,
 	user,
 	fonts,
+	tables,
 	router: connectRouter(history)
 });
 

@@ -10,32 +10,15 @@ const { getByIsa } = require("./getUtils");
 const utils = require("../middleware.js");
 
 const generators = require("./generators");
+const getPack = require("../../queries/getPack");
+const normalizePack = require("../../util/normalizePack");
 
 // Read Pack
 // ---------------------------------
 router.get("/", MW.canViewPack, (req, res, next) => {
-	BuiltPack.findOrBuild(req.pack)
-		.then(async builtpack => {
-			var isOwner = req.user && req.pack._user.id === req.user.id;
-
-			// run getGen so correct format
-			var generators = {};
-			for (var isa in builtpack.generators) {
-				generators[isa] = builtpack.getGen(isa);
-			}
-
-			// get tables
-			var tables = await Table.find({ pack: req.pack.id })
-				.select("id title returns")
-				.exec();
-			tables.sort((a, b) => a.title.localeCompare(b.title));
-
-			return res.json({
-				...req.pack.toJSON(),
-				generators,
-				tables,
-				isOwner
-			});
+	getPack(req.pack, req.user)
+		.then(result => {
+			res.json(normalizePack(result));
 		})
 		.catch(next);
 });

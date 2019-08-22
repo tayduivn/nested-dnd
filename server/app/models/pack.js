@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const SEED_DELIM = ">";
 
 var packSchema = Schema({
-	//optional because dummy universe packs leave this out
+	// optional because dummy universe packs leave this out
 	_user: {
 		type: Schema.Types.ObjectId,
 		ref: "User"

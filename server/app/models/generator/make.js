@@ -14,6 +14,7 @@ var Maker = {
 	 */
 	make: async function(gen, generations, builtpack, node, ancestorData = {}) {
 		if (isNaN(generations) || generations < 0) generations = 0;
+		const isEmbedded = !gen.isa;
 
 		//make into a Generator obj if not
 		gen = cleanGen(gen, builtpack);
@@ -31,7 +32,8 @@ var Maker = {
 			node = new Nested(name, gen, style, desc, gen.data);
 		}
 
-		if (!generations || !gen.in || !gen.in.length) return node;
+		// we have to keep going on embedded generators or we will lose the definition forever
+		if (!isEmbedded && (generations <= 0 || !gen.in || !gen.in.length)) return node;
 
 		// in ---------------------------------------------
 		var madeChildren;
@@ -49,7 +51,8 @@ var Maker = {
 			flatArray = flatArray.concat(child);
 		});
 
-		node.in = !flatArray || !flatArray.length ? undefined : flatArray;
+		let inArr = !flatArray || !flatArray.length ? undefined : flatArray;
+		node.setIn(inArr);
 
 		return node;
 	},
@@ -242,6 +245,11 @@ function cleanGen(genData, builtpack) {
 		// SHOULD NOT EXTEND ON THE FLY
 		// gen = gen.extend(builtpack);
 	} else gen = genData;
+
+	// this is an embedded generator, we need to extend
+	if (!gen.isa) {
+		gen = gen.extend(builtpack);
+	}
 
 	return gen;
 }

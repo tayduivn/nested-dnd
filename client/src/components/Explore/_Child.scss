@@ -1,8 +1,7 @@
-@import "../../variables.scss";
-
 $yPadding: 0.75rem;
 $xPadding: 0.75rem;
-$linkHeight: 2.5rem;
+$linkHeight: 1.3rem;
+$linkLabelWidth: 3rem;
 
 /*Child*/
 .isNew {
@@ -166,13 +165,12 @@ $linkHeight: 2.5rem;
 
 .linkLabel {
 	position: absolute;
-	top: $yPadding/2;
-	left: $xPadding/2;
+	left: $xPadding;
 	padding: 0;
 	z-index: 1;
-	width: 5rem;
+	width: $linkLabelWidth;
 	height: $linkHeight;
-	text-align: left;
+	text-align: center;
 	transition-duration: 500ms;
 	transition-property: width, height, border-radius;
 	transition-timing-function: ease;
@@ -187,14 +185,14 @@ $linkHeight: 2.5rem;
 		left: -25%;
 	}
 
-	svg {
+	.lottie {
 		display: none;
 	}
+}
 
-	span {
-		padding-left: 43px;
-		line-height: $linkHeight;
-	}
+.linkLabel__spacer {
+	display: inline-block;
+	width: $linkLabelWidth + $xPadding * 0.5;
 }
 
 .deleteLink {
@@ -228,7 +226,11 @@ $linkHeight: 2.5rem;
 	}
 
 	&:hover {
+		.child__title {
+			position: static;
+		}
 		.linkLabel {
+			position: absolute;
 			width: 100%;
 			height: 100%;
 			top: 0;

@@ -1,8 +1,10 @@
 import DB from "../../actions/CRUDAction";
+import { receiveTables } from "../Tables/redux/actions";
+import { receiveGenerators } from "../Generators/actions";
 
 export const ADD = "PACKS_ADD";
 export const FETCH = "PACKS_FETCH";
-export const FETCH_PACK = "PACKS_FETCH_PACK";
+
 export const PACKS_SET = "PACKS_SET";
 export const SET_PACK = "PACKS_SET_PACK";
 export const ERROR = "PACKS_ERROR";
@@ -22,19 +24,33 @@ export const fetch = (dispatch, loaded) => {
 	}
 };
 
-export const fetchPack = (dispatch, id, loaded) => {
+export const FETCH_PACK = "PACKS_FETCH_PACK";
+export const fetchPack = (dispatch, url, loaded) => {
 	if (!loaded) {
-		DB.get("packs", id).then(({ error, data }) => {
+		DB.get("packs", url).then(({ error, data }) => {
 			if (error) {
 				dispatch(setError(error));
 			} else {
-				dispatch(setPack(data));
+				if (data.packs) dispatch(packsSet(data.packs));
+				if (data.tables) dispatch(receiveTables(data.tables));
+				if (data.generators) dispatch(receiveGenerators(data.generators));
 			}
 		});
 	}
 	return {
 		type: FETCH_PACK,
-		id
+		url
+	};
+};
+
+export const fetchPackIfNeeded = id => {
+	return (dispatch, getStore) => {
+		if (!id) console.error("no id provided");
+		const pack = getStore().packs.byId[id];
+
+		if (!pack || (pack.partial && !pack.isFetching)) {
+			fetchPack(dispatch, id, false);
+		}
 	};
 };
 

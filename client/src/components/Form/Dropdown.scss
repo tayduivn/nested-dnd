@@ -27,7 +27,7 @@
 	&__option {
 		padding: 0.5em 0.5em;
 		line-height: 1.1em;
-		height: 30px;
+		min-height: 30px;
 		width: 100%;
 		text-overflow: ellipsis;
 		overflow: hidden;

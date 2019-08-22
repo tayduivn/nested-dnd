@@ -1,5 +1,6 @@
+const mongoose = require("mongoose");
+
 const Pack = require("../models/pack");
-const BuiltPack = require("../models/builtpack");
 const Util = require("../models/utils");
 const User = require("../models/user");
 const Universe = require("../models/universe");
@@ -61,7 +62,12 @@ module.exports = {
 		return getPack(req, res, () => {
 			if (!req.pack) return;
 
-			if (req.pack.public || (req.user && req.pack._user.id === req.user.id)) {
+			// TODO: security hole?
+			if (
+				req.pack.public ||
+				req.pack.universe_id ||
+				(req.user && req.pack._user.id === req.user.id)
+			) {
 				return next();
 			} else {
 				return res.status(401).json({ error: "You do not have permission to view this pack" });
@@ -112,7 +118,8 @@ module.exports = {
 		return getPack(req, res, () => {
 			if (!req.pack) return;
 
-			if (req.user && req.pack._user.id === req.user.id) {
+			// TODO: security issue?
+			if (req.pack.universe_id || (req.user && req.pack._user.id === req.user.id)) {
 				return next();
 			} else {
 				return res.status(401).json({ error: "You do not have permission to edit this pack" });
@@ -170,32 +177,37 @@ module.exports = {
  * Puts the pack in the req object
  */
 
-function getPack(req, res, next) {
-	var packGetter;
-
+async function getPack(req, res, next) {
 	const url = req.params.url || req.params.pack;
-	if (url) packGetter = Pack.findOne({ url }).populate("_user", "name id");
-	else return res.status(412).json({ error: "Missing pack id" });
 
-	return packGetter
-		.exec()
-		.then(pack => {
-			if (!pack) {
-				var error = {
-					error: "Couldn't find pack? " + req.params.pack + req.params.url
-				};
-				if (!res.headersSent) {
-					res.status(404).json(error);
-				}
-				return next(error);
-			}
+	if (!url) return res.status(412).json({ error: "Missing pack id" });
 
-			req.pack = pack;
+	let query;
 
-			if (next) {
-				next();
-			}
-			return;
-		})
-		.catch(next);
+	try {
+		const _id = mongoose.Types.ObjectId(url);
+		query = Pack.findOne().or([{ url }, { _id }]);
+	} catch (e) {
+		query = Pack.findOne({ url });
+	}
+
+	const pack = await query.populate("_user", "name id").exec();
+
+	if (!pack) {
+		var error = {
+			error: "Couldn't find pack? " + req.params.pack + req.params.url
+		};
+		if (!res.headersSent) {
+			res.status(404).json(error);
+		}
+		return next(error);
+	}
+
+	req.pack = pack;
+
+	if (next) {
+		next();
+	}
+
+	return;
 }

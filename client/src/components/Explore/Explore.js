@@ -5,7 +5,7 @@ import ExplorePage, { LOADING, Data, Modals, Children } from "./ExplorePage";
 import Title from "./Title";
 import { handleNestedPropertyValue } from "../../util";
 
-import "./Explore.css";
+import "./index.css";
 
 /**
  * This manages the tree data
@@ -161,25 +161,23 @@ export default class Explore extends Component {
 		else this.handleRestartUniverse(doRegenerate, universe);
 	};
 
-	handleAdd = (child, event) => {
-		if (!child.label) {
+	handleAdd = (label, event) => {
+		if (!label) {
 			return this.setState({ showAdd: true });
 		}
 
 		// add link
-		if (!isNaN(child.label)) {
+		if (!isNaN(label)) {
 			var inArr = this.props.current.in || [];
 			inArr = inArr
 				.map(c => c && c.index)
 				.filter(c => typeof c !== "string")
 				.filter(ind => ind !== null);
-			inArr.push(parseInt(child.label, 10));
+			inArr.push(parseInt(label, 10));
 			this.handleChange(this.props.current.index, "in", inArr);
 			//this.getCurrent(this.props, this.props.current.index);
 		}
 	};
-
-	handleClick = () => {};
 
 	toggleData = () => {
 		this.setState(prevState => ({ showData: !prevState.showData }));
@@ -280,22 +278,14 @@ export default class Explore extends Component {
 			isFavorite: this.props.isFavorite
 		};
 	}
-	_getChildrenProps() {
-		const { isUniverse, index, current } = this.props;
-		const { cssClass, highlightColor, in: inArr } = current;
-		const { handleAdd, handleClick, handleChange } = this;
-		const handle = { change: handleChange, add: handleAdd, click: handleClick };
-		const { generators, tables } = getGensTables(this.props.pack);
-		return { isUniverse, index, cssClass, highlightColor, inArr, handle, generators, tables };
-	}
 	render() {
 		if (this.props.current.loading) return <div className="main pt-5">{LOADING}</div>;
 
 		// get props
 		const { current, isUniverse, index } = this.props,
-			{ handleChange } = this,
+			{ handleChange, handleAdd } = this,
 			{ showData } = this.state,
-			{ data, cssClass, up = [], icon, txt } = current,
+			{ data, cssClass, up = [], icon, txt, in: inArr } = current,
 			{ generators, tables } = getGensTables(this.props.pack),
 			title = current && (current.name || current.isa),
 			isLoading = current.todo === true,
@@ -310,7 +300,7 @@ export default class Explore extends Component {
 						<div className={`children col ${isUniverse ? "children--universe" : ""}`}>
 							{showData && <Data {...{ data, generators, tables, handleChange, index }} />}
 							{isLoading && LOADING}
-							<Children {...this._getChildrenProps()} />
+							<Children {...{ isUniverse, inArr, index, handleAdd, handleChange }} />
 						</div>
 					</div>
 				</ExplorePage>
@@ -320,8 +310,12 @@ export default class Explore extends Component {
 	}
 }
 
-function getGensTables(pack = {}) {
+function getGensTables(pack = {}, tables = []) {
 	const { builtpack = {} } = pack;
-	const { generators = [], tables = [] } = builtpack;
-	return { generators: Object.keys(generators).sort(), tables };
+	const { generators = [] } = builtpack;
+	return {
+		generators: Object.keys(generators)
+			.concat(tables.map(t => `${t.title}::${t._id}::Table`))
+			.sort()
+	};
 }
