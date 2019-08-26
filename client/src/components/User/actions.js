@@ -1,5 +1,7 @@
 import DB from "../../actions/CRUDAction";
 
+import { pushSnack } from "../Util/Snackbar/actions";
+
 export const ADD = "USER_ADD";
 export const FETCH = "USER_FETCH";
 export const SET = "USER_SET";
@@ -10,77 +12,69 @@ export const SET_LOGGED_IN = "SET_LOGGED_IN";
 // Note:
 // do not import store because store imports this and it'll error
 
-export const checkLoggedIn = (dispatch, loggedIn = null) => {
-	const doLoad = loggedIn === null;
+// TODO: error check
+export const doLogin = (url, { email, password, password2, isSignup }) => {
+	return dispatch => {
+		// check passwords match
+		if (isSignup && password !== password2) {
+			dispatch({
+				type: SET_LOGGED_IN,
+				error: {
+					password2Error: "Passwords don't match",
+					password2Valid: false
+				},
+				loggedIn: false
+			});
+		}
 
-	if (doLoad) {
-		DB.fetch("loggedIn").then(({ data, error }) => {
-			if (error) setLoggedInError(error);
-			else dispatch(setLoggedIn(!!data.loggedIn));
+		DB.create(`auth${url}`, { email, password }).then(json => {
+			if (json.errors) {
+				return dispatch({
+					type: SET_LOGGED_IN,
+					error: {
+						apiError: json.errors[0]
+					}
+				});
+			}
+
+			const loggedIn = json.meta.loggedIn;
+			// todo put in errors
+			const err = {
+				passwordError: json.data.passwordError,
+				emailError: json.data.emailError
+			};
+
+			dispatch({
+				type: SET_LOGGED_IN,
+				error: err,
+				email: json.data && json.data.attributes.email,
+				id: json.data.id,
+				loggedIn
+			});
 		});
-	}
-	return {
-		type: CHECK_IS_LOGGEDIN,
-		loading: doLoad,
-		error: false
 	};
 };
 
 // TODO: error check
-export const doLogin = (dispatch, url, { email, password, password2, isSignup }) => {
-	// check passwords match
-	if (isSignup && password !== password2) {
-		return dispatch({
-			type: SET_LOGGED_IN,
-			error: {
-				password2Error: "Passwords don't match",
-				password2Valid: false
-			},
-			loggedIn: false
+export const doLogout = () => {
+	return dispatch => {
+		DB.fetch("auth/logout", "POST").then(json => {
+			if (json.errors) {
+				dispatch(
+					pushSnack({
+						title: `There was an issue logging out: ${json.errors[0].title}`
+					})
+				);
+			} else {
+				dispatch({
+					type: SET_LOGGED_IN,
+					loggedIn: !!json.meta.loggedIn
+				});
+			}
 		});
-	}
-
-	return DB.create(url, { email, password }).then(({ data }) => {
-		const loggedIn = data.loggedIn;
-		const error = {
-			passwordError: data.passwordError,
-			emailError: data.emailError
-		};
-		dispatch({
-			type: SET_LOGGED_IN,
-			error: error,
-			email: data.user && data.user.email,
-			loggedIn
-		});
-	});
+	};
 };
-
-// TODO: error check
-export const doLogout = dispatch => {
-	return DB.fetch("logout", "POST").then(({ data, error }) => {
-		const loggedIn = !!data.loggedIn;
-		dispatch({
-			type: SET_LOGGED_IN,
-			error: error,
-			loggedIn
-		});
-	});
-};
-
-const setLoggedInError = error => ({
-	type: CHECK_IS_LOGGEDIN,
-	error,
-	loading: false
-});
-
-const setLoggedIn = loggedIn => ({
-	type: CHECK_IS_LOGGEDIN,
-	loading: false,
-	error: false,
-	loggedIn
-});
 
 export default {
-	checkLoggedIn,
 	doLogin
 };

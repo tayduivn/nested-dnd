@@ -4,7 +4,7 @@ import Explore from "./Explore";
 import Splash from "./Splash";
 import PlayersPreview from "./PlayersPreview";
 
-import { loadFonts } from "../App/store";
+import { loadFonts } from "../App/actions";
 import { loadCurrent, changeInstance, setFavorite, deleteInstance, setLastSaw } from "./actions";
 import { getGeneratorTables, getCurrent } from "./selectors";
 import { getFavorites, getUniverse } from "../Universes/selectors";
@@ -19,64 +19,13 @@ const mapStateToProps = state => {
 		isFavorite: favorites.find(f => f.index === index),
 		pack,
 		index,
-		current: getCurrent(universe, index, isUniverse),
+		current: getCurrent(state.universes.instances, universe, index, isUniverse),
 		isUniverse,
 		tables: getGeneratorTables(state, pack && pack.builtpack)
 	};
 };
-const mapDispatchToProps = (dispatch, { match }) => ({
-	handleChange: changeInstance,
-	loadCurrent: (universe, index, isUniverse, isLite) =>
-		dispatch(
-			loadCurrent(
-				dispatch,
-				universe,
-				index,
-				isUniverse,
-				match.params.pack || match.params.packurl,
-				isLite
-			)
-		),
-	loadFonts: font => font && loadFonts([font]),
-	setFavorite: (i, isFavorite, universe) => dispatch(setFavorite(i, isFavorite, universe)),
-	setLastSaw: (i, universe) => {
-		if (universe._id) dispatch(setLastSaw(i, universe._id));
-	},
-	dispatch
-});
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
-	const dispatch = dispatchProps.dispatch;
-	const universeId = stateProps.universe._id;
-	return {
-		...ownProps,
-		...stateProps,
-		...dispatchProps,
-		loadCurrent: isLite =>
-			dispatchProps.loadCurrent(
-				stateProps.universe,
-				stateProps.index,
-				stateProps.isUniverse,
-				isLite
-			),
-		loadIndex: index =>
-			dispatchProps.loadCurrent(stateProps.universe, index, stateProps.isUniverse, true),
-		loadFonts: () => stateProps.pack && dispatchProps.loadFonts(stateProps.pack.font),
-		setLastSaw: () => dispatchProps.setLastSaw(stateProps.index, stateProps.universe),
-		toggleFavorite: () =>
-			dispatchProps.setFavorite(
-				stateProps.index,
-				!stateProps.current.isFavorite,
-				stateProps.universe
-			),
-		handleDelete: (i = stateProps.index) => dispatch(deleteInstance(i, universeId, dispatch))
-	};
-};
 
-const Container = connect(
-	mapStateToProps,
-	mapDispatchToProps,
-	mergeProps
-)(Explore);
+const Container = connect(mapStateToProps)(Explore);
 
 export default Container;
 export { Splash, PlayersPreview };

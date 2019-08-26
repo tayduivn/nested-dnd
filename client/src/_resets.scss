@@ -1,0 +1,245 @@
+//RESETS
+*,
+*::before,
+*::after {
+	box-sizing: border-box; // 1
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0; // 1
+	font-family: $font-family-base;
+	font-size: $font-size-base;
+	font-weight: $font-weight-base;
+	line-height: $line-height-base;
+	color: $body-color;
+	text-align: left; // 3
+	background-color: $body-bg; // 2
+}
+
+textarea {
+	font-family: $font-family-base;
+}
+
+a {
+	text-decoration: none;
+}
+
+// Bootstrap fixes ------------------------
+
+.btn {
+	white-space: nowrap;
+}
+
+.btn:not([class*="btn-"]):not([class*="bg-"]) {
+	color: $link-color;
+	background: $body-color;
+
+	&:hover {
+		color: $link-color;
+		background: $body-color;
+	}
+}
+
+// Bootstrap makes this -webkit-appearance: button; which fucks with styles
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+	-webkit-appearance: none;
+}
+
+.dropdown-menu button,
+.form-check-label,
+.form-check-input,
+.nav-link {
+	cursor: pointer;
+}
+
+.isvg {
+	&.loading {
+		margin: 0;
+	}
+}
+
+button.nav-link {
+	background-color: transparent;
+	border: 0;
+}
+
+.btn:not(:disabled):not(.disabled):active,
+.btn:not(:disabled):not(.disabled).active {
+	background-image: unset;
+}
+.btn-group .form-check.btn {
+	padding-left: 2em;
+}
+
+.no-gutters {
+	margin-right: 0;
+	margin-left: 0;
+
+	> .col,
+	> [class*="col-"] {
+		padding-right: 0;
+		padding-left: 0;
+	}
+}
+
+.popover {
+	max-width: 100vw;
+	top: 100%;
+	left: 50%;
+	z-index: 2;
+	transform: translateX(-50%);
+
+	.arrow {
+		position: relative;
+		background: #ffffff;
+		margin: 0 auto;
+		border-color: rgba(0, 0, 0, 0.2);
+	}
+	.arrow:after,
+	.arrow:before {
+		bottom: 100%;
+		left: 50%;
+		border: solid transparent;
+		content: " ";
+		height: 0;
+		width: 0;
+		position: absolute;
+		pointer-events: none;
+	}
+
+	.arrow:after {
+		border-bottom-color: #ffffff;
+		border-width: 10px;
+		margin-left: -10px;
+	}
+	.arrow:before {
+		border-bottom-color: rgba(0, 0, 0, 0.2);
+		border-width: 11px;
+		margin-left: -11px;
+	}
+}
+
+i.gi,
+i.fi {
+	-webkit-font-smoothing: antialiased;
+	text-rendering: auto;
+	font-style: normal;
+	display: inline-block;
+	font-variant: normal;
+	line-height: 1;
+}
+
+// React Select overrides
+//--------------------------------
+
+.Select {
+	text-align: left;
+	color: #000;
+
+	.Select-option i {
+		vertical-align: middle;
+		font-size: 2em;
+	}
+
+	.Select-menu-outer {
+		z-index: 999 !important;
+		margin-bottom: 1em;
+
+		.VirtualizedSelectOption {
+			padding: 0.5em 0.25em 0 0.5em;
+			line-height: 1em;
+			vertical-align: middle;
+			height: auto;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			&:hover {
+				background-color: #eee;
+				color: #000;
+			}
+		}
+
+		.VirtualizedSelectFocusedOption {
+			background-color: $component-active-bg;
+			color: $component-active-color;
+		}
+	}
+
+	&.form-inline {
+		display: inline-table;
+		.Select-input {
+			position: absolute;
+			top: 0;
+		}
+		.Select-value-label {
+			display: block;
+		}
+		.Select-value {
+			position: relative;
+			white-space: normal;
+		}
+	}
+
+	&.is-open {
+		position: relative !important;
+		z-index: 1000 !important;
+	}
+}
+
+.has-success > .Select .Select-control {
+	border-color: theme-color("success");
+}
+
+.fake-disabled {
+	.Select-control {
+		background-color: #eee;
+	}
+}
+
+/* hold */
+.sortable-chosen {
+	opacity: 1 !important;
+
+	.child-inner {
+		background: var(--contrast) !important;
+		color: var(--parent-theme) !important;
+	}
+}
+
+.form-control {
+	&:focus {
+		border: 1px solid $primary;
+	}
+	&:invalid.dirty {
+		border: 1px solid $warning;
+
+		&:focus {
+			box-shadow: 0 0 0 0.2rem rgba($warning, 0.25);
+		}
+
+		+ .feedback-icon {
+			position: absolute;
+			top: 0.3em;
+			right: 1em;
+			width: 1em;
+			height: 1em;
+			z-index: 3;
+			&::before {
+				content: "⚠";
+			}
+		}
+	}
+}
+
+.invalid-feedback {
+	display: block;
+	color: $warning;
+}

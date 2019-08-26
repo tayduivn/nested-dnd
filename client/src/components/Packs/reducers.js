@@ -1,5 +1,7 @@
-import { ADD, FETCH_PACK, PACKS_SET, SET_PACK, REBUILD_PACK } from "./actions";
+import { ADD, FETCH_PACK, PACKS_SET, SET_PACK, REBUILD_PACK, RECEIVE_PACKS } from "./actions";
 import { GENERATOR_SET, GENERATOR_RENAME, CLEAR_GENERATOR_ERRORS } from "../Generators/actions";
+import { RECEIVE_MY_UNIVERSES } from "../Universes/actions";
+import { RECEIVE_EXPLORE } from "../Explore/actions";
 
 import { combineReducers } from "redux";
 
@@ -44,6 +46,10 @@ const pack = (state = { loaded: false, generators: {} }, action = {}) => {
 };
 
 function byId(state = {}, action) {
+	if (action.type === RECEIVE_MY_UNIVERSES || action.type === RECEIVE_EXPLORE) {
+		action = { ...action, data: action.included.filter(item => item.type === "Pack") };
+	}
+
 	let data;
 	switch (action.type) {
 		case GENERATOR_RENAME:
@@ -69,11 +75,19 @@ function byId(state = {}, action) {
 				obj[packid] = pack(state[packid], { type: SET_PACK, data: data[packid] });
 			}
 			return obj;
+		case RECEIVE_EXPLORE:
+		case RECEIVE_MY_UNIVERSES:
+		case RECEIVE_PACKS:
+			const newState = { ...state };
+			action.data.forEach(item => (newState[item.id] = item.attributes));
+			return newState;
 		default:
 			return state;
 	}
 }
 function byUrl(state = {}, action) {
+	let newByUrl;
+
 	switch (action.type) {
 		case GENERATOR_SET:
 			if (action.data.pack) {
@@ -86,8 +100,23 @@ function byUrl(state = {}, action) {
 			if (action.data) return { ...state, ...action.data.byUrl };
 			else return state;
 		case SET_PACK:
-			const newByUrl = action.data && action.data.url ? { [action.data.url]: action.id } : {};
+			newByUrl = action.data && action.data.url ? { [action.data.url]: action.id } : {};
 			return { ...state, ...newByUrl };
+		case RECEIVE_PACKS:
+			const oldUrls = Object.keys(state);
+			const oldIds = Object.values(state);
+			newByUrl = action.data.reduce((obj, item) => {
+				obj[item.attributes.url] = item.id;
+				// remove old by Url
+				const findIndex = oldIds.indexOf(item.attributes.url);
+				if (findIndex !== -1) {
+					oldUrls.splice(findIndex, 1);
+					oldIds.splice(findIndex, 1);
+				}
+				return obj;
+			}, {});
+			oldUrls.forEach((url, i) => (newByUrl[url] = oldIds[i]));
+			return newByUrl;
 		default:
 			return state;
 	}
@@ -98,6 +127,10 @@ function loaded(state = false, action) {
 
 function publicPacks(state = [], action) {
 	switch (action.type) {
+		case RECEIVE_PACKS:
+			return action.data
+				.filter(item => item.attributes.public && !item.attributes.owned)
+				.map(item => item.id);
 		case ADD:
 			if (action.pack.public) {
 				return [...state, action.pack.id];
@@ -112,6 +145,10 @@ function publicPacks(state = [], action) {
 }
 function myPacks(state = [], action) {
 	switch (action.type) {
+		case RECEIVE_PACKS:
+			return action.data
+				.filter(item => item.attributes.owned && !item.attributes.universe_id)
+				.map(item => item.id);
 		case ADD:
 			return [...state, action.pack.id];
 		case PACKS_SET:
@@ -122,4 +159,5 @@ function myPacks(state = [], action) {
 			return state;
 	}
 }
+
 export default combineReducers({ loaded, byId, byUrl, publicPacks, myPacks });

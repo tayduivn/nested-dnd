@@ -3,10 +3,10 @@ const chaiAsPromised = require("chai-as-promised");
 const sinon = require("sinon");
 chai.use(chaiAsPromised);
 
-const { Generator } = require("../app/models/generator");
-const Pack = require("../app/models/pack");
-const BuiltPack = require("../app/models/builtpack");
-const Maintainer = require("../app/models/generator/maintain");
+const { Generator } = require("../app/generator/Generator");
+const Pack = require("../app/pack/Pack");
+const BuiltPack = require("../app/builtpack/BuiltPack");
+const Maintainer = require("../app/generator/maintain");
 
 describe("Maintainer", () => {
 	var builtpack, pack, generator, gens, childGen, inheritorGen;

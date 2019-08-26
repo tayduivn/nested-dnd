@@ -3,6 +3,7 @@ import DB from "../../actions/CRUDAction";
 import { packsSet, fetchPackIfNeeded } from "../Packs/actions";
 import { receiveGenerators } from "../Generators/actions";
 import { receiveTables } from "../Tables/redux/actions";
+import { pushSnacks } from "../Util/Snackbar/actions";
 
 export const INSTANCE_SET = "INSTANCE_SET";
 export const INSTANCE_DELETE = "INSTANCE_DELETE";
@@ -14,17 +15,19 @@ export const add = (dispatch, created) => {
 	return { type: ADD, created };
 };
 
-export const fetch = (dispatch, loaded) => {
-	if (!loaded) {
-		DB.get("universes").then(({ error, data }) => {
-			if (error) {
-				dispatch(setError(error));
+export const RECEIVE_MY_UNIVERSES = "RECEIVE_MY_UNIVERSES";
+export const fetch = loaded => {
+	return dispatch => {
+		if (loaded) return Promise.resolve();
+
+		DB.get("universes").then(json => {
+			if (json.errors) {
+				dispatch(pushSnacks(json.errors));
 			} else {
-				dispatch(universesSet(data.universes));
-				dispatch(packsSet(data.packs));
+				dispatch({ type: RECEIVE_MY_UNIVERSES, ...json });
 			}
 		});
-	}
+	};
 };
 
 // -------------------------------

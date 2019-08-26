@@ -9,17 +9,16 @@ import { SET_PACK } from "../Packs/actions";
 
 import debounce from "debounce";
 import async from "async";
-import store from "../App/store";
-
 import { universeSet } from "../Universes/actions";
 import { receiveTables } from "../Tables/redux/actions";
+import { getUniverse } from "../Universes/selectors";
+import { getExploreUrlParams } from "./selectors";
+import { pushSnack } from "../Util/Snackbar/actions";
 
 const INSTANCE = "Instance";
 const UNIVERSE = "Universe";
 const TABLE = "Table";
 const PACK = "Pack";
-
-const LOAD_EXPLORE = "LOAD_EXPLORE";
 
 // Queue of save tasks
 const saver = async.cargo((tasks, callback) => {
@@ -76,42 +75,42 @@ export const setLastSaw = (index, universeId) => {
 	return universeSet(universeId, { lastSaw: index });
 };
 
-function dispatchChanges(results, universeId) {
+function dispatchChanges(results, universeId, dispatch, state) {
 	results.forEach(({ array = {} } = {}) => {
 		// save any affected instances other than the one I'm on.
 		// I don't want to save the one I'm on because it may mess with my current changes.
-		const current = parseInt(store.getState().router.location.hash.substr(1));
+		const current = parseInt(state.router.location.hash.substr(1));
 		const changed = { ...array };
 		delete changed[current];
 
 		if (Object.keys(changed).length) {
-			store.dispatch({ type: INSTANCE_SET, data: changed, universeId });
+			dispatch({ type: INSTANCE_SET, data: changed, universeId });
 		}
 	});
 }
 
 export const setFavorite = (i, isFavorite, universe) => {
-	const favorites = [...universe.favorites];
-	const position = favorites.indexOf(i);
-	if (isFavorite) {
-		if (position === -1) favorites.push(i);
-	} else {
-		if (position !== -1) favorites.splice(position, 1);
-	}
-
-	// save to DB
-	changeInstance(i, "isFavorite", isFavorite, universe._id, store.dispatch);
-
-	return {
-		type: UNIVERSE_SET,
-		data: {
-			_id: universe._id,
-			favorites
+	return (dispatch, getState) => {
+		const favorites = [...universe.favorites];
+		const position = favorites.indexOf(i);
+		if (isFavorite) {
+			if (position === -1) favorites.push(i);
+		} else {
+			if (position !== -1) favorites.splice(position, 1);
 		}
+
+		// save to DB
+		changeInstance(i, "isFavorite", isFavorite, universe._id, dispatch);
+
+		dispatch({
+			type: UNIVERSE_SET,
+			data: {
+				_id: universe._id,
+				favorites
+			}
+		});
 	};
 };
-
-const getUniverse = universeId => store.getState().universes.byId[universeId];
 
 const changeUp = (index, universeId, newUp) => {
 	const changes = {};
@@ -130,30 +129,32 @@ const changeUp = (index, universeId, newUp) => {
 };
 
 export const changeInstance = (index, property, value, universeId) => {
-	//debounce these properties
-	const saveFunc = ["name", "desc", "data"].includes(property) ? saveDebounced : save;
+	return (dispatch, getState) => {
+		//debounce these properties
+		const saveFunc = ["name", "desc", "data"].includes(property) ? saveDebounced : save;
 
-	let data = {
-		[index]: { [property]: value }
+		let data = {
+			[index]: { [property]: value }
+		};
+
+		if (property === "up") {
+			data = { ...data, ...changeUp(index, universeId, value) };
+		}
+
+		saveFunc(
+			index,
+			property,
+			universeId,
+			{ index, property, value, universe: universeId },
+			(results = []) => dispatchChanges(results, universeId)
+		);
+
+		dispatch({
+			type: INSTANCE_SET,
+			data,
+			universeId
+		});
 	};
-
-	if (property === "up") {
-		data = { ...data, ...changeUp(index, universeId, value) };
-	}
-
-	saveFunc(
-		index,
-		property,
-		universeId,
-		{ index, property, value, universe: universeId },
-		(results = []) => dispatchChanges(results, universeId)
-	);
-
-	store.dispatch({
-		type: INSTANCE_SET,
-		data,
-		universeId
-	});
 };
 
 const checkAlreadyInArr = (oldIn, index) => {
@@ -164,34 +165,36 @@ const checkAlreadyInArr = (oldIn, index) => {
 	}
 };
 
-const addLink = (universe, index, child) => {
+const addLink = (universe, index, child, dispatch) => {
 	const oldIn = [...(universe.array[index].in || [])];
 
 	// move to the end if it's already in the array
 	checkAlreadyInArr(oldIn, child.index);
 
-	return changeInstance(index, "in", [...oldIn, child.index], universe._id, store.dispatch);
+	return changeInstance(index, "in", [...oldIn, child.index], universe._id, dispatch);
 };
 
 export const addChild = (universeId, index, child) => {
-	const universe = getUniverse(universeId);
+	return dispatch => {
+		const universe = getUniverse(universeId);
 
-	// add link
-	if (child.index !== undefined) {
-		child.index = parseInt(child.index);
-		if (child.index !== index && universe.array[child.index])
-			return addLink(universe, index, child);
+		// add link
+		if (child.index !== undefined) {
+			child.index = parseInt(child.index);
+			if (child.index !== index && universe.array[child.index])
+				return addLink(universe, index, child);
 
-		// doesn't exist, set it as the name
-		child.name = "" + child.index;
-		delete child.index;
-	}
+			// doesn't exist, set it as the name
+			child.name = "" + child.index;
+			delete child.index;
+		}
 
-	DB.create(`/universes/${universeId}/explore/${index}`, child).then(({ error, data = {} }) => {
-		if (error) return;
-		store.dispatch({ type: INSTANCE_SET, data: data.instances, universeId });
-	});
-	return { type: INSTANCE_ADD_CHILD, index, data: child, universeId };
+		DB.create(`/universes/${universeId}/explore/${index}`, child).then(({ error, data = {} }) => {
+			if (error) return;
+			dispatch({ type: INSTANCE_SET, data: data.instances, universeId });
+		});
+		return { type: INSTANCE_ADD_CHILD, index, data: child, universeId };
+	};
 };
 
 const processChunk = (chunk, dispatch, universeId, packUrl) => {
@@ -220,24 +223,45 @@ const processChunk = (chunk, dispatch, universeId, packUrl) => {
 	}
 };
 
-const loadCurrent = (dispatch, universe, index, isUniverse, packUrl, isLite) => {
-	const notLoaded = isLite || !universe.loaded || !universe.array || !universe.array[index];
-	if (notLoaded) {
-		let url = isUniverse ? `/universes/${universe._id}/explore` : `/explore/${packUrl}`;
-		// don't send me back the whole universe, just the current instances
-		if (index !== undefined) url += `/${index}`;
-		if (isLite) url += "/lite";
+// ------------------------------------
+export const LOAD_EXPLORE = "LOAD_EXPLORE";
+export const RECEIVE_EXPLORE = "RECEIVE_EXPLORE";
+const loadCurrent = () => {
+	return async (dispatch, getState) => {
+		const state = getState();
+		const {
+			match: {
+				params: { type, id: identifier }
+			},
+			index
+		} = getExploreUrlParams(state);
 
-		DB.getNormal(url, c => processChunk(c, dispatch, universe._id, packUrl)).then(
-			({ error, data }) => {
-				if (error) console.error(error);
+		dispatch({
+			type: LOAD_EXPLORE,
+			params: { type, identifier },
+			index
+		});
+
+		const item = type === "pack" ? state.packs.byUrl[identifier] : state.universes.byId[identifier];
+
+		const notLoaded = !item || !item.loaded;
+		if (notLoaded) {
+			let url = `/explore/${type}/${identifier}`;
+			// don't send me back the whole universe, just the current instances
+			if (index !== undefined) url += `/${index}`;
+
+			const json = await DB.fetch(url);
+			if (json.errors) {
+				json.errors.forEach(err =>
+					dispatch(pushSnack(`There was a problem retrieving this universe: ` + err))
+				);
+			} else {
+				dispatch({
+					type: RECEIVE_EXPLORE,
+					...json
+				});
 			}
-		);
-	}
-	return {
-		type: LOAD_EXPLORE,
-		universe,
-		index
+		}
 	};
 };
 

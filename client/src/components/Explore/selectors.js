@@ -3,7 +3,7 @@ import { createMatchSelector } from "connected-react-router";
 
 const universePath = createMatchSelector({ path: "/universes/:universe/explore" });
 const packPath = createMatchSelector({ path: "/packs/:pack/explore" });
-const explorePath = createMatchSelector({ path: "/explore/:pack" });
+const explorePath = createMatchSelector({ path: "/explore/:type/:id" });
 
 const NEW_ITEM = {
 	isNew: true,
@@ -111,10 +111,12 @@ function setAncestors(current, universe) {
 	current.up = up;
 }
 
-export function getCurrent(universe = {}, index, isUniverse) {
+export function getCurrent(instances, universe = {}, index, isUniverse) {
 	if (!universe.array || !universe.array[index]) return { loading: true, index };
 
-	let current = { ...universe.array[index], index: index };
+	let current = instances[universe.array[index]];
+	current.index = current.n; //TODO remove alias
+	debugger;
 
 	// set ancestors and fill in cssClass if needed
 	setAncestors(current, universe);
@@ -143,6 +145,13 @@ export function getCurrent(universe = {}, index, isUniverse) {
 const LOADING = "";
 
 const getIndexFromHash = hash => (hash ? parseInt(hash.substr(1), 10) : LOADING);
+
+export const getExploreUrlParams = state => {
+	const location = state.router.location;
+	const match = explorePath(state);
+	const index = getIndexFromHash(location.hash);
+	return { index, match };
+};
 
 export const getUrlInfo = state => {
 	const location = state.router.location;

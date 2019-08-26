@@ -31,7 +31,8 @@ const config = {
 			}
 		],
 		"node/no-unpublished-require": "off",
-		"no-case-declarations": "off"
+		"no-case-declarations": "off",
+		"max-lines-per-function": "off"
 	},
 	overrides: [
 		{
@@ -39,9 +40,7 @@ const config = {
 			env: {
 				mocha: true
 			},
-			rules: {
-				"max-lines-per-function": "off"
-			}
+			rules: {}
 		}
 	]
 };

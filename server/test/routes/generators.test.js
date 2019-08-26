@@ -5,11 +5,11 @@ const request = require("supertest")(app);
 chai.use(chaiAsPromised);
 require("sinon-mongoose");
 
-const MW = require("../../app/routes/middleware");
-const Pack = require("../../app/models/pack");
-const User = require("../../app/models/user");
-const { Generator } = require("../../app/models/generator");
-const BuiltPack = require("../../app/models/builtpack");
+const { MW } = require("../../app/util");
+const Pack = require("../../app/pack/Pack");
+const User = require("../../app/user/User");
+const Generator = require("../../app/generator/Generator");
+const BuiltPack = require("../../app/builtpack/BuiltPack");
 
 describe("/packs/:pack/generator", () => {
 	var PackMock, BPMock, GenMock, user, pack, builtpack;

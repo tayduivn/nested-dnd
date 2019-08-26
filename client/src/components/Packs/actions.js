@@ -12,16 +12,20 @@ export const REBUILD_PACK = "PACK_REBUILD";
 
 export const add = pack => ({ type: ADD, pack });
 
-export const fetch = (dispatch, loaded) => {
-	if (!loaded) {
-		DB.get("packs").then(({ error, data }) => {
-			if (error) {
-				dispatch(setError(error));
+export const RECEIVE_PACKS = "RECEIVE_PACKS";
+export const fetch = loaded => {
+	return (dispatch, getState) => {
+		if (loaded) return Promise.resolve();
+		DB.get("packs").then(json => {
+			if (json.errors) {
+				dispatch(setError(json.errors));
 			} else {
-				dispatch(packsSet(data));
+				const state = getState();
+
+				dispatch({ type: RECEIVE_PACKS, ...json });
 			}
 		});
-	}
+	};
 };
 
 export const FETCH_PACK = "PACKS_FETCH_PACK";

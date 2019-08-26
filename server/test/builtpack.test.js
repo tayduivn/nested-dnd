@@ -3,10 +3,10 @@ const chaiAsPromised = require("chai-as-promised");
 const sinon = require("sinon");
 chai.use(chaiAsPromised);
 
-const BuiltPack = require("../app/models/builtpack");
-const Pack = require("../app/models/pack");
-const { Generator } = require("../app/models/generator");
-const Nested = require("../app/routes/packs/nested");
+const BuiltPack = require("../app/builtpack/BuiltPack");
+const Pack = require("../app/pack/Pack");
+const { Generator } = require("../app/generator/Generator");
+const Nested = require("../app/pack/Nested");
 
 describe("BuiltPack", () => {
 	var builtpack, pack, universe, supercluster, gens;

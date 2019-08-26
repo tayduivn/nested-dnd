@@ -1,25 +1,17 @@
 import React from "react";
-import { connect, Provider } from "react-redux";
+import { Provider } from "react-redux";
+import { ConnectedRouter } from "connected-react-router";
 
-import App, { LOADING_GIF } from "./App.js";
-import store, { loadFonts } from "./store";
-import { doLogout } from "../User/actions";
+import App from "./App.js";
+import store, { history } from "./store";
 
-const mapStateToProps = state => ({ loggedIn: state.user.loggedIn });
-const mapDispatchToProps = dispatch => ({
-	loadFonts: (fonts, source) => loadFonts(fonts, source),
-	handleLogout: () => doLogout(dispatch)
-});
-
-const Container = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(App);
-
+// Create an enhanced history that syncs navigation events with the store
 const Wrapper = () => (
 	<Provider store={store}>
-		<Container />
+		<ConnectedRouter history={history}>
+			<App />
+		</ConnectedRouter>
 	</Provider>
 );
 export default Wrapper;
-export { store, LOADING_GIF };
+export { store };

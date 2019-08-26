@@ -4,11 +4,11 @@ const should = chai.should();
 const sinon = require("sinon");
 chai.use(chaiAsPromised);
 
-const Maker = require("../app/models/generator/make");
-const BuiltPack = require("../app/models/builtpack");
-const { Generator } = require("../app/models/generator");
-const Table = require("../app/models/table");
-const Nested = require("../app/routes/packs/nested");
+const Maker = require("../app/generator/make");
+const BuiltPack = require("../app/builtpack/BuiltPack");
+const { Generator } = require("../app/generator/Generator");
+const Table = require("../app/table/Table");
+const Nested = require("../app/pack/Nested");
 
 describe("Maker", () => {
 	var builtpack, generator, table;

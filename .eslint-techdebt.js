@@ -11,14 +11,6 @@ module.exports = {
 	complexity: ["warn", 10],
 	"max-depth": ["warn", 4],
 	"max-statements": ["warn", 20],
-	"max-lines-per-function": [
-		"warn",
-		{
-			max: 30,
-			skipBlankLines: true,
-			skipComments: true
-		}
-	],
 	"max-nested-callbacks": ["warn", 4],
 	"max-params": ["warn", 6]
 };

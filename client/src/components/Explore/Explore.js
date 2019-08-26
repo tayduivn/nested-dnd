@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import ExplorePage, { LOADING, Data, Modals, Children } from "./ExplorePage";
 import Title from "./Title";
 import { handleNestedPropertyValue } from "../../util";
+import { loadCurrent } from "./actions";
+import { loadFonts } from "../App/actions";
 
 import "./index.css";
 
@@ -44,11 +46,11 @@ export default class Explore extends Component {
 	// first ajax data pull
 	componentDidMount() {
 		this._mounted = true;
-		this.props.loadCurrent();
+		this.props.dispatch(loadCurrent());
 
 		//var index = this.getIndexFromHash(this.props);
 		//setBodyStyle(this.props.current);
-		this.props.loadFonts();
+		this.props.dispatch(loadFonts());
 		this.setTitle();
 	}
 
@@ -60,16 +62,17 @@ export default class Explore extends Component {
 	componentDidUpdate({ pack = {}, index, ...prevProps }) {
 		// load fonts
 		if (this.props.pack && this.props.pack.font !== pack.font) {
-			this.props.loadFonts();
+			this.props.dispatch(loadFonts());
 		}
 		// new last saw
 		if (this.props.index !== this.props.universe.lastSaw) {
-			this.props.setLastSaw();
+			// TODO: do this in actions
+			// this.props.setLastSaw();
 		}
 		// new index
 		if (this.props.index !== index) {
 			if (this.props.current.todo === true) {
-				this.props.loadCurrent(true);
+				this.props.dispatch(loadCurrent(true));
 			}
 		}
 		//setBodyStyle(this.props.current);

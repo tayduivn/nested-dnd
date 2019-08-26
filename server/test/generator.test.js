@@ -4,10 +4,10 @@ const should = chai.should();
 const sinon = require("sinon");
 chai.use(chaiAsPromised);
 
-const { Generator } = require("../app/models/generator");
-const Pack = require("../app/models/pack");
-const BuiltPack = require("../app/models/builtpack");
-const Nested = require("../app/routes/packs/nested");
+const { Generator } = require("../app/generator/Generator");
+const Pack = require("../app/pack/Pack");
+const BuiltPack = require("../app/builtpack/BuiltPack");
+const Nested = require("../app/pack/Nested");
 
 describe("Generator", () => {
 	var generator, gens, pack, builtpack, childGen;

@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import thunk from "redux-thunk";
-import WebFont from "webfontloader";
+
 import { connectRouter, routerMiddleware } from "connected-react-router";
 import { createBrowserHistory } from "history";
 
@@ -10,8 +10,7 @@ import universes from "../Universes/reducers";
 import user from "../User/reducers";
 import generators from "../Generators/reducers";
 import tables from "../Tables/redux/reducers";
-
-import { checkLoggedIn } from "../User/actions";
+import snackbar from "../Util/Snackbar/reducers";
 
 let history;
 try {
@@ -36,36 +35,6 @@ if (!["test", "production"].includes(process.env.NODE_ENV)) {
 
 const middleware = applyMiddleware(...middleWareArr);
 
-function loadFonts(fonts = [], source = "google") {
-	if (!fonts) return;
-	if (!(fonts instanceof Array)) fonts = [fonts];
-
-	// remove fonts already loaded
-	const loadedFonts = Object.keys(store.getState().fonts);
-	const trimmedFonts = fonts.filter(d => !loadedFonts.includes(d));
-	const newState = {};
-	trimmedFonts.forEach(f => (newState[f] = "loading"));
-
-	if (trimmedFonts.length) {
-		WebFont.load({
-			[source]: {
-				families: fonts
-			},
-			active: function() {
-				trimmedFonts.forEach(f => (newState[f] = "loaded"));
-				store.dispatch({
-					type: "LOAD_FONTS",
-					fonts: newState
-				});
-			}
-		});
-		store.dispatch({
-			type: "LOAD_FONTS",
-			fonts: newState
-		});
-	}
-}
-
 const fonts = (state = {}, action = {}) => {
 	switch (action.type) {
 		case "LOAD_FONTS":
@@ -82,11 +51,11 @@ const app = combineReducers({
 	user,
 	fonts,
 	tables,
+	snackbar,
 	router: connectRouter(history)
 });
 
 let store = createStore(app, {}, middleware);
-store.dispatch(dispatch => checkLoggedIn(dispatch));
 
 export default store;
-export { loadFonts, history };
+export { history };

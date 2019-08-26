@@ -3,6 +3,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+import Alert from "../Util/Alert";
+import { doLogin } from "./actions";
+
 import "./Login.css";
 
 class Email extends React.PureComponent {
@@ -94,11 +97,13 @@ const DisplayLogin = ({
 	passwordError,
 	password2,
 	password2Valid,
-	password2Error
+	password2Error,
+	apiError
 }) => (
 	<div className="main ">
 		<div className="container mt-5 loginForm">
 			<h1 className="mb-1"> {title} </h1>
+			<Alert>{apiError ? apiError.title : null}</Alert>
 			<form onSubmit={handleSubmit}>
 				<Email {...{ email, emailValid, emailError, handleChange }} />
 				<Password {...{ password, passwordValid, passwordError, handleChange }} />
@@ -144,14 +149,16 @@ export default class Login extends Component {
 	handleSubmit(e) {
 		e.preventDefault();
 
-		this.props
-			.handleLogin(this.props.location.pathname, {
+		this.props.dispatch(
+			doLogin(this.props.location.pathname, {
 				email: this.state.email,
 				password: this.state.password,
 				password2: this.state.password2,
 				isSignup: this.props.title !== "Login"
 			})
-			.then(() => this.setState({ submitted: true }));
+		);
+
+		this.setState({ submitted: true });
 	}
 	render() {
 		const error = this.props.error || {};

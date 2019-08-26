@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Link } from "../Util";
+import { doLogout } from "../User/actions";
 
-const LoggedOut = ({ handleLogout }) => (
+const LoggedOut = () => (
 	<>
 		<li className="nav-item">
 			<Link className="nav-link mx-3" to="/login">
@@ -30,33 +31,38 @@ const LoggedIn = ({ handleLogout }) => (
 	</>
 );
 
-const Nav = ({ loggedIn, handleLogout }) => (
-	<nav className="navbar navbar-dark navbar-expand-lg">
-		<Link className="navbar-brand" to="/">
-			Nested D&D
-		</Link>
-		<button
-			className="navbar-toggler"
-			type="button"
-			data-toggle="collapse"
-			data-target="#navbarToggle"
-			aria-controls="navbarTogglerDemo01"
-			aria-expanded="false"
-			aria-label="Toggle navigation"
-		>
-			<span className="navbar-toggler-icon" />
-		</button>
+const Nav = ({ loggedIn, dispatch, logOutError }) => {
+	const handleLogout = useCallback(() => {
+		dispatch(doLogout());
+	}, [dispatch]);
 
-		{/* ---------- COLLAPSING ------------*/}
-		<div className="collapse navbar-collapse" id="navbarToggle">
-			<ul className="navbar-nav mr-auto" />
+	return (
+		<nav className="navbar navbar-dark navbar-expand-lg">
+			<Link className="navbar-brand" to="/">
+				Nested D&D
+			</Link>
+			<button
+				className="navbar-toggler"
+				type="button"
+				data-toggle="collapse"
+				data-target="#navbarToggle"
+				aria-controls="navbarTogglerDemo01"
+				aria-expanded="false"
+				aria-label="Toggle navigation"
+			>
+				<span className="navbar-toggler-icon" />
+			</button>
 
-			<ul className="navbar-nav">
-				{!loggedIn ? <LoggedOut handleLogout={handleLogout} /> : <LoggedIn />}
-			</ul>
-		</div>
-	</nav>
-);
+			{/* ---------- COLLAPSING ------------*/}
+			<div className="collapse navbar-collapse" id="navbarToggle">
+				<ul className="navbar-nav mr-auto" />
+
+				<ul className="navbar-nav">
+					{!loggedIn ? <LoggedOut /> : <LoggedIn handleLogout={handleLogout} />}
+				</ul>
+			</div>
+		</nav>
+	);
+};
 
 export default Nav;
-//<IconDebug show={false} />

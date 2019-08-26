@@ -1,10 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Link from "../Util/Link";
 
 import "./Packs.css";
 
 import { Loading, Page } from "../Util";
-import { loadFonts } from "../App/store";
+import { loadFonts } from "../App/actions";
 
 const EDIT_BUTTON = (
 	<h2>
@@ -20,12 +21,12 @@ class PackLink extends React.PureComponent {
 	render() {
 		const { _id, name, url, title, txt, font, description, isUniverse } = this.props;
 		const { dependencies, lastSaw, cssClass = "bg-grey-900" } = this.props;
-		const URL = isUniverse ? `/universes/${_id}` : `/packs/${url}`;
+		const URL = isUniverse ? `/universe/${_id}` : `/pack/${url}`;
 		const style = { color: txt };
 		return (
 			<li className={`col`}>
 				<div className="packlink btn-group">
-					<Link to={`${URL}/explore`} className={`btn col packlink__btn btn-${cssClass}`}>
+					<Link to={`/explore${URL}`} className={`btn col packlink__btn btn-${cssClass}`}>
 						<h1 style={{ fontFamily: font ? `'${font}', serif` : "inherit" }}>{title || name}</h1>
 						{description && <p>{description}</p>}
 						{isUniverse && dependencies && dependencies.length && (
@@ -84,7 +85,15 @@ class PackInput extends React.PureComponent {
 const ADD_BUTTON_CLASSNAME =
 	"create col btn btn-outline-dark d-flex align-items-center justify-content-center packlink";
 
+// Just a simple list of packs
 class PackUL extends React.Component {
+	static propTypes = {
+		dispatch: PropTypes.func,
+		list: PropTypes.array
+	};
+	static defaultProps = {
+		dispatch: () => {}
+	};
 	componentDidMount() {
 		if (this.props.list) this.loadFonts(this.props.list);
 	}
@@ -106,7 +115,7 @@ class PackUL extends React.Component {
 			if (!fonts.includes(pack.font)) fonts.push(pack.font);
 		});
 
-		if (fonts.length) loadFonts(fonts);
+		if (fonts.length) this.props.dispatch(loadFonts(fonts));
 	}
 	render() {
 		const list = this.props.list || [],
@@ -149,7 +158,8 @@ const MyPacks = ({ myPacks = [] }) => (
 	</div>
 );
 
-const PacksList = ({ loggedIn, error, myPacks, publicPacks }) => (
+// List my and public packs
+const PacksList = ({ loggedIn, error, myPacks, publicPacks, dispatch }) => (
 	<div id="Packs > PacksList">
 		{loggedIn && <MyPacks myPacks={myPacks} />}
 
@@ -159,10 +169,11 @@ const PacksList = ({ loggedIn, error, myPacks, publicPacks }) => (
 		{error && error.display}
 
 		{publicPacks && publicPacks.length === 0 && <p>There are no public packs to display</p>}
-		{publicPacks && <PackUL list={publicPacks} />}
+		{publicPacks && <PackUL list={publicPacks} dispatch={dispatch} />}
 	</div>
 );
 
+// The Page
 const Packs = ({ routes, match = {}, ...props }) => (
 	<Page id="Packs">
 		<PacksList {...props} match={match} />

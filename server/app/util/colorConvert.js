@@ -107,7 +107,6 @@ module.exports = {
 	peachpuff: "wood-a100",
 	peru: "wood-400",
 	pink: "pink-200",
-	pink: "red-100",
 	plum: "purple-200",
 	powderblue: "cyan-100",
 	purple: "purple-900",

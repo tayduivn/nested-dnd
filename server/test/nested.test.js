@@ -1,5 +1,5 @@
-const Nested = require("../app/routes/packs/nested.js");
-const Universe = require("../app/models/universe.js");
+const Nested = require("../app/pack/Nested");
+const Universe = require("../app/universe/Universe");
 const assert = require("assert");
 
 var sampleNode = {

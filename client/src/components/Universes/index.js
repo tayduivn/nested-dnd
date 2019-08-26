@@ -21,11 +21,6 @@ const routes = [
 		component: Explore,
 		routes: [
 			{
-				path: "/explore",
-				private: true,
-				component: Explore
-			},
-			{
 				path: "/edit",
 				private: true,
 				component: EditUniverse
@@ -45,9 +40,10 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
 	loadUniverses: ({ packs, universes, loaded }) => {
-		packActions.fetch(dispatch, packs.loaded);
-		fetch(dispatch, loaded);
-	}
+		dispatch(packActions.fetch(packs.loaded));
+		dispatch(fetch(loaded));
+	},
+	dispatch
 });
 const Container = connect(
 	mapStateToProps,

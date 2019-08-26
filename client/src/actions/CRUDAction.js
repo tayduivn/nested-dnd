@@ -34,10 +34,10 @@ const fetch = global.fetch || window.fetch;
  * Always returns a promise, which returns { err, data }
  */
 const DB = {
-	fetch: (url, method, headers, cb) => {
+	fetch: (url, method = "GET", headers, cb) => {
 		headers = setHeader(method, headers);
 		return fetch(cleanURL(url), headers)
-			.then(r => getResponse(r, cb))
+			.then(r => getResponse(r, cb, url))
 			.catch(handleError);
 	},
 	create: function(url, payload) {
@@ -47,8 +47,8 @@ const DB = {
 		if (id !== undefined) return this.fetch(url + "/" + encodeURIComponent(id));
 		else return this.fetch(url, undefined, undefined);
 	},
-	getNormal: function(url, cb) {
-		return this.fetch(`/normal${encodeURI(url)}`, "GET", HEADERS_NORMAL, cb);
+	getStreamed: function(url, cb) {
+		return this.fetch(encodeURI(url), "GET", HEADERS_NORMAL, cb);
 	},
 	set: function(url, id, payload) {
 		return this.fetch(url + "/" + encodeURIComponent(id), "PUT", { body: payload });
@@ -80,43 +80,33 @@ function formDataTOJson(formData) {
 }
 
 function handleError(error) {
+	const newErr = { ...error, title: error.name };
+
 	// Component unmounted
 	if (error.name === "AbortError") return;
 
 	// ERR_CONNECTION_REFUSED
 	if (error.message === "Failed to fetch") {
-		error.message =
+		newErr.title =
 			"We're having trouble communicating with the server right now. Please check your internet connection.";
 	}
-	error.display = <ErrorDisplay {...error} />;
-	return { error };
+
+	return [error];
 }
 
-async function getResponse(response, cb) {
-	var { data, error } = await parseResponse(response, cb);
-
-	if (response.status === 404) {
-		error = "Not found";
-	}
-	if (response.status !== 200) {
-		if (data && data.error) {
-			if (response.status === 500) {
-				data.error.message = "500 Server Error: " + data.error.message;
-				console.error(data.error);
-			}
-			error = data.error;
-			delete data.error; // remove error from the return object
-		} else if (!error) {
-			error = { success: false };
-		}
+async function getResponse(response, cb, url) {
+	if (!response) {
+		return { errors: [{ title: "No response from server" }] };
 	}
 
-	if (error) {
-		if (!(error instanceof Object)) error = { value: error };
-		error.display = <ErrorDisplay {...error} />;
+	let json = await parseResponse(response, cb);
+
+	// create an errors object if there is not one and we errored
+	if (!json.errors && (response.status < 200 || response.status > 299)) {
+		json.errors = [{ title: response.status }];
 	}
 
-	return { error, data };
+	return json;
 }
 
 function decodeChunk(queue = "", value) {
@@ -140,10 +130,7 @@ function decodeChunk(queue = "", value) {
 }
 
 async function parseResponse(response, cb = () => {}) {
-	if (!response) return { error: "No response from server", data: {} };
-
-	var data = {},
-		error;
+	var data = {};
 	var contentType = response.headers.get("content-type");
 
 	if (contentType && contentType.includes("json")) data = await response.json();
@@ -162,6 +149,6 @@ async function parseResponse(response, cb = () => {}) {
 			return reader.read().then(processChunk);
 		});
 	}
-	return { data, error };
+	return data;
 }
 export default DB;

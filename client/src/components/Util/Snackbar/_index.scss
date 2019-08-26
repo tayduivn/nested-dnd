@@ -1,0 +1,48 @@
+.snackbar {
+	$distance: 1rem;
+	position: fixed;
+	top: $totalNavHeight + $distance;
+	right: $distance;
+}
+
+.snack {
+	$pad: 14px 16px;
+	background: material-color("grey", "900");
+	border-radius: 4px;
+	opacity: 1;
+	display: flex;
+	align-items: center;
+
+	/// material design
+	box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+		0 1px 18px 0 rgba(0, 0, 0, 0.12);
+	transition: opacity 0.15s cubic-bezier(0, 0, 0.2, 1) 0ms,
+		transform 0.15s cubic-bezier(0, 0, 0.2, 1) 0ms,
+		-webkit-transform 0.15s cubic-bezier(0, 0, 0.2, 1) 0ms;
+
+	&__label {
+		padding: $pad;
+		color: white;
+		font-weight: 500;
+	}
+
+	&__close {
+		padding: 12px 16px;
+		cursor: pointer;
+		background: transparent;
+		border-radius: 30px;
+		color: white;
+		border: 0;
+		line-height: 1em;
+
+		&:hover,
+		&:focus {
+			background: material-color("grey", "800");
+			outline: none;
+		}
+	}
+
+	&.--hidden {
+		opacity: 0;
+	}
+}

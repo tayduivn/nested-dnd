@@ -5,7 +5,7 @@ const sinon = require("sinon");
 const request = require("supertest");
 chai.use(chaiAsPromised);
 
-const User = require("../../app/models/user");
+const User = require("../../app/user/User");
 
 const TEST_USER = "test@test.com";
 const TEST_PASS = "ca9Y5aOSe9dHu!jiFcyje@3QpC5@075c";

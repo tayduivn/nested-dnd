@@ -1,0 +1,7 @@
+{
+	"dev": {
+		"driver": "mongodb",
+		"database": "nested-dnd",
+		"host": "localhost"
+	}
+}

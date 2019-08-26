@@ -3,7 +3,7 @@ const chaiAsPromised = require("chai-as-promised");
 const sinon = require("sinon");
 chai.use(chaiAsPromised);
 
-const Pack = require("../app/models/pack");
+const Pack = require("../app/pack/Pack");
 
 describe("Pack", () => {
 	var pack;

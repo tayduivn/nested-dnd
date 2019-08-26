@@ -4,7 +4,7 @@ const request = require("supertest")(app);
 chai.use(require("chai-as-promised"));
 require("sinon-mongoose");
 
-const Universe = require("../../app/models/universe");
+const Universe = require("../../app/universe/Universe");
 
 describe("/universes", () => {
 	var UniMock;

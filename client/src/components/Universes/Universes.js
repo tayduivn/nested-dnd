@@ -5,7 +5,12 @@ import DB from "../../actions/CRUDAction";
 import { LoadingIcon } from "../Util/Loading";
 import { PacksList, PackUL } from "../Packs";
 
-const UniverseListDisplay = ({ universes: { loaded, array, error } = {}, packs, loggedIn }) => {
+const UniverseListDisplay = ({
+	universes: { loaded, array, error } = {},
+	packs,
+	loggedIn,
+	dispatch
+}) => {
 	if (error) return error.display;
 
 	return (
@@ -18,10 +23,10 @@ const UniverseListDisplay = ({ universes: { loaded, array, error } = {}, packs, 
 					) : error ? (
 						error.display
 					) : (
-						<PackUL list={array} isUniverse={true} addButton={true} />
+						<PackUL list={array} isUniverse={true} addButton={true} dispatch={dispatch} />
 					)}
 				</div>
-				<PacksList {...packs} loggedIn={loggedIn} />
+				<PacksList {...packs} loggedIn={loggedIn} dispatch={dispatch} />
 			</div>
 		</div>
 	);
@@ -136,9 +141,9 @@ class Universes extends Component {
 		};
 	};
 	render() {
-		const { universes, packs, loggedIn } = this.props;
+		const { universes, packs, loggedIn, dispatch } = this.props;
 
-		var content = <UniverseListDisplay {...{ universes, packs, loggedIn }} />;
+		var content = <UniverseListDisplay {...{ universes, packs, loggedIn, dispatch }} />;
 
 		return content;
 	}

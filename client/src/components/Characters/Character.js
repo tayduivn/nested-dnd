@@ -4,7 +4,7 @@ import WebFont from "webfontloader";
 import CharacterSheet from "./CharacterSheet/CharacterSheet";
 import Cards from "./Cards/Cards";
 import DB from "../../actions/CRUDAction";
-import { LOADING_GIF } from "../App/App";
+import { Loading } from "../Util";
 import { ImportFromDDB } from "./Characters";
 import { ddbConvert } from "../../actions/DDB";
 
@@ -104,7 +104,12 @@ export default class Character extends React.Component {
 	render() {
 		if (this.state.error) return <div className="main">{this.state.error.display}</div>;
 
-		if (!this.state.data) return <div className="main">{LOADING_GIF}</div>;
+		if (!this.state.data)
+			return (
+				<div className="main">
+					<Loading.Icon />
+				</div>
+			);
 
 		return <Display character={this.state.data} handleUpdate={this.handleUpdate} />;
 	}

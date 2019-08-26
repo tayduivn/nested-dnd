@@ -18,7 +18,8 @@ const port = process.env.PORT || 3001;
 const server = require("http").createServer(app);
 //const io = require("socket.io")(server);
 
-const MW = require("./app/routes/middleware");
+const { MW } = require("./app/util");
+const { NOT_FOUND } = require("./app/util/status");
 
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
@@ -33,7 +34,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 if (process.env.NODE_ENV !== "test") {
-	mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/nested-dnd", function(
+	mongoose.connect(process.env.DATABASE_URL || "mongodb://localhost:27017/nested-dnd", function(
 		err
 	) {
 		if (err) {
@@ -67,9 +68,9 @@ app.use(
 			stringify: false
 		}),
 		name: "sessionid",
-		saveUninitialized: true,
+		saveUninitialized: false,
 		cookie: {
-			maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days in ms
+			maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in ms
 		}
 	})
 ); // session secret
@@ -81,33 +82,11 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 // routes ======================================================================
 
-const auth = require("./app/routes/auth");
-const builtpacks = require("./app/routes/builtpacks");
-const characters = require("./app/routes/characters");
-const explore = require("./app/routes/explore");
-const packs = require("./app/routes/packs");
-const playersPreview = require("./app/routes/players-preview");
-const tables = require("./app/routes/tables");
-const universes = require("./app/routes/universes");
-const normal = require("./app/routes/normal");
-const spotify = require("./app/routes/spotify");
-
-// load our routes and pass in our app and fully configured passport
-app.use("/api", auth);
-
-app.use("/api/builtpacks", builtpacks);
-app.use("/api/characters", characters);
-app.use("/api/explore", explore);
-app.use("/api/packs", packs);
-app.use("/api/players-preview", playersPreview);
-app.use("/api/tables", tables);
-app.use("/api/universes", MW.isLoggedIn, universes);
-app.use("/api/normal", normal);
-app.use("/api/spotify", spotify);
+app.use("/api", require("./config/routes"));
 
 // 404 error handler returns json
 app.use("/api", function(req, res) {
-	res.status(404).json({ error: { message: "404 Not Found" } });
+	res.status(NOT_FOUND).json({ errors: [{ title: "404 Not Found" }] });
 	return;
 });
 

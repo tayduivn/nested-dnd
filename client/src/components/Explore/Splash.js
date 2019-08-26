@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "../Util";
 
+import { loadFonts } from "../App/actions";
+
 const nested = {
 	url: "nested",
 	in: true,
@@ -42,7 +44,7 @@ const Pack = ({ pack }) => (
 
 class Splash extends React.Component {
 	componentDidMount() {
-		this.props.loadFonts([nested.font, dnd.font]);
+		this.props.dispatch(loadFonts([nested.font, dnd.font]));
 	}
 	render() {
 		return (

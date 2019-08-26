@@ -4,10 +4,10 @@ const should = chai.should();
 const sinon = require("sinon");
 chai.use(chaiAsPromised);
 
-const Pack = require("../app/models/pack");
-const Universe = require("../app/models/universe");
-const BuiltPack = require("../app/models/builtpack");
-const Nested = require("../app/routes/packs/nested");
+const Pack = require("../app/pack/Pack");
+const Universe = require("../app/universe/Universe");
+const BuiltPack = require("../app/builtpack/BuiltPack");
+const Nested = require("../app/pack/Nested");
 
 describe("Universe", () => {
 	var universe, pack;

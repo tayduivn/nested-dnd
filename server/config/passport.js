@@ -6,7 +6,7 @@ var LocalStrategy = require("passport-local").Strategy;
 const SpotifyStrategy = require("passport-spotify").Strategy;
 
 // load up the user model
-var User = require("../app/models/user");
+var User = require("../app/user/User");
 
 const PASSWORD_MIN_LENGTH = 8;
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;

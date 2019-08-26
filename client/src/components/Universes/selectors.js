@@ -1,21 +1,37 @@
-import { getUrlInfo } from "../Explore/selectors";
+import { getExploreUrlParams } from "../Explore/selectors";
 
 const LOADING = "";
 
-export const selectMyUniverses = ({ universes, packs }) => ({
-	...universes.myUniverses,
-	array: universes.myUniverses.array.map(_id => {
-		const u = universes.byId[_id];
-		if (!u) return { _id };
-		const lastSaw = (u.array && u.array[u.lastSaw]) || u.array[0] || {};
-		const pack = packs.byId[u.pack] || {};
-		return {
-			...u,
-			cssClass: lastSaw.cssClass,
-			txt: lastSaw.txt,
-			font: pack.font,
-			lastSaw: lastSaw.name || lastSaw.isa
-		};
+export function selectAncestorsAndStyle(id, instances) {
+	let current = instances[id];
+	const upArr = [];
+	let style = { ...current };
+
+	while (current.up) {
+		current = instances[current.up];
+		upArr.push(current);
+		style = { ...current, ...style };
+	}
+
+	return {
+		cls: style.cls,
+		txt: style.txt,
+		up: upArr
+	};
+}
+
+export const selectMyUniverses = ({ universes, packs, user }) => ({
+	loaded: universes.myUniverses.loaded,
+	array: universes.myUniverses.array.map(id => {
+		const univ = { ...universes.byId[id] };
+		univ.lastSaw = universes.instances[univ.last].name;
+		const { cls, txt } = selectAncestorsAndStyle(univ.last, universes.instances);
+		const pack = packs.byId[univ.pack];
+		univ._id = id;
+		univ.font = pack.font;
+		univ.cssClass = cls;
+		univ.txt = txt;
+		return univ;
 	})
 });
 
@@ -26,24 +42,28 @@ export function getFavorites({ favorites = [], array = [] } = {}) {
 }
 
 export const getUniverse = state => {
-	let { index, match, isUniverse } = getUrlInfo(state);
+	let { index, match } = getExploreUrlParams(state);
 	let universe, pack;
+	const isUniverse = match.params.type === "universe";
 
 	if (!match) return {};
 
 	if (isUniverse) {
-		universe = state.universes.byId[match.params.universe] || {
+		universe = state.universes.byId[match.params.id] || {
 			loaded: false,
-			_id: match.params.universe
+			_id: match.params.id
 		};
 		pack = state.packs.byId[universe.pack];
 	} else {
-		const packid = match && state.packs.byUrl[match.params.pack];
-		pack = state.packs.byId[packid] || (match && { url: match.params.pack });
+		const packid = match && state.packs.byUrl[match.params.id];
+		pack = state.packs.byId[packid] || (match && { url: match.params.id });
 		universe = (pack && state.universes.byId[pack.tempUniverse]) || { pack: pack._id };
 	}
 
-	if (index === LOADING) index = universe.lastSaw;
+	const last = state.universes.instances[universe.last];
+	if (index === LOADING && last) {
+		index = last.n;
+	}
 
 	return { pack, universe, index, isUniverse };
 };
