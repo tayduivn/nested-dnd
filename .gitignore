@@ -19,6 +19,7 @@ coverage.lcov
 
 # db
 /db/data
+/db/backup
 
 # misc
 .DS_Store
