@@ -1,12 +1,27 @@
+import "./polyfills";
+
 import React from "react";
 import ReactDOM from "react-dom";
-import registerServiceWorker from "./registerServiceWorker";
+import serviceWorker from "./serviceWorker";
 
 import "animate.css";
 
-import "./index.css";
+import "./index.scss";
 
-import App from "./components/App";
+import App from "./App";
+
+import { Provider } from "react-redux";
+import { ConnectedRouter } from "connected-react-router";
+import store, { history } from "./store";
+
+// Create an enhanced history that syncs navigation events with the store
+const Wrapper = () => (
+	<Provider store={store}>
+		<ConnectedRouter history={history}>
+			<App />
+		</ConnectedRouter>
+	</Provider>
+);
 
 // monkey patch
 if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
@@ -14,5 +29,5 @@ if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
 	whyDidYouRender(React);
 }
 
-ReactDOM.render(<App />, document.getElementById("root"));
-registerServiceWorker();
+ReactDOM.render(<Wrapper />, document.getElementById("root"));
+serviceWorker();

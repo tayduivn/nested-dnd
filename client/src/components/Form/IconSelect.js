@@ -2,11 +2,11 @@ import React, { memo } from "react";
 import PropTypes from "prop-types";
 
 import { areEqual } from "react-window";
-import { Icon } from "../Explore/ExplorePage";
-import iconOptions from "../../assets/icons.js";
+import Icon from "components/Icon";
+import iconOptions from "assets/data/icons.json";
 import Dropdown from "./Dropdown";
 
-import "./IconSelect.css";
+import "./IconSelect.scss";
 
 const animations = [
 	"spin",

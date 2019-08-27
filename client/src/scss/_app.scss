@@ -1,0 +1,292 @@
+.wf-loading .webfont {
+	display: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+	text-align: left;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	min-height: 100%;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+
+	@media print {
+		font-size: 13pt;
+		padding: 0 !important;
+		margin: 0 !important;
+		background: none !important;
+		min-width: 1px !important;
+		width: 100vw !important;
+		max-width: 100vw !important;
+	}
+}
+
+#root,
+.app,
+.main {
+	min-height: 100vh;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+@media print {
+	.navbar-nav,
+	.status-bar,
+	.sidebar,
+	.nav-tabs {
+		display: none !important;
+	}
+	#root,
+	.app,
+	.main,
+	.container-fluid {
+		padding: 0 !important;
+		margin: 0 !important;
+		background: none !important;
+		width: 100vw;
+	}
+	.tab-pane:not(.active) {
+		position: absolute;
+	}
+}
+
+.btn-circle {
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	padding: 6px 0;
+	font-size: 12px;
+	line-height: 1.428571429;
+	border-radius: 15px;
+
+	&:active,
+	&:focus,
+	&:active:focus {
+		outline: 0;
+	}
+}
+.btn-circle.btn-lg {
+	width: 50px;
+	height: 50px;
+	padding: 10px 16px;
+	font-size: 18px;
+	line-height: 1.33;
+	border-radius: 25px;
+}
+.btn-circle.btn-xl {
+	width: 70px;
+	height: 70px;
+	padding: 10px 16px;
+	font-size: 24px;
+	line-height: 1.33;
+	border-radius: 35px;
+}
+
+.title {
+	.form-control {
+		border-top: 0;
+		border-left: 0;
+		border-right: 0;
+		font-size: 36px;
+		box-shadow: none;
+		padding: 5px 10px;
+		height: auto;
+	}
+	.form-control-feedback {
+		top: 10px;
+		height: 50px;
+	}
+}
+
+.clearable .form-control-feedback {
+	cursor: pointer;
+	pointer-events: auto;
+	color: #999;
+	z-index: 4;
+
+	&:hover {
+		color: theme-color("danger");
+	}
+}
+
+.not-clearable .form-control-feedback {
+	display: none;
+}
+
+.form-control:disabled {
+	cursor: default;
+}
+
+[class^="flaticon-"]:before,
+[class*=" flaticon-"]:before,
+[class^="flaticon-"]:after,
+[class*=" flaticon-"]:after {
+	font-size: inherit;
+}
+
+.status-bar {
+	border-radius: 0;
+	padding-bottom: 8px;
+	border: 0;
+	height: 52px;
+	margin-bottom: 0;
+	position: fixed;
+	z-index: 2;
+	width: 100%;
+
+	&.alert-default {
+		background-color: #ddd;
+	}
+
+	.form-inline {
+		margin-top: -7px;
+	}
+	.btn {
+		margin-left: 5px;
+	}
+}
+
+.delete-btn {
+	border: 0;
+
+	&:hover,
+	&:focus,
+	&:active,
+	&:focus:active {
+		background-color: theme-color("danger");
+		color: #fff;
+		cursor: pointer;
+	}
+}
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+	padding-bottom: 10px;
+	border-bottom: 1px solid #eee;
+}
+
+/*
+ * Sidebar --------------------------------
+ */
+
+/* Hide for mobile, show later */
+.sidebar {
+	display: none;
+}
+@media screen and (min-width: 768px) {
+	.sidebar {
+		position: fixed;
+		top: 102px;
+		bottom: 0;
+		left: 0;
+		z-index: 1000;
+		display: block;
+		padding: 0;
+		overflow-x: hidden;
+		overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+		background-color: #f5f5f5;
+		border-right: 1px solid #eee;
+	}
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+	margin-right: -21px; /* 20px padding + 1px border */
+	margin-bottom: 20px;
+	margin-left: -20px;
+}
+.nav-sidebar > li > a {
+	padding-right: 20px;
+	padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+	color: #fff;
+	background-color: #428bca;
+}
+
+/*
+ * Main content
+ * ------------------------------
+ */
+
+.container,
+.container-fluid {
+	--parent-theme: white;
+	--contrast: #{$body-bg};
+	--active-theme: #{$gray-600};
+	--hover-theme: #{$gray-300};
+
+	background-color: rgba(255, 255, 255, 0.9);
+	color: $body-bg;
+	padding: 2rem;
+}
+
+.main {
+	padding-top: ($navbar-brand-height + $navbar-brand-padding-y * 2)+ ($navbar-padding-y * 2);
+
+	&.whiteBG:before {
+		content: "";
+		width: 100%;
+		height: $totalNavHeight;
+		background-color: white;
+		position: fixed;
+		top: 0;
+		left: 0;
+		display: block;
+	}
+}
+
+// end main---------------------------------------
+
+.loader {
+	text-align: center;
+	margin-top: 1em;
+	animation-duration: 2s;
+	animation-timing-function: ease-in;
+	font-size: 1.5em;
+
+	.child > .child-inner > i.fa-spin {
+		display: block;
+	}
+}
+
+.loading {
+	font-size: 3em;
+	margin: 1em;
+}
+
+.icon {
+	display: inline-block;
+	overflow: hidden;
+	svg {
+		fill: currentColor;
+		vertical-align: top;
+		height: 1em;
+		min-width: 1em;
+	}
+}
+
+// forms ---------------------------------------
+
+.input-title {
+	width: 100%;
+	font-size: 2rem;
+}
+
+.input-transparent {
+	@include input-transparent();
+}

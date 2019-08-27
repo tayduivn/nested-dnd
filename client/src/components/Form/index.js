@@ -2,7 +2,6 @@ import ColorPicker from "./ColorPicker";
 import Dropdown from "./Dropdown";
 import HexColorPicker from "./HexColorPicker";
 import IconSelect from "./IconSelect";
-import IsASelect from "./IsASelect";
 import MixedKeyValue from "./MixedKeyValue";
 import MixedSortable from "./MixedSortable";
 import MixedThing from "./MixedThing";
@@ -14,7 +13,6 @@ export {
 	Dropdown,
 	HexColorPicker,
 	IconSelect,
-	IsASelect,
 	MixedKeyValue,
 	MixedSortable,
 	MixedThing,

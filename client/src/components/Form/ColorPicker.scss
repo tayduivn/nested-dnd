@@ -1,4 +1,4 @@
-@import "../../variables.scss";
+@import "~scss/variables";
 
 .colorPicker {
 	z-index: 5;
@@ -18,19 +18,19 @@
 		border: 1px solid transparent;
 		transition: border-radius 100ms ease-out;
 
-		&:hover{
+		&:hover {
 			border-radius: 0.5em;
 			border-color: white;
 		}
 
-		&.selected{
+		&.selected {
 			border-radius: 1em;
 			border-color: white;
 		}
 	}
 
-	&.github-picker{
-		left:-258px;
+	&.github-picker {
+		left: -258px;
 		top: 44px;
 		position: absolute !important;
 

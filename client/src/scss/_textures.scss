@@ -1,0 +1,130 @@
+@import "./variables.scss";
+
+$textures: [ "3px-tile", "45-degree-fabric-dark", "45-degree-fabric-light", "60-lines", "ag-square",
+	"always-grey", "arabesque", "arches", "black-scales", "bright-squares", "dark-mosaic", "dark-wood",
+	"diagonal-striped-brick", "diamond-upholstery", "dimension", "egg-shell", "flowers", "foggy-birds",
+	"food", "football-no-lines", "gradient-squares", "gravel", "gray-floral", "grid-me", "grunge-wall",
+	"hexellence", "honey-im-subtle", "inspiration-geometry", "leather", "light-gray",
+	"light-grey-floral-motif", "light-paper-fibers", "maze-black", "maze-white", "nestedBaconverse",
+	"nestedDoughnutverse", "nestedLasagnaverse", "nestedSharkverse", "padded-light", "pineapple-cut",
+	"pixel-weave", "polaroid", "purty-wood", "random-grey-variations", "retina-wood", "robots",
+	"rocky-wall", "scribble-light", "shattered-dark", "shley-tree-1", "shley-tree-2", "skulls",
+	"stardust", "subtle-white-feathers", "tileable-wood-colored", "tileable-wood", "tree-bark", "type",
+	"washi", "white-diamond-dark", "woven-light", "woven", "xv" ];
+$black: #000;
+$red: #f00;
+$yellow: #ff0;
+$blue: #00f;
+$green: #008000;
+
+@each $name in $textures {
+	.ptn-#{$name},
+	.ptn-#{$name}.btn:not(:disabled):not(.disabled):active,
+	.ptn-#{$name}.btn:not(:disabled):not(.disabled).active {
+		background-image: url("../assets/patterns/#{$name}.png");
+	}
+}
+
+.ptn-purty-wood,
+.ptn-absurdity,
+.ptn-white-diamond-dark,
+.ptn-60-lines,
+.ptn-45-degree-fabric-dark {
+	background-blend-mode: color-burn;
+}
+
+.ptn-stardust,
+.ptn-rocky-wall {
+	background-blend-mode: exclusion;
+}
+
+.ptn-shattered-dark {
+	background-blend-mode: multiply;
+}
+
+.ptn-rainbow,
+.child-inner.ptn-rainbow {
+	$rainbow: linear-gradient(to right bottom, #f0f, #ffa500, #ff0, SpringGreen, #0ff);
+
+	background-image: $rainbow;
+	color: $black;
+
+	&.fa,
+	&.gi,
+	svg {
+		background-clip: text;
+		fill: $rainbow;
+		text-fill-color: transparent;
+	}
+
+	&.btn {
+		$btn-bg: #00ff7f;
+		@include button-variant($btn-bg, $btn-bg);
+	}
+}
+
+.ptn-ocean {
+	$ocean: linear-gradient(transparent, #0057be);
+
+	background-image: $ocean;
+}
+
+@keyframes colorchange {
+	0% {
+		filter: hue-rotate(0deg);
+	}
+	25% {
+		filter: hue-rotate(90deg);
+	}
+	50% {
+		filter: hue-rotate(180deg);
+	}
+	75% {
+		filter: hue-rotate(270deg);
+	}
+	100% {
+		filter: hue-rotate(360deg);
+	}
+}
+
+.ptn-colorchange {
+	&.main,
+	&.sample {
+		position: relative;
+		overflow: hidden;
+
+		&::before {
+			content: "";
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 0;
+			width: 100%;
+			height: 100%;
+			background-color: var(--parent-theme);
+			animation: colorchange 30s infinite;
+		}
+		> *,
+		> #text {
+			z-index: 1;
+			position: relative;
+		}
+	}
+}
+/* ----------------- https://loading.io/pattern ---------------- */
+
+.ptn-interstellar {
+	background-image: url("../assets/patterns/interstellar.svg");
+	background-size: 100% 100%;
+}
+
+.ptn-fireflies {
+	background-image: url("../assets/patterns/firefly.svg");
+	background-size: 100% 100%;
+}
+
+.ptn-rain {
+	background-image: url("../assets/patterns/rain.gif");
+	background-blend-mode: overlay;
+}

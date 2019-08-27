@@ -1,0 +1,23 @@
+@import "~scss/variables";
+
+.navbar {
+	height: $totalNavHeight;
+}
+
+.navbar-dark {
+	position: absolute;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	background-color: rgba(0, 0, 0, 0.1);
+	transition: background-color 500ms ease-out;
+
+	&:hover {
+		background-color: rgba(5, 10, 19, 1);
+	}
+}
+
+.navbar-nav {
+	margin-top: 0;
+}

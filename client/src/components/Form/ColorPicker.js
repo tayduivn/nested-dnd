@@ -1,8 +1,8 @@
 import React from "react";
 
-import colors, { colorOrder } from "../../colors";
+import colors, { colorOrder } from "util/colors";
 
-import "./ColorPicker.css";
+import "./ColorPicker.scss";
 
 class ColorRow extends React.PureComponent {
 	render() {

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import debounce from "debounce";
 
-import { Link } from "../Util";
+import Link from "components/Link";
 import Dropdown from "../Form/Dropdown";
 
 import { TYPE } from "./MixedThing";
