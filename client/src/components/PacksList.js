@@ -13,7 +13,7 @@ const MyPacks = ({ myPacks = [] }) => (
 );
 
 // List my and public packs
-const PacksList = ({ loggedIn, error, myPacks, publicPacks, dispatch }) => (
+const PacksList = ({ loggedIn, error, myPacks, publicPacks }) => (
 	<div id="Packs > PacksList">
 		{loggedIn && <MyPacks myPacks={myPacks} />}
 
@@ -23,7 +23,7 @@ const PacksList = ({ loggedIn, error, myPacks, publicPacks, dispatch }) => (
 		{error && error.display}
 
 		{publicPacks && publicPacks.length === 0 && <p>There are no public packs to display</p>}
-		{publicPacks && <PackUL list={publicPacks} dispatch={dispatch} />}
+		{publicPacks && <PackUL list={publicPacks} />}
 	</div>
 );
 

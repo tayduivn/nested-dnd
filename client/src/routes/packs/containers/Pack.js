@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Loading from "components/Loading";
 import Tabs from "components/Tabs";
 import Link from "components/Link";
-import GeneratorsList from "components/GeneratorsList";
+import GeneratorsList from "containers/GeneratorsList";
 import TablesList from "components/TablesList";
 
 import "./Pack.scss";

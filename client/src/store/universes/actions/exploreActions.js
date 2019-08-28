@@ -2,8 +2,6 @@ import DB from "util/DB";
 
 import debounce from "debounce";
 import async from "async";
-import { SET_PACK } from "store/packs";
-import { receiveTables } from "store/tables";
 import {
 	getUniverse,
 	universeSet,
@@ -14,11 +12,6 @@ import {
 } from "store/universes";
 import { getExploreUrlParams } from "store/location";
 import { pushSnack } from "store/snackbar";
-
-const INSTANCE = "Instance";
-const UNIVERSE = "Universe";
-const TABLE = "Table";
-const PACK = "Pack";
 
 // Queue of save tasks
 const saver = async.cargo((tasks, callback) => {
@@ -195,32 +188,6 @@ export const addChild = (universeId, index, child) => {
 		});
 		return { type: INSTANCE_ADD_CHILD, index, data: child, universeId };
 	};
-};
-
-const processChunk = (chunk, dispatch, universeId, packUrl) => {
-	if (chunk.type === INSTANCE) {
-		dispatch({
-			type: INSTANCE_SET,
-			data: chunk.data,
-			universeId: universeId || chunk.meta.universeId
-		});
-	} else if (chunk.type === UNIVERSE) {
-		dispatch({
-			type: UNIVERSE_SET,
-			data: { ...chunk.data, loaded: true }
-		});
-	} else if (chunk.type === PACK) {
-		dispatch({
-			type: SET_PACK,
-			data: {
-				tempUniverse: chunk.meta.universeId,
-				...chunk.data
-			},
-			id: chunk.data._id
-		});
-	} else if (chunk.type === TABLE) {
-		dispatch(receiveTables(chunk.data));
-	}
 };
 
 // ------------------------------------

@@ -168,7 +168,7 @@ class MixedThing extends React.PureComponent {
 		const { weight, array, amount: { min = 1, max = 1 } = {}, chance, ...rest } = this.props;
 		const { type, value, tables } = this.props;
 		const { handleChange } = this;
-		const { hasKey, deleteOne, property, isTextarea } = options;
+		const { hasKey, deleteOne, isTextarea } = options;
 
 		return (
 			<div className="row">

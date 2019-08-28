@@ -8,7 +8,7 @@ import Dropdown from "./Dropdown";
 
 import "./IconSelect.scss";
 
-const animations = [
+const ANIMATIONS = [
 	"spin",
 	"spinReverse",
 	"pulse",
@@ -22,7 +22,7 @@ const animations = [
 ];
 
 const animationOptions = [<option key="placeholder" value="" />].concat(
-	animations.map(anim => (
+	ANIMATIONS.map(anim => (
 		<option value={anim} key={anim}>
 			{anim}
 		</option>
@@ -249,7 +249,7 @@ class IconSelect extends React.Component {
 function findAnim(value) {
 	value = " " + value + " ";
 
-	var matches = value.match("^.*\\s(" + animations.join("|") + ")\\s.*$");
+	var matches = value.match("^.*\\s(" + ANIMATIONS.join("|") + ")\\s.*$");
 	if (matches && matches[1]) {
 		return matches[1];
 	}

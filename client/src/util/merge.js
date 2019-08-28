@@ -1,5 +1,6 @@
 import deepmerge from "deepmerge";
 
+/*
 const arrayMerge = (destinationArray, sourceArray, options) => {
 	const newArr = [...destinationArray];
 
@@ -8,7 +9,7 @@ const arrayMerge = (destinationArray, sourceArray, options) => {
 	});
 
 	return newArr;
-};
+};*/
 
 const overwriteMerge = (destinationArray, sourceArray) => sourceArray;
 

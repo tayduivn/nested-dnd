@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import Characters from "../routes/characters/components/Characters";
-import GeneratorsList from "components/GeneratorsList";
+import GeneratorsList from "containers/GeneratorsList";
 import TablesList from "components/TablesList";
 import Loading from "components/Loading";
 import Tabs from "components/Tabs";

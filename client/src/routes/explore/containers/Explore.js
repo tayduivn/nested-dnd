@@ -1,16 +1,34 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import ExplorePage, { LOADING, Data, Modals, Children } from "../components/ExplorePage";
+import ExplorePage from "../components/ExplorePage";
+import Data from "../components/Data";
+import Modals from "../components/Modals";
+import Children from "../components/Children";
 import Title from "./Title";
+import Loading from "components/Loading";
 import handleNestedPropertyValue from "util/handleNestedPropertyValue";
-import { loadCurrent } from "store/universes";
+import { loadCurrent, getUniverse, getCurrent } from "store/universes";
 import { loadFonts } from "store/fonts";
+import processInSort from "../util/processInSort";
+
+// TODO: use reselect so we don't calculate current every time
+function mapStateToProps(state) {
+	const { pack, universe = {}, index, isUniverse } = getUniverse(state);
+	return {
+		universe,
+		pack,
+		index,
+		current: getCurrent(state.universes.instances, universe, index, isUniverse),
+		isUniverse
+	};
+}
 
 /**
  * This manages the tree data
  */
-export default class Explore extends Component {
+class Explore extends Component {
 	static propTypes = {
 		// should be auto-passed from router
 		location: PropTypes.object.isRequired,
@@ -33,21 +51,9 @@ export default class Explore extends Component {
 		showData: false
 	};
 
-	constructor(props) {
-		super(props);
-
-		if (props.location.state) {
-			this.state = { ...this.state, ...props.location.state };
-		}
-	}
-
 	// first ajax data pull
 	componentDidMount() {
-		this._mounted = true;
 		this.props.dispatch(loadCurrent());
-
-		//var index = this.getIndexFromHash(this.props);
-		//setBodyStyle(this.props.current);
 		this.props.dispatch(loadFonts());
 		this.setTitle();
 	}
@@ -57,7 +63,7 @@ export default class Explore extends Component {
 		document.title = isa || name || "Explore";
 	}
 
-	componentDidUpdate({ pack = {}, index, ...prevProps }) {
+	componentDidUpdate({ pack = {}, index }) {
 		// load fonts
 		if (this.props.pack && this.props.pack.font !== pack.font) {
 			this.props.dispatch(loadFonts());
@@ -77,50 +83,8 @@ export default class Explore extends Component {
 		this.setTitle();
 	}
 
-	determineChange = (props, nextProps) => {
-		const isNewPack =
-			props.match.params.packurl !== nextProps.match.params.packurl &&
-			!!nextProps.match.params.packurl;
-		const isNewNode =
-			this.props.current && "#" + this.props.current.index !== nextProps.location.hash;
-		const isNewHash =
-			props.location.hash !== nextProps.location.hash && nextProps.location.hash.length;
-
-		return { isNewPack, isNewNode, isNewHash };
-	};
-
-	shouldComponentUpdate(nextProps, nextState) {
-		// TODO: this is no bueno - store shouldn't change if it didn't change, shallow compare should be enough
-		const newCurrent = JSON.stringify(this.props.current) !== JSON.stringify(nextProps.current);
-		const newIn = JSON.stringify(this.props.current.in) !== JSON.stringify(nextProps.current.in);
-		const changedError = this.state.error !== nextState.error;
-		const changedURL = this.props.match.params.universe !== nextProps.match.params.universe;
-		const changedShowAdd = this.state.showAdd !== nextState.showAdd;
-		const gotUniverse = JSON.stringify(this.props.universe) !== JSON.stringify(nextProps.universe);
-		const gotPack = JSON.stringify(this.props.pack) !== JSON.stringify(nextProps.pack);
-		const toggledData = this.state.showData !== nextState.showData;
-
-		const shouldUpdate =
-			newCurrent ||
-			newIn ||
-			changedError ||
-			changedURL ||
-			changedShowAdd ||
-			gotUniverse ||
-			toggledData ||
-			gotPack;
-
-		return shouldUpdate;
-	}
-
-	componentWillUnmount() {
-		this._mounted = false;
-		// reset body background to normal on unmount
-		//setBodyStyle({ cssClass: "" });
-	}
-
 	// will set the history, and component will recieve the new props
-	setIndex = (index, isDeleting) => {
+	setIndex = index => {
 		if (isNaN(index)) return;
 
 		if (this.props.location.hash !== "#" + index) {
@@ -128,20 +92,7 @@ export default class Explore extends Component {
 		}
 	};
 
-	handleRestartExplore = () => {
-		// reset universe
-		// TODO: Do as action
-		/*
-		DB.fetch("explore", "DELETE")
-			.then(() => DB.fetch(this.props.location.pathname))
-			.then(({ err, data }) => {
-
-				this.setIndex(data.index);
-			});
-		return;*/
-	};
-
-	handleRestartUniverse = (doRegenerate, universe) => {
+	handleRestartUniverse = () => {
 		var confirm = window.confirm("Are you sure you want to delete this?");
 
 		if (!confirm) return;
@@ -162,7 +113,7 @@ export default class Explore extends Component {
 		else this.handleRestartUniverse(doRegenerate, universe);
 	};
 
-	handleAdd = (label, event) => {
+	handleAdd = label => {
 		if (!label) {
 			return this.setState({ showAdd: true });
 		}
@@ -183,24 +134,6 @@ export default class Explore extends Component {
 	toggleData = () => {
 		this.setState(prevState => ({ showData: !prevState.showData }));
 	};
-
-	doSort(inObjects = [], value) {
-		if (!inObjects) return inObjects;
-
-		// change from objects to indexes and remove new
-		var inArr = inObjects
-			.filter(c => c)
-			.map(c => c && c.index)
-			.filter((v = [], i, self) => {
-				return self.indexOf(v) === i && !(v.includes && v.includes("NEW"));
-			});
-		var child = inArr[value.from];
-
-		// do the move
-		inArr.splice(value.from, 1);
-		inArr.splice(value.to, 0, child);
-		return inArr;
-	}
 
 	doDeleteLink(inArr, value) {
 		//const currentInArr = [...inArr];
@@ -231,7 +164,7 @@ export default class Explore extends Component {
 
 		if (property === "sort") {
 			index = this.props.current.index;
-			inArr = this.doSort(inArr, value);
+			inArr = processInSort(inArr, value);
 			property = "in";
 			value = inArr;
 		} else if (property === "deleteLink") {
@@ -279,15 +212,16 @@ export default class Explore extends Component {
 			isFavorite: this.props.isFavorite
 		};
 	}
+
 	render() {
-		if (this.props.current.loading) return <div className="main pt-5">{LOADING}</div>;
+		if (this.props.current.loading) return <Loading.Page />;
 
 		// get props
 		const { current, isUniverse, index } = this.props,
 			{ handleChange, handleAdd } = this,
 			{ showData } = this.state,
 			{ data, cssClass, up = [], icon, txt, in: inArr } = current,
-			{ generators, tables } = getGensTables(this.props.pack),
+			{ generators, tables } = this.props,
 			title = current && (current.name || current.isa),
 			isLoading = current.todo === true,
 			parent = up[0] && up[0].index;
@@ -300,7 +234,7 @@ export default class Explore extends Component {
 						<Title {...{ current, title, isUniverse, ...this._getTitleProps() }} />
 						<div className={`children col ${isUniverse ? "children--universe" : ""}`}>
 							{showData && <Data {...{ data, generators, tables, handleChange, index }} />}
-							{isLoading && LOADING}
+							{isLoading ? <Loading.Page /> : null}
 							<Children {...{ isUniverse, inArr, index, handleAdd, handleChange }} />
 						</div>
 					</div>
@@ -311,12 +245,6 @@ export default class Explore extends Component {
 	}
 }
 
-function getGensTables(pack = {}, tables = []) {
-	const { builtpack = {} } = pack;
-	const { generators = [] } = builtpack;
-	return {
-		generators: Object.keys(generators)
-			.concat(tables.map(t => `${t.title}::${t._id}::Table`))
-			.sort()
-	};
-}
+const Container = connect(mapStateToProps)(Explore);
+
+export default Container;

@@ -1,5 +1,9 @@
 import merge from "./merge";
 
+/**
+ * @param {array} state
+ * @param {object} data
+ */
 export default function reduceObjToArray(state = [], data) {
 	let newState = [...state];
 

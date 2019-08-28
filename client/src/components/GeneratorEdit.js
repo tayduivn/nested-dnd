@@ -7,8 +7,6 @@ import Dropdown from "../Form/Dropdown";
 import { MixedThing, MixedKeyValue, MixedSortable } from "../Form";
 import IconOrImage from "./IconOrImage";
 
-import NOOP from "util/NOOP";
-
 class Data extends React.PureComponent {
 	handleChange = changes => {
 		if (!changes) {

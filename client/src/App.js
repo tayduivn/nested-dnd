@@ -23,19 +23,18 @@ class App extends Component {
 	}
 
 	render() {
-		const { loggedIn, dispatch, logOutError } = this.props;
+		const { loggedIn, logOutError } = this.props;
 		return (
 			<div id="App" className="app">
 				<Switch>
 					<Route exact path="/players-preview" />
-					<PropsRoute component={Nav} {...{ loggedIn, logOutError, dispatch }} />
+					<PropsRoute component={Nav} {...{ loggedIn, logOutError }} />
 				</Switch>
 				{loggedIn !== null ? (
 					<Switch>
 						<PropsRoute
 							component={loggedIn ? Universes : Splash}
 							{...{ exact: true, path: "/", loggedIn }}
-							dispatch={dispatch}
 						/>
 						{makeSubRoutes(routes, "", { loggedIn })}
 						<PropsRoute path="/login" component={Login} title="Login" loggedIn={loggedIn} />

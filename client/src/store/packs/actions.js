@@ -14,14 +14,12 @@ export const add = pack => ({ type: ADD, pack });
 
 export const RECEIVE_PACKS = "RECEIVE_PACKS";
 export const fetch = loaded => {
-	return (dispatch, getState) => {
+	return dispatch => {
 		if (loaded) return Promise.resolve();
 		DB.get("packs").then(json => {
 			if (json.errors) {
 				dispatch(setError(json.errors));
 			} else {
-				const state = getState();
-
 				dispatch({ type: RECEIVE_PACKS, ...json });
 			}
 		});

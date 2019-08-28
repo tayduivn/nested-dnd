@@ -66,7 +66,7 @@ schema.methods.getGen = function(isa) {
 
 /**
  * Put a generator into the map, without duplicating isa name
- * @param  {Generator} the generator to push
+ * @param  {Generator} generator the generator to push
  */
 schema.methods.setGen = function(generator) {
 	if (generator.toJSON) throw new Error("Cannot put raw generator object into builtpack");
@@ -128,7 +128,7 @@ schema.methods.rebuildGenerator = async function(isa, p) {
 /**
  * Using this buildpack, it will generate
  * @param  {Pack} seedArray array of isa's
- * @return {Promise<Nested>}           the grown tree of generated things to be passed to the user
+ * @return {Promise<Nested>} the grown tree of generated things to be passed to the user
  */
 schema.methods.growFromSeed = function(pack) {
 	if (!pack.seed) {

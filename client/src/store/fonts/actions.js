@@ -1,8 +1,7 @@
 import WebFont from "webfontloader";
 
-import DB from "util/DB";
-
-export const LOAD_FONTS = "LOAD_FONTS";
+export const LOAD_FONTS_START = "LOAD_FONTS_START";
+export const LOAD_FONTS_RECEIVED = "LOAD_FONTS_RECEIVED";
 export function loadFonts(fonts = [], source = "google") {
 	return (dispatch, getState) => {
 		if (!fonts) return;
@@ -11,25 +10,22 @@ export function loadFonts(fonts = [], source = "google") {
 		// remove fonts already loaded
 		const loadedFonts = Object.keys(getState().fonts);
 		const trimmedFonts = fonts.filter(d => !loadedFonts.includes(d));
-		const newState = {};
-		trimmedFonts.forEach(f => (newState[f] = "loading"));
 
 		if (trimmedFonts.length) {
+			dispatch({
+				type: LOAD_FONTS_START,
+				fonts: trimmedFonts
+			});
 			WebFont.load({
 				[source]: {
-					families: fonts
+					families: trimmedFonts
 				},
 				active: function() {
-					trimmedFonts.forEach(f => (newState[f] = "loaded"));
 					dispatch({
-						type: LOAD_FONTS,
-						fonts: newState
+						type: LOAD_FONTS_RECEIVED,
+						fonts: trimmedFonts
 					});
 				}
-			});
-			dispatch({
-				type: LOAD_FONTS,
-				fonts: newState
 			});
 		}
 	};

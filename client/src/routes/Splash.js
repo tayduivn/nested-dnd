@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import Link from "components/Link";
 
 import { loadFonts } from "store/fonts";
+import "./Splash.scss";
 
 const nested = {
 	url: "nested",
@@ -42,20 +44,19 @@ const Pack = ({ pack }) => (
 	</Link>
 );
 
-class Splash extends React.Component {
-	componentDidMount() {
-		this.props.dispatch(loadFonts([nested.font, dnd.font]));
-	}
-	render() {
-		return (
-			<div className="container-fluid p-0">
-				<div className="row fullscreen">
-					<Pack pack={nested} />
-					<Pack pack={dnd} />
-				</div>
-			</div>
-		);
-	}
-}
+export default function Splash() {
+	const dispatch = useDispatch();
 
-export default Splash;
+	useEffect(() => {
+		dispatch(loadFonts([nested.font, dnd.font]));
+	}, [dispatch]);
+
+	return (
+		<div className="container-fluid p-0">
+			<div className="row fullscreen">
+				<Pack pack={nested} />
+				<Pack pack={dnd} />
+			</div>
+		</div>
+	);
+}

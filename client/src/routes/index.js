@@ -1,5 +1,3 @@
-import React from "react";
-
 import Explore from "routes/explore";
 import Packs, { routes as packs } from "routes/packs";
 import Map from "routes/map";

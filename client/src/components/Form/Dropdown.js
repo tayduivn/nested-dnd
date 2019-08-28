@@ -255,12 +255,3 @@ export default class Dropdown extends React.PureComponent {
 		);
 	}
 }
-
-/*
-{this.state.matches.map((item, i) => (
-	<OptionComponent
-		key={i}
-		{...{ item, selected, handleClick, className, useOnClick, handleHover }}
-	/>
-))}
-*/

@@ -3,23 +3,16 @@ import spread from "util/spread";
 
 import { RECEIVE_EXPLORE, LOAD_EXPLORE } from "store/universes";
 import {
-	ADD,
 	FETCH_UNIVERSE_START,
 	FETCH_UNIVERSE_ERROR,
 	FETCH_UNIVERSE_SUCCESS,
 	UNIVERSES_SET,
-	ERROR,
 	UNIVERSE_SET,
 	INSTANCE_SET,
 	INSTANCE_ADD_CHILD,
 	INSTANCE_DELETE,
 	RECEIVE_MY_UNIVERSES
 } from "./actions";
-
-const myUniversesInitial = {
-	loaded: false,
-	array: []
-};
 
 function instance(state = {}, action) {
 	switch (action.type) {
@@ -42,6 +35,7 @@ const DEFAULT_UNIVERSE = {
 };
 
 // todo handle update other
+// eslint-disable-next-line
 function universe(state = DEFAULT_UNIVERSE, action) {
 	const array = state.array instanceof Array ? [...state.array] : [];
 
@@ -99,6 +93,7 @@ function normalize(state = {}, action) {
 	}
 }
 
+// eslint-disable-next-line
 function byId(state = {}, action) {
 	const copy = { ...state };
 	let newState;

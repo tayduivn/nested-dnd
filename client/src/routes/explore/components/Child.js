@@ -3,7 +3,9 @@ import Lottie from "react-lottie";
 import worldLocations from "assets/lottiefiles/world_locations";
 
 import IsASelect from "containers/IsASelect";
-import { Icon, Isa } from "./ExplorePage";
+import Isa from "./Isa";
+import Icon from "components/Icon";
+import "./Child.scss";
 
 const CHILD_CLASSES = "child col-xl-2 col-lg-3 col-md-4 col-sm-4 col-xs-6 ";
 
@@ -31,7 +33,7 @@ const className = (icon = {}, showAdd, cssClass, isNew) =>
 	`child-inner child-inner--link btn-${cssClass}
 	 ${icon ? "" : " no-icon"} ${showAdd ? " showAdd" : ""} ${isNew ? "isNew" : ""}`;
 
-const style = (hasInArr, highlight, txt, isUniverse) => {
+const style = (hasInArr, highlight, txt) => {
 	var style = {
 		color: txt
 	};

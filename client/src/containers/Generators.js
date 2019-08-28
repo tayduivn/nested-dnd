@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import DB from "util/DB";
-import GeneratorsList from "components/GeneratorsList";
+import GeneratorsList from "containers/GeneratorsList";
 
 /**
  * Handles DB call

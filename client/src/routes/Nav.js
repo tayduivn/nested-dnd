@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import Link from "components/Link";
 import { doLogout } from "store/user";
+import "./Nav.scss";
 
 const LoggedOut = () => (
 	<>

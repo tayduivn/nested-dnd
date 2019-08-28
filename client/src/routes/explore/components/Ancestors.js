@@ -2,14 +2,15 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import splitClass from "util/splitClass";
+import "./Ancestors.scss";
 
-const AncestorDropdownItem = ({ a, cssclass, onClick }) => (
+const AncestorDropdownItem = ({ a, cssclass }) => (
 	<a className={"ancestors__dropdown-item " + cssclass} href={`#${a.index}`}>
 		{a.name || a.isa}
 	</a>
 );
 
-const SplitButton = ({ parentInst, style, ancestors, onClick, cssclass, border, bg, ptn }) => (
+const SplitButton = ({ parentInst, style, ancestors, onClick, cssclass, bg }) => (
 	<div
 		id="Ancestors"
 		className={`ancestors parent col btn-group dropdown ${cssclass}`}
@@ -48,7 +49,7 @@ const SplitButtonToggle = ({ style, cssclass }) => (
 	</button>
 );
 
-const OneButton = ({ onClick, parentInst }) => (
+const OneButton = ({ parentInst }) => (
 	<a
 		id="Ancestors"
 		href={`#${parentInst.index}`}
@@ -69,10 +70,12 @@ export default class Ancestors extends Component {
 		ancestors: [{}],
 		handleClick: () => {}
 	};
+
 	constructor(props) {
 		super(props);
 		this.onClick = this.onClick.bind(this);
 	}
+
 	onClick(ancestor) {
 		ancestor.in = true;
 		this.props.handleClick(ancestor);

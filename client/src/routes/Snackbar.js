@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { connect } from "react-redux";
 
 import { popSnack } from "store/snackbar";
+import "./Snackbar.scss";
 
 const Snack = ({ title = "Error", i, dispatch }) => {
 	const [hide, setHide] = useState(false);

@@ -3,10 +3,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import Alert from "../Util/Alert";
-import { doLogin } from "./actions";
+import Alert from "components/Alert";
+import { doLogin } from "store/user";
 
-import "./Login.css";
+import "./Login.scss";
 
 class Email extends React.PureComponent {
 	state = {

@@ -27,7 +27,7 @@ function getTextColor() {
 }*/
 
 function validTextColour(stringToTest) {
-	//Alter the following conditions according to your need.
+	// Alter the following conditions according to your need.
 	if (stringToTest === "") {
 		return false;
 	}
@@ -49,7 +49,8 @@ function validTextColour(stringToTest) {
 	return image.style.color !== "rgb(255, 255, 255)";
 }
 
-const Popover = ({ popover, handleClick, txt, handleType, color }) => (
+// testing
+const Popover = ({ popover, handleClick, handleType, color }) => (
 	<div className="popover animated fadeIn" role="tooltip" style={popover} onClick={handleClick}>
 		<div className="arrow" />
 		<div className="popover-body form-inline">

@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 
 import { sendPlayersPreview } from "store";
 import Link from "components/Link";
@@ -12,8 +11,8 @@ import SearchBar from "../components/SearchBar";
 import Description from "../components/Description";
 import BGSelectPopover from "../components/BGSelectPopover";
 
-import { changeInstance } from "store/universes";
 import splitClass from "util/splitClass";
+import "./Title.scss";
 
 const CENTER_ALIGN = "d-flex align-items-center justify-content-center";
 const COG_BUTTON_SETTINGS = {
@@ -265,29 +264,19 @@ class TheTitleComponent extends React.Component {
 		);
 	}
 }
-const TheTitle = connect(
-	function mapStateToProps(state, { index, universeId, isEditable }) {
-		const universe = state.universes.byId[universeId] || {};
-		const pack = state.packs.byId[universe.pack] || {};
-		const current = (universe.array && universe.array[index]) || {};
-		return {
-			name: current.name,
-			txt: current.txt,
-			isa: current.isa,
-			font: pack.font,
-			fontState: pack.font ? state.fonts[pack.font] : "loaded"
-		};
-	},
-	function mapDispatchToProps(dispatch, { index, universeId, isEditable }) {
-		return {
-			handleChange: val => dispatch(changeInstance(index, "name", val, universeId, dispatch))
-		};
-	}
-)(TheTitleComponent);
 
 class Title extends React.PureComponent {
 	render() {
-		const { current, pack, isUniverse, favorites, universeId, loaded, isFavorite } = this.props;
+		const {
+			current,
+			pack,
+			isUniverse,
+			favorites,
+			universeId,
+			loaded,
+			fav: isFavorite,
+			title
+		} = this.props;
 		const { handleChange, handleRestart, toggleFavorite } = this.props;
 		const { txt, index, cssClass, icon, desc = [], highlightClass: highlight } = current;
 		const { _id: packid } = pack;
@@ -295,7 +284,10 @@ class Title extends React.PureComponent {
 			<div id="Title" className="col-lg">
 				<div className="name mb-2 row animated fadeIn">
 					<IconButton {...{ isUniverse, cssClass, icon, txt }} />
-					<TheTitle key={index + loaded} {...{ isEditable: isUniverse, index, universeId }} />
+					<TheTitleComponent
+						key={index + loaded}
+						{...{ isEditable: isUniverse, index, universeId, title }}
+					/>
 				</div>
 				<ButtonsBar
 					{...{ packid, isUniverse, current, isFavorite }}
