@@ -2,6 +2,9 @@ import DB from "util/DB";
 import { receiveTables } from "store/tables/actions";
 import { receiveGenerators } from "store/generators/actions";
 
+// subfiles
+export * from "./fetchAddChildOptions";
+
 export const ADD = "PACKS_ADD";
 export const FETCH = "PACKS_FETCH";
 

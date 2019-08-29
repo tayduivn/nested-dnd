@@ -73,6 +73,7 @@ function makeNewInst(inst, universe, i) {
 				value: value
 			};
 		}
+
 		// fix icon is actually a url
 		else if (isUrl(inst.icon)) {
 			newInst.icon = {
@@ -81,14 +82,14 @@ function makeNewInst(inst, universe, i) {
 			};
 		} else if (inst.icon) {
 			newInst.icon = {
-				kind: inst.icon.kind,
+				kind: inst.icon.category,
 				value: inst.icon.value
 			};
 		}
 	}
 	if (inst.img) {
 		newInst.icon = {
-			category: "img",
+			kind: "img",
 			value: inst.img
 		};
 	}

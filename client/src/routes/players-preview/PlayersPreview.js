@@ -1,6 +1,6 @@
 import React from "react";
 
-import { subscribeToPlayersPreview } from "store";
+import { subscribeToPlayersPreview } from "store/actions";
 import "./PlayersPreview.scss";
 
 const Image = ({ src, alt, width, height, onLoad }) => (

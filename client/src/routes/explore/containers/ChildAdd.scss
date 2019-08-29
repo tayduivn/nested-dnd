@@ -1,5 +1,9 @@
-/* ------------------------------ IsASelect */
 @import "~scss/variables";
+
+.isNew {
+	height: 100%;
+	width: 100%;
+}
 
 .isa {
 	height: 100%;
@@ -23,21 +27,30 @@
 		resize: none;
 		text-align: center;
 		color: currentColor;
-
 		word-wrap: break-word;
 		word-break: break-all;
 		overflow-y: auto;
 		overflow-x: hidden;
 		box-sizing: border-box;
 		display: block;
+	}
 
-		&::placeholder {
-			font-size: 3rem;
-			line-height: 100%;
-			position: relative;
-			width: 100%;
-			top: 45%;
-			transform: translateY(-50%);
+	&__addChild-placeholder {
+		line-height: 0;
+		position: absolute;
+		top: 50%;
+		left: 0;
+		transform: translateY(-50%);
+		width: 100%;
+		text-align: center;
+
+		font-size: 3rem;
+		opacity: 0.25;
+
+		// when the input is focused
+		.isa__addChild:focus + &,
+		.isa__addChild:not(.empty) + & {
+			opacity: 0;
 		}
 	}
 }

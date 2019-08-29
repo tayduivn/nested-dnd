@@ -20,7 +20,7 @@ const getUniverseExplore = async (id, user_id) => {
 				startWith: "$last",
 				connectFromField: "up",
 				connectToField: "_id",
-				as: "upArray"
+				as: "ancestors"
 			}
 		},
 		{
@@ -29,7 +29,7 @@ const getUniverseExplore = async (id, user_id) => {
 				startWith: "$last",
 				connectFromField: "in",
 				connectToField: "_id",
-				as: "inArray",
+				as: "inArr",
 				maxDepth: 2
 			}
 		}

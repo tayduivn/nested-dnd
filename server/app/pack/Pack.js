@@ -7,10 +7,10 @@ const Schema = mongoose.Schema;
 const SEED_DELIM = ">";
 
 var packSchema = Schema({
-	// optional because dummy universe packs leave this out
 	_user: {
 		type: Schema.Types.ObjectId,
-		ref: "User"
+		ref: "User",
+		required: true
 	},
 
 	// for universe custom changes dummy packs. Packs with a _universe id were auto-generated, and are for backend use. Shouldn't be shown to the user!

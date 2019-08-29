@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import spread from "util/spread";
+import merge from "util/merge";
 
 import { RECEIVE_EXPLORE, LOAD_EXPLORE } from "store/universes";
 import {
@@ -13,19 +14,6 @@ import {
 	INSTANCE_DELETE,
 	RECEIVE_MY_UNIVERSES
 } from "./actions";
-
-function instance(state = {}, action) {
-	switch (action.type) {
-		case INSTANCE_ADD_CHILD:
-			return { ...state, in: [...(state.in || []), "LOADING"] };
-		case INSTANCE_SET:
-			// deleted
-			if (!action.data) return null;
-			return spread(state, action.data);
-		default:
-			return state;
-	}
-}
 
 const DEFAULT_UNIVERSE = {
 	isFetching: false,
@@ -65,15 +53,6 @@ function universe(state = DEFAULT_UNIVERSE, action) {
 				array[toDelete.up].in = inArr;
 			}
 			delete array[action.index];
-			return spread(state, { array });
-		case INSTANCE_ADD_CHILD:
-			array[action.index] = instance(array[action.index], action);
-			return spread(state, { array });
-		case INSTANCE_SET:
-			let index;
-			for (index in action.data) {
-				array[index] = instance(array[index], { ...action, data: action.data[index] });
-			}
 			return spread(state, { array });
 		case UNIVERSE_SET:
 			return spread(state, action.data);
@@ -142,10 +121,6 @@ function byId(state = {}, action) {
 		case FETCH_UNIVERSE_START:
 		case FETCH_UNIVERSE_SUCCESS:
 			return { ...state, [action.id]: universe(state[action.id], action) };
-		case INSTANCE_DELETE:
-		case INSTANCE_ADD_CHILD:
-		case INSTANCE_SET:
-			return spread(state, { [action.universeId]: universe(copy[action.universeId], action) });
 		case UNIVERSE_SET:
 			return spread(state, { [action.data._id]: universe(copy[action.data._id], action) });
 		case UNIVERSES_SET:
@@ -177,17 +152,46 @@ function myUniverses(state = DEFAULT_MY_UNIVERSES, action) {
 	}
 }
 
+function instance(state = {}, action) {
+	switch (action.type) {
+		case INSTANCE_ADD_CHILD:
+			return { ...state, in: [...(state.in || []), "LOADING"] };
+		case INSTANCE_SET:
+			// deleted
+			if (!action.data) return null;
+			// merge deeply together the changes
+			return merge(state, action.data);
+		default:
+			return state;
+	}
+}
+
+// not stored .byId, just in the root state.
 function instances(state = {}, action) {
 	let newState;
 	switch (action.type) {
+		case INSTANCE_SET:
+			let instanceId;
+			newState = { ...state };
+			for (instanceId in action.data) {
+				newState[instanceId] = instance(newState[instanceId], {
+					...action,
+					data: action.data[instanceId]
+				});
+			}
+			return newState;
 		case RECEIVE_EXPLORE:
 		case RECEIVE_MY_UNIVERSES:
 			newState = { ...state };
 			if (action.data.type === "Instance") {
-				newState[action.data.id] = action.data.attributes;
+				// only add it if it's new, so we don't override local changes
+				if (!newState[action.data.id]) newState[action.data.id] = action.data.attributes;
 			}
 			action.included.forEach(inst => {
-				if (inst.type === "Instance") newState[inst.id] = inst.attributes;
+				if (inst.type === "Instance") {
+					// only add it if it's new, so we don't override local changes
+					if (!newState[inst.id]) newState[inst.id] = inst.attributes;
+				}
 			});
 			return newState;
 		default:

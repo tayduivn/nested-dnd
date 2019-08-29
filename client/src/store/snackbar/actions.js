@@ -9,6 +9,6 @@ export const pushSnack = snack => ({
 
 export const PUSH_SNACKS = "PUSH_SNACKS";
 export const pushSnacks = snacks => ({
-	type: PUSH_SNACK,
+	type: PUSH_SNACKS,
 	snacks
 });

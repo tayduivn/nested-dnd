@@ -64,7 +64,7 @@ export default class PatternSelectModal extends React.PureComponent {
 		let className = this.props.bg;
 		if (value) className += " ptn-" + value;
 
-		this.props.handleChange(this.props.index, "cssClass", className);
+		this.props.handleChange("cls", className);
 	};
 	render() {
 		var { bg, ptn } = this.props;

@@ -2,7 +2,7 @@ import React from "react";
 
 import IconSelect from "components/Form/IconSelect";
 
-import { sendPlayersPreview } from "store";
+import { sendPlayersPreview } from "store/actions";
 import "./ModalIconSelect.scss";
 
 const MODAL_SETTINGS = {
@@ -65,7 +65,7 @@ const DoHue = ({ doHue, handleChange }) => (
 	</label>
 );
 
-const VideoInput = ({ setPreview, doHue, cssClass, value, handleChange }) => (
+const VideoInput = ({ setPreview, doHue, cls, value, handleChange }) => (
 	<div>
 		<button className="btn btn-default" onClick={setPreview}>
 			Show to players
@@ -75,7 +75,7 @@ const VideoInput = ({ setPreview, doHue, cssClass, value, handleChange }) => (
 		<DoHue {...{ doHue, handleChange }} />
 		<input className="form-control" name="value" value={value} onChange={handleChange} />
 		<div className="iconSelectModal__video-wrap video__wrapper">
-			<div className={`video__hueOverlay ${doHue ? cssClass : ""}`} />
+			<div className={`video__hueOverlay ${doHue ? cls : ""}`} />
 			<video controls width="100%" loop preload="true" mute="true">
 				<source src={value} type="video/mp4" />
 			</video>
@@ -87,7 +87,7 @@ const ModalBody = ({
 	value,
 	category,
 	index,
-	cssClass,
+	cls,
 	doHue,
 	txt,
 	handleChange,
@@ -102,13 +102,13 @@ const ModalBody = ({
 		{category === "img" ? (
 			<ImageInput {...{ setPreview, value, handleChange }} />
 		) : category === "video" ? (
-			<VideoInput {...{ setPreview, value, handleChange, cssClass, doHue }} />
+			<VideoInput {...{ setPreview, value, handleChange, cls, doHue }} />
 		) : category === "char" ? (
 			<TextBox {...{ value, handleChange }} />
 		) : (
 			<IconSelect
 				{...{ style: { color: txt }, status: { isEnabled: true } }}
-				{...{ cssClass, key: index, value, setPreview, saveProperty: handleChange }}
+				{...{ cls, key: index, value, setPreview, saveProperty: handleChange }}
 			/>
 		)}
 	</div>
@@ -159,7 +159,7 @@ export default class IconSelectModal extends React.PureComponent {
 			sendPlayersPreview({
 				src: this.state.value,
 				category: this.state.category,
-				hueOverlay: this.state.doHue ? this.props.cssClass : ""
+				hueOverlay: this.state.doHue ? this.props.cls : ""
 			});
 		}
 	};
@@ -171,14 +171,14 @@ export default class IconSelectModal extends React.PureComponent {
 		});
 	};
 	render() {
-		var { cssClass, txt } = this.props;
+		var { cls, txt } = this.props;
 		const { handleChange, setPreview, handleSubmit } = this;
 		const { value, category, doHue } = this.state;
 
 		return (
 			<div {...MODAL_SETTINGS} ref={this.modalRef}>
 				<ModalIconsComponent
-					{...{ setPreview, value, category, cssClass, txt, doHue }}
+					{...{ setPreview, value, category, cls, txt, doHue }}
 					{...{ handleChange, handleSubmit }}
 				/>
 			</div>

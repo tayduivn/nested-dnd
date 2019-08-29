@@ -23,30 +23,30 @@ const COG_BUTTON_SETTINGS = {
 	"aria-expanded": false
 };
 
-const SettingsCog = ({ cssClass, toggleData, packid, name, isa }) => {
+const SettingsCog = ({ cls, toggleData, packid, name, isa }) => {
 	const location = `/packs/${packid}/generators`;
 	return (
-		<button className={`title__btn settings dropdown  ${cssClass}`}>
+		<button className={`title__btn settings dropdown  ${cls}`}>
 			<div {...COG_BUTTON_SETTINGS}>
 				<i className="title__btn-icon fa fa-cog" />
 			</div>
 
 			<div
-				className={`settings__menu dropdown-menu dropdown-menu-right ${cssClass}`}
+				className={`settings__menu dropdown-menu dropdown-menu-right ${cls}`}
 				aria-labelledby="dropdownMenuButton"
 			>
-				<div className={"settings__item btn dropdown-item " + cssClass} onClick={toggleData}>
+				<div className={"settings__item btn dropdown-item " + cls} onClick={toggleData}>
 					edit data
 				</div>
 
 				<Link to={isa ? `${location}/${isa}/edit` : `${location}/create?isa=${name}`}>
-					<div className={"settings__item btn dropdown-item " + cssClass}>
+					<div className={"settings__item btn dropdown-item " + cls}>
 						{isa ? <span>edit {isa} generator</span> : <span>create {name} generator</span>}
 					</div>
 				</Link>
 
 				<div
-					className={"settings__item btn dropdown-item " + cssClass}
+					className={"settings__item btn dropdown-item " + cls}
 					data-toggle="modal"
 					data-target="#moveModal"
 				>
@@ -59,9 +59,9 @@ const SettingsCog = ({ cssClass, toggleData, packid, name, isa }) => {
 
 class DeleteButton extends React.PureComponent {
 	render() {
-		const { handleRestart, cssClass } = this.props;
+		const { handleRestart, cls } = this.props;
 		return (
-			<button className={`title__btn btn ${cssClass}`} onClick={handleRestart}>
+			<button className={`title__btn btn ${cls}`} onClick={handleRestart}>
 				<i className="title__btn-icon far fa-trash-alt" />
 			</button>
 		);
@@ -70,9 +70,9 @@ class DeleteButton extends React.PureComponent {
 
 class FavoriteButton extends React.PureComponent {
 	render() {
-		const { cssClass, isFavorite, toggleFavorite } = this.props;
+		const { cls, isFavorite, toggleFavorite } = this.props;
 		return (
-			<button className={`title__btn ${cssClass}`} onClick={toggleFavorite}>
+			<button className={`title__btn ${cls}`} onClick={toggleFavorite}>
 				<i className={`title__btn-icon ${(isFavorite ? "fas" : "far") + " fa-star"}`} />
 			</button>
 		);
@@ -81,11 +81,11 @@ class FavoriteButton extends React.PureComponent {
 
 class PatternButton extends React.PureComponent {
 	render() {
-		const { cssClass = "", bg = "" } = this.props;
+		const { cls = "", bg = "" } = this.props;
 		return (
 			<button className={`title__btn ${bg}`} data-toggle="modal" data-target="#patternSelectModal">
 				<div className={`pattern swatch`}>
-					{cssClass.split(" ").length > 1 && <i className="fa fa-check" />}
+					{cls.split(" ").length > 1 && <i className="fa fa-check" />}
 				</div>
 			</button>
 		);
@@ -95,20 +95,18 @@ class PatternButton extends React.PureComponent {
 class StyleOptions extends React.PureComponent {
 	render() {
 		const { highlight, handleChange, toggleData, handleRestart, packid, color } = this.props;
-		const { index, cssClass, up = [], txt, name, isa, isFavorite, toggleFavorite } = this.props;
-		const resetTxt = up[0] && up[0].txt;
-		const resetColor = parentBG(up);
-		const { bg } = splitClass(cssClass);
+		const { index, cls, parent = {}, txt, name, isa, isFavorite, toggleFavorite } = this.props;
+		const resetTxt = parent.txt;
+		const resetColor = parentBG(parent);
+		const { bg } = splitClass(cls);
 		return (
 			<div id="styleOptions" className={`title__btn-collection col-xs-auto right`}>
-				<BGSelectPopover {...{ index, highlight, handleChange, resetTxt, resetColor, cssClass }} />
-				<PatternButton cssClass={cssClass} bg={bg} />
-				<HexColorPicker
-					{...{ color, index, highlight, txt, handleChange, resetTxt, cssClass: bg }}
-				/>
-				<FavoriteButton {...{ isFavorite, toggleFavorite, cssClass: bg }} />
-				<SettingsCog {...{ toggleData, name, isa, packid, cssClass: bg }} />
-				<DeleteButton handleRestart={handleRestart} cssClass={bg} />
+				<BGSelectPopover {...{ index, highlight, handleChange, resetTxt, resetColor, cls }} />
+				<PatternButton cls={cls} bg={bg} />
+				<HexColorPicker {...{ color, index, highlight, txt, handleChange, resetTxt, cls: bg }} />
+				<FavoriteButton {...{ isFavorite, toggleFavorite, cls: bg }} />
+				<SettingsCog {...{ toggleData, name, isa, packid, cls: bg }} />
+				<DeleteButton handleRestart={handleRestart} cls={bg} />
 			</div>
 		);
 	}
@@ -116,8 +114,8 @@ class StyleOptions extends React.PureComponent {
 const className = (isUniverse, category = "icon") =>
 	`title__iconWrap ${isUniverse ? "universe " : ""} --${category} ${CENTER_ALIGN}`;
 
-const ShowToPlayers = ({ cssClass, setPreview }) => (
-	<button className={`btn btn-${cssClass} btn-sm title__showBtn`} onClick={setPreview}>
+const ShowToPlayers = ({ cls, setPreview }) => (
+	<button className={`btn btn-${cls} btn-sm title__showBtn`} onClick={setPreview}>
 		Show to players
 	</button>
 );
@@ -130,28 +128,29 @@ class IconButton extends React.PureComponent {
 		sendPlayersPreview({
 			...i,
 			src: i.value,
-			hueOverlay: i.doHue ? this.props.cssClass : ""
+			hueOverlay: i.doHue ? this.props.cls : ""
 		});
 	};
 	render() {
-		const { isUniverse, icon = {}, txt, cssClass } = this.props;
+		const { isUniverse, icon = {}, txt, cls } = this.props;
 		return (
 			<div className={className(isUniverse, icon.category)}>
 				{isUniverse ? (
 					<>
 						<button
-							className={`title__iconBtn ${!icon ? "addNew" : ""} ${cssClass}`}
+							className={`title__iconBtn ${!icon ? "addNew" : ""} ${cls}`}
 							data-toggle="modal"
 							data-target="#iconSelectModal"
 							style={{ color: txt }}
 						>
 							<Icon
+								kind={icon.kind || "icon"}
 								name={icon.value || "far fa-plus-square"}
 								{...{ ...icon, inlinesvg: true, className: "title__icon" }}
 							/>
 						</button>
 						{["img", "video"].includes(icon.category) ? (
-							<ShowToPlayers {...{ cssClass, setPreview: this.setPreview }} />
+							<ShowToPlayers {...{ cls, setPreview: this.setPreview }} />
 						) : null}
 					</>
 				) : (
@@ -160,7 +159,7 @@ class IconButton extends React.PureComponent {
 							...icon,
 							name: icon.value,
 							inlinesvg: true,
-							className: `${cssClass} title__icon`
+							className: `${cls} title__icon`
 						}}
 					/>
 				)}
@@ -169,54 +168,55 @@ class IconButton extends React.PureComponent {
 	}
 }
 
-const parentBG = up =>
-	up[0] && up[0].cssClass && up[0].cssClass.split(" ").find(c => c.startsWith("bg-"));
+const parentBG = (parent = {}) =>
+	parent.cls && parent.cls.split(" ").find(c => c.startsWith("bg-"));
 
-const ExploreBar = ({ handleRestart, packid, cssClass }) => (
+const ExploreBar = ({ handleRestart, packid, cls }) => (
 	<div className="col-xs-auto right">
-		<button onClick={handleRestart} className={`title__btn ${cssClass}`}>
+		<button onClick={handleRestart} className={`title__btn ${cls}`}>
 			<i className="fa fa-undo-alt" /> <small>Start over</small>
 		</button>
-		<Link to={"/universes/create?pack=" + packid} className={`title__btn ${cssClass}`}>
+		<Link to={"/universes/create?pack=" + packid} className={`title__btn ${cls}`}>
 			<i className="fas fa-save" /> <small>Save</small>
 		</Link>
 	</div>
 );
 
-class ButtonsBar extends React.Component {
-	shouldComponentUpdate(nextProps) {
-		return (
-			JSON.stringify(this.props.current) !== JSON.stringify(nextProps.current) ||
-			this.props.isFavorite !== nextProps.isFavorite ||
-			this.props.packid !== nextProps.packid
-		);
-	}
-	render() {
-		const { packid, isUniverse, current, isFavorite } = this.props;
-		const { toggleFavorite, handleChange, handleRestart, toggleData } = this.props;
-		const { up = [], cssClass, color, highlight, index, txt, name, isa } = current;
-		return (
-			<nav className="title__bar buttons-bar row">
-				<Ancestors ancestors={up} pageClass={cssClass} highlight={highlight} color={color} />
-				{!isUniverse ? (
-					<ExploreBar handleRestart={handleRestart} packid={packid} />
-				) : (
-					<StyleOptions
-						{...{ index, cssClass, up, txt, name, isa, isFavorite, highlight, color }}
-						{...{ handleChange, toggleData, handleRestart, toggleFavorite, packid }}
-					/>
-				)}
-			</nav>
-		);
-	}
+function ButtonsBar({
+	packid,
+	isUniverse,
+	current,
+	isFavorite,
+	toggleFavorite,
+	handleChange,
+	handleRestart,
+	toggleData,
+	ancestors = []
+}) {
+	const { cls, color, highlight, index, txt, name, isa } = current;
+	const parent = ancestors[0];
+	return (
+		<nav className="title__bar buttons-bar row">
+			<Ancestors ancestors={ancestors} pageClass={cls} highlight={highlight} color={color} />
+			{!isUniverse ? (
+				<ExploreBar handleRestart={handleRestart} packid={packid} />
+			) : (
+				<StyleOptions
+					{...{ index, cls, parent, txt, name, isa, isFavorite, highlight, color }}
+					{...{ handleChange, toggleData, handleRestart, toggleFavorite, packid }}
+				/>
+			)}
+		</nav>
+	);
 }
+
 class TheTitleComponent extends React.Component {
-	state = {
-		title: this.props.name || this.props.isa
-	};
 	constructor(props) {
 		super(props);
 		this.textareaRef = React.createRef();
+		this.state = {
+			title: props.name || props.isa
+		};
 	}
 
 	componentDidMount() {
@@ -241,7 +241,7 @@ class TheTitleComponent extends React.Component {
 		const val = e.target.value;
 		this.setState({ title: val });
 		// todo debounce
-		this.props.handleChange(val);
+		this.props.handleChange("name", val);
 	};
 
 	render() {
@@ -265,40 +265,46 @@ class TheTitleComponent extends React.Component {
 	}
 }
 
-class Title extends React.PureComponent {
-	render() {
-		const {
-			current,
-			pack,
-			isUniverse,
-			favorites,
-			universeId,
-			loaded,
-			fav: isFavorite,
-			title
-		} = this.props;
-		const { handleChange, handleRestart, toggleFavorite } = this.props;
-		const { txt, index, cssClass, icon, desc = [], highlightClass: highlight } = current;
-		const { _id: packid } = pack;
-		return (
-			<div id="Title" className="col-lg">
-				<div className="name mb-2 row animated fadeIn">
-					<IconButton {...{ isUniverse, cssClass, icon, txt }} />
-					<TheTitleComponent
-						key={index + loaded}
-						{...{ isEditable: isUniverse, index, universeId, title }}
-					/>
-				</div>
-				<ButtonsBar
-					{...{ packid, isUniverse, current, isFavorite }}
-					{...{ handleRestart, handleChange, toggleFavorite }}
+const NOOP = () => {};
+export default function Title({
+	current,
+	packid,
+	isUniverse,
+	favorites,
+	universeId,
+	ancestors,
+	handleChange = NOOP,
+	handleRestart = NOOP,
+	toggleFavorite = NOOP,
+	font
+}) {
+	const { txt, index, cls, icon, desc = [], highlightClass: highlight, name, isa } = current;
+	return (
+		<div id="Title" className="col-lg">
+			<div className="name mb-2 row">
+				<IconButton {...{ isUniverse, cls, icon, txt }} />
+				<TheTitleComponent
+					key={index}
+					{...{
+						isEditable: isUniverse,
+						index,
+						universeId,
+						name,
+						isa,
+						ancestors,
+						font,
+						handleChange
+					}}
 				/>
-				{isUniverse || desc.length ? (
-					<Description {...{ desc: desc.join("\n"), highlight, isUniverse, handleChange }} />
-				) : null}
-				{isUniverse && <SearchBar favorites={favorites} index={index} />}
 			</div>
-		);
-	}
+			<ButtonsBar
+				{...{ packid, isUniverse, current }}
+				{...{ handleRestart, handleChange, toggleFavorite, ancestors }}
+			/>
+			{isUniverse || desc.length ? (
+				<Description {...{ desc: desc.join("\n"), highlight, isUniverse, handleChange }} />
+			) : null}
+			{isUniverse && <SearchBar favorites={favorites} index={index} />}
+		</div>
+	);
 }
-export default Title;

@@ -1,14 +1,29 @@
-function normalizeGenerators(array = []) {
-	let generators = {
-		byId: {}
+function normalizeGenerators(list = []) {
+	const result = {
+		data: [],
+		included: []
 	};
-	let idArray = array.map(gen => {
-		const id = gen._id.toString();
-		generators.byId[id] = gen;
-		return id;
+
+	result.data = list.map(item => {
+		// push the pack name into the dependencies for display
+		const { data, included } = normalizeGenerator(item);
+		result.included.push(...included);
+		return data;
 	});
 
-	return { generators, idArray };
+	return result;
+}
+
+function normalizeGenerator(generator) {
+	let result = {
+		data: {
+			type: "Generator",
+			id: generator._id,
+			attributes: { ...generator, _id: undefined, __v: undefined }
+		},
+		included: []
+	};
+	return result;
 }
 
 module.exports = { normalizeGenerators };

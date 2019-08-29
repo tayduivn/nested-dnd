@@ -11,21 +11,23 @@ if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
 }
 import ReactDOM from "react-dom";
 import serviceWorker from "./serviceWorker";
-import { Provider } from "react-redux";
-import { ConnectedRouter } from "connected-react-router";
-import store, { history } from "./store";
-import "animate.css";
+
+import openStore, { history } from "./store";
 
 import "./index.scss";
+import StoreProvider from "containers/StoreProvider";
 import App from "./App";
+
+import "animate.css";
+
+// make the store
+const store = openStore();
 
 // Create an enhanced history that syncs navigation events with the store
 const Wrapper = () => (
-	<Provider store={store}>
-		<ConnectedRouter history={history}>
-			<App />
-		</ConnectedRouter>
-	</Provider>
+	<StoreProvider store={store} history={history}>
+		<App />
+	</StoreProvider>
 );
 
 ReactDOM.render(<Wrapper />, document.getElementById("root"));

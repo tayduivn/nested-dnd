@@ -1,0 +1,13 @@
+{
+	"i_1": {
+		"name": "My Test",
+		"isa": "test",
+		"desc": ["Wow what a test"],
+		"cls": "bg-pink-50",
+		"txt": "purple",
+		"icon": {
+			"kind": "icon",
+			"value": "fas fa-clock"
+		}
+	}
+}

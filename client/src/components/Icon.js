@@ -21,62 +21,28 @@ class SVGWrap extends React.PureComponent {
 	}
 }
 
-class Icon extends React.PureComponent {
-	determineCategory() {
-		let name = this.props.name || "";
-		let displayName = name.trim();
-		let parts = displayName.split(" ");
-		let category = "icon";
-		let value = name;
-		let animation = "";
-
-		if (parts[0] === "svg" || displayName.startsWith("fa")) {
-			category = "icon";
-			value = displayName;
-		} else if (parts[0] === "text") {
-			category = "char";
-			value = parts[1];
-		} else if (displayName && displayName.length && displayName !== "undefined") {
-			category = "img";
-			value = displayName;
-		}
-		return { c: category, v: value, a: animation };
-	}
-
-	_getProps() {
-		let { name = false, category, alignment = "", inlinesvg, className = "" } = this.props;
-		let value = name || "";
-		if (!category) {
-			let { c, v } = this.determineCategory();
-			category = c;
-			value = v;
-		}
-		const parts = value.split(" ");
-		className += ` --${category}`;
-		return { name, category, alignment, inlinesvg, className, value, parts };
-	}
-
-	render() {
-		const { name, category, alignment, inlinesvg, className, value, parts } = this._getProps();
-		if (!name || !name.trim || !name.split) return null;
-
-		if (category === "icon") {
-			if (value.startsWith("svg"))
+function Icon({ name, kind, alignment, inlinesvg, className }) {
+	if (!name || !name.trim || !name.split) return null;
+	const parts = name.split(" ");
+	switch (kind) {
+		case "icon":
+			if (name.startsWith("svg"))
 				return (
 					<SVGWrap {...{ alignment, inlinesvg, className, part1: parts[1], part2: parts[2] }} />
 				);
-			else if (!value.startsWith("fa"))
+			else if (!name.startsWith("fa"))
 				return (
 					<SVGWrap {...{ alignment, inlinesvg, className, part1: parts[0], part2: parts[1] }} />
 				);
-			else return <i className={`icon animated infinite ${value} ${alignment} ${className}`} />;
-		} else if (category === "char") {
-			return <div className={`icon text ${className}`}>{value}</div>;
-		} else if (category === "img") {
+			else return <i className={`icon animated infinite ${name} ${alignment} ${className}`} />;
+		case "char":
+			return <div className={`icon text ${className}`}>{name}</div>;
+		case "img":
 			return <div className={`icon ${className}`} style={{ backgroundImage: `url(${name})` }} />;
-		} else if (category === "video") {
+		case "video":
 			return <i className={`icon fas fa-play-circle ${className}`} />;
-		}
+		default:
+			return null;
 	}
 }
 

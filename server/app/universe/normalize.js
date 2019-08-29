@@ -1,6 +1,24 @@
-const { normalizePacks } = require("../pack/normalize");
+const { normalizePacks, normalizePack } = require("../pack/normalize");
+
+function normalizeInstances(list = []) {
+	const result = {
+		data: [],
+		included: []
+	};
+
+	result.data = list.map(u => {
+		// push the pack name into the dependencies for display
+		const { data, included } = normalizeInstance(u);
+		result.included.push(...included);
+		return data;
+	});
+
+	return result;
+}
 
 function normalizeInstance(inst) {
+	if (!inst) return null;
+
 	const result = {
 		data: {
 			type: "Instance",
@@ -11,8 +29,23 @@ function normalizeInstance(inst) {
 	};
 	if (inst.universe) {
 		const { data, included } = normalizeUniverse(inst.universe);
-		delete inst.universe;
 		result.included.push(data, ...included);
+		delete result.data.attributes.universe;
+	}
+	if (inst.pack) {
+		const { data, included } = normalizePack(inst.pack);
+		result.included.push(data, ...included);
+		delete result.data.attributes.pack;
+	}
+	if (inst.inArr) {
+		const { data, included } = normalizeInstances(inst.inArr);
+		result.included.push(...data, ...included);
+		delete result.data.attributes.inArr;
+	}
+	if (inst.ancestors) {
+		const { data, included } = normalizeInstances(inst.ancestors);
+		result.included.push(...data, ...included);
+		delete result.data.attributes.ancestors;
 	}
 	return result;
 }
@@ -62,10 +95,12 @@ function normalizeUniverse(universe) {
 
 	// todo favorites
 
-	let { data, included } = normalizePacks(u.packs);
-	result.included.push(...data);
-	result.included.push(...included);
-	delete u.packs;
+	if (u.packs) {
+		let { data, included } = normalizePacks(u.packs);
+		result.included.push(...data);
+		result.included.push(...included);
+		delete u.packs;
+	}
 
 	const { newArray, includedInst } = normalizeArray(u);
 	u.array = newArray;

@@ -28,6 +28,8 @@ $dark: material-color("grey", "700");
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
+@import "mixins";
+
 $totalNavHeight: ($navbar-brand-height + $navbar-brand-padding-y * 2)+ ($navbar-padding-y * 2);
 
 $body-bg: material-color("grey", "900");
@@ -53,17 +55,6 @@ $more-colors: (
 	)
 );
 
-@mixin colored-button() {
-	@include transition($btn-transition);
-	cursor: pointer;
-
-	&:hover,
-	&.link:active {
-		background-color: var(--hover-theme);
-		color: inherit;
-	}
-}
-
 $material-colors: map-merge($more-colors, $material-colors);
 
 @each $name, $map in $material-colors {
@@ -77,31 +68,4 @@ $material-colors: map-merge($more-colors, $material-colors);
 	$newNewMap: (#{$name}: $map);
 
 	$material-colors: map-merge($material-colors, $newNewMap);
-}
-
-@mixin input-transparent() {
-	background-color: transparent;
-	border: 0;
-	border-color: currentColor;
-	box-shadow: 0px 0px 5px currentColor;
-	color: inherit;
-	opacity: 0.35;
-	border-radius: 0.2rem;
-
-	&::placeholder {
-		color: inherit;
-	}
-
-	&:focus {
-		opacity: 1;
-		border: 1px solid currentColor;
-		background-color: transparent;
-		color: inherit;
-		outline-color: currentColor;
-		box-shadow: 0px 0px 10px currentColor;
-
-		&::placeholder {
-			opacity: 0.35;
-		}
-	}
 }

@@ -100,10 +100,10 @@ class HexColorPickerInner extends React.Component {
 		var hex = e.target.dataset.hex;
 
 		if (hex && validTextColour(hex)) {
-			this.props.handleChange(this.props.index, "txt", hex);
+			this.props.handleChange("txt", hex);
 			this.setState({ color: hex });
 		} else if (e.target.id === "clearColor") {
-			this.props.handleChange(this.props.index, "txt", null);
+			this.props.handleChange("txt", null);
 			document.body.style.color = "";
 			this.setState({ color: this.props.color });
 		}

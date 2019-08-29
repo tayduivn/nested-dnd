@@ -5,13 +5,15 @@ import thunk from "redux-thunk";
 import { connectRouter, routerMiddleware } from "connected-react-router";
 import { createBrowserHistory } from "history";
 
-import packs from "./packs";
-import universes from "./universes";
-import user from "./user";
-import generators from "./generators";
-import tables from "./tables";
-import snackbar from "./snackbar";
-import fonts from "./fonts";
+// We have to explicitly import the reducers. If we import a file
+// that exports actions or selectors, shit goes haywire with nested dependencies
+import packs from "./packs/reducers";
+import universes from "./universes/reducers";
+import user from "./user/reducers";
+import generators from "./generators/reducers";
+import tables from "./tables/reducers";
+import snackbar from "./snackbar/reducers";
+import fonts from "./fonts/reducers";
 
 let history;
 try {
@@ -47,8 +49,9 @@ const app = combineReducers({
 	router: connectRouter(history)
 });
 
-let store = createStore(app, {}, middleware);
+// we want to export a function so we can explicitly make fresh instances of a store for use in Storybook, etc.
+let openStore = () => createStore(app, {}, middleware);
 
-export default store;
+export default openStore;
 export { history };
 export * from "./actions";

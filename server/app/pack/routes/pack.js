@@ -9,7 +9,7 @@ const { getByIsa } = require("./getUtils");
 const { MW } = require("../../util");
 
 const generators = require("./generators");
-const { getPack } = require("../query");
+const { getPack, getPackOptions } = require("../query");
 const { normalizePack } = require("../normalize");
 
 // Read Pack
@@ -88,6 +88,12 @@ router.get("/instances/:isa", MW.canViewPack, (req, res, next) => {
 			res.json(newGen);
 		})
 		.catch(next);
+});
+
+// get the generators and tables for this pack
+router.get("/options", async (req, res, next) => {
+	const pack = await getPackOptions(req.params.url, req.user._id);
+	res.json(normalizePack(pack));
 });
 
 router.use("/generators", generators);

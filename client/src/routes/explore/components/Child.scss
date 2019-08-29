@@ -6,10 +6,6 @@ $linkHeight: 1.3rem;
 $linkLabelWidth: 3rem;
 
 /*Child*/
-.isNew {
-	height: 100%;
-	width: 100%;
-}
 
 .children {
 	padding: $xPadding/2;
@@ -209,12 +205,6 @@ $linkLabelWidth: 3rem;
 	text-shadow: none;
 	font-weight: normal;
 	padding: $xPadding/2 !important;
-	opacity: 0;
-
-	&:not([class*="sortable-"]) {
-		animation: example 500ms ease;
-		animation-fill-mode: forwards;
-	}
 
 	&:hover,
 	&:focus {

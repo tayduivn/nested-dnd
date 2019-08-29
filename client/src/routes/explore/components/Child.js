@@ -1,23 +1,12 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import Lottie from "react-lottie";
-import worldLocations from "assets/lottiefiles/world_locations";
 
-import IsASelect from "containers/IsASelect";
 import Isa from "./Isa";
 import Icon from "components/Icon";
+import worldLocations from "assets/lottiefiles/world_locations";
 import "./Child.scss";
 
-const CHILD_CLASSES = "child col-xl-2 col-lg-3 col-md-4 col-sm-4 col-xs-6 ";
-
-const ISA_SELECT_OPTIONS = {
-	autoFocus: true,
-	optionHeight: 30,
-	className: "isa",
-	classTextarea: "isa__addChild",
-	placeholder: "✚",
-	clearOnSubmit: true,
-	allowCustom: true
-};
+export const CHILD_CLASSES = "child col-xl-2 col-lg-3 col-md-4 col-sm-4 col-xs-6 ";
 
 const DEFAULT_OPTIONS = {
 	loop: true,
@@ -29,9 +18,8 @@ const DEFAULT_OPTIONS = {
 	}
 };
 
-const className = (icon = {}, showAdd, cssClass, isNew) =>
-	`child-inner child-inner--link btn-${cssClass}
-	 ${icon ? "" : " no-icon"} ${showAdd ? " showAdd" : ""} ${isNew ? "isNew" : ""}`;
+const className = (icon = {}, cls) =>
+	`child-inner child-inner--link btn-${cls} ${icon ? "" : " no-icon"}`;
 
 const style = (hasInArr, highlight, txt) => {
 	var style = {
@@ -44,72 +32,44 @@ const style = (hasInArr, highlight, txt) => {
 const EMPTY_OBJ = {};
 
 const ChildInner = ({
-	child: { name, isa, icon = EMPTY_OBJ, isNew, highlightColor, txt, cssClass, index, isLink },
+	child: { name, isa, icon = EMPTY_OBJ, highlightColor, txt, cls, n: index, isLink },
 	tweetDesc = "",
 	hasInArr,
 	isUniverse
-}) => {
-	const [showAdd, setShowAdd] = useState(false);
+}) => (
+	<a
+		className={className(icon, cls)}
+		style={style(hasInArr, highlightColor, txt, isUniverse)}
+		href={`#${index}`}
+	>
+		<Icon
+			{...{
+				name: icon.value,
+				kind: icon.kind,
+				txt: name ? name : isa,
+				inlinesvg: true,
+				className: "child__icon"
+			}}
+		/>
+		<div className="child__header">
+			<h1 className="child__title">
+				{isLink ? (
+					<>
+						<a href={`#${index}`} className="badge badge-pill badge-dark linkLabel">
+							<Lottie width="150%" height="150%" options={DEFAULT_OPTIONS} />
+							<i class="fas fa-external-link-alt"></i>
+						</a>
+						<span class="linkLabel__spacer"></span>
+					</>
+				) : null}
 
-	const clickBox = useCallback(
-		e => {
-			if (isNew) {
-				e.preventDefault();
-				setShowAdd(true);
-			}
-		},
-		[isNew]
-	);
-
-	const hideAdd = useCallback(() => {
-		setShowAdd(false);
-	}, []);
-
-	if (isNew) {
-		return (
-			<div className="isNew bg-grey-50">
-				<IsASelect {...ISA_SELECT_OPTIONS} hideAdd={hideAdd} />
-			</div>
-		);
-	}
-	return (
-		<a
-			className={className(icon, showAdd, cssClass, isNew)}
-			style={style(hasInArr, highlightColor, txt, isUniverse)}
-			href={`#${index}`}
-			onClick={clickBox}
-		>
-			{!isNew && (
-				<Icon
-					{...{
-						name: icon.value,
-						category: icon.category,
-						txt: name ? name : isa,
-						inlinesvg: true,
-						className: "child__icon"
-					}}
-				/>
-			)}
-			<div className="child__header">
-				<h1 className="child__title">
-					{isLink ? (
-						<>
-							<a href={`#${index}`} className="badge badge-pill badge-dark linkLabel">
-								<Lottie width="150%" height="150%" options={DEFAULT_OPTIONS} />
-								<i class="fas fa-external-link-alt"></i>
-							</a>
-							<span class="linkLabel__spacer"></span>
-						</>
-					) : null}
-
-					{name ? name : isa}
-				</h1>
-				<Isa name={name} isa={isa} />
-			</div>
-			{tweetDesc ? <p className="child__desc">{tweetDesc.substr(0, 140)}</p> : null}
-		</a>
-	);
-};
+				{name ? name : isa}
+			</h1>
+			<Isa name={name} isa={isa} />
+		</div>
+		{tweetDesc ? <p className="child__desc">{tweetDesc.substr(0, 140)}</p> : null}
+	</a>
+);
 
 const Child = ({
 	hasInArr,
@@ -128,7 +88,7 @@ const Child = ({
 	);
 
 	return (
-		<div className={CHILD_CLASSES} style={{ animationDelay: 50 * i + "ms" }}>
+		<div className={`${CHILD_CLASSES} fadeInChild`} style={{ animationDelay: 50 * i + "ms" }}>
 			<ChildInner
 				{...{
 					hasInArr,

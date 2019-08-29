@@ -16,7 +16,10 @@ const MW = {
 
 		// CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
 		// you can do this however you want with whatever variables you set up
-		if (req.isAuthenticated()) return next();
+		if (req.isAuthenticated()) {
+			next();
+			return true;
+		}
 
 		// IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
 		res.status(UNAUTHORIZED).json({ errors: [{ title: USER_NOT_LOGGED_IN }] });
@@ -49,7 +52,9 @@ const MW = {
 	},
 
 	canEditTable: function(req, res, next) {
-		if (!MW.isLoggedIn(req, res, next)) return false;
+		if (!MW.isLoggedIn(req, res, () => {})) {
+			return false;
+		}
 
 		return Table.findById(req.params.table)
 			.exec()
@@ -82,19 +87,21 @@ const MW = {
 		});
 	},
 
-	ownsUniverse: function(req, res, next) {
-		if (!MW.isLoggedIn(req, res, next)) return false;
+	ownsUniverse: async function(req, res, next) {
+		if (!MW.isLoggedIn(req, res, () => {})) {
+			return false;
+		}
 
 		var getProperties =
 			req.params.index !== undefined || req.url.includes("/explore")
 				? undefined
-				: "title user_id pack favorites array";
+				: "title user pack favorites array";
 
-		Universe.findById(req.params.universe, getProperties)
+		await Universe.findById(req.params.universe, getProperties)
 			.populate("pack")
 			.then(async universe => {
 				if (!universe) return res.status(NOT_FOUND).send();
-				if (!req.user || universe.user_id.toString() !== req.user.id) {
+				if (!req.user || universe.user.toString() !== req.user.id) {
 					return res.status(FORBIDDEN).json({ errors: [{ title: USER_FORBIDDEN }] });
 				}
 				req.universe = universe;

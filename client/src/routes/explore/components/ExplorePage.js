@@ -10,11 +10,11 @@ const LOADING = (
 	</div>
 );
 
-const ExplorePage = ({ cssClass, txt, children }) => (
+const ExplorePage = ({ cls, txt, children }) => (
 	<div
 		id="explorePage"
-		className={`explorePage main container-fluid ${cssClass}`}
-		data-bg={cssClass}
+		className={`explorePage main container-fluid ${cls}`}
+		data-bg={cls}
 		style={{ color: txt }}
 	>
 		{children}

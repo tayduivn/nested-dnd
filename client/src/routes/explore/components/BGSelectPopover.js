@@ -3,10 +3,10 @@ import ColorPicker from "components/Form/ColorPicker";
 
 class BGSelectPopoverComponent extends React.PureComponent {
 	render() {
-		const { htmlRef, cssClass, display, handleClick, handleClose, currentSelected } = this.props;
+		const { htmlRef, cls, display, handleClick, handleClose, currentSelected } = this.props;
 
 		return (
-			<button id="bgOptions" className={`title__btn ${cssClass}`} tabIndex="0" ref={htmlRef}>
+			<button id="bgOptions" className={`title__btn ${cls}`} tabIndex="0" ref={htmlRef}>
 				<div type="button" data-toggle="popover" onClick={handleClick}>
 					<div className={`bg swatch`} />
 				</div>
@@ -34,7 +34,7 @@ class BGSelectPopoverComponent extends React.PureComponent {
 
 export default class BGSelectPopover extends React.PureComponent {
 	static defaultProps = {
-		cssClass: ""
+		cls: ""
 	};
 	constructor(props) {
 		super(props);
@@ -55,13 +55,13 @@ export default class BGSelectPopover extends React.PureComponent {
 	};
 
 	currentSelected = () => {
-		return this.props.cssClass.split(" ").find(c => c.startsWith("bg-"));
+		return this.props.cls.split(" ").find(c => c.startsWith("bg-"));
 	};
 	handleClick(e) {
 		var doToggle = e.target.dataset.toggle === "popover";
 		var doReset = e.target.id === "clearColor";
 		var selected = doReset ? this.props.resetColor : e.target.dataset.class;
-		var pattern = this.props.cssClass
+		var pattern = this.props.cls
 			.split(" ")
 			.filter(c => !c.startsWith("bg-"))
 			.join(" ");
@@ -89,16 +89,16 @@ export default class BGSelectPopover extends React.PureComponent {
 
 		// DB change
 		var saveValue = doReset ? null : (selected + " " + pattern).trim();
-		this.props.handleChange(this.props.index, "cssClass", saveValue);
+		this.props.handleChange("cls", saveValue);
 	}
 	render() {
 		const { ref: htmlRef, handleClick, handleClose } = this;
-		const { cssClass } = this.props;
+		const { cls } = this.props;
 		const { display } = this.state;
 		const currentSelected = this.currentSelected();
 		return (
 			<BGSelectPopoverComponent
-				{...{ htmlRef, handleClick, handleClose, cssClass, display, currentSelected }}
+				{...{ htmlRef, handleClick, handleClose, cls, display, currentSelected }}
 			/>
 		);
 	}

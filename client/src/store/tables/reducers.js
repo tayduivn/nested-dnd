@@ -9,10 +9,7 @@ import {
 	SAVE_TABLE_ERROR
 } from "./actions";
 import reduceObjToArray from "util/reduceObjToArray";
-
-const DEFAULT_TABLES = {
-	byId: {}
-};
+import { ADD_CHILD_OPTIONS_RECEIVE } from "store/packs/actions";
 
 const DEFAULT_TABLE = {
 	isFetching: false,
@@ -79,7 +76,12 @@ const table = (state = DEFAULT_TABLE, action) => {
 	}
 };
 
+const DEFAULT_TABLES = {
+	byId: {}
+};
+// eslint-disable-next-line complexity
 const tables = (state = DEFAULT_TABLES, action) => {
+	let newById;
 	switch (action.type) {
 		// a specific table, pass through to table()
 		case FETCH_TABLE:
@@ -96,8 +98,17 @@ const tables = (state = DEFAULT_TABLES, action) => {
 					[action.id]: table(state.byId[action.id], action)
 				}
 			};
+		// included
+		case ADD_CHILD_OPTIONS_RECEIVE:
+			newById = { ...state.nyId };
+			action.included.forEach(item => {
+				if (item.type === "Table") {
+					newById[item.id] = item.attributes;
+				}
+			});
+			return { ...state, byId: newById };
 		case RECEIVE_TABLES:
-			let newById = {};
+			newById = {};
 			// TODO
 			// eslint-disable-next-line
 			for (let id in action.byId) {

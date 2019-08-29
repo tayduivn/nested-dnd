@@ -1,7 +1,6 @@
-import DB from "util/DB";
+import { push } from "connected-react-router";
 
-import debounce from "debounce";
-import async from "async";
+import DB from "util/DB";
 import {
 	getUniverse,
 	universeSet,
@@ -10,61 +9,12 @@ import {
 	INSTANCE_ADD_CHILD,
 	INSTANCE_DELETE
 } from "store/universes";
-import { getExploreUrlParams } from "store/location";
 import { pushSnack } from "store/snackbar";
-
-// Queue of save tasks
-const saver = async.cargo((tasks, callback) => {
-	var universes = {};
-
-	tasks.forEach(t => {
-		if (!t.universe) return;
-
-		var universe = universes[t.universe];
-		if (!universe) universe = universes[t.universe] = { array: {} };
-
-		// updating an index
-		if (t.index !== undefined) {
-			var index = universe.array[t.index];
-			if (!index) index = universe.array[t.index] = {};
-
-			index[t.property] = t.value;
-		}
-		// updating the universe
-		else {
-			universe.lastSaw = t.lastSaw;
-		}
-	});
-	var promises = [];
-
-	for (var id in universes) {
-		var promise = DB.set(`universes`, id, universes[id]).then(({ error, data = {} }) => {
-			return data.result;
-			//if (error).result this.setState({ error });
-		});
-		promises.push(promise);
-	}
-
-	Promise.all(promises).then(callback);
-});
-
-// push into the saver
-const save = (index, property, universe, payload, cb) => {
-	// remove the one that's in there already
-	saver.remove(({ data }) => {
-		return data.universe === universe && data.index === index && data.property === property;
-	});
-
-	saver.push(payload, cb);
-};
-
-const saveDebounced = debounce(save, 1000);
+import queue from "../util/saver";
+import handleChangeClean from "../util/handleChangeClean";
 
 export const setLastSaw = (index, universeId) => {
-	saver.push({
-		universe: universeId,
-		lastSaw: index
-	});
+	queue(index, "lastSaw", universeId, { lastSaw: index });
 	return universeSet(universeId, { lastSaw: index });
 };
 
@@ -105,48 +55,47 @@ export const setFavorite = (i, isFavorite, universe) => {
 	};
 };
 
-const changeUp = (index, universeId, newUp) => {
+const changeUp = (instanceId, newUp, state) => {
 	const changes = {};
-	const universe = getUniverse(universeId);
+	const instance = state.universes.instances[instanceId];
 
 	// remove from old parent
-	const oldUp = universe.array[index].up;
-	const oldParent = universe.array[oldUp];
-	changes[oldUp] = { in: oldParent.in.filter(i => i !== index) };
+	const oldUp = instance.up;
+	const oldParent = state.universes.instances[oldUp];
+	changes[oldUp] = { in: oldParent.in.filter(id => id !== instanceId) };
 
 	// add to new parent
-	const newParent = universe.array[newUp];
-	changes[newUp] = { in: [...(newParent.in || []), index] };
+	const newParent = state.universes.instance[newUp] || {};
+	changes[newUp] = { in: [...(newParent.in || []), instanceId] };
 
 	return changes;
 };
 
-export const changeInstance = (index, property, value, universeId) => {
+export const changeInstance = (universeId, instanceId, p, v) => {
 	return (dispatch, getState) => {
-		//debounce these properties
-		const saveFunc = ["name", "desc", "data"].includes(property) ? saveDebounced : save;
+		const { property, value } = handleChangeClean(p, v);
 
 		let data = {
-			[index]: { [property]: value }
+			[instanceId]: { [property]: value }
 		};
 
 		if (property === "up") {
-			data = { ...data, ...changeUp(index, universeId, value) };
+			let state = getState();
+			data = { ...data, ...changeUp(instanceId, value, state) };
 		}
 
-		saveFunc(
-			index,
-			property,
-			universeId,
-			{ index, property, value, universe: universeId },
-			(results = []) => dispatchChanges(results, universeId)
-		);
+		if (property === "cls") {
+			// reset to parent value if reset
+			data[instanceId].txt = null;
+		}
 
+		// show the changes locally first
 		dispatch({
 			type: INSTANCE_SET,
-			data,
-			universeId
+			data
 		});
+
+		queue.push({ universeId, data }, (results = []) => console.log(results));
 	};
 };
 
@@ -196,26 +145,19 @@ export const RECEIVE_EXPLORE = "RECEIVE_EXPLORE";
 const loadCurrent = () => {
 	return async (dispatch, getState) => {
 		const state = getState();
-		const {
-			match: {
-				params: { type, id: identifier }
-			},
-			index
-		} = getExploreUrlParams(state);
+		const { isLoaded, index, type, identifier } = getUniverse(state);
 
-		dispatch({
-			type: LOAD_EXPLORE,
-			params: { type, identifier },
-			index
-		});
+		if (!isLoaded) {
+			// we're going to load, inform the world
+			dispatch({
+				type: LOAD_EXPLORE,
+				params: { type, identifier }
+			});
 
-		const item = type === "pack" ? state.packs.byUrl[identifier] : state.universes.byId[identifier];
-
-		const notLoaded = !item || !item.loaded;
-		if (notLoaded) {
 			let url = `/explore/${type}/${identifier}`;
-			// don't send me back the whole universe, just the current instances
-			if (index !== undefined) url += `/${index}`;
+
+			// don't send me back the whole universe, just the current instance
+			if (index !== false) url += `/${index}`;
 
 			const json = await DB.fetch(url);
 			if (json.errors) {
@@ -227,13 +169,19 @@ const loadCurrent = () => {
 					type: RECEIVE_EXPLORE,
 					...json
 				});
+				let newIndex = json.data.attributes.n;
+
+				// then, dispatch an action to change the url if needed
+				if (index === false || index !== json.data.attributes.n) {
+					dispatch(push(`/explore/${type}/${identifier}#${newIndex}`));
+				}
 			}
 		}
 	};
 };
 
 export const deleteInstance = (index, universeId, dispatch) => {
-	save(
+	queue(
 		index,
 		"delete",
 		universeId,

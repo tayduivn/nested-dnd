@@ -5,7 +5,7 @@ const BuiltPack = require("../../builtpack/BuiltPack");
 const Table = require("../../table/Table");
 
 const { stringify, normalUniverseResponse, setLastSaw } = require("../../util");
-
+const { UNAUTHORIZED } = require("../../util/status");
 const { getInstanceByIndex, getInstanceFromUniverse } = require("../../instance/query");
 const { normalizeInstance } = require("../../universe/normalize");
 
@@ -25,7 +25,7 @@ async function getTables(pack) {
 	return { tableIds, tablesById, packTables };
 }
 
-router.get("/:universe/:index?", async (req, res, next) => {
+router.get("/:universe/:index?", MW.isLoggedIn, async (req, res, next) => {
 	try {
 		if (req.params.index) {
 			const dbResult = await getInstanceByIndex(

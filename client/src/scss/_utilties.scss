@@ -1,0 +1,9 @@
+// removed from flow
+.--removed {
+	display: none;
+}
+
+// still takes up space in the layout
+.--hidden {
+	visibility: hidden;
+}

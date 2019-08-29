@@ -1,0 +1,26 @@
+/**
+
+This file contains rules relevant to when the whole application is running.
+Formatting on the whole body layout, etc.
+
+It should not be included in the index.scss file, so we can run components-only
+scss utils in Storybook.
+
+ */
+
+@import "~scss/variables";
+
+#root,
+.app {
+	min-height: 100vh;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+body {
+	margin: 0; // 1
+	min-height: 100%;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	background-color: $body-bg; // 2
+}

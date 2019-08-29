@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Sifter from "sifter";
 import debounce from "debounce";
 import { FixedSizeList } from "react-window";
+import "./Dropdown.scss";
 
 const NOT_FOUND_ERROR = "Can't find option";
 
@@ -11,25 +12,36 @@ const VariableSizeList = ({ itemData }) =>
 		<Option key={match.value} data={itemData} index={index} />
 	));
 
-class Input extends React.PureComponent {
-	render() {
-		return (
-			<textarea
-				ref={this.props.htmlRef}
-				className={`dropdown__input ${this.props.classTextarea} ${this.props.dirty ? "dirty" : ""}`}
-				type="text"
-				rows={this.props.rows}
-				onChange={this.props.handleChange}
-				onKeyDown={this.props.handleKeyDown}
-				onFocus={this.props.handleFocus}
-				onBlur={this.props.handleBlur}
-				onClick={this.props.handleClick}
-				disabled={this.props.disabled}
-				placeholder={this.props.placeholder}
-				value={this.props.input}
-			/>
-		);
-	}
+function Input({
+	htmlRef,
+	classTextarea: className,
+	dirty,
+	rows,
+	handleChange,
+	handleFocus,
+	handleKeyDown,
+	handleBlur,
+	handleClick,
+	disabled,
+	placeholder,
+	input
+}) {
+	return (
+		<textarea
+			ref={htmlRef}
+			className={`dropdown__input ${className} ${dirty ? "dirty" : ""} ${!input ? "empty" : ""}`}
+			type="text"
+			rows={rows}
+			onChange={handleChange}
+			onKeyDown={handleKeyDown}
+			onFocus={handleFocus}
+			onBlur={handleBlur}
+			onClick={handleClick}
+			disabled={disabled}
+			placeholder={placeholder}
+			value={input}
+		/>
+	);
 }
 
 class Option extends React.PureComponent {
@@ -73,7 +85,10 @@ export default class Dropdown extends React.PureComponent {
 		fixedOptions: PropTypes.array,
 		isMulti: PropTypes.bool,
 		limit: PropTypes.number,
-		itemHeight: PropTypes.number
+		itemHeight: PropTypes.number,
+		onChange: PropTypes.func,
+		sibling: PropTypes.node,
+		style: PropTypes.object
 		//OptionComponent
 	};
 
@@ -87,7 +102,10 @@ export default class Dropdown extends React.PureComponent {
 		useOnClick: false,
 		allowCustom: false,
 		isMulti: false,
-		OptionComponent: Option
+		OptionComponent: Option,
+		onChange: () => {},
+		// sibling sits alongside (right after) the textarea. Useful for complex placeholders
+		sibling: null
 	};
 	constructor(props) {
 		super(props);
@@ -235,18 +253,15 @@ export default class Dropdown extends React.PureComponent {
 		const List = this.props.itemHeight ? FixedSizeList : VariableSizeList;
 		return (
 			<React.Fragment>
-				<div className={`dropdown ${className}`}>
+				<div className={`dropdown ${className}`} style={this.props.style}>
 					<div className="feedback-icon" />
 					<Input
 						{...{ input, handleChange, handleFocus, handleBlur, handleKeyDown }}
 						{...{ rows, placeholder, htmlRef: this.ref, className, disabled, classTextarea, dirty }}
 						handleClick={this.handleClickTextarea}
 					/>
-					<div
-						className={`dropdown__menu ${this.props.className}__menu ${
-							this.state.open ? "--open" : ""
-						}`}
-					>
+					{this.props.sibling}
+					<div className={`dropdown__menu ${className}__menu ${this.state.open ? "--open" : ""}`}>
 						<List {...this._getListProps()}>{OptionComponent}</List>
 					</div>
 				</div>

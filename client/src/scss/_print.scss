@@ -1,0 +1,29 @@
+@media print {
+	body {
+		font-size: 13pt;
+		padding: 0 !important;
+		margin: 0 !important;
+		background: none !important;
+		min-width: 1px !important;
+		width: 100vw !important;
+		max-width: 100vw !important;
+	}
+	.navbar-nav,
+	.status-bar,
+	.sidebar,
+	.nav-tabs {
+		display: none !important;
+	}
+	#root,
+	.app,
+	.main,
+	.container-fluid {
+		padding: 0 !important;
+		margin: 0 !important;
+		background: none !important;
+		width: 100vw;
+	}
+	.tab-pane:not(.active) {
+		position: absolute;
+	}
+}

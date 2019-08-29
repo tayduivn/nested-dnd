@@ -11,7 +11,8 @@ import NotFound from "./components/NotFound";
 import Snackbar from "routes/Snackbar";
 
 import routes from "./routes";
-import { sendPlayersPreview } from "store";
+import { sendPlayersPreview } from "store/actions";
+import "./App.scss";
 
 class App extends Component {
 	sendPlayersPreview = icon => sendPlayersPreview({ src: icon });

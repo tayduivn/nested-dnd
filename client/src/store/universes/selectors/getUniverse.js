@@ -1,33 +1,51 @@
 import { getExploreUrlParams } from "store/location";
+import isInstanceLoaded from "../util/isInstanceLoaded";
 
-const LOADING = "";
-
-// eslint-disable-next-line
 const getUniverse = state => {
-	let { index, match } = getExploreUrlParams(state);
-	let universe, pack;
-	const isUniverse = match.params.type === "universe";
+	const {
+		match: {
+			params: { type, id: identifier }
+		},
+		index
+	} = getExploreUrlParams(state);
+	const isUniverse = type === "universe";
+	const validIndex = Number.isInteger(index);
 
-	if (!match) return {};
-
+	// lookup universe and pack by id
+	let universe, pack, universeId, packId;
 	if (isUniverse) {
-		universe = state.universes.byId[match.params.id] || {
-			loaded: false,
-			_id: match.params.id
-		};
-		pack = state.packs.byId[universe.pack];
+		universeId = identifier;
+		universe = state.universes.byId[universeId];
+		if (universe) {
+			packId = universe.pack;
+			pack = state.packs.byId[packId];
+		}
 	} else {
-		const packid = match && state.packs.byUrl[match.params.id];
-		pack = state.packs.byId[packid] || (match && { url: match.params.id });
-		universe = (pack && state.universes.byId[pack.tempUniverse]) || { pack: pack._id };
+		pack = state.packs.byUrl[identifier];
+		if (pack) {
+			universeId = pack.universe_id;
+			universe = state.universes.byId[universeId];
+		}
 	}
 
-	const last = state.universes.instances[universe.last];
-	if (index === LOADING && last) {
-		index = last.n;
-	}
+	// lookup the current instance
+	let instanceId;
+	if (universe) instanceId = universe.array[index];
 
-	return { pack, universe, index, isUniverse };
+	let isLoaded =
+		universe && pack && validIndex && isInstanceLoaded(instanceId, state.universes.instances);
+
+	return {
+		universe,
+		universeId,
+		pack,
+		packId,
+		index: validIndex ? index : false,
+		isUniverse,
+		isLoaded,
+		type,
+		identifier
+	};
 };
 
 export default getUniverse;

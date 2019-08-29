@@ -10,6 +10,12 @@
       "problemMatcher": [
         "$eslint-compact"
       ]
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "path": "db/",
+      "problemMatcher": []
     }
   ]
 }

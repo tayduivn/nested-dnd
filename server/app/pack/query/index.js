@@ -1,7 +1,7 @@
-const BuiltPack = require("../builtpack/BuiltPack");
-const Table = require("../table/Table");
-const Pack = require("./Pack");
-const { Generator } = require("../generator/Generator");
+const BuiltPack = require("../../builtpack/BuiltPack");
+const Table = require("../../table/Table");
+const Pack = require("../Pack");
+const { Generator } = require("../../generator/Generator");
 
 async function getPack(pack, user) {
 	var isOwner = !!pack.universe_id || (user && pack._user.id === user.id);
@@ -47,4 +47,5 @@ async function getAllPacks(user) {
 	return await query.exec();
 }
 
-module.exports = { getPack, getAllPacks };
+const getPackOptions = require("./getPackOptions");
+module.exports = { getPack, getAllPacks, getPackOptions };

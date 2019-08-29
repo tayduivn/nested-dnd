@@ -12,6 +12,7 @@ const { getPack } = require("../query");
 const { normalizeUniverse, normalizeUniverses } = require("../normalize");
 const { getUniversesByUser } = require("../query");
 const { saveInstance } = require("../util");
+const { updateInstance } = require("../../instance/query");
 
 router
 	.route("/")
@@ -214,6 +215,9 @@ router.post("/:universe/explore/:index", (req, res, next) => {
 		.catch(next);
 });
 
+/**
+ * Make a new pack specific to this universe, so we can edit it.
+ */
 router.post("/:universe/pack/create", MW.ownsUniverse, async (req, res) => {
 	const id = req.params.universe;
 
@@ -226,6 +230,7 @@ router.post("/:universe/pack/create", MW.ownsUniverse, async (req, res) => {
 
 	const newPack = new Pack({
 		_id: id,
+		_user: req.user._id,
 		universe_id: id,
 		name: req.universe.title,
 		url: id,
@@ -248,6 +253,18 @@ router.post("/:universe/pack/create", MW.ownsUniverse, async (req, res) => {
 	packs[oldPack._id.toString()] = oldPack;
 
 	res.json({ universe, packs });
+});
+
+router.put("/:universe/instances", MW.ownsUniverse, async (req, res) => {
+	const instances = req.body;
+	const results = [];
+
+	instances.forEach(async item => {
+		const result = await updateInstance(req.universe._id, item.id, item.changes);
+		results.push(result);
+	});
+
+	res.send({ meta: results });
 });
 
 module.exports = router;

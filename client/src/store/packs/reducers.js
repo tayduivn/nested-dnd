@@ -1,4 +1,13 @@
-import { ADD, FETCH_PACK, PACKS_SET, SET_PACK, REBUILD_PACK, RECEIVE_PACKS } from "./actions";
+import {
+	ADD,
+	FETCH_PACK,
+	PACKS_SET,
+	SET_PACK,
+	REBUILD_PACK,
+	RECEIVE_PACKS,
+	ADD_CHILD_OPTIONS_FETCH,
+	ADD_CHILD_OPTIONS_RECEIVE
+} from "./actions";
 import { GENERATOR_SET, GENERATOR_RENAME, CLEAR_GENERATOR_ERRORS } from "store/generators";
 import { RECEIVE_EXPLORE, RECEIVE_MY_UNIVERSES } from "store/universes";
 
@@ -27,8 +36,23 @@ function generators(state = {}, action = {}) {
 	}
 }
 
-const pack = (state = { loaded: false, generators: {} }, action = {}) => {
+const pack = (state = { loaded: false, generators: false, tables: false }, action = {}) => {
 	switch (action.type) {
+		case ADD_CHILD_OPTIONS_RECEIVE:
+			return {
+				...state,
+				...action.data,
+				generators: action.generators,
+				tables: action.tables,
+				isFetching: false
+			};
+		case ADD_CHILD_OPTIONS_FETCH:
+			return {
+				...state,
+				generators: false,
+				tables: false,
+				isFetching: true
+			};
 		case REBUILD_PACK:
 			return {
 				...state,
@@ -44,6 +68,7 @@ const pack = (state = { loaded: false, generators: {} }, action = {}) => {
 	}
 };
 
+// eslint-disable-next-line complexity
 function byId(state = {}, action) {
 	if (action.type === RECEIVE_MY_UNIVERSES || action.type === RECEIVE_EXPLORE) {
 		action = { ...action, data: action.included.filter(item => item.type === "Pack") };
@@ -62,10 +87,14 @@ function byId(state = {}, action) {
 				};
 			}
 			return state;
+		// we're operating on a sole pack, so just pass on through
+		case ADD_CHILD_OPTIONS_RECEIVE:
+		case ADD_CHILD_OPTIONS_FETCH:
 		case FETCH_PACK:
 		case REBUILD_PACK:
 		case SET_PACK:
-			return { ...state, [action.id]: pack(state[action.id], action) };
+			if (action.id) return { ...state, [action.id]: pack(state[action.id], action) };
+			else return state;
 		case PACKS_SET:
 			data = action.data.byId;
 			const obj = { ...state, ...data };
@@ -84,6 +113,7 @@ function byId(state = {}, action) {
 			return state;
 	}
 }
+// eslint-disable-next-line complexity
 function byUrl(state = {}, action) {
 	let newByUrl;
 

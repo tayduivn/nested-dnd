@@ -11,19 +11,19 @@ export default class Modals extends React.Component {
 		return JSON.stringify(next) !== JSON.stringify(current);
 	}
 	render() {
-		const { handleChange, index, icon = {}, cssClass = "", txt, parent } = this.props;
+		const { handleChange, index, icon = {}, cls = "", txt, parent } = this.props;
 		return (
 			<React.Fragment>
 				<MoveModal key={index + "move"} handleChange={handleChange} index={index} up={parent} />
 				<IconSelectModal
 					key={index + "icon"}
-					{...{ ...icon, handleChange, cssClass, txt, index }}
+					{...{ ...icon, handleChange, cls, txt, index }}
 				/>
 				<PatternSelectModal
 					key={index + "pattern"}
 					handleChange={handleChange}
-					bg={cssClass.split(" ").find(c => c.startsWith("bg-"))}
-					ptn={cssClass.split(" ").find(c => c.startsWith("ptn-"))}
+					bg={cls.split(" ").find(c => c.startsWith("bg-"))}
+					ptn={cls.split(" ").find(c => c.startsWith("ptn-"))}
 					index={index}
 				/>
 			</React.Fragment>
