@@ -126,7 +126,7 @@ describe("Generator", () => {
 		it("should return", () => {
 			return generator
 				.makeStyle("blue universe")
-				.should.eventually.have.property("cssClass", "bg-blue-900 ptn-purty-wood");
+				.should.eventually.have.property("cls", "bg-blue-900 ptn-purty-wood");
 		});
 	});
 

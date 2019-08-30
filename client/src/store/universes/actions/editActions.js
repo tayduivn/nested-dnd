@@ -5,10 +5,6 @@ import { receiveGenerators } from "store/generators/actions";
 import { receiveTables } from "store/tables/actions";
 import { pushSnacks } from "store/snackbar/actions";
 
-export const INSTANCE_SET = "INSTANCE_SET";
-export const INSTANCE_DELETE = "INSTANCE_DELETE";
-export const INSTANCE_ADD_CHILD = "INSTANCE_ADD_CHILD";
-
 export const ADD = "UNIVERSES_ADD";
 export const add = (dispatch, created) => {
 	// todo set

@@ -13,8 +13,8 @@ export function fetchAddChildOptions(url) {
 		// TODO check if need, dispatch if starting
 
 		const state = getState();
-		const packId = state.packs.byUrl[url];
-		const pack = state.packs.byId[packId];
+		const pack_id = state.packs.byUrl[url];
+		const pack = state.packs.byId[pack_id];
 
 		// exit if we're good
 		if (pack && pack.generators && pack.tables) return;
@@ -22,13 +22,13 @@ export function fetchAddChildOptions(url) {
 		dispatch({
 			type: ADD_CHILD_OPTIONS_FETCH,
 			url,
-			id: packId
+			id: pack_id
 		});
 
 		const json = await DB.fetch(`packs/${url}/options`);
 		if (json.errors) {
 			pushSnacks(json.errors);
-		} else {
+		} else if (json.data) {
 			dispatch({
 				type: ADD_CHILD_OPTIONS_RECEIVE,
 				id: json.data.id,

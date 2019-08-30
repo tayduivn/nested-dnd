@@ -20,10 +20,10 @@ class Generators extends React.Component {
 
 	handleAdd = isa => {
 		var payload = { isa: isa };
-		const packid = this.props.match.params.pack;
+		const pack_id = this.props.match.params.pack;
 
 		// TODO: Do as action
-		DB.create("packs/" + packid + "/generators", payload).then(({ error, data: generator }) => {
+		DB.create("packs/" + pack_id + "/generators", payload).then(({ error, data: generator }) => {
 			if (error) return this.setState({ error });
 			this.setState({ generator }, () => {
 				this.props.history.replace(

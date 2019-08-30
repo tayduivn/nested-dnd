@@ -12,16 +12,13 @@ if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
 import ReactDOM from "react-dom";
 import serviceWorker from "./serviceWorker";
 
-import openStore, { history } from "./store";
+import store, { history } from "./store";
 
 import "./index.scss";
 import StoreProvider from "containers/StoreProvider";
 import App from "./App";
 
 import "animate.css";
-
-// make the store
-const store = openStore();
 
 // Create an enhanced history that syncs navigation events with the store
 const Wrapper = () => (

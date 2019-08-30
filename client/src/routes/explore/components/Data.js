@@ -12,7 +12,7 @@ const Data = ({ data, generators, tables, handleChange, index }) => (
 		map={data}
 		options={DATA_OPTIONS}
 		{...{ generators, tables }}
-		handleChange={(prop, val) => handleChange(index, prop, val)}
+		handleChange={(prop, val) => handleChange({ [index]: { [prop]: val } })}
 	/>
 );
 

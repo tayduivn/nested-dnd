@@ -51,6 +51,15 @@ function makeNewInst(inst, universe, i) {
 	}
 	if (inst.data) {
 		newInst.data = inst.data;
+		let name;
+		for (name in newInst.data) {
+			if (newInst.data[name].type === "table_id" && typeof newInst.data[name].value === "string") {
+				console.log(
+					`Casting table_id ${newInst.data[name].value} to string in data[${name}] univ: ${universe._id} n: ${i} `
+				);
+				newInst.data[name].value = ObjectID(newInst.data[name].value);
+			}
+		}
 	}
 	if (inst.icon) {
 		if (typeof inst.icon === "string") {
@@ -188,7 +197,8 @@ exports.up = async function(dbMigrate) {
 			pack: universe.pack,
 			title: universe.title,
 			last: lookupNewId[universe.lastSaw],
-			seed: insertedIds[0]
+			seed: insertedIds[0],
+			count: insertedIds.length
 		};
 
 		await new Promise((resolve, reject) => {

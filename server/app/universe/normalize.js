@@ -1,14 +1,17 @@
 const { normalizePacks, normalizePack } = require("../pack/normalize");
 
 function normalizeInstances(list = []) {
+	if (!list.map) {
+		throw Error("Something has gone wrong - normalizeInstances only accepts an array as a param.");
+	}
 	const result = {
 		data: [],
 		included: []
 	};
 
-	result.data = list.map(u => {
+	result.data = list.map(instance => {
 		// push the pack name into the dependencies for display
-		const { data, included } = normalizeInstance(u);
+		const { data, included } = normalizeInstance(instance);
 		result.included.push(...included);
 		return data;
 	});
@@ -16,17 +19,30 @@ function normalizeInstances(list = []) {
 	return result;
 }
 
+/**
+ * Expects a POJO to be passed
+ * @param {Object} inst
+ */
+// eslint-disable-next-line max-statements, complexity
 function normalizeInstance(inst) {
 	if (!inst) return null;
 
+	if (!inst._id) {
+		const e = new Error("HELP: why does this instance not have an id?");
+		console.error(e);
+		return null;
+	}
+
+	const pojo = inst.toJSON ? inst.toJSON() : inst;
 	const result = {
 		data: {
 			type: "Instance",
 			id: inst._id.toString(),
-			attributes: { ...inst, _id: undefined, __v: undefined }
+			attributes: { ...pojo, _id: undefined, __v: undefined }
 		},
 		included: []
 	};
+
 	if (inst.universe) {
 		const { data, included } = normalizeUniverse(inst.universe);
 		result.included.push(data, ...included);
@@ -37,16 +53,21 @@ function normalizeInstance(inst) {
 		result.included.push(data, ...included);
 		delete result.data.attributes.pack;
 	}
-	if (inst.inArr) {
-		const { data, included } = normalizeInstances(inst.inArr);
-		result.included.push(...data, ...included);
-		delete result.data.attributes.inArr;
+	if (inst.parent) {
+		const { data, included } = normalizeInstance(inst.parent);
+		result.included.push(data, ...included);
+		delete result.data.attributes.parent;
 	}
-	if (inst.ancestors) {
-		const { data, included } = normalizeInstances(inst.ancestors);
+
+	function processInstances(attribute) {
+		if (!inst[attribute]) return;
+		const { data, included } = normalizeInstances(inst[attribute]);
 		result.included.push(...data, ...included);
-		delete result.data.attributes.ancestors;
+		delete result.data.attributes[attribute];
 	}
+	processInstances("inArr");
+	processInstances("descendents");
+	processInstances("ancestors");
 	return result;
 }
 
@@ -80,18 +101,18 @@ const normalizeArray = ({ array }) => {
 	return { array: newArray, includedInst };
 };
 
-function normalizeUniverse(universe) {
-	let u = universe.toJSON ? universe.toJSON() : universe;
+function normalizeUniverse(u) {
+	if (!u) return;
+
+	const pojo = u.toJSON ? u.toJSON() : u;
 	const result = {
 		data: {
 			type: "Universe",
 			id: u._id,
-			attributes: u
+			attributes: { ...pojo, __v: undefined, _id: undefined }
 		},
 		included: []
 	};
-	delete result.data.attributes._id;
-	delete result.data.attributes.__v;
 
 	// todo favorites
 
@@ -112,5 +133,6 @@ function normalizeUniverse(universe) {
 module.exports = {
 	normalizeUniverse,
 	normalizeUniverses,
-	normalizeInstance
+	normalizeInstance,
+	normalizeInstances
 };

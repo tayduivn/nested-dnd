@@ -9,7 +9,7 @@ const Generator = require("../generator/Generator");
  * @param  {Generator[]} gens    an unsorted array of generators
  * @param  {string[]} packIds an array of pack id dependencies
  */
-function sortGensByPack(gens, packIds) {
+function sortGensByPack(gens = [], packIds) {
 	gens.sort(function(a, b) {
 		return packIds.indexOf(a.pack) - packIds.indexOf(b.pack);
 	});
@@ -26,17 +26,13 @@ function combineGenerators(generators) {
 
 	//loop dependencies and overwrite
 	generators.forEach(d => {
+		// store the id
 		gen_ids.unshift(d._id);
-
-		if (!generator)
-			// first
-			generator = d;
-		// combine
-		else generator.set(d);
+		generator.set(d);
 	});
 
 	//save to map
-	generator = Object.assign({}, generator.toJSON());
+	generator = generator.toJSON();
 	generator.gen_ids = gen_ids;
 	delete generator._id;
 	delete generator.pack;

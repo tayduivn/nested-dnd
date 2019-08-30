@@ -7,15 +7,6 @@ $linkLabelWidth: 3rem;
 
 /*Child*/
 
-.children {
-	padding: $xPadding/2;
-	background: white;
-
-	&--universe {
-		background: white;
-	}
-}
-
 .child {
 	&__header {
 		//border-bottom: 1px solid currentColor;
@@ -99,23 +90,6 @@ $linkLabelWidth: 3rem;
 	height: 100%;
 	padding-bottom: 0.25rem;
 
-	&--link {
-		cursor: pointer;
-
-		&:hover,
-		&:focus {
-			text-decoration: none;
-		}
-
-		&:hover,
-		&:focus,
-		&:active,
-		&:active:focus {
-			opacity: 1;
-			box-shadow: 0px 0px 5px !important;
-		}
-	}
-
 	&.no-icon {
 		height: auto;
 	}
@@ -160,6 +134,23 @@ $linkLabelWidth: 3rem;
 		}
 	}
 } //.child-inner
+
+.child-inner:link {
+	cursor: pointer;
+
+	&:hover,
+	&:focus {
+		text-decoration: none;
+	}
+
+	&:hover,
+	&:focus,
+	&:active,
+	&:active:focus {
+		opacity: 1;
+		box-shadow: 0px 0px 5px !important;
+	}
+}
 
 .linkLabel {
 	position: absolute;

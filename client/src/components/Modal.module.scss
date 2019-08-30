@@ -1,0 +1,94 @@
+@import "~scss/variables";
+
+.overlay {
+	position: fixed;
+	background: rgba(0, 0, 0, 0.376);
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: $zindex-modal;
+}
+
+.scroll,
+.mediumm .wide {
+}
+
+.dialog {
+	background-color: $modal-content-bg;
+	max-width: $modal-md;
+	box-shadow: $shadow24;
+	border-radius: $modal-content-border-radius;
+	max-height: calc(100% - 30px);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+
+	.medium & {
+		height: $modal-md;
+		width: $modal-md;
+		width: 100%;
+	}
+	.wide & {
+		height: $modal-lg;
+		height: 100%;
+		width: $modal-lg;
+		width: 100%;
+	}
+}
+
+.header {
+	padding: 20px 20px 10px 20px;
+	flex-shrink: 0;
+
+	h1 {
+		font-size: 20px;
+		font-weight: $font-weight-semibold;
+		margin: 0;
+		display: inline-block;
+		margin-right: 2em;
+	}
+}
+
+.select {
+	width: 100%;
+	font-size: 20px;
+	font-weight: $font-weight-semibold;
+	padding: 10px 20px;
+	border: 0;
+	cursor: pointer;
+
+	&:hover {
+		background-color: material-color("grey", "100");
+	}
+
+	option {
+		font-size: 1rem;
+	}
+}
+
+.close {
+	position: relative;
+	top: -10px;
+	right: -10px;
+}
+
+.body {
+	padding: 5px 20px 10px 20px;
+	overflow-y: auto;
+	flex-grow: 1;
+
+	.scroll & {
+		border-top: 1px solid $modal-content-border-color;
+		border-bottom: 1px solid $modal-content-border-color;
+	}
+}
+
+.footer {
+	flex-shrink: 0;
+	text-align: right;
+	padding: 8px;
+}

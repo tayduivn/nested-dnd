@@ -9,7 +9,7 @@ const selectMyUniverses = ({ universes, packs, user }) => ({
 		const pack = packs.byId[univ.pack];
 		univ._id = id;
 		univ.font = pack.font;
-		univ.cssClass = cls;
+		univ.cls = cls;
 		univ.txt = txt;
 		return univ;
 	})

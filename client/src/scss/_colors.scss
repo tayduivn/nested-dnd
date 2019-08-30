@@ -2,58 +2,6 @@
 
 @import "./variables.scss";
 
-$gradients: (
-	ocean: linear-gradient(#00bea6, #0057be)
-);
-
-@function isLight($color) {
-	@return lightness($color) > 49;
-}
-
-@function getContrastText($color) {
-	$color-adjust: 0%;
-
-	@if (isLight($color)) {
-		$lightness: lightness($color);
-		$color-adjust: -35%;
-
-		@if ($lightness > 60) {
-			$color-adjust: -55%;
-		}
-		@if ($lightness > 90) {
-			$color-adjust: -65%;
-		}
-	} @else {
-		$color-adjust: 55%;
-	}
-
-	@return adjust-color($color, $lightness: $color-adjust);
-}
-
-@function slightlyOff($color) {
-	@if (isLight($color)) {
-		@return adjust-color($color, $lightness: -10%);
-	} @else {
-		@return adjust-color($color, $lightness: 15%);
-	}
-}
-
-@function moreOff($color) {
-	@if (isLight($color)) {
-		@return adjust-color($color, $lightness: -15%);
-	} @else {
-		@return adjust-color($color, $lightness: 20%);
-	}
-}
-
-@mixin background($color, $gradient) {
-	@if ($gradient) {
-		background: $color $gradient;
-	} @else {
-		background-color: $color;
-	}
-}
-
 /* create varibles */
 body {
 	@each $name, $map in $material-colors {

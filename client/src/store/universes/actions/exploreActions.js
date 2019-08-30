@@ -1,143 +1,112 @@
 import { push } from "connected-react-router";
 
 import DB from "util/DB";
-import {
-	getUniverse,
-	universeSet,
-	UNIVERSE_SET,
-	INSTANCE_SET,
-	INSTANCE_ADD_CHILD,
-	INSTANCE_DELETE
-} from "store/universes";
+import { getUniverse, universeSet } from "store/universes";
 import { pushSnack } from "store/snackbar";
 import queue from "../util/saver";
-import handleChangeClean from "../util/handleChangeClean";
+import { selectAncestorsAndStyle } from "../selectors";
 
-export const setLastSaw = (index, universeId) => {
-	queue(index, "lastSaw", universeId, { lastSaw: index });
-	return universeSet(universeId, { lastSaw: index });
+export const setLastSaw = (index, universe_id) => {
+	queue.push(index, "lastSaw", universe_id, { lastSaw: index });
+	return universeSet(universe_id, { lastSaw: index });
 };
 
-function dispatchChanges(results, universeId, dispatch, state) {
-	results.forEach(({ array = {} } = {}) => {
-		// save any affected instances other than the one I'm on.
-		// I don't want to save the one I'm on because it may mess with my current changes.
-		const current = parseInt(state.router.location.hash.substr(1));
-		const changed = { ...array };
-		delete changed[current];
-
-		if (Object.keys(changed).length) {
-			dispatch({ type: INSTANCE_SET, data: changed, universeId });
-		}
-	});
-}
-
-export const setFavorite = (i, isFavorite, universe) => {
+// ------------------------------------
+export const INSTANCE_SAVE_REQUEST = "INSTANCE_SAVE_REQUEST";
+export const changeInstance = (universe_id, instance_id, changes) => {
 	return (dispatch, getState) => {
-		const favorites = [...universe.favorites];
-		const position = favorites.indexOf(i);
-		if (isFavorite) {
-			if (position === -1) favorites.push(i);
-		} else {
-			if (position !== -1) favorites.splice(position, 1);
-		}
+		let state = getState();
+		let oldInstance = state.universes.instances[instance_id];
 
-		// save to DB
-		changeInstance(i, "isFavorite", isFavorite, universe._id, dispatch);
-
-		dispatch({
-			type: UNIVERSE_SET,
-			data: {
-				_id: universe._id,
-				favorites
-			}
-		});
-	};
-};
-
-const changeUp = (instanceId, newUp, state) => {
-	const changes = {};
-	const instance = state.universes.instances[instanceId];
-
-	// remove from old parent
-	const oldUp = instance.up;
-	const oldParent = state.universes.instances[oldUp];
-	changes[oldUp] = { in: oldParent.in.filter(id => id !== instanceId) };
-
-	// add to new parent
-	const newParent = state.universes.instance[newUp] || {};
-	changes[newUp] = { in: [...(newParent.in || []), instanceId] };
-
-	return changes;
-};
-
-export const changeInstance = (universeId, instanceId, p, v) => {
-	return (dispatch, getState) => {
-		const { property, value } = handleChangeClean(p, v);
-
-		let data = {
-			[instanceId]: { [property]: value }
-		};
-
-		if (property === "up") {
-			let state = getState();
-			data = { ...data, ...changeUp(instanceId, value, state) };
-		}
-
-		if (property === "cls") {
+		// special cases that involve changing multiple properties or instances
+		// should have changes reflected on frontend before the result gets back
+		if (changes.cls) {
 			// reset to parent value if reset
-			data[instanceId].txt = null;
+			changes.txt = null;
+		}
+		// if we set txt, it has to have a class
+		if (changes.txt && !oldInstance.cls) {
+			const { cls } = selectAncestorsAndStyle(instance_id, state.universes.instances);
+			// reset to parent value if reset
+			changes.cls = cls;
+		}
+
+		// the data we will push to the redux state
+		const data = { ...changes };
+		if (data.up) {
+			// attempt to set up if we have that id stored, otherwise clear
+			const universe = state.universes[universe_id];
+			data.up = (universe && universe.array[data.up]) || null;
 		}
 
 		// show the changes locally first
 		dispatch({
-			type: INSTANCE_SET,
-			data
+			type: INSTANCE_SAVE_REQUEST,
+			data: changes,
+			universe_id,
+			instance_id
 		});
 
-		queue.push({ universeId, data }, (results = []) => console.log(results));
+		queue.push({ universe_id, instance_id, changes });
 	};
 };
 
-const checkAlreadyInArr = (oldIn, index) => {
-	if (oldIn.includes(index)) {
-		oldIn.splice(oldIn.indexOf(index), 1);
-		// check it again in case there are duplicates
-		checkAlreadyInArr(oldIn, index);
-	}
-};
-
-const addLink = (universe, index, child, dispatch) => {
-	const oldIn = [...(universe.array[index].in || [])];
-
-	// move to the end if it's already in the array
-	checkAlreadyInArr(oldIn, child.index);
-
-	return changeInstance(index, "in", [...oldIn, child.index], universe._id, dispatch);
-};
-
-export const addChild = (universeId, index, child) => {
+// ------------------------------------
+// Triggered by queue after a changeInstance
+export const INSTANCE_MOVE_RECEIVE = "INSTANCE_MOVE_RECEIVE";
+export const INSTANCE_CHANGE_RECEIVE = "INSTANCE_CHANGE_RECEIVE";
+export const changeInstanceReceived = (universe_id, originalTask, json) => {
 	return dispatch => {
-		const universe = getUniverse(universeId);
-
-		// add link
-		if (child.index !== undefined) {
-			child.index = parseInt(child.index);
-			if (child.index !== index && universe.array[child.index])
-				return addLink(universe, index, child);
-
-			// doesn't exist, set it as the name
-			child.name = "" + child.index;
-			delete child.index;
+		if (json.errors) {
+			json.errors.forEach(err => dispatch(pushSnack(err)));
+			console.error("Error completing task. Original, Result: ", originalTask, json);
+			return;
 		}
 
-		DB.create(`/universes/${universeId}/explore/${index}`, child).then(({ error, data = {} }) => {
-			if (error) return;
-			dispatch({ type: INSTANCE_SET, data: data.instances, universeId });
-		});
-		return { type: INSTANCE_ADD_CHILD, index, data: child, universeId };
+		if (!json.data || json.data.type !== "Instance" || !json.data.id) {
+			//this task didn't result in anything, or did something unexpected, so do nothing
+			return;
+		}
+
+		if (json.meta.action === "CHANGE") {
+			dispatch({
+				type: INSTANCE_CHANGE_RECEIVE,
+				universe_id,
+				instance_id: json.data.id,
+				data: json.data.attributes
+			});
+			return;
+		}
+
+		if (json.meta.action === "MOVE") {
+			dispatch({
+				type: INSTANCE_MOVE_RECEIVE,
+				universe_id,
+				instance_id: json.data.id,
+				included: json.included,
+				data: json.data.attributes
+			});
+			return;
+		}
 	};
 };
+
+// const checkAlreadyInArr = (oldIn, index) => {
+// 	if (oldIn.includes(index)) {
+// 		oldIn.splice(oldIn.indexOf(index), 1);
+// 		// check it again in case there are duplicates
+// 		checkAlreadyInArr(oldIn, index);
+// 	}
+// };
+
+// const addLink = (universe, universe_id, instance_id, index, child, dispatch) => {
+// 	const oldIn = [...(universe.array[index].in || [])];
+
+// 	// move to the end if it's already in the array
+// 	checkAlreadyInArr(oldIn, child.index);
+
+// 	return dispatch(changeInstance(universe_id, instance_id, [...oldIn, child.index]));
+// };
 
 // ------------------------------------
 export const LOAD_EXPLORE = "LOAD_EXPLORE";
@@ -145,13 +114,14 @@ export const RECEIVE_EXPLORE = "RECEIVE_EXPLORE";
 const loadCurrent = () => {
 	return async (dispatch, getState) => {
 		const state = getState();
-		const { isLoaded, index, type, identifier } = getUniverse(state);
+		const { isLoaded, index, type, identifier, instance_id } = getUniverse(state);
 
 		if (!isLoaded) {
 			// we're going to load, inform the world
 			dispatch({
 				type: LOAD_EXPLORE,
-				params: { type, identifier }
+				params: { type, identifier },
+				instance_id
 			});
 
 			let url = `/explore/${type}/${identifier}`;
@@ -162,7 +132,7 @@ const loadCurrent = () => {
 			const json = await DB.fetch(url);
 			if (json.errors) {
 				json.errors.forEach(err =>
-					dispatch(pushSnack(`There was a problem retrieving this universe: ` + err))
+					dispatch(pushSnack(`There was a problem retrieving this universe: ` + err.title))
 				);
 			} else {
 				dispatch({
@@ -180,23 +150,83 @@ const loadCurrent = () => {
 	};
 };
 
-export const deleteInstance = (index, universeId, dispatch) => {
-	queue(
-		index,
-		"delete",
-		universeId,
-		{
-			index,
-			universe: universeId,
-			property: "delete",
-			value: true
-		},
-		(results = []) => dispatchChanges(results, universeId)
-	);
-	return {
-		type: INSTANCE_DELETE,
-		index,
-		universeId
+// ------------------------------------
+export const INSTANCE_ADD_CHILD_REQUEST = "INSTANCE_ADD_CHILD_REQUEST";
+export const INSTANCE_ADD_CHILD_RECEIVE = "INSTANCE_ADD_CHILD_RECEIVE";
+export const addChild = (universe_id, instance_id, child) => {
+	return dispatch => {
+		dispatch({
+			type: INSTANCE_ADD_CHILD_REQUEST,
+			universe_id,
+			instance_id,
+			data: child
+		});
+
+		DB.create(`/universes/${universe_id}/instances/${instance_id}`, child).then(json => {
+			if (json.errors) {
+				json.errors.forEach(err =>
+					dispatch(pushSnack(`There was a problem retrieving this universe: ` + err.title))
+				);
+			}
+			if (json.data) {
+				dispatch({
+					type: INSTANCE_ADD_CHILD_RECEIVE,
+					data: json.data,
+					included: json.included,
+					universe_id,
+					instance_id
+				});
+			} else {
+				if (!json.errors) {
+					dispatch(pushSnack(`There was a problem retrieving this universe: ${universe_id}`));
+				}
+				// we need to dispatch this so we can stop showing the spinner
+				dispatch({
+					type: INSTANCE_ADD_CHILD_RECEIVE,
+					universe_id,
+					instance_id
+				});
+			}
+		});
+	};
+};
+
+// ------------------------------------
+export const INSTANCE_DELETE = "INSTANCE_DELETE";
+export const INSTANCE_DELETE_ERROR = "INSTANCE_DELETE_ERROR";
+export const deleteInstance = (universe_id, instance_id) => {
+	return async (dispatch, getState) => {
+		const state = getState();
+
+		// make a copy in case it couldn't delete
+		const oldInstance = { ...state.universes.instances[instance_id] };
+		const oldParent = state.universes.instances[oldInstance.up];
+
+		DB.delete(`/universes/${universe_id}/instances`, instance_id).then(json => {
+			if (json.meta) {
+				dispatch({
+					type: INSTANCE_DELETE,
+					universe_id,
+					data: json.meta.ids
+				});
+			} else {
+				dispatch(pushSnack(`There was a problem deleting instance ${instance_id}`));
+				dispatch({
+					type: INSTANCE_DELETE_ERROR,
+					instance_id,
+					universe_id,
+					data: oldInstance
+				});
+			}
+		});
+
+		// must dispatch AFTER we send!
+		dispatch(push(`/explore/universe/${universe_id}#${oldParent.n}`));
+		dispatch({
+			type: INSTANCE_DELETE,
+			universe_id,
+			data: [instance_id]
+		});
 	};
 };
 

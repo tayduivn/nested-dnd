@@ -74,7 +74,7 @@ function appendBlank(packs) {
 		_user: "5aa2f8a31e0a791ed4d0a546",
 		url: "nested",
 		font: "Press Start 2P",
-		cssClass: "black stardust",
+		cls: "black stardust",
 		txt: "white"
 	};
 
@@ -84,7 +84,7 @@ function appendBlank(packs) {
 		url: "dnd",
 		_user: "5aa2f8a31e0a791ed4d0a546",
 		font: "IM Fell English SC",
-		cssClass: "burlywood purty-wood",
+		cls: "burlywood purty-wood",
 		txt: "brown"
 	};
 
@@ -97,7 +97,7 @@ function appendBlank(packs) {
 			name: "Blank",
 			_id: "BLANK",
 			txt: "black",
-			cssClass: "white",
+			cls: "white",
 			description: "Start fresh with an empty universe"
 		}
 	]);

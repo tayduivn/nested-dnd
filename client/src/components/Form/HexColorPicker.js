@@ -1,8 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { CustomPicker } from "react-color";
-import { ColorPicker } from "./ColorPicker";
-
 import debounce from "debounce";
+
+import ColorPicker from "./ColorPicker";
 
 /*function componentToHex(c) {
 	var hex = c.toString(16);
@@ -70,8 +71,8 @@ const Popover = ({ popover, handleClick, handleType, color }) => (
 	</div>
 );
 
-const HexColorPickerDisplay = ({ children, handleOpen, ref, cssClass }) => (
-	<button id="txtOptions" className={`title__btn ${cssClass}`} tabIndex="0" ref={ref}>
+const HexColorPickerDisplay = ({ children, handleOpen, ref, cls }) => (
+	<button id="txtOptions" className={`title__btn ${cls}`} tabIndex="0" ref={ref}>
 		<div className={"txt"} onClick={handleOpen} type="button">
 			<div className={`txt swatch`} />
 		</div>
@@ -79,7 +80,11 @@ const HexColorPickerDisplay = ({ children, handleOpen, ref, cssClass }) => (
 	</button>
 );
 
-class HexColorPickerInner extends React.Component {
+class HexColorPicker extends React.Component {
+	static propTypes = {
+		hex: PropTypes.string
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -96,23 +101,28 @@ class HexColorPickerInner extends React.Component {
 		this.setState({ display: false });
 	};
 
+	// handle click anywhere on the popover
 	handleClick = e => {
 		var hex = e.target.dataset.hex;
 
 		if (hex && validTextColour(hex)) {
-			this.props.handleChange("txt", hex);
+			this.sendChange(hex);
 			this.setState({ color: hex });
 		} else if (e.target.id === "clearColor") {
-			this.props.handleChange("txt", null);
-			document.body.style.color = "";
-			this.setState({ color: this.props.color });
+			this.sendChange(null);
+			// document.body.style.color = "";
+			this.setState({ color: this.props.hex });
 		}
 	};
+
+	sendChange(value) {
+		this.props.handleChange({ txt: value });
+	}
 
 	handleType = e => {
 		var hex = e.target.value;
 		if (validTextColour(hex)) {
-			this.props.handleChange(this.props.index, "txt", hex);
+			this.sendChange(hex);
 		}
 		this.setState({ color: hex });
 	};
@@ -123,34 +133,18 @@ class HexColorPickerInner extends React.Component {
 			zIndex: "2"
 		};
 		const { handleOpen, ref, handleClick } = this;
-		const { cssClass, txt, hex, handleType } = this.props;
+		const { cls, txt, handleType } = this.props;
 		const { color } = this.state;
 
 		return (
-			<HexColorPickerDisplay {...{ handleOpen, ref, cssClass }}>
-				{this.state.display && (
-					<Popover {...{ popover, txt, hex, handleType, color, handleClick }} />
-				)}
+			<HexColorPickerDisplay {...{ handleOpen, ref, cls }}>
+				{this.state.display && <Popover {...{ popover, txt, color, handleType, handleClick }} />}
 				{this.state.display && <div className="popover-cover" onClick={this.handleClose} />}
 			</HexColorPickerDisplay>
 		);
 	}
 }
 
-const HexColorPickerComponent = CustomPicker(HexColorPickerInner);
-// we need to wrap this so we can have a corrent shouldComponentUpdate
-class HexColorPicker extends HexColorPickerComponent {
-	// TODO fix
-	/*shouldComponentUpdate(nextProps, nextState) {
-		return (
-			this.props.index !== nextProps.index ||
-			this.props.cssClass !== nextProps.cssClass ||
-			this.state.display !== nextState.display ||
-			this.state.color !== nextState.color
-		);
-	}*/
-}
-
-export default HexColorPicker;
+export default CustomPicker(HexColorPicker);
 
 export { HexColorPicker };

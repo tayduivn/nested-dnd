@@ -21,7 +21,7 @@ class SVGWrap extends React.PureComponent {
 	}
 }
 
-function Icon({ name, kind, alignment, inlinesvg, className }) {
+function Icon({ name, kind = "icon", alignment, inlinesvg, className }) {
 	if (!name || !name.trim || !name.split) return null;
 	const parts = name.split(" ");
 	switch (kind) {

@@ -6,8 +6,7 @@
  */
 export default function isInstanceLoaded(id, instances = {}) {
 	const current = instances[id];
-	if (!current) return false;
-	if (current.in === true) return false;
+	if (!current || (current.todo && !current.in)) return false;
 
 	if (current.in) {
 		for (let index = 0; index < current.in.length; index++) {

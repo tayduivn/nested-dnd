@@ -1,6 +1,8 @@
 const mongo = require("mongoose").mongo;
+const debug = require("debug")("app:universe:query");
+const sortAncestors = require("instance/util/sortAncestors");
 
-const Universe = require("./Universe");
+const Universe = require("../Universe");
 
 const getUniverseExplore = async (id, user_id) => {
 	const universes = await Universe.aggregate([
@@ -36,7 +38,11 @@ const getUniverseExplore = async (id, user_id) => {
 	]).exec();
 
 	if (!universes.length) return null;
-	else return universes[0];
+	else {
+		const universe = universes[0];
+		universes.ancestors = sortAncestors(universe.last, universes.ancestors);
+		return universe;
+	}
 };
 
 const getUniversesByUser = async _id => {
@@ -63,8 +69,35 @@ const getUniversesByUser = async _id => {
 	]).exec();
 };
 
+function countInstances(nestedArr) {
+	let count = nestedArr.length;
+	nestedArr.forEach(nest => {
+		if (nest.TEMP_IN) {
+			count += countInstances(nest.TEMP_IN);
+		}
+	});
+	return count;
+}
+
+const allocateSpaceForNewInstances = async function(_id, nestedArr) {
+	const toAdd = countInstances(nestedArr);
+
+	// allocate space in the universe count first
+	debug("STARTING  Universe.findByIdAndUpdate --- allocateSpaceForNewInstances");
+	const u = await Universe.findByIdAndUpdate(_id, { $inc: { count: toAdd } });
+	debug("DONE      Universe.findByIdAndUpdate --- allocateSpaceForNewInstances");
+
+	// return the old universe's count, which is the first possible index number
+	return u.count;
+};
+
 const deleteUniversesByUser = async _id => {
 	return await Universe.deleteMany({ user: _id }).exec();
 };
 
-module.exports = { deleteUniversesByUser, getUniversesByUser, getUniverseExplore };
+module.exports = {
+	deleteUniversesByUser,
+	getUniversesByUser,
+	getUniverseExplore,
+	allocateSpaceForNewInstances
+};

@@ -3,14 +3,15 @@ import PropTypes from "prop-types";
 import Sifter from "sifter";
 import debounce from "debounce";
 import { FixedSizeList } from "react-window";
-import "./Dropdown.scss";
+import defaultStyles from "./Dropdown.module.scss";
 
 const NOT_FOUND_ERROR = "Can't find option";
 
-const VariableSizeList = ({ itemData }) =>
-	itemData.matches.map((match, index) => (
-		<Option key={match.value} data={itemData} index={index} />
-	));
+const VariableSizeList = ({ itemData }) => {
+	return itemData.matches.map((match, index) => {
+		return <Option key={match.value || index} data={itemData} index={index} />;
+	});
+};
 
 function Input({
 	htmlRef,
@@ -24,12 +25,13 @@ function Input({
 	handleClick,
 	disabled,
 	placeholder,
+	styles,
 	input
 }) {
 	return (
 		<textarea
 			ref={htmlRef}
-			className={`dropdown__input ${className} ${dirty ? "dirty" : ""} ${!input ? "empty" : ""}`}
+			className={`${styles.input} ${dirty ? styles.dirty : ""} ${!input ? styles.empty : ""}`}
 			type="text"
 			rows={rows}
 			onChange={handleChange}
@@ -46,20 +48,20 @@ function Input({
 
 class Option extends React.PureComponent {
 	render() {
-		const { matches, selected, className, clickEvent, handleClick } = this.props.data;
-		const { index, style } = this.props;
+		const { matches, selected, clickEvent, handleClick, styles } = this.props.data;
+		const { index } = this.props;
+		// extend the default styles
 
 		const item = matches[index];
-		const isSelected = item === selected ? `--selected` : "";
+		const isSelected = item === selected ? styles.selected : "";
 
 		if (!item) return null;
 		return (
 			<li
-				className={`dropdown__option ${className}__option ${isSelected}`}
+				className={`${styles.option} ${isSelected}`}
 				data-value={item.value}
 				data-label={item.label}
 				{...{ [clickEvent]: handleClick }}
-				style={style}
 			>
 				{item.label}
 			</li>
@@ -71,31 +73,25 @@ class Option extends React.PureComponent {
 export default class Dropdown extends React.PureComponent {
 	static propTypes = {
 		// comma delimited options
-		options: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-		disabled: PropTypes.bool,
-		className: PropTypes.string,
-		classTextarea: PropTypes.string,
-		rows: PropTypes.number,
-		placeholder: PropTypes.string,
-		notFoundError: PropTypes.string,
-		saveOnBlur: PropTypes.bool,
-		useOnClick: PropTypes.bool,
 		allowCustom: PropTypes.bool,
-		// options never change
-		fixedOptions: PropTypes.array,
+		disabled: PropTypes.bool,
+		fixedOptions: PropTypes.array, // options never change
 		isMulti: PropTypes.bool,
-		limit: PropTypes.number,
 		itemHeight: PropTypes.number,
+		limit: PropTypes.number,
+		notFoundError: PropTypes.string,
 		onChange: PropTypes.func,
-		sibling: PropTypes.node,
-		style: PropTypes.object
+		options: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+		placeholder: PropTypes.string,
+		rows: PropTypes.number,
+		saveOnBlur: PropTypes.bool,
+		styles: PropTypes.object,
+		useOnClick: PropTypes.bool
 		//OptionComponent
 	};
 
 	static defaultProps = {
-		className: "dropdown",
 		notFoundError: NOT_FOUND_ERROR,
-		classTextarea: "form-control",
 		limit: 20,
 		disabled: false,
 		saveOnBlur: false,
@@ -104,8 +100,7 @@ export default class Dropdown extends React.PureComponent {
 		isMulti: false,
 		OptionComponent: Option,
 		onChange: () => {},
-		// sibling sits alongside (right after) the textarea. Useful for complex placeholders
-		sibling: null
+		styles: defaultStyles
 	};
 	constructor(props) {
 		super(props);
@@ -165,11 +160,15 @@ export default class Dropdown extends React.PureComponent {
 			this.submit((this.state.selected && this.state.selected.value) || this.state.input);
 			e.preventDefault();
 		}
+
+		if (!this.state.open) {
+			this.setState({ open: true });
+		}
 	};
 	sift = () => {
 		const input = this.state.input;
 		let newMatches = { items: [] };
-		if (input.length) {
+		if (input && input.length) {
 			newMatches = this.sifter.search(input, { fields: ["label"], limit: this.props.limit });
 		}
 		const matches = newMatches.items.map(({ id }) => this.options[id]);
@@ -195,9 +194,9 @@ export default class Dropdown extends React.PureComponent {
 	handleClickTextarea = e => {
 		e.target.focus();
 	};
+
 	// fire on mousedown so it happens before blur event
-	handleClick = e => {
-		console.log("clicked");
+	handleMouseDownOption = e => {
 		if (e.button === 0) {
 			this.setState({ input: e.target.dataset.label }, this.sift);
 			this.submit(e.target.dataset.value);
@@ -230,6 +229,7 @@ export default class Dropdown extends React.PureComponent {
 		const itemSize = this.props.itemHeight || 30;
 		const length = this.state.matches.length;
 		const height = length < 7 ? length * itemSize : 7 * itemSize;
+		const styles = { ...defaultStyles, ...this.props.styles };
 		let result = {
 			height,
 			itemSize: this.props.itemHeight,
@@ -237,10 +237,10 @@ export default class Dropdown extends React.PureComponent {
 			itemData: {
 				selected: this.state.selected,
 				clickEvent: this.props.useOnClick ? "onClick" : "onMouseDown",
-				handleClick: this.handleClick,
+				handleClick: this.handleMouseDownOption,
 				handleHover: this.handleHover,
 				matches: this.state.matches,
-				className: this.props.className
+				styles: styles
 			}
 		};
 		return result;
@@ -248,24 +248,24 @@ export default class Dropdown extends React.PureComponent {
 	render() {
 		const { input, dirty } = this.state;
 		const { handleChange, handleKeyDown, handleFocus, handleBlur } = this;
-		const { disabled, className, rows, placeholder, classTextarea } = this.props;
+		const { disabled, rows, placeholder } = this.props;
 		const { OptionComponent } = this.props;
 		const List = this.props.itemHeight ? FixedSizeList : VariableSizeList;
+		const styles = { ...defaultStyles, ...this.props.styles };
 		return (
 			<React.Fragment>
-				<div className={`dropdown ${className}`} style={this.props.style}>
-					<div className="feedback-icon" />
+				<div className={styles.dropdown}>
 					<Input
-						{...{ input, handleChange, handleFocus, handleBlur, handleKeyDown }}
-						{...{ rows, placeholder, htmlRef: this.ref, className, disabled, classTextarea, dirty }}
+						{...{ input, handleChange, handleFocus, handleBlur, handleKeyDown, styles }}
+						{...{ rows, placeholder, htmlRef: this.ref, disabled, dirty }}
 						handleClick={this.handleClickTextarea}
 					/>
-					{this.props.sibling}
-					<div className={`dropdown__menu ${className}__menu ${this.state.open ? "--open" : ""}`}>
+					{this.props.children}
+					<div className={`${styles.menu} ${this.state.open ? styles.open : ""}`}>
 						<List {...this._getListProps()}>{OptionComponent}</List>
 					</div>
 				</div>
-				<div className="invalid-feedback">{this.state.error}</div>
+				<div className={styles.error}>{this.state.error}</div>
 			</React.Fragment>
 		);
 	}

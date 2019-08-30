@@ -3,6 +3,9 @@ var techdebt = require("./.eslint-techdebt");
 const config = {
 	extends: ["eslint:recommended", "plugin:node/recommended"],
 	plugins: ["node"],
+	parserOptions: {
+		sourceType: "module"
+	},
 	env: {
 		node: true,
 		es6: true,

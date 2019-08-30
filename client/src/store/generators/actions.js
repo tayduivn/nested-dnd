@@ -98,7 +98,7 @@ export function fetchGenerator(params) {
 	};
 }
 
-function changeIsa(dispatch, packid, packurl, id, isa, change) {
+function changeIsa(dispatch, pack_id, packurl, id, isa, change) {
 	// change url
 	window.history.replaceState(
 		{},
@@ -108,7 +108,7 @@ function changeIsa(dispatch, packid, packurl, id, isa, change) {
 
 	dispatch({
 		type: GENERATOR_RENAME,
-		packid,
+		pack_id,
 		id,
 		oldIsa: isa,
 		isa: change.isa
@@ -166,10 +166,10 @@ function doChange(dispatch, state, packurl, id, isa, change) {
 	});
 }
 
-export function changeGenerator(packurl, packid, id, isa, change = {}) {
+export function changeGenerator(packurl, pack_id, id, isa, change = {}) {
 	return (dispatch, getState) => {
 		if (change.isa) {
-			changeIsa(dispatch, packid, packurl, id, isa, change);
+			changeIsa(dispatch, pack_id, packurl, id, isa, change);
 		} else {
 			dispatch({
 				type: GENERATOR_SET,

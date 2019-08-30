@@ -20,134 +20,12 @@ var universeSchema = Schema({
 	seed: {
 		type: Schema.Types.ObjectId,
 		ref: "Instance"
+	},
+	count: {
+		type: Schema.Types.Number,
+		default: 0
 	}
 });
-
-universeSchema.methods.setLastSaw = function(index = 0) {
-	const i = parseInt(index, 10);
-	var rootIndex = this.array[i] ? i : typeof this.lastSaw !== undefined ? this.lastSaw : 0;
-	this.lastSaw = parseInt(rootIndex, 10);
-	return this.lastSaw;
-};
-
-universeSchema.methods.getAncestorData = function(index, ancestorData = {}) {
-	let current = this.array[index] || this.array[0] || {};
-	var data = Object.assign({}, ancestorData, current.data || {});
-	if (!isNaN(current.up)) return this.getAncestorData(current.up, data);
-	return data; // termination, no up
-};
-
-universeSchema.methods.setFavorite = function(index, isFavorite) {
-	var favs = this.favorites;
-	var included = favs.includes(index);
-	if (isFavorite && !included) favs.push(index);
-	else if (!isFavorite && included) {
-		favs.splice(favs.indexOf(index), 1);
-	}
-};
-
-universeSchema.methods.moveInstance = function(index, newUp) {
-	var instance = this.array[index];
-	var oldParent = this.array[instance.up];
-	var newParent = this.array[newUp];
-	const oldUp = instance.up;
-
-	var oldPosition = oldParent.in.indexOf(index);
-	if (oldPosition !== -1) oldParent.in.splice(oldPosition, 1);
-
-	if (!newParent.in) newParent.in = [];
-	newParent.in.push(index);
-	instance.up = newUp;
-
-	this.array.set(oldUp, oldParent);
-	this.array.set(newUp, newParent);
-	this.array.set(index, instance);
-};
-
-function deleteEverything() {
-	//delete everyhing
-	const oldLength = this.array.length;
-	this.array = [{ name: this.title }];
-	this.lastSaw = 0;
-	const empties = {};
-	const emptyIndexes = [];
-	for (var i = 1; i < oldLength; i++) {
-		empties[i] = null;
-		emptyIndexes.push(i);
-	}
-	return {
-		emptyIndexes,
-		length: 0
-	};
-}
-
-function addToEmpties(index, empties, length) {
-	if (!empties.includes(index)) empties.push(index);
-
-	// validate empty indexes if out of order
-	if (index < empties[empties.length - 2]) {
-		empties.sort((a, b) => a - b);
-		for (var i = empties.length - 1; i >= 0; i--) {
-			if (empties[i] >= length) empties.splice(i, 1);
-			else break;
-		}
-	}
-	return empties;
-}
-
-universeSchema.methods.doDelete = function(index) {
-	if (index === this.array.length - 1) this.array.splice(index, 1);
-	else {
-		this.array.set(index, null);
-		this.emptyIndexes = addToEmpties(index, this.emptyIndexes, this.array.length);
-	}
-};
-
-// TODO
-// eslint-disable-next-line
-universeSchema.methods.deleteInstance = function(index, willDeleteParent) {
-	index = parseInt(index, 10);
-	let instance = this.array[index];
-
-	if (isNaN(index))
-		return {
-			emptyIndexes: this.emptyIndexes,
-			length: this.array.length
-		};
-	if (index === 0) return deleteEverything.call(this);
-	if (!instance)
-		return {
-			emptyIndexes: this.emptyIndexes,
-			length: this.array.length
-		};
-
-	if (!this.emptyIndexes) this.emptyIndexes = [];
-
-	// has children, recurse
-	if (instance.in) {
-		instance.in.forEach(j => {
-			this.deleteInstance(j, true);
-		});
-	}
-
-	// remove from parent
-	if (!willDeleteParent && typeof instance.up === "number") {
-		var inArr = this.array[instance.up].in || [];
-		inArr.splice(inArr.indexOf(index), 1);
-	}
-
-	// delete this index
-	this.doDelete(index);
-
-	// fix lastSaw
-	if (this.lastSaw === index) {
-		this.lastSaw = instance.up;
-	}
-	return {
-		emptyIndexes: this.emptyIndexes,
-		length: this.array.length
-	};
-};
 
 universeSchema.methods.getNested = async function(index, pack) {
 	this.lastSaw = index;
@@ -158,37 +36,9 @@ universeSchema.methods.getNested = async function(index, pack) {
 		flatInstance = new Nested({ name: this.title, index: 0 });
 	}
 
-	// -------- restore missing children -----------
-	// TODO: TEMP
-	/*
-	var changed = 0;
-
-	for(var i = 1; i < this.array.length; i++){
-		inst = this.array[i];
-		if(!inst) continue;
-		var parent = this.array[inst.up];
-
-		if(!parent){ //parent is null
-			inst.up = 0;
-			parent = this.array[0];
-		}
-		if(!parent.in)
-			parent.in = [];
-
-		if(!parent.in.includes(i)){
-			parent.in.push(i);
-			changed++;
-		}
-	}
-	if(changed){
-		this.save();
-	}
-	*/
-	// -------- restore missing children -----------
-
 	var nested = flatInstance.expand ? flatInstance.expand(1) : flatInstance;
 	nested.index = this.lastSaw;
-	nested.savedCssClass = flatInstance.cssClass;
+	nested.savedCssClass = flatInstance.cls;
 	nested.savedTxt = flatInstance.txt;
 	nested.isFavorite = this.favorites.includes(this.lastSaw);
 

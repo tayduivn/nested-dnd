@@ -1,3 +1,5 @@
+import isObject from "util/isObject";
+
 // flatten a nested object to dot notation
 export default function flatten(object) {
 	const result = {};
@@ -6,7 +8,9 @@ export default function flatten(object) {
 		let key;
 		for (key in obj) {
 			let value = obj[key];
-			if (typeof value === "object") {
+
+			// we have to check if value is truthy, because `null` is an object
+			if (isObject(value)) {
 				flatten(value, `${prefix}${key}.`);
 			} else {
 				result[`${prefix}${key}`] = value;

@@ -8,7 +8,7 @@ import "./Splash.scss";
 const nested = {
 	url: "nested",
 	in: true,
-	cssClass: "bg-grey-1000 ptn-stardust",
+	cls: "bg-grey-1000 ptn-stardust",
 	name: "Nested",
 	font: "Press Start 2P",
 	inArr: true
@@ -17,7 +17,7 @@ const nested = {
 const dnd = {
 	url: "dnd",
 	in: true,
-	cssClass: "bg-wood-200 ptn-purty-wood",
+	cls: "bg-wood-200 ptn-purty-wood",
 	name: "Dungeons & Dragons",
 	font: "IM Fell English SC",
 	txt: "brown",
@@ -36,7 +36,7 @@ const Pack = ({ pack }) => (
 				}
 			}
 		}}
-		className={`col-lg ${pack.cssClass} ${pack.url}`}
+		className={`col-lg ${pack.cls} ${pack.url}`}
 	>
 		<div>
 			<p className="webfont">{pack.name}</p>

@@ -89,7 +89,7 @@ export default class BGSelectPopover extends React.PureComponent {
 
 		// DB change
 		var saveValue = doReset ? null : (selected + " " + pattern).trim();
-		this.props.handleChange("cls", saveValue);
+		this.props.handleChange({ cls: saveValue });
 	}
 	render() {
 		const { ref: htmlRef, handleClick, handleClose } = this;

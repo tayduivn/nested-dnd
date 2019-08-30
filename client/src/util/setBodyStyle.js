@@ -1,4 +1,4 @@
-export default function setBodyStyle({ cssClass = "", txt = "", up = [] } = {}) {
+export default function setBodyStyle({ cls = "", txt = "", up = [] } = {}) {
 	var body = window.document.getElementById("body");
 	if (!body) return; //for tests
 	var stripped = body.className
@@ -6,11 +6,11 @@ export default function setBodyStyle({ cssClass = "", txt = "", up = [] } = {}) 
 		.filter(c => !c.startsWith("bg-") && !c.startsWith("ptn-"))
 		.join(" ")
 		.trim();
-	if (!cssClass) {
-		cssClass = (up[0] && up[0].cssClass) || "";
+	if (!cls) {
+		cls = (up[0] && up[0].cls) || "";
 	}
 	if (!txt) txt = "";
-	stripped += " " + cssClass;
+	stripped += " " + cls;
 	body.className = stripped.trim();
 	body.style.color = txt;
 }

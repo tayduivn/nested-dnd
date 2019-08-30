@@ -5,6 +5,7 @@ import DB from "util/DB";
 import Loading from "components/Loading";
 import PacksList from "components/PacksList";
 import PackUL from "components/PackUL";
+import Page from "components/Page";
 
 const UniverseListDisplay = ({
 	universes: { loaded, array, error } = {},
@@ -15,21 +16,19 @@ const UniverseListDisplay = ({
 	if (error) return error.display;
 
 	return (
-		<div className="main">
-			<div className="container mt-5">
-				<div className="universes">
-					<h1>Universes</h1>
-					{!loaded ? (
-						<Loading.Icon />
-					) : error ? (
-						error.display
-					) : (
-						<PackUL list={array} isUniverse={true} addButton={true} dispatch={dispatch} />
-					)}
-				</div>
-				<PacksList {...packs} loggedIn={loggedIn} dispatch={dispatch} />
+		<Page>
+			<div className="universes">
+				<h1>Universes</h1>
+				{!loaded ? (
+					<Loading.Icon />
+				) : error ? (
+					error.display
+				) : (
+					<PackUL list={array} isUniverse={true} addButton={true} dispatch={dispatch} />
+				)}
 			</div>
-		</div>
+			<PacksList {...packs} loggedIn={loggedIn} dispatch={dispatch} />
+		</Page>
 	);
 };
 

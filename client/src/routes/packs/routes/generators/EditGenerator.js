@@ -102,10 +102,10 @@ const EditGenerator = connect(
 			router: { ...state.router, location: { ...state.router.location, ...window.location } }
 		}) || { params: {} };
 
-		const packid = state.packs.byUrl[match.params.pack];
+		const pack_id = state.packs.byUrl[match.params.pack];
 
 		const isa = decodeURIComponent(match.params.generator);
-		const pack = state.packs.byId[packid] || {
+		const pack = state.packs.byId[pack_id] || {
 			url: match.params.pack,
 			generators: defaultGen(isa)
 		};

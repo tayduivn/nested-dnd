@@ -1,32 +1,49 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import IconSelectModal from "./ModalIconSelect";
 import MoveModal from "./MoveModal";
 import PatternSelectModal from "./PatternSelectModal";
+import Data from "../components/Data";
 
-export default class Modals extends React.Component {
-	shouldComponentUpdate(nextProps) {
-		const next = { ...nextProps, handleChange: undefined };
-		const current = { ...this.props, handleChange: undefined };
-		return JSON.stringify(next) !== JSON.stringify(current);
-	}
-	render() {
-		const { handleChange, index, icon = {}, cls = "", txt, parent } = this.props;
-		return (
-			<React.Fragment>
-				<MoveModal key={index + "move"} handleChange={handleChange} index={index} up={parent} />
+export default function Modals({
+	data,
+	showModal,
+	toggleModal,
+	handleChange,
+	index,
+	icon = {},
+	cls = "",
+	txt,
+	parent
+}) {
+	const closeModal = useCallback(() => {
+		toggleModal(false);
+	}, [toggleModal]);
+
+	if (!showModal) return null;
+
+	switch (showModal) {
+		case "MOVE":
+			return <MoveModal key={index + "move"} {...{ handleChange, index, parent, closeModal }} />;
+		case "ICON":
+			return (
 				<IconSelectModal
 					key={index + "icon"}
-					{...{ ...icon, handleChange, cls, txt, index }}
+					{...{ ...icon, handleChange, cls, txt, index, closeModal }}
 				/>
+			);
+		case "DATA":
+			return <Data key={index + "data"} {...{ data, handleChange, closeModal }} />;
+		case "PATTERN":
+			const bg = cls.split(" ").find(c => c.startsWith("bg-"));
+			const ptn = cls.split(" ").find(c => c.startsWith("ptn-"));
+			return (
 				<PatternSelectModal
 					key={index + "pattern"}
-					handleChange={handleChange}
-					bg={cls.split(" ").find(c => c.startsWith("bg-"))}
-					ptn={cls.split(" ").find(c => c.startsWith("ptn-"))}
-					index={index}
+					{...{ handleChange, index, closeModal, bg, ptn }}
 				/>
-			</React.Fragment>
-		);
+			);
+		default:
+			return null;
 	}
 }

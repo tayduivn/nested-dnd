@@ -361,8 +361,8 @@ function createMirrorPlane(instance, name) {
 		child = instanceStore.get(child);
 		child.background = thing.background;
 		child.textColor = thing.textColor;
-		if (child.cssClass.indexOf(thing.background) === -1)
-			child.cssClass = " " + thing.background;
+		if (child.cls.indexOf(thing.background) === -1)
+			child.cls = " " + thing.background;
 		if (
 			child.data.mirrors !== undefined &&
 			instanceStore.get(child.data.mirrors).thing.contains

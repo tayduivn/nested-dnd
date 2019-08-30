@@ -85,10 +85,10 @@ export default class Generator extends Component {
 	});
 
 	componentDidMount() {
-		const { pack: packid, generator: isa } = this.props.match.params;
+		const { pack: pack_id, generator: isa } = this.props.match.params;
 
 		if (isa) {
-			DB.get("packs/" + packid + "/generators", isa).then(({ error, data }) => {
+			DB.get("packs/" + pack_id + "/generators", isa).then(({ error, data }) => {
 				this.setState({ generator: data, error: error });
 			});
 		}

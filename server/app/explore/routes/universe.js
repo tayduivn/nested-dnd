@@ -1,80 +1,65 @@
 const router = require("express").Router();
+const mongoose = require("mongoose");
+const ObjectId = mongoose.mongo.ObjectId;
 
 const MW = require("../../util/middleware");
-const BuiltPack = require("../../builtpack/BuiltPack");
-const Table = require("../../table/Table");
+const Maker = require("generator/util/make");
 
-const { stringify, normalUniverseResponse, setLastSaw } = require("../../util");
-const { UNAUTHORIZED } = require("../../util/status");
-const { getInstanceByIndex, getInstanceFromUniverse } = require("../../instance/query");
-const { normalizeInstance } = require("../../universe/normalize");
+const { stringify, normalUniverseResponse } = require("util");
+const { getInstanceFromUniverse, createInstancesFromNested } = require("instance/query");
+const getInstanceByIndex = require("instance/query/getInstanceByIndex");
+const { normalizeInstance } = require("universe/normalize");
+const makeBuiltpack = require("builtpack/makeBuiltpack");
+const { NOT_FOUND } = require("util/status");
 
-async function getTables(pack) {
-	const allPackIds = pack.dependencies.concat([pack.id]);
-	var tables = await Table.find({ pack: { $in: allPackIds } }, "title _id pack returns").exec();
-	tables.sort((a, b) => a.title.localeCompare(b.title));
-
-	const packTables = [];
-	const tablesById = {};
-	const tableIds = tables.map(t => {
-		if (t.pack.toString() === pack.id) packTables.push(t._id);
-		tablesById[t._id] = t;
-		return t._id;
-	});
-
-	return { tableIds, tablesById, packTables };
-}
-
+// eslint-disable-next-line max-statements
 router.get("/:universe/:index?", MW.isLoggedIn, async (req, res, next) => {
 	try {
+		const universe_id = ObjectId(req.params.universe);
+		const index = parseInt(req.params.index, 10);
+		let dbResult;
+
 		if (req.params.index) {
-			const dbResult = await getInstanceByIndex(
-				req.params.universe,
-				req.params.index,
-				req.user._id
-			);
-			res.json(normalizeInstance(dbResult));
-		} else {
-			const dbResult = await getInstanceFromUniverse(req.params.universe, req.user._id);
-			res.json(normalizeInstance(dbResult));
+			dbResult = await getInstanceByIndex(universe_id, index, req.user._id);
 		}
+
+		// either we provided no index or it doesn't exit
+		if (!dbResult) {
+			dbResult = await getInstanceFromUniverse(req.params.universe, req.user._id);
+		}
+
+		let { instance, generators, tables, pack, universe, ancestorData } = dbResult;
+
+		if (!instance) {
+			res.status(NOT_FOUND).json({});
+			return;
+		}
+
+		// we need to generate the children of this
+		let descendents = [];
+		if (dbResult.todo) {
+			const builtpack = makeBuiltpack(pack, generators);
+			const maker = new Maker({ builtpack, tables });
+			let generator = builtpack.getGen(instance.isa);
+			const nested = maker.make(generator, 1, instance, ancestorData);
+
+			instance.set("todo", false);
+			const { parent, instances } = await createInstancesFromNested(
+				nested.TEMP_IN,
+				instance,
+				universe
+			);
+			instance.in = parent.in;
+			descendents = instances;
+		}
+
+		if (instance.toJSON) instance = instance.toJSON();
+
+		const result = { pack, universe, generators, tables, descendents, ...instance };
+		res.json(normalizeInstance(result));
 	} catch (e) {
 		next(e);
 	}
-
-	/*
-		// generate if we need to
-		.getNested(sentIndex, req.universe.pack)
-		.then(async nested => {
-			const index = setLastSaw(nested.index, req.universe);
-			const firstBatch = normalUniverseResponse(req.universe, index);
-			const pack = req.universe.pack;
-
-			// send the first batch to display crucial info
-			res.write(stringify("Instance", firstBatch));
-
-			// send the whole universe
-			res.write(stringify("Universe", { ...req.universe.toObject(), pack: pack.id }));
-
-			// send pack metadata
-			res.write(stringify("Pack", pack.toObject()));
-
-			const builtpack = await BuiltPack.findOrBuild(pack);
-
-			// get tables
-			const { tablesById, tableIds, packTables } = await getTables(pack);
-
-			const result = {
-				...pack.toObject(),
-				builtpack: { ...builtpack.toObject(), tables: tableIds },
-				tables: packTables
-			};
-			res.write(stringify("Pack", result));
-			res.write(stringify("Table", tablesById));
-
-			res.end();
-		})
-		.catch(next);*/
 });
 
 router.get("/:universe/:index/lite", (req, res, next) => {

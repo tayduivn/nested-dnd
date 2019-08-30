@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"baseUrl": "./app"
+	},
+	"include": ["./app"],
+	"exclude": [
+		"./node_modules",
+		"../node_modules",
+		"./.tmp",
+		".nyc_output",
+		"./coverage",
+		"./client/public/icons"
+	]
+}

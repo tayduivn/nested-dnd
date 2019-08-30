@@ -17,10 +17,11 @@ scss utils in Storybook.
 	backface-visibility: hidden;
 }
 
-body {
+#body {
 	margin: 0; // 1
 	min-height: 100%;
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
 	background-color: $body-bg; // 2
+	color: $body-color;
 }

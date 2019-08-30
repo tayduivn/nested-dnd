@@ -6,7 +6,7 @@ var sampleNode = {
 	name: "foofoo",
 	isa: "foo",
 	up: [],
-	cssClass: "black",
+	cls: "black",
 	txt: "white",
 	img: "fooimg",
 	icon: "fa fa-foo",
@@ -32,13 +32,13 @@ describe("Nested", function() {
 			index: 1,
 			up: [
 				{
-					cssClass: "blue",
+					cls: "blue",
 					txt: "pink",
 					name: "fooparent",
 					index: 0
 				}
 			],
-			cssClass: "black",
+			cls: "black",
 			txt: "white",
 			img: "fooimg",
 			icon: "fa fa-foo",

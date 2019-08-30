@@ -1,12 +1,15 @@
+/* eslint-disable complexity */
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-
 import { areEqual } from "react-window";
+
 import Icon from "components/Icon";
 import iconOptions from "assets/data/icons.json";
 import Dropdown from "./Dropdown";
+import styles from "./IconSelect.module.scss";
+import isObject from "util/isObject";
 
-import "./IconSelect.scss";
+console.log("IconSelect styles", styles);
 
 const ANIMATIONS = [
 	"spin",
@@ -29,6 +32,23 @@ const animationOptions = [<option key="placeholder" value="" />].concat(
 	))
 );
 
+function findAnim(value) {
+	value = " " + value + " ";
+
+	var matches = value.match("^.*\\s(" + ANIMATIONS.join("|") + ")\\s.*$");
+	if (matches && matches[1]) {
+		return matches[1];
+	}
+}
+function replaceAnim(value, anim) {
+	var str = (" " + value + " ")
+		.replace(/ animated /g, " ")
+		.replace(/ infinite /g, " ")
+		.replace(" " + anim + " ", " ")
+		.trim();
+	return str;
+}
+
 const Option = memo(
 	({
 		data: { matches, selected, clickEvent, handleClick, className },
@@ -37,18 +57,18 @@ const Option = memo(
 		style
 	}) => {
 		const item = matches[index];
-		const isSelected = item === selected ? `--selected` : "";
+		const isSelected = item === selected ? styles.selected : "";
 
 		if (!item) return null;
 		return (
 			<li
-				className={`dropdown__option ${className}__option ${isSelected}`}
+				className={`${styles.option} ${isSelected}`}
 				data-value={item.value}
 				data-label={item.label}
 				style={style}
 				{...{ [clickEvent]: handleClick }}
 			>
-				<Icon name={item.value} fadeIn={false} /> {item.label}
+				<Icon className={`${styles.icon}`} name={item.value} fadeIn={false} /> {item.label}
 			</li>
 		);
 	},
@@ -57,22 +77,20 @@ const Option = memo(
 
 class IconPreview extends React.PureComponent {
 	render() {
-		const { handleChangeAnim, animArr = [], index, icon, cssClass, style } = this.props;
+		const { handleChangeAnim, animArr = [], index, icon, cls, style } = this.props;
 		return (
-			<div className="col icon-wrap" key={index}>
-				<div className={"form-group icon " + cssClass} style={style} name={"icon" + index}>
-					<label>
-						<Icon name={icon + " " + animArr[index]} />
-					</label>
-					<select
-						onChange={handleChangeAnim}
-						value={animArr[index]}
-						data-index={index}
-						data-icon={icon}
-					>
-						{animationOptions}
-					</select>
-				</div>
+			<div key={index} className={`${styles.iconForm} ${cls}`} style={style} name={"icon" + index}>
+				<label className={styles.previewIcon}>
+					<Icon name={icon + " " + animArr[index]} inlinesvg={true} />
+				</label>
+				<select
+					onChange={handleChangeAnim}
+					value={animArr[index]}
+					data-index={index}
+					data-icon={icon}
+				>
+					{animationOptions}
+				</select>
 			</div>
 		);
 	}
@@ -86,7 +104,8 @@ class IconSelectDisplay extends React.PureComponent {
 		const { multi = false, iconArr = [] } = this.props;
 		return {
 			name: "icon",
-			className: "iconDropdown",
+			className: styles.iconDropdown,
+			classMenu: styles.menu,
 			defaultValue: multi ? iconArr.label : iconArr[0] && iconArr[0].label,
 			fixedOptions: iconOptions,
 			onChange: this.handleChange,
@@ -101,23 +120,16 @@ class IconSelectDisplay extends React.PureComponent {
 	}
 	render() {
 		const { status = {}, validationState, iconArr = [] } = this.props;
-		const { handleChangeAnim, animArr = [], cssClass, style } = this.props;
+		const { handleChangeAnim, animArr = [], cls, style } = this.props;
 		return (
 			<div className={status.isEnabled ? "" : "fake-disabled"}>
-				<div className="row">
-					<div className="col-md">
-						<div validationstate={validationState} className="form-group">
-							<Dropdown {...this._getSelectProps()} />
-						</div>
-					</div>
-					<div id="icons-preview" className="col-md-auto row">
-						{iconArr.map(({ label, value: icon }, index) => (
-							<IconPreview
-								key={index}
-								{...{ handleChangeAnim, animArr, index, icon, cssClass, style }}
-							/>
-						))}
-					</div>
+				<div validationstate={validationState} className="form-group">
+					<Dropdown {...this._getSelectProps()} />
+				</div>
+				<div className={styles.preview}>
+					{iconArr.map(({ label, value: icon }, index) => (
+						<IconPreview key={index} {...{ handleChangeAnim, animArr, index, icon, cls, style }} />
+					))}
 				</div>
 			</div>
 		);
@@ -128,29 +140,27 @@ class IconSelect extends React.Component {
 	static propTypes = {
 		multi: PropTypes.bool,
 		setPreview: PropTypes.func,
-		saveProperty: PropTypes.func
+		saveProperty: PropTypes.func,
+		status: PropTypes.object
 	};
-	shouldComponentUpdate(nextProps) {
-		let diffVal = typeof nextProps.value !== typeof this.props.value;
-		if (diffVal) return true;
-
-		if (typeof nextProps.value == "object") {
-			diffVal = JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value);
-		} else {
-			diffVal = nextProps.value !== this.props.value;
-		}
-		return diffVal || nextProps.status.isUpdated !== this.props.status.isUpdated;
-	}
+	static defaultProps = {
+		status: {},
+		saveProperty: () => {}
+	};
 	handleChange = (value = [], animArr = []) => {
-		var { iconArr, animArr: anims } = this._parseIconArr(this.props.value);
-		animArr = animArr ? animArr : anims;
-
+		//reset!
 		if (value === null) {
-			//reset!
 			return this.props.saveProperty(null);
 		}
 
-		//value = value.map(v => v.value);
+		// we expect an array
+		if (!value.map) {
+			value = [value];
+		}
+
+		// originals
+		var { iconArr, animArr: anims } = this._parseIconArr(this.props.value);
+		animArr = animArr ? animArr : anims;
 
 		//is delete, remove animArr option
 		if (value.length < iconArr.length) {
@@ -161,10 +171,6 @@ class IconSelect extends React.Component {
 			}
 		}
 
-		// put the spin classes back into the values
-		if (!value.map) {
-			value = [value];
-		}
 		value = value.map((val, i) => (animArr[i] && animArr[i] !== "" ? val + " " + animArr[i] : val));
 
 		//re-flatten
@@ -180,7 +186,7 @@ class IconSelect extends React.Component {
 		}
 		if (value === "") value = null;
 
-		return this.props.saveProperty(value);
+		return this.props.saveProperty({ value: value });
 	};
 	handleChangeAnim = event => {
 		var index = event.target.getAttribute("data-index");
@@ -199,6 +205,8 @@ class IconSelect extends React.Component {
 		}
 		this.props.setPreview("icon", value);
 	};
+
+	// may be string, null, or object with { label, value }
 	_parseIconArr(value) {
 		var iconArr = [];
 		var animArr = [];
@@ -213,10 +221,12 @@ class IconSelect extends React.Component {
 		} else if (typeof value === "string") {
 			animArr = [findAnim(value)];
 			iconArr = [replaceAnim(value, animArr[0])];
-		} else if (value.type === "string") {
-			value = value.value;
-			animArr = [findAnim(value)];
-			iconArr = [replaceAnim(value, animArr[0])];
+		} else if (isObject(value)) {
+			if (value.type === "string") {
+				value = value.value;
+				animArr = [findAnim(value)];
+				iconArr = [replaceAnim(value, animArr[0])];
+			}
 		} else {
 			//should be Array
 			iconArr = value.map((val, index) => {
@@ -235,32 +245,16 @@ class IconSelect extends React.Component {
 		return { iconArr, animArr };
 	}
 	render() {
+		const { iconArr, animArr } = this._parseIconArr(this.props.value);
 		return (
 			<IconSelectDisplay
-				{...this._parseIconArr(this.props.value)}
-				{...this}
+				{...{ iconArr, animArr }}
 				{...this.props}
+				handleChange={this.handleChange}
 				validationState={this.props.status.isUpdated ? "success" : null}
 			/>
 		);
 	}
-}
-
-function findAnim(value) {
-	value = " " + value + " ";
-
-	var matches = value.match("^.*\\s(" + ANIMATIONS.join("|") + ")\\s.*$");
-	if (matches && matches[1]) {
-		return matches[1];
-	}
-}
-function replaceAnim(value, anim) {
-	var str = (" " + value + " ")
-		.replace(/ animated /g, " ")
-		.replace(/ infinite /g, " ")
-		.replace(" " + anim + " ", " ")
-		.trim();
-	return str;
 }
 
 export default IconSelect;

@@ -4,7 +4,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import Alert from "components/Alert";
+import Page from "components/Page";
 import { doLogin } from "store/user";
+import { SubmitButton } from "components/Button";
 
 import "./Login.scss";
 
@@ -100,23 +102,19 @@ const DisplayLogin = ({
 	password2Error,
 	apiError
 }) => (
-	<div className="main ">
-		<div className="container mt-5 loginForm">
-			<h1 className="mb-1"> {title} </h1>
-			<Alert>{apiError ? apiError.title : null}</Alert>
-			<form onSubmit={handleSubmit}>
-				<Email {...{ email, emailValid, emailError, handleChange }} />
-				<Password {...{ password, passwordValid, passwordError, handleChange }} />
-				{title === "Login" ? null : (
-					<Password {...{ password2, password2Valid, password2Error, handleChange }} />
-				)}
-				<button type="submit" className="btn btn-primary">
-					Submit
-				</button>
-			</form>
-			<a href="/api/auth/spotify">Login with Spotify</a>
-		</div>
-	</div>
+	<Page>
+		<h1 className="mb-1"> {title} </h1>
+		<Alert>{apiError ? apiError.title : null}</Alert>
+		<form onSubmit={handleSubmit}>
+			<Email {...{ email, emailValid, emailError, handleChange }} />
+			<Password {...{ password, passwordValid, passwordError, handleChange }} />
+			{title === "Login" ? null : (
+				<Password {...{ password2, password2Valid, password2Error, handleChange }} />
+			)}
+			<SubmitButton title="Submit" variant="contained"></SubmitButton>
+		</form>
+		<a href="/api/auth/spotify">Login with Spotify</a>
+	</Page>
 );
 
 export default class Login extends Component {

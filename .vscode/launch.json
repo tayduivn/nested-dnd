@@ -5,22 +5,39 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Chrome",
-			"type": "chrome",
+			"name": "Debug Jest Tests",
+			"type": "node",
 			"request": "launch",
-			"url": "http://localhost:3000",
-			"webRoot": "${workspaceRoot}/src",
-			"userDataDir": false
+			"runtimeArgs": [
+				"--inspect-brk",
+				"${workspaceRoot}/node_modules/jest/bin/jest.js",
+				"--runInBand"
+			],
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen",
+			"port": 9229,
+			"cwd": "${workspaceFolder}/server"
 		},
 		{
 			"type": "node",
 			"request": "launch",
 			"name": "nodemon",
 			"runtimeExecutable": "nodemon",
+			"cwd": "${workspaceFolder}/server",
 			"program": "${workspaceFolder}/server/server.js",
 			"restart": true,
 			"console": "integratedTerminal",
-			"internalConsoleOptions": "neverOpen"
+			"env": {
+				"NODE_PATH": "./app"
+			}
+		},
+		{
+			"name": "Chrome",
+			"type": "chrome",
+			"request": "launch",
+			"url": "http://localhost:3000",
+			"webRoot": "${workspaceRoot}/src",
+			"userDataDir": false
 		}
 	]
 }

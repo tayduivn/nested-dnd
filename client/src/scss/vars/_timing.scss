@@ -1,0 +1,19 @@
+// ----------------------------------------
+// TIMING
+// ----------------------------------------
+// https://material.io/design/motion/speed.html
+
+$ms-fade-out: 75ms;
+$ms-simple: 100ms; // for buttons and controls
+$ms-fade-in: 150ms;
+// sections opening and closing
+$ms-med-close: 200ms;
+$ms-med-open: 250ms;
+$ms-large-close: 250ms;
+$ms-large-open: 300ms;
+// detailed shape change
+$ms-detailed: 500ms;
+
+$ease: cubic-bezier(0.4, 0.0, 0.2, 1); //standard timing
+$ease-in: cubic-bezier(0.0, 0.0, 0.2, 1); // for elements coming into view
+$ease-out: cubic-bezier(0.4, 0.0, 1, 1); // for elements leaving view

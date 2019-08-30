@@ -18,15 +18,6 @@
 
 `depcheck`
 
-## Database import/export commands
-
-mongodump --db nested-dnd --out server/data/dump
-mongorestore -h <:> -d <heroku\_> -u <user> -p <pw> server/data/dump/nested-dnd
-mongorestore -h <:mlab.com> -d <dbname> -u <user> -p <password> <input .bson file> // collection
-
-mongoexport --db nested-dnd -c generators > server/data/dump-json/nested-dnd/generators.json
-mongoimport --db nested-dnd -c generators --upsert server/data/dump-json/nested-dnd/generators.json
-mongo nested-dnd
 db.builtpacks.remove()
 
 ## Build patterns

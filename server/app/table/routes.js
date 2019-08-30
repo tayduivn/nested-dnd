@@ -38,6 +38,7 @@ router.get("/pack/:pack/", MW.canViewPack, (req, res) => {
 // ---------------------------------
 router.get("/:table", MW.canViewTable, (req, res) => {
 	if (req.table && req.table.roll) {
+		// TODO
 		req.table.roll().then(result => {
 			return res.json(Object.assign({}, req.table.toJSON(), { roll: result }));
 		});

@@ -30,7 +30,7 @@ var packSchema = Schema({
 		unique: true
 	},
 	font: String,
-	cssClass: String,
+	cls: String,
 	txt: String,
 	desc: String,
 	seed: {
@@ -139,7 +139,7 @@ packSchema.methods.getSeedFromTree = function(tree) {
 
 	// save the style of the seed
 	this.txt = foundNode.txt;
-	this.cssClass = foundNode.cssClass;
+	this.cls = foundNode.cls;
 
 	return foundNode;
 };

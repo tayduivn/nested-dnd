@@ -1,10 +1,12 @@
 "use strict";
 
+require("dotenv").config();
+
 //get all the packages
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const path = require("path");
+
 const passport = require("passport");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -75,9 +77,9 @@ app.use(
 	})
 ); // session secret
 
-app.use(MW.getLoggedInUser);
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
+// app.use(MW.getLoggedInUser);
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 // routes ======================================================================

@@ -1,0 +1,14 @@
+@import "~scss/variables";
+
+$page-margin-top: $navHeight + 50px;
+
+.root {
+	background-color: $white;
+	color: material-color("grey", "900");
+	margin-top: $page-margin-top;
+	max-width: map-get($container-max-widths, "lg");
+	width: 100%;
+	padding: 1px $gutter;
+	margin-left: auto;
+	margin-right: auto;
+}

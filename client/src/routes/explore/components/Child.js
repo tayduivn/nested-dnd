@@ -6,7 +6,7 @@ import Icon from "components/Icon";
 import worldLocations from "assets/lottiefiles/world_locations";
 import "./Child.scss";
 
-export const CHILD_CLASSES = "child col-xl-2 col-lg-3 col-md-4 col-sm-4 col-xs-6 ";
+export const CHILD_CLASSES = "child col-xl-2 col-lg-3 col-md-4 col-sm-4 col-xs-6";
 
 const DEFAULT_OPTIONS = {
 	loop: true,
@@ -35,47 +35,52 @@ const ChildInner = ({
 	child: { name, isa, icon = EMPTY_OBJ, highlightColor, txt, cls, n: index, isLink },
 	tweetDesc = "",
 	hasInArr,
-	isUniverse
-}) => (
-	<a
-		className={className(icon, cls)}
-		style={style(hasInArr, highlightColor, txt, isUniverse)}
-		href={`#${index}`}
-	>
-		<Icon
-			{...{
-				name: icon.value,
-				kind: icon.kind,
-				txt: name ? name : isa,
-				inlinesvg: true,
-				className: "child__icon"
-			}}
-		/>
-		<div className="child__header">
-			<h1 className="child__title">
-				{isLink ? (
-					<>
-						<a href={`#${index}`} className="badge badge-pill badge-dark linkLabel">
-							<Lottie width="150%" height="150%" options={DEFAULT_OPTIONS} />
-							<i class="fas fa-external-link-alt"></i>
-						</a>
-						<span class="linkLabel__spacer"></span>
-					</>
-				) : null}
-
-				{name ? name : isa}
-			</h1>
-			<Isa name={name} isa={isa} />
-		</div>
-		{tweetDesc ? <p className="child__desc">{tweetDesc.substr(0, 140)}</p> : null}
-	</a>
-);
+	isUniverse,
+	isSaving = false
+}) => {
+	// leave the href attribute off if it should not be visibly clickable
+	const linkAttributes = isSaving ? {} : { href: `#${index}` };
+	return (
+		<a
+			className={className(icon, cls)}
+			style={style(hasInArr, highlightColor, txt, isUniverse)}
+			{...linkAttributes}
+		>
+			<Icon
+				{...{
+					name: isSaving ? "fas fa-plus fa-spin" : icon.value,
+					kind: isSaving ? "icon" : icon.kind,
+					txt: name ? name : isa,
+					inlinesvg: true,
+					className: "child__icon"
+				}}
+			/>
+			<div className="child__header">
+				<h1 className="child__title">
+					{isLink ? (
+						<>
+							<a href={`#${index}`} className="badge badge-pill badge-dark linkLabel">
+								<Lottie width="150%" height="150%" options={DEFAULT_OPTIONS} />
+								<i class="fas fa-external-link-alt"></i>
+							</a>
+							<span class="linkLabel__spacer"></span>
+						</>
+					) : null}
+					{name ? name : isa}
+				</h1>
+				<Isa name={name} isa={isa} />
+			</div>
+			{tweetDesc ? <p className="child__desc">{tweetDesc.substr(0, 140)}</p> : null}
+		</a>
+	);
+};
 
 const Child = ({
 	hasInArr,
 	tweetDesc,
 	handleAdd,
 	handleDeleteLink: handleDeleteLinkUp,
+	isSaving,
 	child,
 	i
 }) => {
@@ -88,14 +93,19 @@ const Child = ({
 	);
 
 	return (
-		<div className={`${CHILD_CLASSES} fadeInChild`} style={{ animationDelay: 50 * i + "ms" }}>
+		<div
+			draggable={true}
+			className={`${CHILD_CLASSES} fadeInChild`}
+			style={{ animationDelay: 50 * i + "ms" }}
+		>
 			<ChildInner
 				{...{
 					hasInArr,
 					tweetDesc,
 					handleAdd,
 					handleDeleteLink,
-					child
+					child,
+					isSaving
 				}}
 			/>
 			{child.isLink ? (

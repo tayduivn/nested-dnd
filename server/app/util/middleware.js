@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const debug = require("debug")("app:util");
 
 const Pack = require("../pack/Pack");
 const Universe = require("../universe/Universe");
@@ -36,29 +37,37 @@ const MW = {
 		res.status(FORBIDDEN).json({ errors: [{ title: USER_FORBIDDEN }] });
 	},
 
-	canViewTable: function(req, res, next) {
-		return Table.findById(req.params.table)
-			.exec()
-			.then(table => {
-				if (!table) return res.status(404);
+	canViewTable: async function(req, res, next) {
+		debug("STARTING  Table.findById --- MW.canViewTable");
+		let table;
+		try {
+			table = await Table.findById(req.params.table).exec();
+		} catch (e) {
+			next(e);
+			return;
+		}
+		debug("    DONE  Table.findById --- MW.canViewTable");
 
-				if (!table.public && (!req.user || table.user.toString() !== req.user.id))
-					return res.status(FORBIDDEN).json({ errors: [{ title: USER_FORBIDDEN }] });
+		if (!table) return res.status(404);
 
-				req.table = table;
-				next();
-			})
-			.catch(next);
+		if (!table.public && (!req.user || table.user.toString() !== req.user.id))
+			return res.status(FORBIDDEN).json({ errors: [{ title: USER_FORBIDDEN }] });
+
+		// eslint-disable-next-line require-atomic-updates
+		req.table = table;
+		next();
+		return table;
 	},
 
 	canEditTable: function(req, res, next) {
 		if (!MW.isLoggedIn(req, res, () => {})) {
 			return false;
 		}
-
+		debug("STARTING  Table.findById --- MW.canEditTable");
 		return Table.findById(req.params.table)
 			.exec()
 			.then(table => {
+				debug("    DONE  Table.findById --- MW.canEditTable");
 				if (!table) return res.status(NOT_FOUND);
 
 				if (!req.user || table.user.toString() !== req.user.id)
@@ -91,13 +100,7 @@ const MW = {
 		if (!MW.isLoggedIn(req, res, () => {})) {
 			return false;
 		}
-
-		var getProperties =
-			req.params.index !== undefined || req.url.includes("/explore")
-				? undefined
-				: "title user pack favorites array";
-
-		await Universe.findById(req.params.universe, getProperties)
+		await Universe.findById(req.params.universe)
 			.populate("pack")
 			.then(async universe => {
 				if (!universe) return res.status(NOT_FOUND).send();
@@ -184,6 +187,7 @@ const MW = {
 
 		function get(cb) {
 			if (req.sessionID) {
+				debug("req.sessionStore.get");
 				req.sessionStore.get(req.sessionID, async function(err, mySession) {
 					if (mySession && mySession.passport && mySession.passport.user) {
 						try {
@@ -228,6 +232,7 @@ async function getPack(req, res, next) {
 		query = Pack.findOne({ url });
 	}
 
+	debug("STARTING  Pack.findOne --- Mw getPack");
 	const pack = await query.populate("_user", "name id").exec();
 
 	if (!pack) {
@@ -239,6 +244,7 @@ async function getPack(req, res, next) {
 		}
 		return next(error);
 	}
+	debug("    DONE  Pack.findOne --- Mw getPack");
 
 	req.pack = pack;
 

@@ -46,8 +46,8 @@ const mapStateToProps = (state, ownProps) => {
 		publicPacks: state.publicPacks.map(id => state.packs.byId[id]),
 		loggedIn: state.user.loggedIn,
 		// needs to be a function because this is Packs not Pack
-		getPack: packid => {
-			return (state.packs.byId && state.packs.byId[packid]) || {};
+		getPack: pack_id => {
+			return (state.packs.byId && state.packs.byId[pack_id]) || {};
 		}
 	};
 };

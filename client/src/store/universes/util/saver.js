@@ -1,42 +1,42 @@
 import async from "async";
 
 import DB from "util/DB";
-import merge from "util/merge";
 import flatten from "util/flatten";
 
-const PAUSE_BETWEEN = 1000;
+// this is an exceptional case. idk
+import store from "store";
+import { changeInstanceReceived } from "../actions/exploreActions";
+
+const PAUSE_BETWEEN = 3000;
 
 // Queue of save tasks
-export default async.cargo(async (tasks, callback) => {
-	let universeId = tasks[0].universeId;
-
-	// merge all the tasks together by instance
-	const data = tasks.reduce((instances, { data }) => {
-		let instanceId;
-
-		for (instanceId in data) {
-			instances[instanceId] = merge(instances[instanceId] || {}, data[instanceId]);
-		}
-		return instances;
+// THIS CANNOT BE AN ASYNC function so that the pause will work
+export default async.cargo((tasks, callback = () => {}) => {
+	// merge all the tasks together by universe
+	const u = tasks.reduce((u, { universe_id, instance_id, changes = {} }) => {
+		if (!u[universe_id]) u[universe_id] = [];
+		const flatChanges = flatten(changes);
+		u[universe_id].push({ instance_id, changes: flatChanges });
+		return u;
 	}, {});
 
-	let flatData = [];
-	let instanceId;
-	for (instanceId in data) {
-		flatData.push({
-			id: instanceId,
-			changes: flatten(data[instanceId])
+	const uIdArr = Object.keys(u);
+
+	const promises = uIdArr.map(universe_id => {
+		return DB.fetch(`universes/${universe_id}/instances`, "PUT", { body: u[universe_id] });
+	});
+
+	// send out all the universe changes simultaneously
+	Promise.all(promises).then(universeResults => {
+		universeResults.forEach((universeTasks, i) => {
+			const originalUniverse = u[uIdArr[i]];
+			universeTasks.forEach((json, j) => {
+				const originalTask = originalUniverse[j];
+				store.dispatch(changeInstanceReceived(uIdArr[i], originalTask, json));
+			});
 		});
-	}
 
-	const json = await DB.fetch(`universes/${universeId}/instances`, "PUT", { body: flatData });
-
-	console.log(json);
-	//return data.result;
-	//if (error).result this.setState({ error });
-
-	// take a break, then say we're done
-	if (callback) {
-		setTimeout(() => callback(json), PAUSE_BETWEEN);
-	}
+		// take a break, then say we're done.
+		setTimeout(() => callback(), PAUSE_BETWEEN);
+	});
 });

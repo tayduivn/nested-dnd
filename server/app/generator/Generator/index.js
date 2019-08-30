@@ -6,7 +6,7 @@ const styleSchema = require("./styleSchema");
 const sourceSchema = require("../../source/Source");
 
 const Maintainer = require("../maintain");
-const Maker = require("../make");
+const Maker = require("../util/make");
 const Nested = require("../../pack/Nested");
 const Universe = require("../../universe/Universe");
 
@@ -14,7 +14,7 @@ const { merge } = require("../../util");
 
 const GENERATE_LEVELS = 1;
 
-var schema = Schema({
+const schema = Schema({
 	pack: {
 		type: Schema.Types.ObjectId,
 		ref: "Pack",
@@ -42,14 +42,18 @@ var schema = Schema({
 		set: styleSchema.validateMixedThing,
 		default: void 0
 	},
-	desc: {
-		type: [styleSchema.mixedTypeSchema],
-		set: styleSchema.validateMixedThing,
-		default: void 0
-	},
 	in: {
 		type: [childSchema],
-		set: styleSchema.validateMixedThing,
+		set: arr => {
+			return arr && arr.map && arr.map(childSchema.validateChildSchema);
+		},
+		default: void 0
+	},
+	desc: {
+		type: [styleSchema.mixedTypeSchema],
+		set: arr => {
+			return arr && arr.map && arr.map(styleSchema.validateMixedThing);
+		},
 		default: void 0
 	},
 	data: Object,
@@ -75,26 +79,6 @@ schema.pre("init", doc => {
 
 schema.post("remove", Maintainer.cleanAfterRemove);
 
-// ----------------------- VIRTUALS
-
-schema.methods.makeStyle = async function(name) {
-	if (!this.style) return {};
-
-	var arr = await Promise.all([
-		this.style.makeTextColor(),
-		this.style.makeBackgroundColor(),
-		this.style.noAutoColor ? false : this.style.strToColor(name),
-		this.style.makeIcon(),
-		this.style.makePattern()
-	]);
-
-	return mergeStyle(arr, ["txt", "bg", "autoBG", "icon", "pattern"]);
-};
-
-schema.methods.makeName = async function(data = {}) {
-	return this.name ? Maker.makeMixedThing(this.name, this.model("Table"), data) : undefined;
-};
-
 // ----------------------- STATICS
 
 /**
@@ -116,19 +100,19 @@ schema.statics.insertNew = async function(data, pack) {
  * @param  {BuiltPack} builtpack
  * @return {Promise<Nested>}           the root node of the tree
  */
-schema.statics.makeAsRoot = async function(seedArray, builtpack, data = {}) {
+schema.statics.makeAsRoot = function(seedArray, builtpack, data = {}) {
 	var seed = seedArray.shift();
 	const ancestorData = Object.assign({}, data, seed.data);
 
 	if (seedArray.length === 0) {
-		let nestedSeed = await Maker.make(seed, GENERATE_LEVELS, builtpack, undefined, ancestorData);
+		let nestedSeed = Maker.make(seed, GENERATE_LEVELS, builtpack, undefined, ancestorData);
 		nestedSeed.isNestedSeed = true; // this will be our starting point when we generate the world
 		return nestedSeed;
 	}
 
 	// generate the next seed in the array and push to in
-	var node = await Maker.make(seed, GENERATE_LEVELS, builtpack);
-	var generatedChild = await this.makeAsRoot(seedArray, builtpack, ancestorData);
+	var node = Maker.make(seed, GENERATE_LEVELS, builtpack);
+	var generatedChild = this.makeAsRoot(seedArray, builtpack, ancestorData);
 
 	if (!node.in) node.in = [];
 
@@ -152,7 +136,7 @@ schema.statics.makeAsRoot = async function(seedArray, builtpack, data = {}) {
  * @param  {BuiltPack} builtpack
  * @return {Promise<Nested>}           the root node of the tree
  */
-schema.statics.makeAsNode = async function(tree, universe, builtpack) {
+schema.statics.makeAsNode = function(tree, universe, builtpack) {
 	// has no children to generate, return
 	if (typeof tree !== "object") return tree;
 
@@ -166,7 +150,7 @@ schema.statics.makeAsNode = async function(tree, universe, builtpack) {
 	if (builtpack && tree.in === true) {
 		var generator = builtpack.getGen(tree.isa);
 		if (generator) {
-			tree = await Maker.make(
+			tree = Maker.make(
 				generator,
 				GENERATE_LEVELS,
 				builtpack,
@@ -239,36 +223,5 @@ schema.methods.extend = function(builtpack, extended = []) {
 
 	return extendsGen;
 };
-
-/**
- * Takes an array of attributes and their labels and merges them into a single style object
- * @param  {string[]} arr    The values
- * @param  {string[]} labels The attribute names
- * @return {Object}        The unified style object
- */
-function mergeStyle(arr, labels) {
-	var style = {
-		cssClass: []
-	};
-	var bg, autoBG;
-	arr.forEach((val, i) => {
-		if (labels[i] === "cssClass") style.cssClass.push(val);
-		else if (labels[i] === "bg") bg = val ? "bg-" + val : undefined;
-		else if (labels[i] === "autoBG") autoBG = val ? "bg-" + val : undefined;
-		else if (labels[i] === "pattern") {
-			if (val && !bg && !autoBG) style.cssClass.push("bg-grey-50"); // default bg if none supplied
-			if (val) style.cssClass.push("ptn-" + val);
-		} else style[labels[i]] = val;
-	});
-	if (autoBG) {
-		style.cssClass.unshift(autoBG);
-		style.txt = undefined;
-	} else if (bg) {
-		style.cssClass.unshift(bg);
-	}
-	style.cssClass = style.cssClass.join(" ").trim();
-	if (!style.cssClass.length) style.cssClass = undefined;
-	return style;
-}
 
 module.exports = mongoose.model("Generator", schema);

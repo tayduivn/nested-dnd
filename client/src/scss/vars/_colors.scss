@@ -1,0 +1,218 @@
+@import "~sass-material-colors/sass/_sass-material-colors";
+
+// add a 1000 color to the stock colors
+@each $name, $map in $material-colors {
+	$primary-color: map-get($map, "900");
+
+	$newMap: (
+		"1000": darken($primary-color, 15%)
+	);
+	$map: map-merge($map, $newMap);
+
+	$newNewMap: (#{$name}: $map);
+
+	$material-colors: map-merge($material-colors, $newNewMap);
+}
+
+$more-colors: (
+	"wood": (
+		"50": #f7f3e3,
+		"100": #e7d9ca,
+		"200": #d7c0a7,
+		"300": #c7a784,
+		"400": #b78e61,
+		"500": #a8763e,
+		// metallic sunburst, secondary
+			"600": #8a6133,
+		"700": #6b4c28,
+		"800": #4d361d,
+		"900": #2b2118,
+		// raisin black
+			"1000": #18120e,
+		// licorice
+			"a100": #ffd8bd,
+		"a200": #fdb37f,
+		"a400": #ff8c3a,
+		"a700": #ff6a00
+	),
+	"red": (
+		"1000": #7f0000 // maroon, primary
+	)
+);
+
+$material-colors: map-merge($more-colors, $material-colors);
+
+$blue: material-color("teal", "400");
+$indigo: material-color("indigo", "600");
+$purple: material-color("purple", "600");
+$pink: material-color("pink", "600");
+$red: material-color("red", "600");
+$orange: material-color("amber", "a700");
+$yellow: material-color("yellow", "600");
+$green: material-color("green", "a700");
+$teal: material-color("teal", "600");
+$cyan: material-color("cyan", "600");
+
+$white: #ffffff;
+$gray-100: material-color("grey", "100");
+$gray-200: material-color("grey", "200");
+$gray-300: material-color("grey", "300");
+$gray-400: material-color("grey", "400");
+$gray-500: material-color("grey", "500");
+$gray-600: material-color("grey", "600");
+$gray-700: material-color("grey", "700");
+$gray-800: material-color("grey", "800");
+$gray-900: material-color("grey", "900");
+$black: #000;
+
+$grays: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$grays: map-merge(
+	(
+		"100": $gray-100,
+		"200": $gray-200,
+		"300": $gray-300,
+		"400": $gray-400,
+		"500": $gray-500,
+		"600": $gray-600,
+		"700": $gray-700,
+		"800": $gray-800,
+		"900": $gray-900
+	),
+	$grays
+);
+
+$colors: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$colors: map-merge(
+	(
+		"blue": $blue,
+		"indigo": $indigo,
+		"purple": $purple,
+		"pink": $pink,
+		"red": $red,
+		"orange": $orange,
+		"yellow": $yellow,
+		"green": $green,
+		"teal": $teal,
+		"cyan": $cyan,
+		"white": $white,
+		"gray": $gray-600,
+		"gray-dark": $gray-800
+	),
+	$colors
+);
+
+// --------------------------------------------------------------------
+// THEEEEEEEEEEEEEEEEEEEEEEEEEEEEMAAAAAAAAAAAAAAAAAAAAAAEEEEEEEEEEEEEEE
+
+// Variables
+//
+// Variables should follow the `$component-state-property-size` formula for
+// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+// Color system
+
+$theme: "teal";
+$theme2: "wood";
+$primary: material-color($theme, "600");
+$secondary: material-color($theme2, "600");
+$light: $white;
+$dark: $black;
+
+$success: $green;
+$info: $cyan;
+$warning: $orange;
+$danger: $red;
+
+// wood, explore palette
+// https://coolors.co/a8763e-f7f3e3-eceff1-7f0000-2b2118
+
+// $p-1: "wood";
+// $p-2: "red";
+// $p-3: "amber";
+// $p-4: "blue-grey";
+
+// $primary: material-color("wood", "500");
+// $warmlight: material-color("amber", "50");
+// $light: material-color("blue-grey", "50");
+// $secondary: material-color("red", "1000");
+// $dark: material-color("wood", "1000");
+
+$theme-colors: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$theme-colors: map-merge(
+	(
+		"primary": $primary,
+		"secondary": $secondary,
+		"success": $success,
+		"info": $info,
+		"warning": $warning,
+		"danger": $danger,
+		"light": $light,
+		"dark": $dark
+	),
+	$theme-colors
+);
+
+// Set a specific jump point for requesting color jumps
+$theme-color-interval: 8% !default;
+
+// The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.
+$yiq-contrasted-threshold: 150 !default;
+
+// Customize the light and dark text colors for use in our YIQ color contrast function.
+$yiq-text-dark: #000000;
+$yiq-text-light: $white !default;
+
+$gradients: (
+	ocean: linear-gradient(#00bea6, #0057be)
+);
+
+@function isLight($color) {
+	@return lightness($color) > 49;
+}
+
+@function getContrastText($color) {
+	$color-adjust: 0%;
+
+	@if (isLight($color)) {
+		$lightness: lightness($color);
+		$color-adjust: -35%;
+
+		@if ($lightness > 60) {
+			$color-adjust: -55%;
+		}
+		@if ($lightness > 90) {
+			$color-adjust: -65%;
+		}
+	} @else {
+		$color-adjust: 55%;
+	}
+
+	@return adjust-color($color, $lightness: $color-adjust);
+}
+
+@function slightlyOff($color) {
+	@if (isLight($color)) {
+		@return adjust-color($color, $lightness: -10%);
+	} @else {
+		@return adjust-color($color, $lightness: 15%);
+	}
+}
+
+@function moreOff($color) {
+	@if (isLight($color)) {
+		@return adjust-color($color, $lightness: -15%);
+	} @else {
+		@return adjust-color($color, $lightness: 20%);
+	}
+}
+
+@mixin background($color, $gradient) {
+	@if ($gradient) {
+		background: $color $gradient;
+	} @else {
+		background-color: $color;
+	}
+}

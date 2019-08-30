@@ -49,9 +49,5 @@ const app = combineReducers({
 	router: connectRouter(history)
 });
 
-// we want to export a function so we can explicitly make fresh instances of a store for use in Storybook, etc.
-let openStore = () => createStore(app, {}, middleware);
-
-export default openStore;
+export default createStore(app, {}, middleware);
 export { history };
-export * from "./actions";

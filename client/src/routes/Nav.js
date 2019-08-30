@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import Link from "components/Link";
 import { doLogout } from "store/user";
+import { useDispatch } from "react-redux";
 import "./Nav.scss";
 
 const LoggedOut = () => (
@@ -20,6 +21,11 @@ const LoggedOut = () => (
 const LoggedIn = ({ handleLogout }) => (
 	<>
 		<li className="nav-item">
+			<Link to="/players-preview" className="nav-link">
+				Player view
+			</Link>
+		</li>
+		<li className="nav-item">
 			<Link to="/account" className="nav-link">
 				Account
 			</Link>
@@ -32,7 +38,8 @@ const LoggedIn = ({ handleLogout }) => (
 	</>
 );
 
-const Nav = ({ loggedIn, dispatch, logOutError }) => {
+const Nav = ({ loggedIn, logOutError }) => {
+	const dispatch = useDispatch();
 	const handleLogout = useCallback(() => {
 		dispatch(doLogout());
 	}, [dispatch]);

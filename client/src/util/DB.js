@@ -98,8 +98,12 @@ async function getResponse(response, cb, url) {
 	let json = await parseResponse(response, cb);
 
 	// create an errors object if there is not one and we errored
-	if (!json.errors && (response.status < 200 || response.status > 299)) {
-		json.errors = [{ title: response.status }];
+	if ((!json || !json.errors) && (response.status < 200 || response.status > 299)) {
+		return { errors: [{ title: response.status }] };
+	}
+
+	if (!json) {
+		return { errors: [{ title: "No response from server" }] };
 	}
 
 	return json;
@@ -129,8 +133,9 @@ async function parseResponse(response, cb = () => {}) {
 	var data = {};
 	var contentType = response.headers.get("content-type");
 
-	if (contentType && contentType.includes("json")) data = await response.json();
-	else {
+	if (contentType && contentType.includes("json")) {
+		data = await response.json();
+	} else {
 		const reader = response.body.getReader();
 		let queue = "";
 		reader.read().then(function processChunk({ value, done }) {

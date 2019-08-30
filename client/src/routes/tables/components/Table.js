@@ -23,10 +23,10 @@ export default class Table extends Component {
 	};
 
 	componentDidMount() {
-		const tableid = this.props.match.params.table;
+		const table_id = this.props.match.params.table;
 
-		if (tableid) {
-			DB.get("tables", tableid).then(({ error, data: table }) => this.setState({ table, error }));
+		if (table_id) {
+			DB.get("tables", table_id).then(({ error, data: table }) => this.setState({ table, error }));
 		}
 	}
 

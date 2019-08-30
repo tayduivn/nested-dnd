@@ -10,7 +10,7 @@ class Parent extends Ancestor {
 		super(node);
 
 		if (node.txt) this.txt = node.txt;
-		if (node.cssClass) this.cssClass = node.cssClass;
+		if (node.cls) this.cls = node.cls;
 	}
 }
 
@@ -28,7 +28,7 @@ class Nested {
 
 		if (style) {
 			this.txt = style.txt;
-			this.cssClass = style.cssClass;
+			this.cls = style.cls;
 			this.img = style.img;
 			this.icon = style.icon;
 		}
@@ -41,7 +41,7 @@ class Nested {
 		_t.name = inst.name;
 		_t.isa = inst.isa;
 		_t.txt = inst.txt;
-		_t.cssClass = inst.cssClass;
+		_t.cls = inst.cls;
 		_t.img = inst.img;
 		_t.icon = inst.icon;
 		_t.up = inst.up;
@@ -76,8 +76,8 @@ class Nested {
 
 		// copy parent's style
 		/*
-		if(!this.cssClass && up && up instanceof Array && up[0]){
-			this.cssClass = up[0].cssClass;
+		if(!this.cls && up && up instanceof Array && up[0]){
+			this.cls = up[0].cls;
 			if(!this.txt)
 				this.txt = up[0].txt;
 		}*/

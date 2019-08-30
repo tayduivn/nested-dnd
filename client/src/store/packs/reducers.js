@@ -42,8 +42,6 @@ const pack = (state = { loaded: false, generators: false, tables: false }, actio
 			return {
 				...state,
 				...action.data,
-				generators: action.generators,
-				tables: action.tables,
 				isFetching: false
 			};
 		case ADD_CHILD_OPTIONS_FETCH:
@@ -77,7 +75,7 @@ function byId(state = {}, action) {
 	let data;
 	switch (action.type) {
 		case GENERATOR_RENAME:
-			return { ...state, [action.packid]: pack(state[action.packid], action) };
+			return { ...state, [action.pack_id]: pack(state[action.pack_id], action) };
 		case GENERATOR_SET:
 			if (action.data.pack) {
 				data = { ...action.data.pack, generators: action.data.builtpack.generators };
@@ -98,9 +96,9 @@ function byId(state = {}, action) {
 		case PACKS_SET:
 			data = action.data.byId;
 			const obj = { ...state, ...data };
-			for (var packid in obj) {
-				if (!data[packid]) continue;
-				obj[packid] = pack(state[packid], { type: SET_PACK, data: data[packid] });
+			for (var pack_id in obj) {
+				if (!data[pack_id]) continue;
+				obj[pack_id] = pack(state[pack_id], { type: SET_PACK, data: data[pack_id] });
 			}
 			return obj;
 		case RECEIVE_EXPLORE:
@@ -188,5 +186,17 @@ function myPacks(state = [], action) {
 			return state;
 	}
 }
+/**
+ * An object mapping pack ids to an array of generator and table names
+ */
+function options(state = {}, action) {
+	switch (action.type) {
+		case ADD_CHILD_OPTIONS_RECEIVE:
+			state[action.id] = { generators: action.generators, tables: action.tables };
+			return state;
+		default:
+			return state;
+	}
+}
 
-export default combineReducers({ loaded, byId, byUrl, publicPacks, myPacks });
+export default combineReducers({ loaded, byId, byUrl, publicPacks, myPacks, options });

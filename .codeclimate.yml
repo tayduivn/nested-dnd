@@ -52,7 +52,6 @@ exclude_patterns:
   - "**/*.png"
   - "**/*.txt"
   - "*.lock"
-  - ".babelrc"
   - ".codeclimate.json"
   - "client/.testSetup.js"
   - "**/*.css"

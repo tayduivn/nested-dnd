@@ -1,0 +1,25 @@
+/* ModalIconSelect */
+@import "~scss/variables";
+
+.imgWrap {
+	margin-top: 1.5rem;
+	text-align: center;
+
+	img {
+		max-width: 100%;
+	}
+}
+
+.video-wrap {
+	position: relative;
+}
+
+.content {
+	background: black;
+	color: white;
+}
+
+.typeChanger {
+	border: none;
+	width: 100%;
+}

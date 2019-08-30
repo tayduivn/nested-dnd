@@ -5,8 +5,6 @@ const express = require("express");
 const passport = require("passport");
 
 require("sinon-mongoose");
-require("@babel/register")();
-require("babel-polyfill");
 require("ignore-styles");
 require("chai").should();
 

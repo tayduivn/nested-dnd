@@ -183,5 +183,7 @@ module.exports = function(passport) {
 	});
 
 	local(passport);
-	spotify(passport);
+	if (process.env.SPOTIFY_CLIENT_ID && process.env.SPOTIFY_CLIENT_SECRET) {
+		spotify(passport);
+	}
 };

@@ -1,8 +1,6 @@
 import React from "react";
 
-const Page = ({children, id}) => (
-	<div className="main" id={id}>
-		<div className="container mt-5">{children}</div>
-	</div>
-);
+import styles from "./Page.module.scss";
+
+const Page = ({ children, id }) => <article className={styles.root}>{children}</article>;
 export default Page;

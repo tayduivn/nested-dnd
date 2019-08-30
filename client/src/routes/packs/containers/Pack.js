@@ -138,8 +138,8 @@ class Pack extends Component {
 
 export default connect(
 	(state, { match }) => {
-		const packid = state.packs.byUrl[match.params.pack];
-		const pack = state.packs.byId[packid];
+		const pack_id = state.packs.byUrl[match.params.pack];
+		const pack = state.packs.byId[pack_id];
 
 		// TODO : memoize
 

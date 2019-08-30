@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ModalHeader } from "./ModalIconSelect";
+import Modal from "components/Modal";
 import textures from "assets/data/textures";
 import "./PatternSelectModal.scss";
 
@@ -37,7 +37,7 @@ const PatternSelectModalComponent = ({ bg, ptn, handleClick }) => (
 	<div {...MODAL_OPTIONS}>
 		<div className="patterns__dialog modal-dialog" role="document">
 			<div className={"patterns__content modal-content " + bg}>
-				{ModalHeader}
+				<Modal.Header>Background Pattern</Modal.Header>
 				<div className="patterns__body modal-body row">
 					<div className={cols}>
 						<div
@@ -64,7 +64,7 @@ export default class PatternSelectModal extends React.PureComponent {
 		let className = this.props.bg;
 		if (value) className += " ptn-" + value;
 
-		this.props.handleChange("cls", className);
+		this.props.handleChange({ cls: className });
 	};
 	render() {
 		var { bg, ptn } = this.props;

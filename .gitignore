@@ -20,6 +20,7 @@ coverage.lcov
 # db
 /db/data
 /db/backup
+/db/dump-json
 
 # misc
 .DS_Store

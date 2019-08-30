@@ -6,7 +6,8 @@ const Nested = require("../pack/Nested");
 const flatInstanceSchema = mongoose.Schema({
 	univ: {
 		type: Schema.Types.ObjectId,
-		ref: "Universe"
+		ref: "Universe",
+		required: true
 	},
 	name: String,
 	isa: String,
@@ -35,18 +36,28 @@ const flatInstanceSchema = mongoose.Schema({
 			}
 		}
 	},
-	up: Number,
+	up: {
+		type: Schema.Types.ObjectId,
+		ref: "Instance"
+	},
 	todo: Boolean,
 	desc: [String],
 	in: {
-		type: [Number],
+		type: [Schema.Types.ObjectId],
+		ref: "Instance",
 		default: void 0,
 		set: value => {
 			if (!value) value = undefined;
 			return value;
 		}
 	},
-	data: Schema.Types.Mixed
+	data: Schema.Types.Mixed,
+
+	// index. Used as the url
+	n: {
+		type: Schema.Types.Number,
+		required: true
+	}
 });
 
 /**
@@ -54,7 +65,9 @@ const flatInstanceSchema = mongoose.Schema({
  * @param  {[type]} generations [description]
  * @return {[type]}             [description]
  */
+
 flatInstanceSchema.methods.expand = function(generations) {
+	/*
 	var inArr = this.in || [];
 	var arr = this.parent().array;
 
@@ -63,8 +76,8 @@ flatInstanceSchema.methods.expand = function(generations) {
 	node.up = expandUp.call(this);
 
 	// copy style from parent if it is the currently displayed node
-	if (generations > 0 && !node.cssClass && node.up) {
-		node.cssClass = node.up[0].cssClass;
+	if (generations > 0 && !node.cls && node.up) {
+		node.cls = node.up[0].cls;
 		node.txt = node.up[0].txt;
 	}
 
@@ -95,6 +108,7 @@ flatInstanceSchema.methods.expand = function(generations) {
 	}
 
 	return node;
+	*/
 };
 
 /**
@@ -142,9 +156,9 @@ function expandUp() {
 		} else {
 			up.push(ancestor);
 
-			// set cssClass and txt
-			if (!up[0].cssClass) {
-				up[0].cssClass = ref.cssClass;
+			// set cls and txt
+			if (!up[0].cls) {
+				up[0].cls = ref.cls;
 				up[0].txt = ref.txt;
 			}
 		}

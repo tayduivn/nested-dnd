@@ -1,0 +1,94 @@
+@import "~scss/variables";
+
+$light-bg: material-color($theme, "50");
+$active-bg: material-color($theme, "100");
+
+.root {
+	border-radius: $border-radius;
+	border-style: none;
+	border: $btn-border-width solid;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: $btn-font-size;
+	font-weight: $btn-font-weight;
+	letter-spacing: 0.04em;
+	line-height: 1em;
+	outline-style: none;
+	padding: $btn-padding-y $btn-padding-x;
+	text-transform: uppercase;
+	transition: all $ms-fade-in $ease-in;
+
+	&:hover {
+		transition-timing-function: $ease-out;
+		transition-duration: $ms-fade-in;
+	}
+}
+
+.text {
+	background: transparent;
+	border-color: transparent;
+	color: $primary;
+	padding: $btn-padding-y $btn-padding-x-sm;
+	font-weight: $font-weight-semibold;
+
+	&:hover {
+		background-color: $light-bg;
+	}
+
+	&:active {
+		background-color: $active-bg;
+	}
+}
+
+.contained {
+	color: white;
+	background-color: $primary;
+	border-color: $primary;
+	box-shadow: $shadow2;
+
+	&:hover {
+		$bg-color: material-color($theme, "800");
+		border-color: $bg-color;
+		background-color: $bg-color;
+	}
+
+	&:active {
+		$bg-color: material-color($theme, "700");
+		border-color: $bg-color;
+		background-color: $bg-color;
+		box-shadow: $shadow8;
+	}
+}
+
+.outline {
+	color: $primary;
+	background-color: white;
+	font-weight: $font-weight-semibold;
+
+	&:hover {
+		background-color: $light-bg;
+	}
+
+	&:active {
+		background-color: $active-bg;
+	}
+}
+
+.icon {
+	background: transparent;
+	border: none;
+	padding: 12px;
+	width: 2.2em;
+	height: 2.2em;
+	font-size: 20px;
+	border-radius: 50%;
+	color: $black;
+
+	&:hover {
+		background-color: material-color("grey", "100");
+	}
+
+	&:active {
+		background-color: material-color("grey", "200");
+	}
+}

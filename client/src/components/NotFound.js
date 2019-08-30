@@ -1,9 +1,8 @@
 import React from "react";
+import Page from "components/Page";
 
 export default () => (
-	<div className="main">
-		<div className="container mt-5">
-			<h1>404 Not Found</h1>
-		</div>
-	</div>
+	<Page>
+		<h1>404 Not Found</h1>
+	</Page>
 );

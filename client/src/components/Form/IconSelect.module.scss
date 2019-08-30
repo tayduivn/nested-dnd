@@ -1,0 +1,99 @@
+@import "~scss/variables";
+
+$itemSize: 40px;
+
+.iconDropdown {
+	color: #000;
+}
+
+.menu {
+	margin-top: 5px;
+	max-height: 7 * $itemSize;
+	background: white;
+	box-shadow: $shadow8;
+	border: 1px solid material-color("grey", "100");
+}
+
+.option {
+	padding: 5px;
+	line-height: 1em;
+	height: $itemSize;
+	font-size: 0.85rem;
+	color: #555;
+	width: 100%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	cursor: pointer;
+	list-style: none;
+
+	&:hover,
+	&:active,
+	&:focus {
+		background: material-color("teal", "50");
+		color: material-color("teal", "900");
+	}
+}
+
+.selected {
+	background: material-color("teal", "100");
+	color: material-color("teal", "900");
+}
+
+.icon {
+	vertical-align: middle;
+	font-size: 2rem;
+	height: 2rem;
+	svg {
+		height: 1em;
+	}
+}
+
+// wrapper for each form
+.preview {
+	$gutter: 5px;
+	font-size: 0.85rem;
+	margin-left: -$gutter;
+	margin-right: -$gutter;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+$size: 4rem;
+
+.iconForm {
+	$selectHeight: 0.85rem;
+	$selectMarginButton: 0.3rem;
+	$padding: 10px;
+
+	text-align: center;
+	padding: 7px $padding $selectHeight + $selectMarginButton + 1.5rem $padding;
+	border-radius: 5px;
+	margin: 0;
+	position: relative; // so we can position the select absolutely within
+	box-shadow: $shadow1;
+
+	// the select
+	select {
+		border: 0;
+		border-top: 1px solid material-color("grey", "300");
+		padding: 5px 3px;
+		height: auto;
+		font-size: $selectHeight;
+		line-height: 1rem;
+		-webkit-appearance: none; /*removes original arrow*/
+		width: 100%;
+		position: absolute;
+		bottom: $selectMarginButton;
+		right: 0;
+	}
+}
+
+// the icon
+.previewIcon {
+	font-weight: normal;
+	font-size: $size;
+	height: $size;
+	width: $size;
+	display: block;
+}

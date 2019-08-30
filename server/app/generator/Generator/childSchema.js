@@ -1,6 +1,7 @@
 const Schema = require("mongoose").Schema;
 
 const { rand } = require("../../util");
+const { validateMixedThing } = require("./styleSchema");
 
 var childSchema = Schema(
 	{
@@ -33,6 +34,11 @@ var childSchema = Schema(
 	{ typeKey: "$type" }
 );
 
+function validateChildSchema({ type, value, amount, chance, isEmbedded }) {
+	const out = validateMixedThing({ type, value });
+	return { ...out, amount, chance, isEmbedded };
+}
+
 /**
  * @return {boolean} if the child will be included in the generated object based on % chance
  */
@@ -52,4 +58,5 @@ childSchema.virtual("makeAmount").get(function() {
 	return this.amount.min;
 });
 
+childSchema.validateChildSchema = validateChildSchema;
 module.exports = childSchema;

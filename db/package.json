@@ -5,7 +5,6 @@
 	"engines": {
 		"node": "10.16.0"
 	},
-	"main": "index.js",
 	"scripts": {
 		"test": "",
 		"start": "mongod --dbpath ./data"

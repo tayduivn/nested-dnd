@@ -21,10 +21,12 @@
 
 // App global css--------------------------
 @import "scss/animations";
+@import "scss/app";
+@import "scss/print";
 @import "scss/resets";
 @import "scss/switch";
 @import "scss/textures";
+@import "scss/utilities";
 
-@import "scss/app";
 // colors needs to come after app.scss so we can override with bg- styles
 @import "scss/colors";

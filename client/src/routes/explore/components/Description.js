@@ -1,9 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-const DescriptionComponent = ({ highlight, desc = [], isUniverse, handle, newLine }) => (
+const DescriptionComponent = ({ cls, txt, desc = [], isUniverse, handle, newLine }) => (
 	<ul
 		id="description"
-		className={highlight + " max-contrast " + (!desc.length ? "empty" : "")}
+		className={cls + " max-contrast " + (!desc.length ? "empty" : "")}
 		onKeyDown={handle.keydown}
 		onKeyUp={handle.keyup}
 		onBlur={handle.blur}
@@ -31,6 +32,12 @@ const DescriptionComponent = ({ highlight, desc = [], isUniverse, handle, newLin
 );
 
 export default class Description extends React.PureComponent {
+	static propTypes = {
+		desc: PropTypes.string,
+		cls: PropTypes.string,
+		txt: PropTypes.string
+	};
+
 	state = {
 		focusNew: false
 	};
@@ -61,7 +68,7 @@ export default class Description extends React.PureComponent {
 					desc.splice(i + 1, 0, "");
 					this.setState({ focusNew: i + 1 });
 					e.target.blur();
-					this.props.handleChange(this.props.index, "desc", desc);
+					this.props.handleChange({ desc });
 				} else next.focus();
 			} else {
 				if (!desc.length) {
@@ -70,7 +77,7 @@ export default class Description extends React.PureComponent {
 				desc.push("");
 				this.setState({ focusNew: true });
 				e.target.blur();
-				this.props.handleChange(this.props.index, "desc", desc);
+				this.props.handleChange({ desc });
 			}
 			e.preventDefault();
 			return false;
@@ -83,7 +90,7 @@ export default class Description extends React.PureComponent {
 		e.target.dataset["deleting"] = true;
 		var prev = e.target.previousElementSibling;
 		// e.target.remove();
-		this.props.handleChange(this.props.index, "desc", desc);
+		this.props.handleChange({ desc });
 		if (prev) prev.focus();
 		e.preventDefault();
 		return false;
@@ -113,6 +120,8 @@ export default class Description extends React.PureComponent {
 	handleBlur = e => {
 		var desc = [];
 		var lines = e.target.parentElement.children;
+		let isChanged = false;
+		let original = this.props.desc.split("\n");
 
 		if (e.target.dataset["deleting"]) {
 			delete e.target.dataset["deleting"];
@@ -123,11 +132,19 @@ export default class Description extends React.PureComponent {
 			c = lines[i];
 			var text = c.innerText;
 			text = text.length ? text.split(/\r\n|\n|\r/g).filter(s => s.trim().length) : [""];
+
+			// if it's different, mark it
+			if (text.length !== 1 || text[0] !== original[i]) {
+				isChanged = true;
+			}
+
 			desc.push(...text);
 			delete c.dataset["deleting"];
 		}
 
-		this.props.handleChange(this.props.index, "desc", desc);
+		if (isChanged) {
+			this.props.handleChange({ desc });
+		}
 	};
 	handlePaste = e => {
 		e.preventDefault();
@@ -140,7 +157,7 @@ export default class Description extends React.PureComponent {
 	};
 
 	render() {
-		const { desc: descStr, highlight, isUniverse } = this.props;
+		const { desc: descStr, cls, txt, isUniverse } = this.props;
 		const handle = {
 			blur: this.handleBlur,
 			paste: this.handlePaste,
@@ -150,7 +167,7 @@ export default class Description extends React.PureComponent {
 		const desc = descStr.split("\n");
 
 		return (
-			<DescriptionComponent {...{ desc, highlight, isUniverse, handle, newLine: this.newLine }} />
+			<DescriptionComponent {...{ desc, cls, txt, isUniverse, handle, newLine: this.newLine }} />
 		);
 	}
 }
