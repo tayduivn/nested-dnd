@@ -6,7 +6,7 @@ import Login from "routes/login";
 import Nav from "routes/Nav";
 import Splash from "routes/Splash";
 import { PropsRoute, makeSubRoutes } from "./containers/Routes";
-import Universes from "routes/universes";
+import { Universes } from "routes/universes";
 import NotFound from "./components/NotFound";
 import Snackbar from "routes/Snackbar";
 

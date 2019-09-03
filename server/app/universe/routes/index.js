@@ -1,6 +1,8 @@
 /* eslint-disable max-statements */
 const debug = require("debug")("app:unverse:routes");
 const router = require("express").Router();
+const mongoose = require("mongoose");
+const ObjectId = mongoose.mongo.ObjectId;
 
 const Universe = require("../Universe");
 
@@ -9,6 +11,7 @@ const MW = require("util/middleware");
 const { normalizeUniverse, normalizeUniverses } = require("../normalize");
 const { getUniversesByUser, getPack } = require("../query");
 const { saveInstance } = require("util");
+const getUniverseInfo = require("universe/query/getUniverseInfo");
 
 router
 	.route("/")
@@ -43,18 +46,10 @@ router
 	.route("/:universe")
 	// Get universe
 	// ---------------------------------
-	.get(MW.ownsUniverse, async (req, res) => {
-		// populate the dependencies so we can see them
-		await req.universe.pack.populate({ path: "dependencies" }).execPopulate();
-
-		const pack = await getPack(req.universe.pack, req.user);
-
-		const { universe, packs, generators, tables } = normalizeUniverse({
-			...req.universe.toJSON(),
-			pack
-		});
-
-		res.json({ universe, packs, generators, tables });
+	.get(async (req, res) => {
+		const universe_id = ObjectId(req.params.universe);
+		const { universe, packs, tables, generators } = await getUniverseInfo(universe_id, req.user_id);
+		res.json(normalizeUniverse({ packs, tables, generators, ...universe }));
 	})
 	// Edit Universe
 	// ---------------------------------
