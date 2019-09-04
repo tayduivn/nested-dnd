@@ -6,37 +6,39 @@ const { stringify, normalUniverseResponse, setLastSaw } = require("../../util");
 const { normalizePack } = require("../../pack/normalize");
 
 router.get("/:url/:index?", MW.canViewPack, async (req, res, next) => {
-	Universe.getTemp(req.sessionID, req.pack, req.params.index)
-		.then(async universe => {
-			const index = setLastSaw(req.params.index, universe);
-			const firstBatch = normalUniverseResponse(universe, index);
+	const pack_url = req.params.url;
 
-			const meta = {
-				universeId: universe._id,
-				packId: req.pack._id,
-				packUrl: req.params.url
-			};
-			const { packs, tables, generators } = normalizePack(req.pack);
+	// Universe.getTemp(req.sessionID, req.pack, req.params.index)
+	// 	.then(async universe => {
+	// 		const index = setLastSaw(req.params.index, universe);
+	// 		const firstBatch = normalUniverseResponse(universe, index);
 
-			res.write(stringify("Pack", packs, meta));
-			if (tables) res.write(stringify("Table", tables, meta));
-			if (generators) res.write(stringify("Generator", generators, meta));
+	// 		const meta = {
+	// 			universeId: universe._id,
+	// 			packId: req.pack._id,
+	// 			packUrl: req.params.url
+	// 		};
+	// 		const { packs, tables, generators } = normalizePack(req.pack);
 
-			// send the metatdata about the universe
-			const metaUni = universe.toObject();
-			delete metaUni.array;
-			res.write(stringify("Universe", metaUni, meta));
+	// 		res.write(stringify("Pack", packs, meta));
+	// 		if (tables) res.write(stringify("Table", tables, meta));
+	// 		if (generators) res.write(stringify("Generator", generators, meta));
 
-			// send the first batch to display crucial info
-			res.write(stringify("Instance", firstBatch, meta));
+	// 		// send the metatdata about the universe
+	// 		const metaUni = universe.toObject();
+	// 		delete metaUni.array;
+	// 		res.write(stringify("Universe", metaUni, meta));
 
-			// send the whole universe
-			res.write(stringify("Universe", universe.toObject(), meta));
+	// 		// send the first batch to display crucial info
+	// 		res.write(stringify("Instance", firstBatch, meta));
 
-			await universe.save();
-			res.end();
-		})
-		.catch(next);
+	// 		// send the whole universe
+	// 		res.write(stringify("Universe", universe.toObject(), meta));
+
+	// 		await universe.save();
+	// 		res.end();
+	// 	})
+	// 	.catch(next);
 });
 
 // only give me the node, not everything else

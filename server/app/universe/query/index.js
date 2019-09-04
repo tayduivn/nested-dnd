@@ -4,6 +4,12 @@ const sortAncestors = require("instance/util/sortAncestors");
 
 const Universe = require("../Universe");
 
+/**
+ * From a universe id, get the last saw instance and return
+ *
+ * @param {string} id The id of a universe
+ * @param {ObjectId} user_id
+ */
 const getUniverseExplore = async (id, user_id) => {
 	const universes = await Universe.aggregate([
 		{ $match: { _id: mongo.ObjectId(id), user: user_id } },

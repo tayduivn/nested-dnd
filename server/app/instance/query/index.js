@@ -4,6 +4,11 @@ const Universe = require("universe/Universe");
 
 const { getUniverseExplore, allocateSpaceForNewInstances } = require("universe/query");
 
+/**
+ * From a universe id, get the initial view of the universe.
+ * @param {string} univ A universe id
+ * @param {ObjectId} user_id
+ */
 async function getInstanceFromUniverse(univ, user_id) {
 	let universe = await getUniverseExplore(univ, user_id);
 
@@ -23,6 +28,12 @@ async function getInstanceFromUniverse(univ, user_id) {
 	return { instance };
 }
 
+/**
+ * Update an instance with changes
+ * @param {ObjectId} universe_id
+ * @param {ObjectId} id instance
+ * @param {Object} data the changes
+ */
 async function updateInstance(universe_id, id, data) {
 	debug("STARTING  \t Instance.findOneAndUpdate --- updateInstance");
 	const inst = await Instance.findOneAndUpdate({ _id: id, univ: universe_id }, data, {
@@ -70,6 +81,13 @@ async function moveInstance(universe_id, instance_id, up_n) {
 	return { instance, newParent, oldParent };
 }
 
+/**
+ * From raw instance data, saves a new instance
+ * @param {ObjectId} universe_id
+ * @param {ObjectId} user_id
+ * @param {ObjectId} up_id
+ * @param {Object} data
+ */
 async function createInstance(universe_id, user_id, up_id, data) {
 	// Allocate space in the universe first so no one taks this #n
 	debug("STARTING  Universe.updateOne --- createInstance");
@@ -111,6 +129,12 @@ async function createInstance(universe_id, user_id, up_id, data) {
 	return inst;
 }
 
+/**
+ * From an array of created instances, push them into the DB
+ * @param {[Instance]} nestedArr
+ * @param {ObjectId} up instance
+ * @param {ObjectId} universe
+ */
 // eslint-disable-next-line max-statements
 async function createInstancesFromNested(nestedArr = [], up, universe) {
 	debug(`createInstancesFromNested ${nestedArr.length} count`);

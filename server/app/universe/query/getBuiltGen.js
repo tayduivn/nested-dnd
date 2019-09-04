@@ -53,7 +53,7 @@ async function getBuiltGen(
 				connectToField: "_id"
 			}
 		},
-		// recursively lookup all our dependencies
+		// recursively lookup all our pack dependencies
 		{
 			$graphLookup: {
 				from: "packs",
@@ -87,6 +87,7 @@ async function getBuiltGen(
 			}
 		},
 		// get extends
+		// TODO: restrict to packs
 		{
 			$graphLookup: {
 				from: "generators",

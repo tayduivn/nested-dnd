@@ -27,7 +27,7 @@ const dnd = {
 const Pack = ({ pack }) => (
 	<Link
 		to={{
-			pathname: "/explore/" + pack.url,
+			pathname: "/explore/pack/" + pack.url,
 			state: {
 				fromSplash: true,
 				current: pack,
