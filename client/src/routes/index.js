@@ -2,7 +2,7 @@ import Explore from "routes/explore";
 import Packs, { routes as packs } from "routes/packs";
 import Map from "routes/map";
 import Account from "routes/account";
-import Universes, { routes as universes } from "routes/universes";
+import UniverseRouter from "routes/universes";
 import PlayersPreview from "routes/players-preview";
 
 export default [
@@ -20,10 +20,9 @@ export default [
 		routes: packs
 	},
 	{
-		path: "/universes",
-		component: Universes,
-		private: true,
-		routes: universes
+		path: "/universe",
+		component: UniverseRouter,
+		private: true
 	},
 	{
 		path: "/players-preview",

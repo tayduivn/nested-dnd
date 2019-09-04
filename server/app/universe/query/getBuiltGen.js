@@ -26,7 +26,7 @@ async function getBuiltGen(
 	alreadyFoundIsa = new Set(),
 	alreadyFoundTable = new Set()
 ) {
-	debug("STARTING  Pack.aggregate --- getBuiltGen");
+	debug("STARTING  Universe.aggregate --- getBuiltGen");
 	const array = await Universe.aggregate([
 		// get the pack and make sure we have permission to get it
 		{ $match: { _id: universe_id, user: user_id } },
@@ -63,6 +63,17 @@ async function getBuiltGen(
 				as: "packs"
 			}
 		},
+		// recursively lookup all our ancestors. We need this to get data
+		{
+			$graphLookup: {
+				from: "instances",
+				as: "ancestors",
+				startWith: up_id,
+				connectFromField: "up",
+				connectToField: "_id"
+			}
+		},
+
 		// join all the pack ids together so we can graph lookup on it
 		{
 			$addFields: {
