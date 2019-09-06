@@ -8,7 +8,7 @@ const { normalizeUniverse } = require("../normalize");
 /**
  * Make a new pack specific to this universe, so we can edit it.
  */
-router.post("/create", MW.ownsUniverse, async (req, res) => {
+router.post("/", MW.ownsUniverse, async (req, res) => {
 	const id = req.params.universe;
 
 	// we already have a universe pack, bail

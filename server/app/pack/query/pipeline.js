@@ -1,9 +1,9 @@
-const getPacksPipeline = (pack_id, user_id) => [
+const getPacksPipeline = (startWith, user_id, pack_ids = []) => [
 	// recursively lookup all our dependencies
 	{
 		$graphLookup: {
 			from: "packs",
-			startWith: pack_id || "pack",
+			startWith: startWith || "$pack",
 			connectFromField: "dependencies",
 			connectToField: "_id",
 			as: "packs",
@@ -11,9 +11,26 @@ const getPacksPipeline = (pack_id, user_id) => [
 				$or: [{ public: true }, { _user: user_id }]
 			}
 		}
+	},
+	// need for $lookups on pack ids
+	{
+		$addFields: {
+			packIds: { $concatArrays: ["$packs._id", pack_ids] }
+		}
+	}
+];
+
+const getSeedIsaPipeline = () => [
+	{
+		$addFields: {
+			seedIsa: {
+				$split: ["$seed", ">"]
+			}
+		}
 	}
 ];
 
 module.exports = {
-	getPacksPipeline
+	getPacksPipeline,
+	getSeedIsaPipeline
 };

@@ -5,10 +5,10 @@ const Table = require("../../table/Table");
 const Pack = require("../../pack/Pack");
 const Generator = require("../../generator/Generator");
 
-const { getByIsa } = require("./getUtils");
+const { getByIsa } = require("../util/getUtils");
 const { MW } = require("../../util");
 
-const generators = require("./generators");
+const generators = require("../../generator/routes/generators");
 const { getPack, getPackOptions } = require("../query");
 const { normalizePack } = require("../normalize");
 

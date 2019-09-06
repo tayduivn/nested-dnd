@@ -6,11 +6,11 @@ const { getUniverseExplore, allocateSpaceForNewInstances } = require("universe/q
 
 /**
  * From a universe id, get the initial view of the universe.
- * @param {string} univ A universe id
+ * @param {ObjectId} universe_id A universe id
  * @param {ObjectId} user_id
  */
-async function getInstanceFromUniverse(univ, user_id) {
-	let universe = await getUniverseExplore(univ, user_id);
+async function getInstanceFromUniverse(universe_id, user_id) {
+	let universe = await getUniverseExplore(universe_id, user_id);
 
 	// get rid of the duplicate $last result
 	const instance = universe.ancestors[universe.ancestors.length - 1];

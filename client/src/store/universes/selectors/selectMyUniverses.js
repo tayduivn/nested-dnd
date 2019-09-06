@@ -4,7 +4,8 @@ const selectMyUniverses = ({ universes, packs, user }) => ({
 	loaded: universes.myUniverses.loaded,
 	array: universes.myUniverses.array.map(id => {
 		const univ = { ...universes.byId[id] };
-		univ.lastSaw = universes.instances[univ.last].name;
+		const last = universes.instances[univ.last];
+		univ.lastSaw = last ? last.name : "";
 		const { cls, txt } = selectAncestorsAndStyle(univ.last, universes.instances);
 		const pack = packs.byId[univ.pack];
 		univ._id = id;

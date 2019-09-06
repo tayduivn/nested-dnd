@@ -1,46 +1,21 @@
-const mongo = require("mongoose").mongo;
 const debug = require("debug")("app:universe:query");
 const sortAncestors = require("instance/util/sortAncestors");
 
 const Universe = require("../Universe");
+const { getPacksPipeline } = require("pack/query/pipeline");
+const { getAncestors, getAncestorsAndDescendents } = require("instance/query/pipeline");
 
 /**
  * From a universe id, get the last saw instance and return
  *
- * @param {string} id The id of a universe
+ * @param {ObjectId} _id The id of a universe
  * @param {ObjectId} user_id
  */
-const getUniverseExplore = async (id, user_id) => {
+const getUniverseExplore = async (_id, user_id) => {
 	const universes = await Universe.aggregate([
-		{ $match: { _id: mongo.ObjectId(id), user: user_id } },
-		{
-			$graphLookup: {
-				from: "packs",
-				startWith: "$pack",
-				connectFromField: "dependencies",
-				connectToField: "_id",
-				as: "packs"
-			}
-		},
-		{
-			$graphLookup: {
-				from: "instances",
-				startWith: "$last",
-				connectFromField: "up",
-				connectToField: "_id",
-				as: "ancestors"
-			}
-		},
-		{
-			$graphLookup: {
-				from: "instances",
-				startWith: "$last",
-				connectFromField: "in",
-				connectToField: "_id",
-				as: "inArr",
-				maxDepth: 2
-			}
-		}
+		{ $match: { _id: _id, user: user_id } },
+		...getPacksPipeline("$pack", user_id),
+		...getAncestorsAndDescendents("$last", "$last", 2)
 	]).exec();
 
 	if (!universes.length) return null;
@@ -51,28 +26,13 @@ const getUniverseExplore = async (id, user_id) => {
 	}
 };
 
-const getUniversesByUser = async _id => {
-	return await Universe.aggregate([
-		{ $match: { user: _id } },
-		{
-			$graphLookup: {
-				from: "packs",
-				startWith: "$pack",
-				connectFromField: "dependencies",
-				connectToField: "_id",
-				as: "packs"
-			}
-		},
-		{
-			$graphLookup: {
-				from: "instances",
-				startWith: "$last",
-				connectFromField: "up",
-				connectToField: "_id",
-				as: "array"
-			}
-		}
-	]).exec();
+const getUniversesByUser = async user_id => {
+	const pipeline = [
+		{ $match: { user: user_id } },
+		...getPacksPipeline("$pack", user_id),
+		...getAncestors("$last", "instances")
+	];
+	return await Universe.aggregate(pipeline).exec();
 };
 
 function countInstances(nestedArr) {

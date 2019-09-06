@@ -76,7 +76,7 @@ export const createUniversePack = id => {
 	return dispatch => {
 		dispatch({ type: FETCH_UNIVERSE_START, id });
 
-		DB.fetch(`universes/${id}/pack/create`, "POST").then(({ data, error }) => {
+		DB.fetch(`universes/${id}/pack`, "POST").then(({ data, error }) => {
 			fetchComplete(dispatch, id, data, error);
 		});
 	};

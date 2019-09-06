@@ -5,7 +5,6 @@ const ObjectId = mongoose.mongo.ObjectId;
 const MW = require("../../util/middleware");
 const Maker = require("generator/util/make");
 
-const { stringify, normalUniverseResponse } = require("util");
 const { getInstanceFromUniverse, createInstancesFromNested } = require("instance/query");
 const getInstanceByIndex = require("instance/query/getInstanceByIndex");
 const { normalizeInstance } = require("universe/normalize");
@@ -25,7 +24,7 @@ router.get("/:universe/:index?", MW.isLoggedIn, async (req, res, next) => {
 
 		// either we provided no index or it doesn't exit
 		if (!dbResult) {
-			dbResult = await getInstanceFromUniverse(req.params.universe, req.user._id);
+			dbResult = await getInstanceFromUniverse(universe_id, req.user._id);
 		}
 
 		let { instance, generators, tables, pack, universe, ancestorData } = dbResult;
@@ -60,23 +59,6 @@ router.get("/:universe/:index?", MW.isLoggedIn, async (req, res, next) => {
 	} catch (e) {
 		next(e);
 	}
-});
-
-router.get("/:universe/:index/lite", (req, res, next) => {
-	req.universe
-		// generate if we need to
-		.getNested(req.params.index, req.universe.pack)
-		.then(nested => {
-			req.universe.save();
-			const index = nested.index;
-			const firstBatch = normalUniverseResponse(req.universe, index);
-
-			// send the first batch to display crucial info
-			res.write(stringify("Instance", firstBatch));
-
-			res.end();
-		})
-		.catch(next);
 });
 
 module.exports = router;

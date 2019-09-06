@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 
 import IconSelect from "components/Form/IconSelect";
 import Modal from "components/Modal";

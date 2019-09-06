@@ -1,61 +1,27 @@
 const router = require("express").Router();
+const makeBuiltpack = require("builtpack/makeBuiltpack");
 
 const MW = require("../../util/middleware");
-const Universe = require("../../universe/Universe");
-const { stringify, normalUniverseResponse, setLastSaw } = require("../../util");
+// const Universe = require("../../universe/Universe");
+// const { stringify, normalUniverseResponse, setLastSaw } = require("../../util");
 const { normalizePack } = require("../../pack/normalize");
+const { normalizeInstance } = require("universe/normalize");
+const explorePack = require("pack/query/explorePack");
+const Maker = require("generator/util/make");
 
-router.get("/:url/:index?", MW.canViewPack, async (req, res, next) => {
-	const pack_url = req.params.url;
+router.get("/:url/:isa?", MW.canViewPack, async (req, res, next) => {
+	try {
+		const pack_url = req.params.url;
+		const { pack, packs, tables, generators, seeds } = await explorePack(pack_url, req.user._id);
 
-	// Universe.getTemp(req.sessionID, req.pack, req.params.index)
-	// 	.then(async universe => {
-	// 		const index = setLastSaw(req.params.index, universe);
-	// 		const firstBatch = normalUniverseResponse(universe, index);
+		const builtpack = makeBuiltpack(pack, generators);
+		const maker = new Maker({ builtpack, tables });
+		const nested = maker.make(builtpack.getGen(seeds[0]), 1, undefined);
 
-	// 		const meta = {
-	// 			universeId: universe._id,
-	// 			packId: req.pack._id,
-	// 			packUrl: req.params.url
-	// 		};
-	// 		const { packs, tables, generators } = normalizePack(req.pack);
-
-	// 		res.write(stringify("Pack", packs, meta));
-	// 		if (tables) res.write(stringify("Table", tables, meta));
-	// 		if (generators) res.write(stringify("Generator", generators, meta));
-
-	// 		// send the metatdata about the universe
-	// 		const metaUni = universe.toObject();
-	// 		delete metaUni.array;
-	// 		res.write(stringify("Universe", metaUni, meta));
-
-	// 		// send the first batch to display crucial info
-	// 		res.write(stringify("Instance", firstBatch, meta));
-
-	// 		// send the whole universe
-	// 		res.write(stringify("Universe", universe.toObject(), meta));
-
-	// 		await universe.save();
-	// 		res.end();
-	// 	})
-	// 	.catch(next);
-});
-
-// only give me the node, not everything else
-router.get("/:url/:index/lite", MW.canViewPack, async (req, res, next) => {
-	Universe.getTemp(req.sessionID, req.pack, req.params.index)
-		.then(async universe => {
-			const index = setLastSaw(req.params.index, universe);
-			const firstBatch = normalUniverseResponse(universe, index);
-
-			// send the first batch to display crucial info
-			res.write(stringify("Instance", firstBatch, { universeId: universe._id }));
-
-			await universe.save();
-
-			res.end();
-		})
-		.catch(next);
+		res.json(normalizePack({ packs, tables, generators, ...pack }));
+	} catch (e) {
+		next(e);
+	}
 });
 
 module.exports = router;

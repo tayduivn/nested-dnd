@@ -1,12 +1,12 @@
 const router = require("express").Router({ mergeParams: true });
 
-const Generator = require("../../generator/Generator");
+const Generator = require("../Generator");
 const BuiltPack = require("../../builtpack/BuiltPack");
 
-const Maintainer = require("../../generator/maintain");
+const Maintainer = require("../maintain");
 const { MW } = require("../../util");
 
-const { getById, getByIsa } = require("./getUtils");
+const { getById, getByIsa } = require("../../pack/util/getUtils");
 
 // Create Generator
 // ---------------------------------

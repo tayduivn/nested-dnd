@@ -1,5 +1,8 @@
 const Pack = require("../Pack");
 
+const { getPacksPipeline } = require("./pipeline");
+const { getGeneratorsFromPack } = require("generator/query/pipeline");
+
 /**
  * Get all the generators and tables for a pack. Anything that would be an option in a dropdown
  * @param {string} url
@@ -10,26 +13,14 @@ async function getPackOptions(url, user_id) {
 		// get the pack and make sure we have permission to get it
 		{ $match: { url: url, _user: user_id } },
 		// recursively lookup all our dependencies
-		{
-			$graphLookup: {
-				from: "packs",
-				startWith: "$dependencies",
-				connectFromField: "dependencies",
-				connectToField: "_id",
-				as: "packs"
-			}
-		},
-		// join all the pack ids together so we can graph lookup on it
-		{ $addFields: { allDeps: { $concatArrays: ["$dependencies", ["$_id"]] } } },
+		...getPacksPipeline("$dependencies", user_id, ["$_id"]),
 		// get generators
-		{
-			$lookup: { from: "generators", localField: "allDeps", foreignField: "pack", as: "generators" }
-		},
+		...getGeneratorsFromPack("packIds"),
 		// get tables
 		{
 			$lookup: {
 				from: "tables",
-				localField: "allDeps",
+				localField: "packIds",
 				foreignField: "pack",
 				as: "tables"
 			}

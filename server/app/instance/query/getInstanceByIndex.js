@@ -5,57 +5,18 @@ const makeBuiltpack = require("builtpack/makeBuiltpack");
 const getBuiltGen = require("../../universe/query/getBuiltGen");
 const { findTableRecurse } = require("table/query");
 const sortAncestors = require("instance/util/sortAncestors");
+const { getPacksPipeline } = require("pack/query/pipeline");
+const { getAncestorsAndDescendents } = require("instance/query/pipeline");
+const { getUniverse } = require("universe/query/pipeline");
+const { getGeneratorsFromPack } = require("generator/query/pipeline");
 
 const pipeline = (universe_id, index, user_id) => [
 	{
 		$match: { univ: universe_id, n: index }
 	},
-	// get universe
-	{
-		$lookup: {
-			from: "universes",
-			as: "universe",
-			pipeline: [{ $match: { _id: universe_id, user: user_id } }]
-		}
-	},
-	// get pack
-	{
-		$lookup: {
-			from: "packs",
-			localField: "universe.0.pack",
-			foreignField: "_id",
-			as: "pack"
-		}
-	},
-	// flatten universe and pack & mark if item is todo
-	{
-		$addFields: {
-			pack: { $arrayElemAt: ["$pack", 0] },
-			universe: { $arrayElemAt: ["$universe", 0] }
-		}
-	},
-
-	// find ancestors
-	{
-		$graphLookup: {
-			from: "instances",
-			startWith: "$_id",
-			connectFromField: "up",
-			connectToField: "_id",
-			as: "ancestors"
-		}
-	},
-	// find descendants
-	{
-		$graphLookup: {
-			from: "instances",
-			startWith: "$_id",
-			connectFromField: "in",
-			connectToField: "_id",
-			as: "inArr",
-			maxDepth: 2
-		}
-	},
+	...getUniverse(universe_id, user_id),
+	...getPacksPipeline("universe.pack", user_id),
+	...getAncestorsAndDescendents("$_id", "in", 2),
 	// -------------- if item is todo -----------------------
 	// can't merge this step with other addFields because it depends on it
 	{
@@ -69,62 +30,10 @@ const pipeline = (universe_id, index, user_id) => [
 			}
 		}
 	},
-	// get all the packs
-	{
-		$graphLookup: {
-			from: "packs",
-			startWith: "$todoItem.pack",
-			connectFromField: "dependencies",
-			connectToField: "_id",
-			as: "packs"
-		}
-	}, // join all the pack ids together so we can graph lookup on it
-	{
-		$addFields: {
-			packs: { $concatArrays: ["$packs._id", ["$todoItem.pack"]] }
-		}
-	},
-	{
-		// look up the genrators for this todo item
-		$lookup: {
-			from: "generators",
-			as: "sourceGenerators",
-			let: { packs: "$packs", todoIsa: ["$todoItem.isa"] },
-			pipeline: [
-				{
-					$match: {
-						$expr: { $in: ["$isa", "$$todoIsa"] }
-					}
-				},
-				{
-					$match: {
-						$expr: { $in: ["$pack", "$$packs"] }
-					}
-				}
-			]
-		}
-	},
-	// get extends
-	{
-		$graphLookup: {
-			from: "generators",
-			startWith: "$sourceGenerators",
-			connectFromField: "extends",
-			connectToField: "isa",
-			as: "extendGens"
-		}
-	},
-	// merge extends
-	{
-		$addFields: {
-			generators: { $concatArrays: ["$extendGens", "$sourceGenerators"] }
-		}
-	},
+	...getGeneratorsFromPack("packIds"),
 	{
 		$project: {
-			packs: 0, // only needed this to get the generators
-			sourceGenerators: 0,
-			extendsGenerators: 0
+			packs: 0 // only needed this to get the generators
 		}
 	}
 ];
@@ -163,21 +72,18 @@ async function getInstanceByIndex(universe_id, index, user_id) {
 		const builtpack = makeBuiltpack(pack, generators);
 		const generator = builtpack.getGen(instance.isa);
 		const inArrGenerator = generator.in;
-		const alreadyFoundIsas = new Set();
-		const alreadyFoundTables = new Set();
-		alreadyFoundIsas.add(instance.isa);
+		const alreadyFoundIsa = new Set();
+		alreadyFoundIsa.add(instance.isa);
 		let ancestorData = ancestors.reduce((data, anc = {}) => {
 			data = { ...data, ...(anc.data || {}) };
 			return data;
 		}, {});
 
-		const {
-			toFindIsas,
-			toFindTableIds,
-			alreadyFoundTable,
-			alreadyFoundIsa,
-			usedData
-		} = processFlat(inArrGenerator);
+		const { toFindIsas, toFindTableIds, alreadyFoundTable, usedData } = processFlat(
+			inArrGenerator,
+			undefined,
+			alreadyFoundIsa
+		);
 		const trimmedData = Array.from(usedData).reduce((trim, name) => {
 			trim[name] = ancestorData[name];
 			return trim;
@@ -186,7 +92,7 @@ async function getInstanceByIndex(universe_id, index, user_id) {
 		processFlat(trimmedData, alreadyFoundTable, alreadyFoundIsa, toFindIsas, toFindTableIds);
 
 		// get tables in the `in` definiton
-		const tables = await findTableRecurse(toFindTableIds, alreadyFoundTables);
+		const tables = await findTableRecurse(toFindTableIds, alreadyFoundTable);
 		processFlat(tables, alreadyFoundTable, alreadyFoundIsa, toFindIsas, toFindTableIds);
 
 		const builtGenResults = await getBuiltGen(
@@ -194,8 +100,8 @@ async function getInstanceByIndex(universe_id, index, user_id) {
 			user_id,
 			instance._id,
 			Array.from(toFindIsas),
-			alreadyFoundTables,
-			alreadyFoundIsas
+			alreadyFoundTable,
+			alreadyFoundIsa
 		);
 
 		return {

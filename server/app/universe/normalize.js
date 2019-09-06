@@ -120,7 +120,13 @@ function normalizeUniverse(u) {
 		let { data, included } = normalizePacks(u.packs);
 		result.included.push(...data);
 		result.included.push(...included);
-		delete u.packs;
+		delete result.data.attributes["packs"];
+	}
+
+	if (u.instances) {
+		const { data, included } = normalizeInstances(u.instances);
+		result.included.push(...data, ...included);
+		delete result.data.attributes["instances"];
 	}
 
 	const { newArray, includedInst } = normalizeArray(u);
