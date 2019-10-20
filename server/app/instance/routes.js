@@ -160,8 +160,11 @@ router.post("/:instance", async (req, res, next) => {
 
 			// make sure the result has any additional options passed in the request
 			const TEMP_IN = nested.TEMP_IN;
-			nested.set(req.body);
+			const requestedValues = {...req.body};
+			delete requestedValues.isa;
+			nested.set(requestedValues);
 			nested.TEMP_IN = TEMP_IN;
+			
 			const { parent, instances } = await createInstancesFromNested([nested], up, universe);
 
 			debug(`DONE      POST ${req.url}`);

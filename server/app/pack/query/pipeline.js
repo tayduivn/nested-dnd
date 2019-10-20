@@ -1,9 +1,9 @@
-const getPacksPipeline = (startWith, user_id, pack_ids = []) => [
+const getPacksPipeline = (startWith = "$pack", user_id, pack_ids = []) => [
 	// recursively lookup all our dependencies
 	{
 		$graphLookup: {
 			from: "packs",
-			startWith: startWith || "$pack",
+			startWith: startWith,
 			connectFromField: "dependencies",
 			connectToField: "_id",
 			as: "packs",

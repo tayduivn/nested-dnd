@@ -5,18 +5,21 @@ const makeBuiltpack = require("builtpack/makeBuiltpack");
 const getBuiltGen = require("../../universe/query/getBuiltGen");
 const { findTableRecurse } = require("table/query");
 const sortAncestors = require("instance/util/sortAncestors");
-const { getPacksPipeline } = require("pack/query/pipeline");
+
+// pipeline 
 const { getAncestorsAndDescendents } = require("instance/query/pipeline");
 const { getUniverse } = require("universe/query/pipeline");
-const { getGeneratorsFromPack } = require("generator/query/pipeline");
+const { getPacksPipeline } = require("pack/query/pipeline");
+const { getGeneratorsFromIsa, getChildIsas, mergeGens, getData } = require("generator/query/pipeline");
+const { getTablesFromTypeValue } = require("table/query/pipeline");
 
 const pipeline = (universe_id, index, user_id) => [
 	{
 		$match: { univ: universe_id, n: index }
 	},
 	...getUniverse(universe_id, user_id),
-	...getPacksPipeline("universe.pack", user_id),
-	...getAncestorsAndDescendents("$_id", "in", 2),
+	...getPacksPipeline("$universe.pack", user_id),
+	...getAncestorsAndDescendents("$_id", "$in", 2),
 	// -------------- if item is todo -----------------------
 	// can't merge this step with other addFields because it depends on it
 	{
@@ -30,12 +33,24 @@ const pipeline = (universe_id, index, user_id) => [
 			}
 		}
 	},
-	...getGeneratorsFromPack("packIds"),
-	{
-		$project: {
-			packs: 0 // only needed this to get the generators
-		}
-	}
+	...getGeneratorsFromIsa(['$todoItem.isa']),
+	...getChildIsas(),
+	...getGeneratorsFromIsa("$childIsas", "$packIds", "childGens"),
+	...mergeGens(["$generators", "$childGens"]),
+	...getData("$generators.data"),
+	...getTablesFromTypeValue(
+		[
+			"$generators.desc",
+			["$generators.name"],
+			["$generators.style.icon"],
+			"$generators.in",
+			// "$generators.extendsGen.desc",
+			// "$generators.extendsGen.name",
+			["$data.v"],
+			["$childIn"]
+		],
+		user_id
+	)
 ];
 
 /**
@@ -47,13 +62,15 @@ const pipeline = (universe_id, index, user_id) => [
 async function getInstanceByIndex(universe_id, index, user_id) {
 	debug("STARTING  Instance.aggregate --- getInstanceByIndex");
 
-	const array = await Instance.aggregate(pipeline(universe_id, index, user_id));
+	const aggregation = pipeline(universe_id, index, user_id);
+	const array = await Instance.aggregate(aggregation);
 	debug("DONE      Instance.aggregate --- getInstanceByIndex");
 
 	if (!array.length) return null;
 
 	let instance = array[0];
-	let { pack, generators, universe, ancestors, descendents } = instance;
+	let { packs, generators, universe, ancestors, inArr: descendents } = instance;
+	let pack = packs.find(p => universe.pack.equals(p._id));
 	ancestors = sortAncestors(instance._id, ancestors);
 	generators = [...generators];
 	instance = Instance.hydrate(instance);

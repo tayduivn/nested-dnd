@@ -7,6 +7,10 @@ const Pack = require("pack/Pack");
 const { findTableRecurse } = require("table/query");
 const processFlat = require("util/processFlat");
 const sortAncestors = require("instance/util/sortAncestors");
+const { getPacksPipeline } = require("pack/query/pipeline");
+const { getAncestors } = require("instance/query/pipeline");
+const { getGeneratorsFromIsa, getChildIsas, mergeGens, getData } = require("generator/query/pipeline");
+const { getTablesFromTypeValue } = require("table/query/pipeline");
 
 // eslint-disable-next-line max-statements
 /**
@@ -26,134 +30,40 @@ async function getBuiltGen(
 	alreadyFoundIsa = new Set(),
 	alreadyFoundTable = new Set()
 ) {
-	debug("STARTING  Universe.aggregate --- getBuiltGen");
-	const array = await Universe.aggregate([
+	const aggregation = [
 		// get the pack and make sure we have permission to get it
 		{ $match: { _id: universe_id, user: user_id } },
-		{
-			$lookup: {
-				from: "packs",
-				localField: "pack",
-				foreignField: "_id",
-				as: "pack"
-			}
-		},
-		{
-			$addFields: {
-				pack: { $arrayElemAt: ["$pack", 0] }
-			}
-		},
-		// recursively lookup all our ancestors. We need this to get data
-		{
-			$graphLookup: {
-				from: "instances",
-				as: "ancestors",
-				startWith: up_id,
-				connectFromField: "up",
-				connectToField: "_id"
-			}
-		},
-		// recursively lookup all our pack dependencies
-		{
-			$graphLookup: {
-				from: "packs",
-				startWith: "$pack.dependencies",
-				connectFromField: "dependencies",
-				connectToField: "_id",
-				as: "packs"
-			}
-		},
-		// recursively lookup all our ancestors. We need this to get data
-		{
-			$graphLookup: {
-				from: "instances",
-				as: "ancestors",
-				startWith: up_id,
-				connectFromField: "up",
-				connectToField: "_id"
-			}
-		},
-
-		// join all the pack ids together so we can graph lookup on it
-		{
-			$addFields: {
-				packs: { $concatArrays: ["$pack.dependencies", ["$pack._id"]] }
-			}
-		},
-
-		// get generators that we are looking for
-		{
-			$lookup: {
-				from: "generators",
-				as: "sourceGenerators",
-				let: { packs: "$packs" },
-				pipeline: [
-					{
-						$match: {
-							isa: { $in: isas },
-							$expr: { $in: ["$pack", "$$packs"] }
-						}
-					}
-				]
-			}
-		},
-		// get extends
-		// TODO: restrict to packs
-		{
-			$graphLookup: {
-				from: "generators",
-				startWith: "$sourceGenerators",
-				connectFromField: "extends",
-				connectToField: "isa",
-				as: "extendGens"
-			}
-		},
-
-		{
-			$addFields: {
-				generators: { $concatArrays: ["$extendGens", "$sourceGenerators"] }
-			}
-		},
-		// merge all the descs together in one
-		{
-			$addFields: {
-				desc: {
-					$filter: {
-						input: {
-							$reduce: {
-								input: {
-									$concatArrays: ["$generators.desc", ["$generators.name"]]
-								},
-								initialValue: [],
-								in: { $concatArrays: ["$$value", "$$this"] }
-							}
-						},
-						as: "d",
-						cond: {
-							$eq: ["$$d.type", "table_id"]
-						}
-					}
-				}
-			}
-		},
-		{
-			$graphLookup: {
-				from: "tables",
-				startWith: "$desc.value",
-				connectFromField: "rows.value",
-				connectToField: "_id",
-				as: "tables"
-			}
-		},
-		{
-			$project: {
-				desc: 0,
-				packs: 0,
-				sourceGenerators: 0,
-				extendsGenerators: 0
-			}
-		}
-	]);
+		...getPacksPipeline("$pack", user_id),
+		...getAncestors(up_id),
+		...getGeneratorsFromIsa(isas),
+		...getChildIsas(),
+		...getGeneratorsFromIsa("$childIsas", "$packIds", "childGens"),
+		...mergeGens(["$generators", "$childGens"]),
+		...getData("$generators.data"),
+		...getTablesFromTypeValue(
+			[
+				"$generators.desc",
+				["$generators.name"],
+				["$generators.style.icon"],
+				"$generators.in",
+				// "$generators.extendsGen.desc",
+				// "$generators.extendsGen.name",
+				["$data.v"],
+				["$childIn"]
+			],
+			user_id
+		),
+		// {
+		// 	$project: {
+		// 		desc: 0,
+		// 		packs: 0,
+		// 		sourceGenerators: 0,
+		// 		extendsGenerators: 0
+		// 	}
+		// }
+	];
+	debug("STARTING  Universe.aggregate --- getBuiltGen");
+	const array = await Universe.aggregate(aggregation);
 	debug("DONE      Pack.aggregate --- getBuiltGen");
 	if (!array.length) return null;
 	const universe = array[0];

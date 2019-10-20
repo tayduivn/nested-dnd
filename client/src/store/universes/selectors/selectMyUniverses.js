@@ -1,6 +1,6 @@
 import selectAncestorsAndStyle from "./selectAncestorsAndStyle";
 
-const selectMyUniverses = ({ universes, packs, user }) => ({
+const selectMyUniverses = ({ universes, packs }) => ({
 	loaded: universes.myUniverses.loaded,
 	array: universes.myUniverses.array.map(id => {
 		const univ = { ...universes.byId[id] };
@@ -10,7 +10,7 @@ const selectMyUniverses = ({ universes, packs, user }) => ({
 		const pack = packs.byId[univ.pack];
 		univ._id = id;
 		univ.font = pack.font;
-		univ.cls = cls;
+		univ.cssClass = cls;
 		univ.txt = txt;
 		return univ;
 	})

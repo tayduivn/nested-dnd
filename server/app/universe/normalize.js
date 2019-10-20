@@ -33,7 +33,14 @@ function normalizeInstance(inst) {
 		return null;
 	}
 
-	const pojo = inst.toJSON ? inst.toJSON() : inst;
+	// clean up extra fields
+	let pojo = inst;
+	if(inst.model){
+		const Instance = inst.model("Instance");
+		pojo = new Instance(inst);
+	}
+	pojo = inst.toJSON ? inst.toJSON() : inst;
+	
 	const result = {
 		data: {
 			type: "Instance",

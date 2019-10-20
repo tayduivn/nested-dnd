@@ -27,7 +27,7 @@ router.get("/:universe/:index?", MW.isLoggedIn, async (req, res, next) => {
 			dbResult = await getInstanceFromUniverse(universe_id, req.user._id);
 		}
 
-		let { instance, generators, tables, pack, universe, ancestorData } = dbResult;
+		let { instance, generators, tables, pack, universe, ancestorData, ancestors = [], descendents = [] } = dbResult;
 
 		if (!instance) {
 			res.status(NOT_FOUND).json({});
@@ -35,7 +35,6 @@ router.get("/:universe/:index?", MW.isLoggedIn, async (req, res, next) => {
 		}
 
 		// we need to generate the children of this
-		let descendents = [];
 		if (dbResult.todo) {
 			const builtpack = makeBuiltpack(pack, generators);
 			const maker = new Maker({ builtpack, tables });
@@ -52,10 +51,13 @@ router.get("/:universe/:index?", MW.isLoggedIn, async (req, res, next) => {
 			descendents = instances;
 		}
 
-		if (instance.toJSON) instance = instance.toJSON();
-
-		const result = { pack, universe, generators, tables, descendents, ...instance };
-		res.json(normalizeInstance(result));
+		instance.pack = pack;
+		instance.universe = universe;
+		instance.generators = generators;
+		instance.tables = tables;
+		instance.descendents = descendents;
+		instance.ancestors= ancestors;
+		res.json(normalizeInstance(instance));
 	} catch (e) {
 		next(e);
 	}

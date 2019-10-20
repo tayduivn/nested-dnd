@@ -141,8 +141,8 @@ const loadCurrent = () => {
 				});
 				let newIndex = json.data.attributes.n;
 
-				// then, dispatch an action to change the url if needed
-				if (index === false || index !== json.data.attributes.n) {
+				// then, dispatch an action to change the hash of the url if needed
+				if (index === false || (!isNaN(json.data.attributes.n) && index !== json.data.attributes.n)) {
 					dispatch(push(`/explore/${type}/${identifier}#${newIndex}`));
 				}
 			}

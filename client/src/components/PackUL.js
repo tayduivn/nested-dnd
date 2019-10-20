@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import PackLink from "components/PackLink";
 
 import Link from "components/Link";
 import { loadFonts } from "store/fonts";
@@ -7,54 +8,15 @@ import { loadFonts } from "store/fonts";
 const ADD_BUTTON_CLASSNAME =
 	"create col btn btn-outline-dark d-flex align-items-center justify-content-center packlink";
 
-const EDIT_BUTTON = (
-	<h2>
-		<i className="fas fa-pen-square" />
-		<small>Edit</small>
-	</h2>
-);
 
-const EDITBTN_CLS =
-	"edit btn col-xs-auto d-flex align-items-center justify-content-center packlink__btn";
 
-class PackLink extends React.PureComponent {
-	render() {
-		const { _id, name, url, title, txt, font, description, isUniverse } = this.props;
-		const { dependencies, lastSaw, cls = "bg-grey-900" } = this.props;
-		const URL = isUniverse ? `/universe/${_id}` : `/pack/${url}`;
-		const style = { color: txt };
-		return (
-			<li className={`col`}>
-				<div className="packlink btn-group">
-					<Link to={`/explore${URL}`} className={`btn col packlink__btn btn-${cls}`}>
-						<h1 style={{ fontFamily: font ? `'${font}', serif` : "inherit" }}>{title || name}</h1>
-						{description && <p>{description}</p>}
-						{isUniverse && dependencies && dependencies.length && (
-							<p>
-								<strong>Packs</strong>: {dependencies.join(", ")}
-							</p>
-						)}
-						{lastSaw && (
-							<p>
-								<strong>Currently viewing:</strong> {lastSaw}
-							</p>
-						)}
-					</Link>
-					<Link to={`${URL}/edit`} className={`${EDITBTN_CLS} btn-${cls}`} style={style}>
-						{EDIT_BUTTON}
-					</Link>
-				</div>
-			</li>
-		);
-	}
-}
 
-const PackInput = ({ _id, name, txt, font, cls, description, selected, url, onSelect }) => (
+const PackInput = ({ _id, name, txt, font, cssClass, description, selected, url, onSelect }) => (
 	<li className={`col`}>
 		<div className="packlink btn-group">
 			<button
 				{...{ onClick: onSelect, _id, style: { color: txt } }}
-				className={`btn col btn-${cls}`}
+				className={`btn col btn-${cssClass}`}
 			>
 				<h1 className="webfont" style={{ fontFamily: font ? `'${font}', serif` : "inherit" }}>
 					<span className={`fa-stack ${selected ? "selected" : ""}`}>
@@ -66,7 +28,7 @@ const PackInput = ({ _id, name, txt, font, cls, description, selected, url, onSe
 				{description ? <p>{description}</p> : null}
 			</button>
 			{url ? (
-				<Link to={"/explore/" + url} className={`explore btn col-xs-auto btn-${cls}`}>
+				<Link to={"/explore/" + url} className={`explore btn col-xs-auto btn-${cssClass}`}>
 					<h2>
 						<i className="fas fa-eye" />
 						<small>preview</small>

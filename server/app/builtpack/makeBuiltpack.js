@@ -1,3 +1,4 @@
+const debug = require("debug")("app:builtpack");
 const BuiltPack = require("./BuiltPack");
 const Generator = require("../generator/Generator");
 
@@ -11,6 +12,7 @@ const { sortGensByPack, combineGenerators } = require("./util");
  */
 //eslint-disable-next-line
 module.exports = function(pack, gens) {
+	debug(`makeBuiltpack with ${gens.length} generators`);
 	const map = {};
 	const allPackIds = pack.dependencies.concat([pack.id]);
 	const builtpack = new BuiltPack({ _id: pack.id });

@@ -11,7 +11,7 @@ export default function isInstanceLoaded(id, instances = {}) {
 	if (current.in) {
 		for (let index = 0; index < current.in.length; index++) {
 			const childId = current.in[index];
-			if (!instances[childId]) return false;
+			if (childId !== null && !instances[childId]) return false;
 		}
 	}
 

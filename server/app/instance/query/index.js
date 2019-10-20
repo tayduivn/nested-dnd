@@ -12,20 +12,15 @@ const { getUniverseExplore, allocateSpaceForNewInstances } = require("universe/q
 async function getInstanceFromUniverse(universe_id, user_id) {
 	let universe = await getUniverseExplore(universe_id, user_id);
 
-	// get rid of the duplicate $last result
-	const instance = universe.ancestors[universe.ancestors.length - 1];
-	universe.ancestors.splice(universe.ancestors.length - 1, 1);
-	universe.inArr.splice(universe.inArr.length - 1, 1);
-	instance.universe = {
-		...universe,
-		array: [...universe.inArr, ...universe.ancestors],
-		inArr: undefined,
-		ancestors: undefined
-	};
+	// grab the copy of this instance out of the ancestors list
+	let instanceIndex = universe.ancestors.findIndex((inst) => inst._id.equals(universe.last));
+	const instance = universe.ancestors.splice(instanceIndex, 1)[0];
+	
+	// remove the copy of this instance from the inArr
+	instanceIndex = universe.inArr.findIndex((inst) => inst._id.equals(universe.last));
+	universe.inArr.splice(instanceIndex, 1);
 
-	// TODO: Make `in` if necessary
-
-	return { instance };
+	return { instance, ancestors: universe.ancestors, descendents: universe.inArr, universe };
 }
 
 /**
@@ -107,7 +102,7 @@ async function createInstance(universe_id, user_id, up_id, data) {
 		inst = await Instance.create({
 			univ: universe._id,
 			up: up_id,
-			n: universe.count,
+			n: universe.count + 1,
 			...data
 		});
 	} catch (e) {

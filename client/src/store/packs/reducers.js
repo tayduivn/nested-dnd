@@ -41,7 +41,8 @@ const pack = (state = { loaded: false, generators: false, tables: false }, actio
 		case ADD_CHILD_OPTIONS_RECEIVE:
 			return {
 				...state,
-				...action.data,
+				generators: action.generators,
+				tables: action.tables,
 				isFetching: false
 			};
 		case ADD_CHILD_OPTIONS_FETCH:
@@ -105,7 +106,7 @@ function byId(state = {}, action) {
 		case RECEIVE_MY_UNIVERSES:
 		case RECEIVE_PACKS:
 			const newState = { ...state };
-			action.data.forEach(item => (newState[item.id] = item.attributes));
+			action.data.forEach(item => (newState[item.id] = {...(state[item.id] || {}), ...item.attributes}));
 			return newState;
 		default:
 			return state;
@@ -116,6 +117,10 @@ function byUrl(state = {}, action) {
 	let newByUrl;
 
 	switch (action.type) {
+		case RECEIVE_EXPLORE:
+			// find the pack in included items
+			const pack = action.included.find(item => item.type === "Pack")
+			return {...state, [pack.attributes.url]: pack.id};
 		case GENERATOR_SET:
 			if (action.data.pack) {
 				return { ...state, [action.data.pack.url]: action.data.pack._id };
