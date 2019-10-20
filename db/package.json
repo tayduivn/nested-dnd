@@ -7,7 +7,8 @@
 	},
 	"scripts": {
 		"test": "",
-		"start": "mongod --dbpath ./data"
+		"start": "mongod --dbpath ./data",
+		"up": "db-migrate up"
 	},
 	"author": "",
 	"license": "ISC",
