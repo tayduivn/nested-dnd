@@ -9,11 +9,11 @@ const getTablesInPacks = (localField = "packIds") => [
 	}
 ];
 
-const getTablesFromTypeValue = (arrays = [], user_id) => [
+const getTablesFromTypeValue = (arrays = [], user_id, field = "tables") => [
 	// this gets all the "values" from our various tables and filters for table_ids
 	{
 		$addFields: {
-			tables: {
+			[field]: {
 				$filter: {
 					input: {
 						$reduce: {

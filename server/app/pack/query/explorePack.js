@@ -31,13 +31,11 @@ async function explorePack(url, user_id, isa) {
 				["$generators.name"],
 				["$generators.style.icon"],
 				"$generators.in",
-				// "$generators.extendsGen.desc",
-				// "$generators.extendsGen.name",
-				["$data.v"],
 				["$childIn"]
 			],
 			user_id
-		)
+		),
+		...getTablesFromTypeValue([["$data.v"]], user_id, "dataTables")
 		// {
 		// 	$project: {
 		// 		childGens: 0,

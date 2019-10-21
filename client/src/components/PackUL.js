@@ -4,16 +4,11 @@ import PackLink from "components/PackLink";
 
 import Link from "components/Link";
 import { loadFonts } from "store/fonts";
-
-const ADD_BUTTON_CLASSNAME =
-	"create col btn btn-outline-dark d-flex align-items-center justify-content-center packlink";
-
-
-
+import styles from "./PackUL.module.scss";
 
 const PackInput = ({ _id, name, txt, font, cssClass, description, selected, url, onSelect }) => (
 	<li className={`col`}>
-		<div className="packlink btn-group">
+		<div className={styles.linkGroup}>
 			<button
 				{...{ onClick: onSelect, _id, style: { color: txt } }}
 				className={`btn col btn-${cssClass}`}
@@ -28,7 +23,7 @@ const PackInput = ({ _id, name, txt, font, cssClass, description, selected, url,
 				{description ? <p>{description}</p> : null}
 			</button>
 			{url ? (
-				<Link to={"/explore/" + url} className={`explore btn col-xs-auto btn-${cssClass}`}>
+				<Link to={"/explore/" + url} className={`${styles.exploreButton} btn-${cssClass}`}>
 					<h2>
 						<i className="fas fa-eye" />
 						<small>preview</small>
@@ -59,7 +54,7 @@ const PackUL = ({ list = EMPTY_ARRAY, isUniverse, selected, onSelect, addButton,
 	const to = `${isUniverse ? "/universes" : "/packs"}/create`;
 
 	return (
-		<ul className="row packs">
+		<ul className={styles.packUL}>
 			{list.map((p = {}, i) => {
 				return selectable ? (
 					<PackInput key={p._id || i} {...p} selected={selected === p._id} onSelect={onSelect} />
@@ -68,13 +63,11 @@ const PackUL = ({ list = EMPTY_ARRAY, isUniverse, selected, onSelect, addButton,
 				);
 			})}
 			{addButton ? (
-				<li className="col">
-					<Link to={to} className={ADD_BUTTON_CLASSNAME}>
-						<span>
-							<i className="fas fa-plus" /> Create new
-						</span>
-					</Link>
-				</li>
+				<Link to={to} className={styles.addButton}>
+					<span>
+						<i className="fas fa-plus" /> Create new
+					</span>
+				</Link>
 			) : null}
 		</ul>
 	);

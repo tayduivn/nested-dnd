@@ -13,11 +13,11 @@ async function getInstanceFromUniverse(universe_id, user_id) {
 	let universe = await getUniverseExplore(universe_id, user_id);
 
 	// grab the copy of this instance out of the ancestors list
-	let instanceIndex = universe.ancestors.findIndex((inst) => inst._id.equals(universe.last));
+	let instanceIndex = universe.ancestors.findIndex(inst => inst._id.equals(universe.last));
 	const instance = universe.ancestors.splice(instanceIndex, 1)[0];
-	
+
 	// remove the copy of this instance from the inArr
-	instanceIndex = universe.inArr.findIndex((inst) => inst._id.equals(universe.last));
+	instanceIndex = universe.inArr.findIndex(inst => inst._id.equals(universe.last));
 	universe.inArr.splice(instanceIndex, 1);
 
 	return { instance, ancestors: universe.ancestors, descendents: universe.inArr, universe };

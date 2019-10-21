@@ -1,6 +1,7 @@
 import DB from "util/DB";
 import { receiveTables } from "store/tables/actions";
 import { receiveGenerators } from "store/generators/actions";
+import { pushSnack } from "store/snackbar/actions";
 
 // subfiles
 export * from "./fetchAddChildOptions";
@@ -29,16 +30,21 @@ export const fetch = loaded => {
 	};
 };
 
-export const FETCH_PACK = "PACKS_FETCH_PACK";
+export const FETCH_PACK = "FETCH_PACK";
+export const RECEIVE_PACK = "RECEIVE_PACK";
 export const fetchPack = (dispatch, url, loaded) => {
 	if (!loaded) {
-		DB.get("packs", url).then(({ error, data }) => {
-			if (error) {
-				dispatch(setError(error));
+		dispatch({
+			type: FETCH_PACK,
+			url: url
+		});
+		DB.get("packs", url).then(json => {
+			if (json.errors) {
+				dispatch(pushSnack(json.errors[0]));
 			} else {
-				if (data.packs) dispatch(packsSet(data.packs));
+				/*if (data.packs) dispatch(packsSet(data.packs));
 				if (data.tables) dispatch(receiveTables(data.tables));
-				if (data.generators) dispatch(receiveGenerators(data.generators));
+				if (data.generators) dispatch(receiveGenerators(data.generators));*/
 			}
 		});
 	}

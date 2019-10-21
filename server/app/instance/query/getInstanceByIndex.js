@@ -6,11 +6,16 @@ const getBuiltGen = require("../../universe/query/getBuiltGen");
 const { findTableRecurse } = require("table/query");
 const sortAncestors = require("instance/util/sortAncestors");
 
-// pipeline 
+// pipeline
 const { getAncestorsAndDescendents } = require("instance/query/pipeline");
 const { getUniverse } = require("universe/query/pipeline");
 const { getPacksPipeline } = require("pack/query/pipeline");
-const { getGeneratorsFromIsa, getChildIsas, mergeGens, getData } = require("generator/query/pipeline");
+const {
+	getGeneratorsFromIsa,
+	getChildIsas,
+	mergeGens,
+	getData
+} = require("generator/query/pipeline");
 const { getTablesFromTypeValue } = require("table/query/pipeline");
 
 const pipeline = (universe_id, index, user_id) => [
@@ -33,7 +38,7 @@ const pipeline = (universe_id, index, user_id) => [
 			}
 		}
 	},
-	...getGeneratorsFromIsa(['$todoItem.isa']),
+	...getGeneratorsFromIsa(["$todoItem.isa"]),
 	...getChildIsas(),
 	...getGeneratorsFromIsa("$childIsas", "$packIds", "childGens"),
 	...mergeGens(["$generators", "$childGens"]),
@@ -61,7 +66,6 @@ const pipeline = (universe_id, index, user_id) => [
 // eslint-disable-next-line max-statements
 async function getInstanceByIndex(universe_id, index, user_id) {
 	debug("STARTING  Instance.aggregate --- getInstanceByIndex");
-
 	const aggregation = pipeline(universe_id, index, user_id);
 	const array = await Instance.aggregate(aggregation);
 	debug("DONE      Instance.aggregate --- getInstanceByIndex");
@@ -76,11 +80,11 @@ async function getInstanceByIndex(universe_id, index, user_id) {
 	instance = Instance.hydrate(instance);
 
 	if (!instance.todo) {
-		return { instance, pack, universe, ancestors, descendents };
+		return { instance, pack, packs, universe, ancestors, descendents };
 	}
 	if (instance.todo && instance.in) {
 		debug(`Something has gone wrong! This instance is marked as todo but already has an in!`);
-		return { instance, pack, universe, ancestors, descendents };
+		return { instance, pack, packs, universe, ancestors, descendents };
 	}
 
 	// get generator stuff for in

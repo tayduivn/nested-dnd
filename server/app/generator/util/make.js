@@ -230,11 +230,13 @@ class Maker {
 
 		if (genData.chooseRandom) {
 			var choices = [];
-			for (var isa in this.builtpack.generators) {
-				if (this.builtpack.generators[isa].extends === genData.isa) choices.push(isa);
+			for (let isa in this.builtpack.generators) {
+				if (this.builtpack.generators[isa].extends === genData.isa) {
+					choices.push(isa);
+				}
 			}
 			if (choices.length) {
-				isa = choices[Math.floor(Math.random() * choices.length)];
+				let isa = choices[Math.floor(Math.random() * choices.length)];
 				genData = this.builtpack.getGen(isa);
 				return this.cleanGen(genData);
 			}
