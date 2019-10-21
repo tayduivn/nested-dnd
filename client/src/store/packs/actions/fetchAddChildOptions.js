@@ -2,8 +2,8 @@ import DB from "util/DB";
 
 import { pushSnacks } from "store/snackbar";
 
-export const ADD_CHILD_OPTIONS_FETCH = "ADD_CHILD_OPTIONS_FETCH";
-export const ADD_CHILD_OPTIONS_RECEIVE = "ADD_CHILD_OPTIONS_RECEIVE";
+export const FETCH_CHILD_OPTIONS = "FETCH_CHILD_OPTIONS";
+export const RECEIVE_CHILD_OPTIONS = "RECEIVE_CHILD_OPTIONS";
 
 /**
  * @param {string} url the pack url
@@ -20,7 +20,7 @@ export function fetchAddChildOptions(url) {
 		if (pack && pack.generators && pack.tables) return;
 
 		dispatch({
-			type: ADD_CHILD_OPTIONS_FETCH,
+			type: FETCH_CHILD_OPTIONS,
 			url,
 			id: pack_id
 		});
@@ -30,7 +30,7 @@ export function fetchAddChildOptions(url) {
 			pushSnacks(json.errors);
 		} else if (json.data) {
 			dispatch({
-				type: ADD_CHILD_OPTIONS_RECEIVE,
+				type: RECEIVE_CHILD_OPTIONS,
 				id: json.data.id,
 				data: json.data.attributes,
 				generators: json.related.generators,

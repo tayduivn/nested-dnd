@@ -10,16 +10,16 @@ import { add, fetchPack, fetchRebuild } from "store/packs";
 
 const routes = [
 	{
+		path: "/:pack/edit",
+		isCreate: false,
+		component: Pack
+	},
+	{
 		path: "/:pack",
 		isCreate: false,
 		exact: false,
 		component: Pack,
 		routes: [
-			{
-				path: "/edit",
-				private: true,
-				component: Pack
-			},
 			{
 				path: "/generators",
 				component: Generators

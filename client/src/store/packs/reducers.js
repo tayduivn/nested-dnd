@@ -1,12 +1,13 @@
 import {
 	ADD,
+	FETCH_CHILD_OPTIONS,
 	FETCH_PACK,
 	PACKS_SET,
-	SET_PACK,
 	REBUILD_PACK,
+	RECEIVE_CHILD_OPTIONS,
+	RECEIVE_PACK,
 	RECEIVE_PACKS,
-	ADD_CHILD_OPTIONS_FETCH,
-	ADD_CHILD_OPTIONS_RECEIVE
+	SET_PACK
 } from "./actions";
 import { GENERATOR_SET, GENERATOR_RENAME, CLEAR_GENERATOR_ERRORS } from "store/generators";
 import { RECEIVE_EXPLORE, RECEIVE_MY_UNIVERSES } from "store/universes";
@@ -38,14 +39,14 @@ function generators(state = {}, action = {}) {
 
 const pack = (state = { loaded: false, generators: false, tables: false }, action = {}) => {
 	switch (action.type) {
-		case ADD_CHILD_OPTIONS_RECEIVE:
+		case RECEIVE_CHILD_OPTIONS:
 			return {
 				...state,
 				generators: action.generators,
 				tables: action.tables,
 				isFetching: false
 			};
-		case ADD_CHILD_OPTIONS_FETCH:
+		case FETCH_CHILD_OPTIONS:
 			return {
 				...state,
 				generators: false,
@@ -60,6 +61,9 @@ const pack = (state = { loaded: false, generators: false, tables: false }, actio
 		case SET_PACK:
 			return { ...state, ...action.data, loaded: true, isFetching: false };
 		case FETCH_PACK:
+			return { ...state, isFetching: true };
+		case RECEIVE_PACK:
+			return { ...state, ...action.data.attributes, isFetching: false, loaded: true };
 		default:
 			const newGens = generators(state.generators, action);
 			if (newGens !== state.generators) return { ...state, generators: newGens };
@@ -87,9 +91,10 @@ function byId(state = {}, action) {
 			}
 			return state;
 		// we're operating on a sole pack, so just pass on through
-		case ADD_CHILD_OPTIONS_RECEIVE:
-		case ADD_CHILD_OPTIONS_FETCH:
+		case RECEIVE_CHILD_OPTIONS:
+		case FETCH_CHILD_OPTIONS:
 		case FETCH_PACK:
+		case RECEIVE_PACK:
 		case REBUILD_PACK:
 		case SET_PACK:
 			if (action.id) return { ...state, [action.id]: pack(state[action.id], action) };
@@ -106,7 +111,9 @@ function byId(state = {}, action) {
 		case RECEIVE_MY_UNIVERSES:
 		case RECEIVE_PACKS:
 			const newState = { ...state };
-			action.data.forEach(item => (newState[item.id] = {...(state[item.id] || {}), ...item.attributes}));
+			action.data.forEach(
+				item => (newState[item.id] = { ...(state[item.id] || {}), ...item.attributes })
+			);
 			return newState;
 		default:
 			return state;
@@ -117,10 +124,12 @@ function byUrl(state = {}, action) {
 	let newByUrl;
 
 	switch (action.type) {
+		case RECEIVE_PACK:
+			return { ...state, [action.data.attributes.url]: action.id };
 		case RECEIVE_EXPLORE:
 			// find the pack in included items
-			const pack = action.included.find(item => item.type === "Pack")
-			return {...state, [pack.attributes.url]: pack.id};
+			const pack = action.included.find(item => item.type === "Pack");
+			return { ...state, [pack.attributes.url]: pack.id };
 		case GENERATOR_SET:
 			if (action.data.pack) {
 				return { ...state, [action.data.pack.url]: action.data.pack._id };
@@ -196,7 +205,7 @@ function myPacks(state = [], action) {
  */
 function options(state = {}, action) {
 	switch (action.type) {
-		case ADD_CHILD_OPTIONS_RECEIVE:
+		case RECEIVE_CHILD_OPTIONS:
 			state[action.id] = { generators: action.generators, tables: action.tables };
 			return state;
 		default:

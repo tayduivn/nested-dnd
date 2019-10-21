@@ -13,4 +13,5 @@ async function getAllPacks(user) {
 }
 
 const getPackOptions = require("./getPackOptions");
-module.exports = { getAllPacks, getPackOptions };
+const getPackByUrl = require("./getPackByUrl");
+module.exports = { getAllPacks, getPackOptions, getPackByUrl };

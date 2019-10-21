@@ -12,9 +12,10 @@ class Link extends React.Component {
 	}
 
 	render() {
+		const { to, title, className, children, ...rest } = this.props;
 		return (
-			<L to={this.props.to} title={this.props.title} className={this.props.className}>
-				{this.props.children}
+			<L to={to} title={title} className={className} {...rest}>
+				{children}
 			</L>
 		);
 	}

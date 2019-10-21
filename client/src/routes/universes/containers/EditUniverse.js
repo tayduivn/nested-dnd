@@ -63,15 +63,9 @@ const EditUniverseDisplay = ({
 				<>
 					<button onClick={() => fetchRebuild(dispatch, pack._id)}>Rebuild Pack</button>
 					<Tabs labels={TABS} active={tab}>
-						<Tabs.Pane label="generators" active={tab}>
-							<GeneratorsList generators={pack.generators} isOwner={true} packurl={pack.url} />
-						</Tabs.Pane>
-						<Tabs.Pane label="tables" active={tab}>
-							<TablesList {...{ tables: pack.tables, packurl: pack.url }} isOwner={true} />
-						</Tabs.Pane>
-						<Tabs.Pane label="characters" active={tab}>
-							<Characters universe_id={_id} />
-						</Tabs.Pane>
+						<GeneratorsList generators={pack.generators} isOwner={true} packurl={pack.url} />
+						<TablesList {...{ tables: pack.tables, packurl: pack.url }} isOwner={true} />
+						<Characters universe_id={_id} />
 					</Tabs>
 				</>
 			)}

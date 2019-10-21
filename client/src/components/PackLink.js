@@ -11,12 +11,11 @@ const EDIT_BUTTON = (
 const EDITBTN_CLS =
 	"edit btn col-xs-auto d-flex align-items-center justify-content-center packlink__btn";
 
-
 export default class PackLink extends React.PureComponent {
 	render() {
 		const { _id, name, url, title, txt, font, description, isUniverse } = this.props;
 		const { dependencies, lastSaw, cssClass = "bg-grey-900" } = this.props;
-		const URL = isUniverse ? `/universe/${_id}` : `/pack/${url}`;
+		const URL = isUniverse ? `/universe/${_id}` : `/packs/${url}`;
 		const style = { color: txt };
 		return (
 			<li className={`col`}>

@@ -9,7 +9,7 @@ import {
 	SAVE_TABLE_ERROR
 } from "./actions";
 import reduceObjToArray from "util/reduceObjToArray";
-import { ADD_CHILD_OPTIONS_RECEIVE } from "store/packs/actions";
+import { RECEIVE_CHILD_OPTIONS } from "store/packs/actions";
 
 const DEFAULT_TABLE = {
 	isFetching: false,
@@ -99,7 +99,7 @@ const tables = (state = DEFAULT_TABLES, action) => {
 				}
 			};
 		// included
-		case ADD_CHILD_OPTIONS_RECEIVE:
+		case RECEIVE_CHILD_OPTIONS:
 			newById = { ...state.nyId };
 			action.included.forEach(item => {
 				if (item.type === "Table") {

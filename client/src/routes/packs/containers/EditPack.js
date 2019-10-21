@@ -6,6 +6,7 @@ import DB from "util/DB";
 import { connect } from "react-redux";
 
 import { fetchPack } from "store/packs";
+import Page from "components/Page";
 
 class Name extends React.PureComponent {
 	render() {
@@ -68,24 +69,22 @@ class Form extends React.PureComponent {
 	render() {
 		const { isCreate, seed, font, handleSubmit, handleDelete } = this.props;
 		return (
-			<div className="main">
-				<div className="container mt-5 loginForm">
-					<h1>{isCreate ? "Create" : "Edit"} Pack</h1>
-					<form onSubmit={handleSubmit}>
-						<Name name={this.props.name} />
-						<Public isPublic={this.props.isPublic} url={this.props.url} />
-						<div className="form-group">
-							<label>Font</label>
-							<input defaultValue={font} name="font" className="form-control" />
-						</div>
-						<div className="form-group">
-							<label>Default Seed</label>
-							<input defaultValue={seed} name="seed" className="form-control" />
-						</div>
-						<Dependencies {...{ isCreate, handleDelete }} />
-					</form>
-				</div>
-			</div>
+			<Page>
+				<h1>{isCreate ? "Create" : "Edit"} Pack</h1>
+				<form onSubmit={handleSubmit}>
+					<Name name={this.props.name} />
+					<Public isPublic={this.props.isPublic} url={this.props.url} />
+					<div className="form-group">
+						<label>Font</label>
+						<input defaultValue={font} name="font" className="form-control" />
+					</div>
+					<div className="form-group">
+						<label>Default Seed</label>
+						<input defaultValue={seed} name="seed" className="form-control" />
+					</div>
+					<Dependencies {...{ isCreate, handleDelete }} />
+				</form>
+			</Page>
 		);
 	}
 }

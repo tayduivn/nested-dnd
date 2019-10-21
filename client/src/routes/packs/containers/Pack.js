@@ -7,6 +7,7 @@ import Tabs from "components/Tabs";
 import Link from "components/Link";
 import GeneratorsList from "containers/GeneratorsList";
 import TablesList from "components/TablesList";
+import Page from "components/Page";
 
 import "./Pack.scss";
 import { fetchPack, fetchRebuild } from "store/packs";
@@ -58,38 +59,36 @@ const TAB_LABELS = [GENERATORS, TABLES];
 class ViewPack extends Component {
 	render() {
 		const { name, _id, _user: user = {}, url, defaultSeed, isOwner, public: isPublic } = this.props;
-		const { generators = {}, tables = [], font, handleRebuild } = this.props;
+		const { generators = {}, tables = [], font, handleRebuild, activeTab } = this.props;
 		return (
-			<div className="main" id="view-pack">
-				<div className="container mt-5">
-					<h1>{name}</h1>
+			<Page>
+				<h1>{name}</h1>
 
-					{isOwner && (
-						<div>
-							<Link to={"/packs/" + _id + "/edit"}>
-								<button className="btn btn-outline-dark">
-									<i className="fa fa-pencil-alt" /> Edit Pack
-								</button>
-							</Link>
-							&nbsp;
-							<button className="btn btn-danger" onClick={handleRebuild}>
-								Rebuild
+				{isOwner && (
+					<div>
+						<Link to={"/packs/" + _id + "/edit"}>
+							<button className="btn btn-outline-dark">
+								<i className="fa fa-pencil-alt" /> Edit Pack
 							</button>
-						</div>
-					)}
+						</Link>
+						&nbsp;
+						<button className="btn btn-danger" onClick={handleRebuild}>
+							Rebuild
+						</button>
+					</div>
+				)}
 
-					<PackInfo {...{ isOwner, user, isPublic, url, font, defaultSeed }} />
+				<PackInfo {...{ isOwner, user, isPublic, url, font, defaultSeed }} />
 
-					<Tabs labels={TAB_LABELS} active={GENERATORS}>
-						<Tabs.Pane label={GENERATORS} active={GENERATORS}>
-							<GeneratorsList generators={generators} {...{ isOwner, packurl: url }} />
-						</Tabs.Pane>
-						<Tabs.Pane label={TABLES} active={GENERATORS}>
-							<TablesList {...{ tables, isOwner, packurl: url }} />
-						</Tabs.Pane>
-					</Tabs>
-				</div>
-			</div>
+				<Tabs labels={TAB_LABELS} active={activeTab || GENERATORS}>
+					<GeneratorsList
+						label={GENERATORS}
+						generators={generators}
+						{...{ isOwner, packurl: url }}
+					/>
+					<TablesList label={GENERATORS} {...{ tables, isOwner, packurl: url }} />
+				</Tabs>
+			</Page>
 		);
 	}
 }
@@ -125,20 +124,25 @@ class Pack extends Component {
 	};
 
 	render() {
-		const { error, pack, tables, generators } = this.props;
+		const { error, pack, tables, generators, activeTab } = this.props;
 
 		if (error) return error.display;
 		if (!pack.loaded) {
 			return <Loading.Page />;
 		}
 
-		return <ViewPack {...{ ...pack, tables, generators }} handleRebuild={this.handleRebuild} />;
+		return (
+			<ViewPack
+				{...{ ...pack, tables, generators, activeTab }}
+				handleRebuild={this.handleRebuild}
+			/>
+		);
 	}
 }
 
 export default connect(
-	(state, { match }) => {
-		const pack_id = state.packs.byUrl[match.params.pack];
+	(state, ownProps) => {
+		const pack_id = state.packs.byUrl[ownProps.match.params.pack];
 		const pack = state.packs.byId[pack_id];
 
 		// TODO : memoize
@@ -161,13 +165,14 @@ export default connect(
 		return {
 			pack,
 			tables,
-			generators
+			generators,
+			activeTab: ownProps.location.hash.substr(1)
 		};
 	},
-	(dispatch, { match }) => {
+	(dispatch, ownProps) => {
 		return {
-			fetchPack: () => fetchPack(dispatch, match.params.pack),
-			fetchRebuild: () => fetchRebuild(dispatch, match.params.pack),
+			fetchPack: () => fetchPack(dispatch, ownProps.match.params.pack),
+			fetchRebuild: () => fetchRebuild(dispatch, ownProps.match.params.pack),
 			dispatch
 		};
 	},

@@ -29,16 +29,15 @@ export const fetch = loaded => {
 	};
 };
 
-export const FETCH_PACK = "PACKS_FETCH_PACK";
+export const FETCH_PACK = "FETCH_PACK";
+export const RECEIVE_PACK = "RECEIVE_PACK";
 export const fetchPack = (dispatch, url, loaded) => {
 	if (!loaded) {
-		DB.get("packs", url).then(({ error, data }) => {
-			if (error) {
-				dispatch(setError(error));
+		DB.get("packs", url).then(json => {
+			if (json.errors) {
+				dispatch(setError(json.errors));
 			} else {
-				if (data.packs) dispatch(packsSet(data.packs));
-				if (data.tables) dispatch(receiveTables(data.tables));
-				if (data.generators) dispatch(receiveGenerators(data.generators));
+				dispatch({ type: RECEIVE_PACK, id: json.data.id, loaded: true, ...json });
 			}
 		});
 	}

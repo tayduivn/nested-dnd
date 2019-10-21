@@ -9,13 +9,13 @@ const { getByIsa } = require("../util/getUtils");
 const { MW } = require("../../util");
 
 const generators = require("../../generator/routes/generators");
-const { getPack, getPackOptions } = require("../query");
+const { getPackByUrl, getPackOptions } = require("../query");
 const { normalizePack } = require("../normalize");
 
 // Read Pack
 // ---------------------------------
-router.get("/", MW.canViewPack, (req, res, next) => {
-	getPack(req.pack, req.user)
+router.get("/", (req, res, next) => {
+	getPackByUrl(req.params.url, req.user._id)
 		.then(result => {
 			res.json(normalizePack(result));
 		})
