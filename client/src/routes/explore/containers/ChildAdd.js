@@ -26,7 +26,7 @@ const ISA_SELECT_OPTIONS = {
 };
 
 // In Explore!
-function ChildAdd({ handleAdd, universe_id, index, i, packurl, fixedOptions }) {
+function ChildAdd({ handleAdd, universe_id, index, i, packUrl, fixedOptions }) {
 	const [fadeIn, setfadeIn] = useState(false);
 	const dispatch = useDispatch();
 
@@ -41,8 +41,8 @@ function ChildAdd({ handleAdd, universe_id, index, i, packurl, fixedOptions }) {
 
 	// do this only when universe changes
 	useEffect(() => {
-		dispatch(fetchAddChildOptions(packurl));
-	}, [dispatch, packurl]);
+		dispatch(fetchAddChildOptions(packUrl));
+	}, [dispatch, packUrl]);
 
 	return (
 		<div
@@ -62,7 +62,7 @@ export default connect(function mapStateToProps(state) {
 	const { pack_id, pack, universe_id, index } = getUniverse(state);
 	return {
 		fixedOptions: getIsaOptions(state, pack_id),
-		packurl: pack && pack.url,
+		packUrl: pack && pack.url,
 		universe_id,
 		index
 	};

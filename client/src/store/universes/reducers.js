@@ -156,7 +156,7 @@ function byId(state = {}, action) {
 }
 
 const DEFAULT_MY_UNIVERSES = {
-	loaded: false,
+	isLoaded: false,
 	array: []
 };
 
@@ -164,7 +164,7 @@ function myUniverses(state = DEFAULT_MY_UNIVERSES, action) {
 	switch (action.type) {
 		case RECEIVE_MY_UNIVERSES:
 			return {
-				loaded: true,
+				isLoaded: true,
 				array: action.data.map(item => item.id)
 			};
 		default:

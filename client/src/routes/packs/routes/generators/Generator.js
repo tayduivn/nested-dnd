@@ -9,7 +9,7 @@ import { LoadingIcon } from "../Util/Loading";
 
 export class ViewGenerator extends Component {
 	render() {
-		const { built: gen, packurl } = this.props;
+		const { built: gen, packUrl } = this.props;
 		const isa = gen.isa;
 
 		if (!gen) return null;
@@ -17,13 +17,13 @@ export class ViewGenerator extends Component {
 		return (
 			<div className="main">
 				<div className="container mt-5">
-					{!gen.loaded ? <LoadingIcon /> : null}
-					<Link to={"/packs/" + packurl}>⬑ Pack</Link>
+					{!gen.isLoaded ? <LoadingIcon /> : null}
+					<Link to={"/packs/" + packUrl}>⬑ Pack</Link>
 					<h1>{isa}</h1>
 
 					{/* --------- Edit Button ------------ */}
 					{this.props.loggedIn ? (
-						<Link to={"/packs/" + packurl + "/generators/" + isa + "/edit"}>
+						<Link to={"/packs/" + packUrl + "/generators/" + isa + "/edit"}>
 							<button className="btn btn-primary">Edit Generator</button>
 						</Link>
 					) : null}

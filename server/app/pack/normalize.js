@@ -1,5 +1,4 @@
 const { normalizeTables } = require("../table/normalize");
-const { normalizeGenerators } = require("../generator/normalize");
 
 const normalizePacks = (packs, user_id) => {
 	const result = {

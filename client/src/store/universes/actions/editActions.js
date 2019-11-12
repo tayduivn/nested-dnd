@@ -1,7 +1,6 @@
 import DB from "util/DB";
 
 import { packsSet, fetchPackIfNeeded } from "store/packs/actions";
-import { receiveGenerators } from "store/generators/actions";
 import { receiveTables } from "store/tables/actions";
 import { pushSnacks } from "store/snackbar/actions";
 
@@ -12,9 +11,9 @@ export const add = (dispatch, created) => {
 };
 
 export const RECEIVE_MY_UNIVERSES = "RECEIVE_MY_UNIVERSES";
-export const fetch = loaded => {
+export const fetch = isLoaded => {
 	return dispatch => {
-		if (loaded) return Promise.resolve();
+		if (isLoaded) return Promise.resolve();
 
 		DB.get("universes").then(json => {
 			if (json.errors) {
@@ -40,7 +39,8 @@ function fetchComplete(dispatch, id, data, error) {
 			id
 		});
 		if (data.packs) dispatch(packsSet(data.packs));
-		if (data.generators) dispatch(receiveGenerators(data.generators));
+		// TODO: Check if this is necessary or works
+		// if (data.generators) dispatch(receiveGenerators(data.generators));
 		if (data.tables) dispatch(receiveTables(data.tables));
 	}
 }

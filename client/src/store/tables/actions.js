@@ -135,16 +135,16 @@ export const saveTableError = (id, error) => ({
 
 // -----------------------------------------
 export const CREATE_TABLE = "CREATE_TABLE";
-export const createTable = (packurl, title) => {
+export const createTable = (packUrl, title) => {
 	return dispatch => {
-		DB.fetch(`tables/create/${packurl}`, "POST", { body: { title } }).then(({ error, data }) => {
+		DB.fetch(`tables/create/${packUrl}`, "POST", { body: { title } }).then(({ error, data }) => {
 			// TODO: error
 
 			// change url
 			window.history.replaceState(
 				{},
 				data.title,
-				`/packs/${packurl}/tables/${encodeURI(data._id)}/edit`
+				`/packs/${packUrl}/tables/${encodeURI(data._id)}/edit`
 			);
 
 			dispatch(receiveTable(data._id, data));

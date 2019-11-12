@@ -17,9 +17,9 @@ export const REBUILD_PACK = "PACK_REBUILD";
 export const add = pack => ({ type: ADD, pack });
 
 export const RECEIVE_PACKS = "RECEIVE_PACKS";
-export const fetch = loaded => {
+export const fetch = isLoaded => {
 	return dispatch => {
-		if (loaded) return Promise.resolve();
+		if (isLoaded) return Promise.resolve();
 		DB.get("packs").then(json => {
 			if (json.errors) {
 				dispatch(setError(json.errors));
@@ -30,10 +30,11 @@ export const fetch = loaded => {
 	};
 };
 
+// Fetch just the pure pack info, no generators or tables
 export const FETCH_PACK = "FETCH_PACK";
 export const RECEIVE_PACK = "RECEIVE_PACK";
-export const fetchPack = (dispatch, url, loaded) => {
-	if (!loaded) {
+export const fetchPack = (dispatch, url, isLoaded) => {
+	if (!isLoaded) {
 		dispatch({
 			type: FETCH_PACK,
 			url: url
@@ -42,7 +43,7 @@ export const fetchPack = (dispatch, url, loaded) => {
 			if (json.errors) {
 				dispatch(pushSnack(json.errors[0]));
 			} else {
-				dispatch({ type: RECEIVE_PACK, id: json.data.id, loaded: true, ...json });
+				dispatch({ type: RECEIVE_PACK, id: json.data.id, isLoaded: true, ...json });
 			}
 		});
 	}

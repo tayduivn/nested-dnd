@@ -12,6 +12,9 @@ async function getAllPacks(user) {
 	return await query.exec();
 }
 
-const getPackOptions = require("./getPackOptions");
-const getPackByUrl = require("./getPackByUrl");
-module.exports = { getAllPacks, getPackOptions, getPackByUrl };
+module.exports = {
+	getAllPacks,
+	getPackOptions: require("./getPackOptions"),
+	getPackByUrl: require("./getPackByUrl"),
+	getPackGenerators: require("./getPackGenerators")
+};

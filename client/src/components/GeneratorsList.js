@@ -73,7 +73,7 @@ class GenLink extends React.PureComponent {
 		const isa = (this.props.gen && this.props.gen.isa) || "";
 		return encodeURI(
 			"/packs/" +
-				this.props.packurl +
+				this.props.packUrl +
 				"/generators/" +
 				encodeURIComponent(isa.replace(/\\/g, "\\")) +
 				(this.props.isOwner ? "/edit" : "")
@@ -118,14 +118,14 @@ class GenLink extends React.PureComponent {
  */
 class NestedGenerators extends React.PureComponent {
 	_getProps(isa) {
-		const { generatorTree = {}, generators, packurl, isOwner = false } = this.props;
+		const { generatorTree = {}, generators, packUrl, isOwner = false } = this.props;
 		const { handleGeneratorToggle = () => {}, open = [] } = this.props;
 		const genTree = generatorTree[isa];
 		const isOpen = open.includes(isa);
 		const gen = generators[isa];
 		return {
 			key: isa,
-			packurl,
+			packUrl,
 			isOwner,
 			handleGeneratorToggle,
 			gen,
@@ -155,7 +155,7 @@ class NestedGenerators extends React.PureComponent {
  */
 export default class GeneratorsDisplay extends React.PureComponent {
 	render() {
-		const { query, filters, isOwner, packurl, handleQuery, ...rest } = this.props;
+		const { query, filters, isOwner, packUrl, handleQuery, ...rest } = this.props;
 		const { handleFilterToggle } = this.props;
 		return (
 			<>
@@ -167,11 +167,11 @@ export default class GeneratorsDisplay extends React.PureComponent {
 					<Filters filters={filters} handleFilterToggle={handleFilterToggle} />
 					<div className="col">
 						{!isOwner ? null : (
-							<Link to={"/packs/" + packurl + "/generators/create"}>{ADD_GENERATOR}</Link>
+							<Link to={"/packs/" + packUrl + "/generators/create"}>{ADD_GENERATOR}</Link>
 						)}
 						<FiltersToString filters={filters} />
 						<hr />
-						<NestedGenerators {...rest} {...{ isOwner, packurl }} />
+						<NestedGenerators {...rest} {...{ isOwner, packUrl }} />
 					</div>
 				</div>
 			</>

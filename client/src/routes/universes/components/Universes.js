@@ -8,7 +8,7 @@ import PackUL from "components/PackUL";
 import Page from "components/Page";
 
 const UniverseListDisplay = ({
-	universes: { loaded, array, error } = {},
+	universes: { isLoaded, array, error } = {},
 	packs,
 	loggedIn,
 	dispatch
@@ -19,7 +19,7 @@ const UniverseListDisplay = ({
 		<Page>
 			<div className="universes">
 				<h1>Universes</h1>
-				{!loaded ? (
+				{!isLoaded ? (
 					<Loading.Icon />
 				) : error ? (
 					error.display

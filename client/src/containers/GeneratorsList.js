@@ -11,7 +11,7 @@ export default class GeneratorsList extends React.Component {
 	static propTypes = {
 		generators: PropTypes.object,
 		isOwner: PropTypes.bool,
-		packurl: PropTypes.string.isRequired
+		packUrl: PropTypes.string.isRequired
 	};
 
 	state = {
@@ -27,12 +27,12 @@ export default class GeneratorsList extends React.Component {
 		this.state.generatorTree = this.buildTree(props.generators || {});
 	}
 
-	getDerivedStateFromProps(nextProps) {
-		if (this.props.generators !== nextProps.generators) {
-			let generatorTree = this.buildTree(nextProps.generators);
-			this.setState({ generatorTree });
-		}
-	}
+	// static getDerivedStateFromProps(nextProps) {
+	// 	if (this.props.generators !== nextProps.generators) {
+	// 		let generatorTree = this.buildTree(nextProps.generators);
+	// 		this.setState({ generatorTree });
+	// 	}
+	// }
 
 	buildTree = gens => {
 		const tree = {};
@@ -121,14 +121,14 @@ export default class GeneratorsList extends React.Component {
 	};
 
 	render() {
-		const { isOwner, generators, packurl } = this.props;
+		const { isOwner, generators, packUrl } = this.props;
 		const { handleGeneratorToggle, handleFilterToggle, handleQuery } = this;
 
 		return (
 			<GeneratorsDisplay
 				{...this.state}
 				{...{ handleGeneratorToggle, handleFilterToggle }}
-				{...{ handleQuery, isOwner, generators, packurl }}
+				{...{ handleQuery, isOwner, generators, packUrl }}
 			/>
 		);
 	}

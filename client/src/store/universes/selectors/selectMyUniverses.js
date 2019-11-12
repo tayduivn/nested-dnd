@@ -1,7 +1,7 @@
 import selectAncestorsAndStyle from "./selectAncestorsAndStyle";
 
 const selectMyUniverses = ({ universes, packs }) => ({
-	loaded: universes.myUniverses.loaded,
+	isLoaded: universes.myUniverses.isLoaded,
 	array: universes.myUniverses.array.map(id => {
 		const univ = { ...universes.byId[id] };
 		const last = universes.instances[univ.last];

@@ -2,7 +2,6 @@ import {
 	ADD,
 	FETCH_CHILD_OPTIONS,
 	FETCH_PACK,
-	RECEIVE_PACK,
 	PACKS_SET,
 	REBUILD_PACK,
 	RECEIVE_CHILD_OPTIONS,
@@ -12,6 +11,7 @@ import {
 } from "./actions";
 import { GENERATOR_SET, GENERATOR_RENAME, CLEAR_GENERATOR_ERRORS } from "store/generators";
 import { RECEIVE_EXPLORE, RECEIVE_MY_UNIVERSES } from "store/universes";
+import { RECEIVE_GENERATORS } from "store/generators/actions";
 
 import { combineReducers } from "redux";
 
@@ -38,8 +38,24 @@ function generators(state = {}, action = {}) {
 	}
 }
 
-const pack = (state = { loaded: false, generators: false, tables: false }, action = {}) => {
+const DEFAULT_PACK = {
+	isLoaded: false,
+	// an array of generator names
+	generators: false,
+	tables: false,
+	// do we have all the abbreviated info for the genertors in this pack (ids and what they extend)
+	isGeneratorsLoaded: false
+};
+
+const pack = (state = DEFAULT_PACK, action = {}) => {
 	switch (action.type) {
+		case RECEIVE_GENERATORS:
+			return {
+				...state,
+				...action.data.attributes,
+				isLoaded: true,
+				generators: action.related.generators
+			};
 		case RECEIVE_CHILD_OPTIONS:
 			return {
 				...state,
@@ -57,14 +73,14 @@ const pack = (state = { loaded: false, generators: false, tables: false }, actio
 		case REBUILD_PACK:
 			return {
 				...state,
-				loaded: false
+				isLoaded: false
 			};
 		case SET_PACK:
-			return { ...state, ...action.data, loaded: true, isFetching: false };
+			return { ...state, ...action.data, isLoaded: true, isFetching: false };
 		case FETCH_PACK:
 			return { ...state, isFetching: true };
 		case RECEIVE_PACK:
-			return { ...state, ...action.data.attributes, isFetching: false, loaded: true };
+			return { ...state, ...action.data.attributes, isFetching: false, isLoaded: true };
 		default:
 			const newGens = generators(state.generators, action);
 			if (newGens !== state.generators) return { ...state, generators: newGens };
@@ -80,6 +96,11 @@ function byId(state = {}, action) {
 
 	let data;
 	switch (action.type) {
+		case RECEIVE_GENERATORS:
+			return {
+				...state,
+				[action.data.id]: pack(state[action.pack_id], action)
+			};
 		case GENERATOR_RENAME:
 			return { ...state, [action.pack_id]: pack(state[action.pack_id], action) };
 		case GENERATOR_SET:
@@ -125,6 +146,7 @@ function byUrl(state = {}, action) {
 	let newByUrl;
 
 	switch (action.type) {
+		case RECEIVE_GENERATORS:
 		case RECEIVE_PACK:
 			return { ...state, [action.data.attributes.url]: action.id };
 		case RECEIVE_EXPLORE:
@@ -163,8 +185,8 @@ function byUrl(state = {}, action) {
 			return state;
 	}
 }
-function loaded(state = false, action) {
-	return action.loaded || false;
+function isLoaded(state = false, action) {
+	return action.isLoaded || false;
 }
 
 function publicPacks(state = [], action) {
@@ -214,4 +236,4 @@ function options(state = {}, action) {
 	}
 }
 
-export default combineReducers({ loaded, byId, byUrl, publicPacks, myPacks, options });
+export default combineReducers({ isLoaded, byId, byUrl, publicPacks, myPacks, options });

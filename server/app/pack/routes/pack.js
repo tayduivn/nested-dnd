@@ -9,10 +9,11 @@ const { getByIsa } = require("../util/getUtils");
 const { MW } = require("../../util");
 
 const generators = require("../../generator/routes/generators");
-const { getPackByUrl, getPackOptions } = require("../query");
+const { getPackByUrl, getPackOptions, getPackGenerators } = require("../query");
 const { normalizePack } = require("../normalize");
+const { normalizeGenerators } = require("../../generator/normalize");
 
-// Read Pack
+// Read Pack - slim! needs to be simple for edit page, etc. not all options
 // ---------------------------------
 router.get("/", (req, res, next) => {
 	getPackByUrl(req.params.url, req.user._id)
@@ -81,6 +82,20 @@ router.get("/tables", MW.canViewPack, (req, res, next) => {
 		.catch(next);
 });
 
+/**
+ * Get partial definition of generators for this pack. Used on the view pack screen
+ */
+router.get("/generators", MW.canViewPack, async (req, res, next) => {
+	try {
+		const pack = await getPackGenerators(req.params.url, req.user._id);
+		const normalPack = normalizePack(pack);
+		normalPack.included = normalizeGenerators(pack.generators).data;
+		res.json(normalPack);
+	} catch (e) {
+		next(e);
+	}
+});
+
 router.get("/instances/:isa", MW.canViewPack, (req, res, next) => {
 	getByIsa(req.params.isa, req.pack)
 		.then(async ({ gen, builtpack }) => {
@@ -91,7 +106,7 @@ router.get("/instances/:isa", MW.canViewPack, (req, res, next) => {
 });
 
 // get the generators and tables for this pack
-router.get("/options", async (req, res, next) => {
+router.get("/options", async (req, res) => {
 	const pack = await getPackOptions(req.params.url, req.user._id);
 	res.json(normalizePack(pack));
 });

@@ -3,95 +3,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import Loading from "components/Loading";
-import Tabs from "components/Tabs";
-import Link from "components/Link";
-import GeneratorsList from "containers/GeneratorsList";
-import TablesList from "components/TablesList";
-import Page from "components/Page";
+import PackDisplay from "../components/PackDisplay";
 
-import "./Pack.scss";
 import { fetchPack, fetchRebuild } from "store/packs";
-
-class PackInfo extends React.PureComponent {
-	render() {
-		const { isOwner, user, isPublic, url, font, defaultSeed } = this.props;
-		return (
-			<ul>
-				{/* --------- Author ------------ */}
-				{isOwner ? null : (
-					<li>
-						<strong>Author: </strong>
-						<Link to={"/user/" + user._id}>{user.name}</Link>
-					</li>
-				)}
-
-				{/* --------- Public ------------ */}
-				<li>{isPublic ? "Public" : "Private"}</li>
-				{url ? (
-					<li>
-						<Link to={"/explore/" + url}>Explore</Link>
-					</li>
-				) : null}
-
-				{/* --------- Font ------------ */}
-				<li>Font: {font}</li>
-
-				{/* --------- Default Seed ------------ */}
-				{defaultSeed ? (
-					<li>
-						<strong>DefaultSeed: </strong> {defaultSeed}
-					</li>
-				) : null}
-
-				{/* --------- Dependencies: TODO ------------ */}
-			</ul>
-		);
-	}
-}
-
-const GENERATORS = "generators";
-const TABLES = "tables";
-const TAB_LABELS = [GENERATORS, TABLES];
-
-/**
- * View a Pack
- */
-class ViewPack extends Component {
-	render() {
-		const { name, _id, _user: user = {}, url, defaultSeed, isOwner, public: isPublic } = this.props;
-		const { generators = {}, tables = [], font, handleRebuild, activeTab } = this.props;
-		return (
-			<Page>
-				<h1>{name}</h1>
-
-				{isOwner && (
-					<div>
-						<Link to={"/packs/" + _id + "/edit"}>
-							<button className="btn btn-outline-dark">
-								<i className="fa fa-pencil-alt" /> Edit Pack
-							</button>
-						</Link>
-						&nbsp;
-						<button className="btn btn-danger" onClick={handleRebuild}>
-							Rebuild
-						</button>
-					</div>
-				)}
-
-				<PackInfo {...{ isOwner, user, isPublic, url, font, defaultSeed }} />
-
-				<Tabs labels={TAB_LABELS} active={activeTab || GENERATORS}>
-					<GeneratorsList
-						label={GENERATORS}
-						generators={generators}
-						{...{ isOwner, packurl: url }}
-					/>
-					<TablesList label={GENERATORS} {...{ tables, isOwner, packurl: url }} />
-				</Tabs>
-			</Page>
-		);
-	}
-}
+import { fetchPackGenerators } from "store/generators";
 
 /**
  * Wrapper Component for Pack pages
@@ -107,12 +22,11 @@ class Pack extends Component {
 		pack: PropTypes.object
 	};
 	static defaultProps = {
-		pack: {},
-		fetchPack: () => {}
+		pack: {}
 	};
 	constructor(props) {
 		super(props);
-		props.fetchPack();
+		props.dispatch(fetchPackGenerators(props.packUrl));
 	}
 
 	handleRebuild = () => {
@@ -120,23 +34,19 @@ class Pack extends Component {
 	};
 
 	handleRenameGen = () => {
+		// TODO: what?
 		this.props.fetchPack(this.props.match.params.pack);
 	};
 
 	render() {
-		const { error, pack, tables, generators, activeTab } = this.props;
+		const { error, pack, activeTab } = this.props;
 
 		if (error) return error.display;
-		if (!pack.loaded) {
+		if (!pack.isLoaded) {
 			return <Loading.Page />;
 		}
 
-		return (
-			<ViewPack
-				{...{ ...pack, tables, generators, activeTab }}
-				handleRebuild={this.handleRebuild}
-			/>
-		);
+		return <PackDisplay {...{ ...pack, activeTab }} handleRebuild={this.handleRebuild} />;
 	}
 }
 
@@ -163,6 +73,7 @@ export default connect(
 		}
 
 		return {
+			packUrl: ownProps.match.params.pack,
 			pack,
 			tables,
 			generators,

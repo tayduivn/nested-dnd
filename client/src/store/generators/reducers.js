@@ -13,9 +13,13 @@ function style(state = {}, action) {
 			return state;
 	}
 }
+const DEFAULT_GENERATOR = { isLoaded: false };
 
-function generator(state = {}, action) {
+function generator(state = DEFAULT_GENERATOR, action) {
 	switch (action.type) {
+		// recieve a partial generator
+		case RECEIVE_GENERATORS:
+			return { ...state, ...action.data };
 		case GENERATOR_RENAME:
 			return { ...state, isa: action.isa };
 		case GENERATOR_SET:
@@ -33,7 +37,16 @@ function generator(state = {}, action) {
 function byId(state = {}, action) {
 	switch (action.type) {
 		case RECEIVE_GENERATORS:
-			return { ...state, ...action.data.byId };
+			const newState = { ...state };
+			// look thorugh each generator in the array and use the generators() function
+			action.included.forEach(item => {
+				newState[item.id] = generator(newState[item.id], {
+					type: action.type,
+					data: item.attributes
+				});
+			});
+			return newState;
+		// return { ...state, ...action.data.byId };
 		case GENERATOR_RENAME:
 			return {
 				...state,
