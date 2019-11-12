@@ -1,5 +1,5 @@
 import Explore from "routes/explore";
-import Packs, { routes as packs } from "routes/packs";
+import PackRouter from "routes/packs";
 import Map from "routes/map";
 import Account from "routes/account";
 import UniverseRouter from "routes/universes";
@@ -16,8 +16,7 @@ export default [
 	},
 	{
 		path: "/packs",
-		component: Packs,
-		routes: packs
+		component: PackRouter
 	},
 	{
 		path: "/universe",

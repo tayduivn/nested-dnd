@@ -1,6 +1,7 @@
 import DB from "util/DB";
 import { receiveTables } from "store/tables/actions";
 import { receiveGenerators } from "store/generators/actions";
+import { pushSnack } from "store/snackbar/actions";
 
 // subfiles
 export * from "./fetchAddChildOptions";
@@ -33,9 +34,13 @@ export const FETCH_PACK = "FETCH_PACK";
 export const RECEIVE_PACK = "RECEIVE_PACK";
 export const fetchPack = (dispatch, url, loaded) => {
 	if (!loaded) {
+		dispatch({
+			type: FETCH_PACK,
+			url: url
+		});
 		DB.get("packs", url).then(json => {
 			if (json.errors) {
-				dispatch(setError(json.errors));
+				dispatch(pushSnack(json.errors[0]));
 			} else {
 				dispatch({ type: RECEIVE_PACK, id: json.data.id, loaded: true, ...json });
 			}

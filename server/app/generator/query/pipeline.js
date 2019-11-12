@@ -17,6 +17,43 @@ const getGeneratorsFromIsa = (isas = [], packIds = "$packIds", field = "generato
 					}
 				},
 				{
+					$lookup: {
+						from: "generators",
+						as: "replace",
+						let: {
+							mainId: "$_id",
+							isa: "$isa",
+							random: "$chooseRandom"
+						},
+						pipeline: [
+							{
+								$match: {
+									$expr: {
+										$cond: [
+											"$$random",
+											{ $eq: ["$extends", "$$isa"] },
+											{ $eq: ["$_id", "$$mainId"] }
+										]
+									}
+								}
+							},
+							{ $sample: { size: 1 } },
+							{
+								$addFields: {
+									randomChoice: "$$random"
+								}
+							}
+						]
+					}
+				},
+				{
+					$replaceRoot: {
+						newRoot: {
+							$arrayElemAt: ["$replace", 0]
+						}
+					}
+				},
+				{
 					$graphLookup: {
 						from: "generators",
 						startWith: "$extends",
@@ -134,9 +171,35 @@ const getData = (input = "$generators.data") => [
 	}
 ];
 
+const getGensThatExtendThis = (isa = "$isa", packIds = "$packIds") => [
+	{
+		from: "generators",
+		as: "extendsThis",
+		let: {
+			isa: isa,
+			packs: packIds,
+			random: "$chooseRandom"
+		},
+		pipeline: [
+			{
+				$match: {
+					$expr: {
+						$cond: [
+							"$$random",
+							{ $and: [{ $eq: ["$extends", "$$isa"] }, { $in: ["$pack", "$$packs"] }] },
+							false
+						]
+					}
+				}
+			}
+		]
+	}
+];
+
 module.exports = {
 	getGeneratorsFromIsa,
 	getGeneratorsFromPack,
+	getGensThatExtendThis,
 	getChildIsas,
 	mergeGens,
 	getData

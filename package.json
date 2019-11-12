@@ -18,7 +18,7 @@
 		"dev-db": "cd db && npm start",
 		"build-icon-options": "cd client/public/icons && dir /s/n/b *.svg > icons.txt && node gi_convert.js > ../../src/assets/icons.js",
 		"dev-test-debug": "yarn test --inspect-brk",
-		"heroku-postbuild": "yarn build",
+		"heroku-postbuild": "npx db-migrate up -e prod && yarn build",
 		"report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
 		"start": "db-migrate up && cd server && npm run start-prod",
 		"test": "cd server && npm test && cd .. && cd client && npm test"

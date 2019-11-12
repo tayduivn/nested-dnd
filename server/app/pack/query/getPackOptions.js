@@ -43,7 +43,7 @@ async function getPackOptions(url, user_id) {
 	]);
 	if (!array.length) return null;
 	// clear out unnecessary fields
-	else return { ...array[0], allDeps: undefined };
+	else return array[0];
 }
 
 module.exports = getPackOptions;

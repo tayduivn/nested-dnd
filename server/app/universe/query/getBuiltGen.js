@@ -6,10 +6,16 @@ const Pack = require("pack/Pack");
 
 const { findTableRecurse } = require("table/query");
 const processFlat = require("util/processFlat");
+const makeBuiltpack = require("builtpack/makeBuiltpack");
 const sortAncestors = require("instance/util/sortAncestors");
 const { getPacksPipeline } = require("pack/query/pipeline");
 const { getAncestors } = require("instance/query/pipeline");
-const { getGeneratorsFromIsa, getChildIsas, mergeGens, getData } = require("generator/query/pipeline");
+const {
+	getGeneratorsFromIsa,
+	getData,
+	getChildIsas,
+	mergeGens
+} = require("generator/query/pipeline");
 const { getTablesFromTypeValue } = require("table/query/pipeline");
 
 // eslint-disable-next-line max-statements
@@ -52,7 +58,7 @@ async function getBuiltGen(
 				["$childIn"]
 			],
 			user_id
-		),
+		)
 		// {
 		// 	$project: {
 		// 		desc: 0,
@@ -84,9 +90,33 @@ async function getBuiltGen(
 	generators.forEach(g => alreadyFoundIsa.add(g.isa));
 	tables.forEach(t => alreadyFoundTable.add(t._id.toString()));
 
+	const builtpack = makeBuiltpack(pack, generators);
+	const gensWithoutData = {};
+	for (var isa in builtpack.generators) {
+		gensWithoutData[isa] = { ...builtpack.generators[isa], data: undefined };
+	}
+	let mainGens = isas.map(isa => gensWithoutData[isa]);
+	generators.forEach(gen => {
+		if (gen.randomChoice) {
+			mainGens = mainGens.filter(g => g.isa !== gen.extends);
+			mainGens.push(gensWithoutData[gen.isa]);
+		}
+	});
+
 	// grab all the isas and tables out of these
-	const { toFindIsas, toFindTableIds, usedData } = processFlat(up.toJSON());
-	processFlat(generators, alreadyFoundTable, alreadyFoundIsa, toFindIsas, toFindTableIds, usedData);
+	// only if we are todo ing
+	// const { toFindIsas, toFindTableIds, usedData } = processFlat(
+	// 	up.toJSON(),
+	// 	alreadyFoundTable,
+	// 	alreadyFoundIsa
+	// );
+	// I dont want to get Isas for allll the generators, but tables is fine
+	let toFindIsas = new Set();
+	let toFindTableIds = new Set();
+	let usedData = new Set();
+
+	processFlat(gensWithoutData, alreadyFoundTable, alreadyFoundIsa, undefined, toFindTableIds);
+	processFlat(mainGens, alreadyFoundTable, alreadyFoundIsa, toFindIsas, toFindTableIds, usedData);
 	processFlat(tables, alreadyFoundTable, alreadyFoundIsa, toFindIsas, toFindTableIds, usedData);
 
 	const trimmedData = Array.from(usedData).reduce((trim, name) => {

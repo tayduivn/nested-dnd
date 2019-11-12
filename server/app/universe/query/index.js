@@ -12,16 +12,18 @@ const { getAncestors, getAncestorsAndDescendents } = require("instance/query/pip
  * @param {ObjectId} user_id
  */
 const getUniverseExplore = async (_id, user_id) => {
-	const universes = await Universe.aggregate([
+	const pipeline = [
 		{ $match: { _id: _id, user: user_id } },
 		...getPacksPipeline("$pack", user_id),
 		...getAncestorsAndDescendents("$last", "$last", 2)
-	]).exec();
+	];
+	const universes = await Universe.aggregate(pipeline).exec();
 
 	if (!universes.length) return null;
 	else {
 		const universe = universes[0];
-		universes.ancestors = sortAncestors(universe.last, universes.ancestors);
+		universe.ancestors = sortAncestors(universe.last, universe.ancestors);
+		universe.pack = universe.packs.find(({ _id }) => _id.equals(universe.pack));
 		return universe;
 	}
 };
