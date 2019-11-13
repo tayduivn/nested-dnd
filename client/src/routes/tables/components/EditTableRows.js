@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Dropdown, MixedThing } from "../Form";
+import { Dropdown, MixedThing } from "components/Form";
 
 import fngArrayOptions, { wrapOption } from "util/fngArrayOptions";
 

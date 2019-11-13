@@ -74,7 +74,7 @@ export function fetchGenerator(params) {
 
 		//create page
 		if (!isa || isa === "create") return;
-		DB.get(`packs/${packUrl}/generators`, isa).then(({ error, data }) => {
+		DB.get(`packs/${packUrl}/generators`, isa).then(({ error, data = {} }) => {
 			if (error) {
 				return handleError(dispatch, packUrl, isa, error);
 			}

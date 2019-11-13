@@ -1,11 +1,16 @@
+/**
+ * This is under the /components folder because EditTable necds to use it
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 import debounce from "debounce";
 
 import Link from "components/Link";
-import Dropdown from "../Form/Dropdown";
-import { MixedThing, MixedKeyValue, MixedSortable } from "../Form";
+import Dropdown from "components/Form/Dropdown";
+import { MixedThing, MixedKeyValue, MixedSortable } from "components/Form";
 import IconOrImage from "./IconOrImage";
+import Page from "components/Page";
 
 class Data extends React.PureComponent {
 	handleChange = changes => {
@@ -321,7 +326,7 @@ const ToggleOptions = ({ chooseRandom, isUnique, handleChange, disabled, isa }) 
 	</>
 );
 
-export default class GeneratorEdit extends React.PureComponent {
+export default class EditGeneratorDisplay extends React.PureComponent {
 	static propTypes = {
 		isEmbedded: PropTypes.bool,
 		index: PropTypes.number,
@@ -343,40 +348,42 @@ export default class GeneratorEdit extends React.PureComponent {
 		const { handleChange, handleDelete, chooseRandom, data = {}, readOnly: disabled } = this.props;
 
 		return (
-			<form className="editGen container mt-5" onSubmit={this.handleSubmit} autoComplete="off">
-				{this.props.isEmbedded ? (
-					<h3>↳ Row {this.props.index}</h3>
-				) : (
-					<Name {...{ inherits, isa, isCreate, handleChange, disabled }} />
-				)}
+			<Page>
+				<form className="editGen" onSubmit={this.handleSubmit} autoComplete="off">
+					{this.props.isEmbedded ? (
+						<h3>↳ Row {this.props.index}</h3>
+					) : (
+						<Name {...{ inherits, isa, isCreate, handleChange, disabled }} />
+					)}
 
-				{!isCreate ? (
-					<React.Fragment>
-						{!this.props.isEmbedded ? (
-							<ToggleOptions {...{ chooseRandom, isUnique, handleChange, disabled, isa }} />
-						) : null}
+					{!isCreate ? (
+						<React.Fragment>
+							{!this.props.isEmbedded ? (
+								<ToggleOptions {...{ chooseRandom, isUnique, handleChange, disabled, isa }} />
+							) : null}
 
-						<Extends key={_id} {...{ xtends, isa, generators, url, handleChange, disabled }} />
+							<Extends key={_id} {...{ xtends, isa, generators, url, handleChange, disabled }} />
 
-						{!chooseRandom ? (
-							<>
-								<DisplayName {...{ name, tables, generators, handleChange, disabled }} />
-								<IconOrImage {...{ icon, handleChange, disabled }} />
-								<Description {...{ desc, handleChange, tables, generators, disabled }} />
-								<InArr {...{ inArr, tables, handleChange, generators, disabled }} />
-								<Data {...{ data, handleChange, tables, generators, disabled }} />
-								<Source {...{ source, handleChange, disabled }} />
-							</>
-						) : null}
+							{!chooseRandom ? (
+								<>
+									<DisplayName {...{ name, tables, generators, handleChange, disabled }} />
+									<IconOrImage {...{ icon, handleChange, disabled }} />
+									<Description {...{ desc, handleChange, tables, generators, disabled }} />
+									<InArr {...{ inArr, tables, handleChange, generators, disabled }} />
+									<Data {...{ data, handleChange, tables, generators, disabled }} />
+									<Source {...{ source, handleChange, disabled }} />
+								</>
+							) : null}
 
-						{!disabled ? <DeleteButton {...{ handleDelete, disabled }} /> : null}
-					</React.Fragment>
-				) : (
-					<button className="btn btn-primary" onClick={this.props.handleAdd}>
-						Create
-					</button>
-				)}
-			</form>
+							{!disabled ? <DeleteButton {...{ handleDelete, disabled }} /> : null}
+						</React.Fragment>
+					) : (
+						<button className="btn btn-primary" onClick={this.props.handleAdd}>
+							Create
+						</button>
+					)}
+				</form>
+			</Page>
 		);
 	}
 }

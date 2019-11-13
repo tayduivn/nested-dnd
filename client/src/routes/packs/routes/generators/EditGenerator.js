@@ -2,21 +2,21 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import EditGeneratorDisplay from "./EditGeneratorDisplay";
+import EditGeneratorDisplay from "../../../../components/EditGeneratorDisplay";
 import {
 	fetchGenerator,
 	changeGenerator,
 	createGenerator,
 	CLEAR_GENERATOR_ERRORS
-} from "./actions";
-import { fetchPackIfNeeded } from "../Packs/actions";
-import { genPathSelector } from "./reducers";
-import Page from "../Util/Page";
-import { tablesSelect } from "../Tables/redux/selectors";
+} from "store/generators/actions";
+import { fetchPackIfNeeded } from "store/packs/actions";
+import { genPathSelector } from "store/generators/reducers";
+import Page from "components/Page";
+import { tablesSelect } from "store/tables/selectors/tablePathSelector";
 
-import "./EditGenerator.css";
+import "./EditGenerator.scss";
 
-class EditGeneratorComponent extends Component {
+class EditGenerator extends Component {
 	static propTypes = {
 		built: PropTypes.object,
 		unbuilt: PropTypes.object,
@@ -85,17 +85,13 @@ class EditGeneratorComponent extends Component {
 			return <Page>{error.display}</Page>;
 		}
 
-		return (
-			<div id="Generator" className="main">
-				<EditGeneratorDisplay {...this._getProps()} />
-			</div>
-		);
+		return <EditGeneratorDisplay {...this._getProps()} />;
 	}
 }
 
 const defaultGen = isa => ({ [isa]: { gen_ids: [] } });
 
-const EditGenerator = connect(
+export default connect(
 	function mapStateToProps(state, ownProps) {
 		// because we are fucking with the url, we need to make our own match based on real url
 		const match = genPathSelector({
@@ -130,9 +126,8 @@ const EditGenerator = connect(
 		return {
 			clearErrors: () => dispatch({ type: CLEAR_GENERATOR_ERRORS }),
 			changeGenerator,
-			createGenerator
+			createGenerator,
+			dispatch
 		};
 	}
-)(EditGeneratorComponent);
-
-export default EditGenerator;
+)(EditGenerator);

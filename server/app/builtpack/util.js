@@ -13,7 +13,7 @@ const Generator = require("../generator/Generator");
 function sortGensByPack(gens = [], packIds) {
 	if (!packIds.length) throw Error("Need at least one packId");
 	if (typeof packIds[0] !== "string") {
-		packIds = packIds.map(id => id.toString());
+		packIds = packIds.filter(id => id).map(id => id.toString());
 	}
 
 	gens.sort(function(a, b) {

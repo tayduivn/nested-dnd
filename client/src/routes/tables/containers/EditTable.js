@@ -3,16 +3,16 @@ import PropTypes from "prop-types";
 import debounce from "debounce";
 import { connect } from "react-redux";
 
-import Page from "../Util/Page";
-import EditTableDisplay from "./EditTableDisplay";
-import { TitleInput } from "../Form";
-import { Loading, Link } from "../Util";
-import EditGeneratorDisplay from "../Generators/EditGeneratorDisplay";
+import Page from "components/Page";
+import EditTableDisplay from "../components/EditTableDisplay";
+import { TitleInput } from "components/Form";
+import { Loading, Link } from "components";
+import EditGeneratorDisplay from "components/EditGeneratorDisplay";
 
-import { fetchTableIfNeeded, setTable, createTable } from "./redux/actions";
-import { tablePathSelector, embeddedContentSelector } from "./redux/selectors";
-import { fetchPackIfNeeded } from "../Packs/actions";
-import { tablesSelect } from "../Tables/redux/selectors";
+import { fetchTableIfNeeded, setTable, createTable } from "store/tables/actions";
+import { tablePathSelector, embeddedContentSelector } from "store/tables/selectors";
+import { fetchPackIfNeeded } from "store/packs/actions";
+import { tablesSelect } from "store/tables/selectors/tablePathSelector";
 
 const mapStateToProps = state => {
 	const match = tablePathSelector(state);

@@ -288,8 +288,6 @@ function instances(state = {}, action) {
 
 const tempChildrenInitial = {};
 function tempChildren(state = tempChildrenInitial, { type, data, universe_id, instance_id }) {
-	console.log(type);
-
 	switch (type) {
 		case INSTANCE_ADD_CHILD_RECEIVE:
 			// remove one! we got em boys

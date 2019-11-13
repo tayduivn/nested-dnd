@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Toggle } from "../Form";
+import { Toggle } from "components/Form";
 import EditTableRows from "./EditTableRows";
 
 const ReturnOption = ({ returns, handleChange, type = "" }) => (
