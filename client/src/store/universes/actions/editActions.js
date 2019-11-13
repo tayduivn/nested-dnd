@@ -10,7 +10,7 @@ export const add = (dispatch, created) => {
 	return { type: ADD, created };
 };
 
-export const RECEIVE_MY_UNIVERSES = "RECEIVE_MY_UNIVERSES";
+export const RECVD_MY_UNIVERSES = "RECVD_MY_UNIVERSES";
 export const fetch = isLoaded => {
 	return dispatch => {
 		if (isLoaded) return Promise.resolve();
@@ -19,7 +19,7 @@ export const fetch = isLoaded => {
 			if (json.errors) {
 				dispatch(pushSnacks(json.errors));
 			} else {
-				dispatch({ type: RECEIVE_MY_UNIVERSES, ...json });
+				dispatch({ type: RECVD_MY_UNIVERSES, ...json });
 			}
 		});
 	};

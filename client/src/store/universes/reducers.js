@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 import spread from "util/spread";
 import merge, { mergeConcat } from "util/merge";
 
-import { RECEIVE_EXPLORE, LOAD_EXPLORE } from "store/universes";
+import { RECVD_EXPLORE, LOAD_EXPLORE } from "store/universes";
 import {
 	FETCH_UNIVERSE_START,
 	FETCH_UNIVERSE_ERROR,
@@ -15,7 +15,7 @@ import {
 	INSTANCE_MOVE_RECEIVE,
 	INSTANCE_ADD_CHILD_REQUEST,
 	INSTANCE_DELETE,
-	RECEIVE_MY_UNIVERSES,
+	RECVD_MY_UNIVERSES,
 	INSTANCE_ADD_CHILD_RECEIVE,
 	INSTANCE_DELETE_ERROR
 } from "./actions";
@@ -101,8 +101,8 @@ function byId(state = {}, action) {
 				}
 			}
 			return state;
-		case RECEIVE_EXPLORE:
-		case RECEIVE_MY_UNIVERSES:
+		case RECVD_EXPLORE:
+		case RECVD_MY_UNIVERSES:
 			newState = copy;
 
 			// data
@@ -162,7 +162,7 @@ const DEFAULT_MY_UNIVERSES = {
 
 function myUniverses(state = DEFAULT_MY_UNIVERSES, action) {
 	switch (action.type) {
-		case RECEIVE_MY_UNIVERSES:
+		case RECVD_MY_UNIVERSES:
 			return {
 				isLoaded: true,
 				array: action.data.map(item => item.id)
@@ -263,8 +263,8 @@ function instances(state = {}, action) {
 				data: { up: action.data.up }
 			});
 			return newState;
-		case RECEIVE_EXPLORE:
-		case RECEIVE_MY_UNIVERSES:
+		case RECVD_EXPLORE:
+		case RECVD_MY_UNIVERSES:
 			newState = { ...state };
 			if (action.data.type === "Instance") {
 				// we don't care about overridin local changes becaues this is the thing we just

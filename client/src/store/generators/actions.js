@@ -185,7 +185,7 @@ export function changeGenerator(packUrl, pack_id, id, isa, change = {}) {
 
 // Fetch an list of abbreviated generators (not full data)
 export const FETCH_PACK_GENERATORS = "FETCH_PACK_GENERATORS";
-export const RECEIVE_GENERATORS = "RECEIVE_GENERATORS";
+export const RECVD_GENERATORS = "RECVD_GENERATORS";
 export function fetchPackGenerators(packUrl) {
 	return async (dispatch, getStore) => {
 		const store = getStore();
@@ -197,7 +197,7 @@ export function fetchPackGenerators(packUrl) {
 				pushSnacks(json.errors);
 			} else if (json.data) {
 				dispatch({
-					type: RECEIVE_GENERATORS,
+					type: RECVD_GENERATORS,
 					id: json.data.id,
 					...json
 				});

@@ -11,7 +11,6 @@ export default class TablesList extends Component {
 	render() {
 		const { isOwner, tables = [], packUrl } = this.props;
 		const state = { packUrl, tables };
-
 		return (
 			<>
 				{!isOwner ? null : (

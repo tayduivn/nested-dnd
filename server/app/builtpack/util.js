@@ -7,12 +7,22 @@ const Generator = require("../generator/Generator");
 /**
  * Sorts generators by a list of pack Ids
  * @param  {Generator[]} gens    an unsorted array of generators
- * @param  {string[]} packIds an array of pack id dependencies
+ * @param  {ObjectId[] || string[]} packIds an array of pack id dependencies
+ * @return the sorted gens
  */
 function sortGensByPack(gens = [], packIds) {
+	if (!packIds.length) throw Error("Need at least one packId");
+	if (typeof packIds[0] !== "string") {
+		packIds = packIds.map(id => id.toString());
+	}
+
 	gens.sort(function(a, b) {
-		return packIds.indexOf(a.pack) - packIds.indexOf(b.pack);
+		const aPack = typeof a.pack !== "string" ? a.pack.toString() : a.pack;
+		const bPack = typeof b.pack !== "string" ? b.pack.toString() : b.pack;
+		return packIds.indexOf(aPack) - packIds.indexOf(bPack);
 	});
+
+	return gens;
 }
 
 /**

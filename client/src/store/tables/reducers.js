@@ -1,15 +1,16 @@
 import {
-	FETCH_TABLE,
-	RECEIVE_TABLE,
-	RECEIVE_TABLES,
 	FETCH_TABLE_ERROR,
-	SET_TABLE,
+	FETCH_TABLE,
+	RECVD_PACK_TABLES,
+	RECVD_TABLE,
+	RECVD_TABLES,
+	SAVE_TABLE_ERROR,
 	SAVE_TABLE_START,
 	SAVE_TABLE_SUCCESS,
-	SAVE_TABLE_ERROR
+	SET_TABLE
 } from "./actions";
 import reduceObjToArray from "util/reduceObjToArray";
-import { RECEIVE_CHILD_OPTIONS } from "store/packs/actions";
+import { RECVD_CHILD_OPTIONS } from "store/packs/actions";
 
 const DEFAULT_TABLE = {
 	isFetching: false,
@@ -32,8 +33,8 @@ const table = (state = DEFAULT_TABLE, action) => {
 			return {
 				isFetching: true
 			};
-		case RECEIVE_TABLES:
-		case RECEIVE_TABLE:
+		case RECVD_TABLES:
+		case RECVD_TABLE:
 			return {
 				...state,
 				...action.data,
@@ -85,7 +86,7 @@ const tables = (state = DEFAULT_TABLES, action) => {
 	switch (action.type) {
 		// a specific table, pass through to table()
 		case FETCH_TABLE:
-		case RECEIVE_TABLE:
+		case RECVD_TABLE:
 		case FETCH_TABLE_ERROR:
 		case SAVE_TABLE_START:
 		case SAVE_TABLE_SUCCESS:
@@ -98,16 +99,18 @@ const tables = (state = DEFAULT_TABLES, action) => {
 					[action.id]: table(state.byId[action.id], action)
 				}
 			};
-		// included
-		case RECEIVE_CHILD_OPTIONS:
+		// included, partial data
+		case RECVD_PACK_TABLES:
+		case RECVD_CHILD_OPTIONS:
 			newById = { ...state.nyId };
 			action.included.forEach(item => {
 				if (item.type === "Table") {
-					newById[item.id] = item.attributes;
+					if (!newById[item.id]) newById[item.id] = {};
+					newById[item.id] = { ...newById[item.id], ...item.attributes };
 				}
 			});
 			return { ...state, byId: newById };
-		case RECEIVE_TABLES:
+		case RECVD_TABLES:
 			newById = {};
 			// TODO
 			// eslint-disable-next-line

@@ -39,7 +39,7 @@ export default class GeneratorsList extends React.Component {
 		const pointers = {};
 
 		for (var isa in gens) {
-			let extend = gens[isa].extends;
+			let extend = gens[isa];
 
 			// set up placeholders
 			if (!pointers[isa]) {
@@ -58,9 +58,10 @@ export default class GeneratorsList extends React.Component {
 		return tree;
 	};
 
-	determineInclude = (gen, isa = "") => {
-		const { filters, query } = this.state;
+	determineInclude = (gen, query, isa = "", filters) => {
 		let include = true;
+		isa = isa.toLowerCase();
+		query = query && query.toLowerCase();
 
 		if (
 			(query && !(isa.includes && isa.includes(query))) ||
@@ -83,7 +84,7 @@ export default class GeneratorsList extends React.Component {
 			if (query.length < 3) query = false;
 
 			for (var isa in generators) {
-				gen = generators[isa];
+				gen = { isa, extends: generators[isa] };
 				const include = this.determineInclude(gen, query, isa, filters);
 
 				if (include) {

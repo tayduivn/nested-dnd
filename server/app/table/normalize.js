@@ -15,11 +15,12 @@ function normalizeTables(list = []) {
 }
 
 function normalizeTable(table) {
+	const pojo = table.toJSON ? table.toJSON() : table;
 	let result = {
 		data: {
 			type: "Table",
 			id: table._id,
-			attributes: { ...table, _id: undefined, __v: undefined }
+			attributes: { ...pojo, _id: undefined, __v: undefined }
 		},
 		included: []
 	};

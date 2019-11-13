@@ -110,7 +110,7 @@ export const changeInstanceReceived = (universe_id, originalTask, json) => {
 
 // ------------------------------------
 export const LOAD_EXPLORE = "LOAD_EXPLORE";
-export const RECEIVE_EXPLORE = "RECEIVE_EXPLORE";
+export const RECVD_EXPLORE = "RECVD_EXPLORE";
 const loadCurrent = () => {
 	return async (dispatch, getState) => {
 		const state = getState();
@@ -136,13 +136,16 @@ const loadCurrent = () => {
 				);
 			} else {
 				dispatch({
-					type: RECEIVE_EXPLORE,
+					type: RECVD_EXPLORE,
 					...json
 				});
 				let newIndex = json.data.attributes.n;
 
 				// then, dispatch an action to change the hash of the url if needed
-				if (index === false || (!isNaN(json.data.attributes.n) && index !== json.data.attributes.n)) {
+				if (
+					index === false ||
+					(!isNaN(json.data.attributes.n) && index !== json.data.attributes.n)
+				) {
 					dispatch(push(`/explore/${type}/${identifier}#${newIndex}`));
 				}
 			}

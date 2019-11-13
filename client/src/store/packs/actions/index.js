@@ -16,7 +16,7 @@ export const REBUILD_PACK = "PACK_REBUILD";
 
 export const add = pack => ({ type: ADD, pack });
 
-export const RECEIVE_PACKS = "RECEIVE_PACKS";
+export const RECVD_PACKS = "RECVD_PACKS";
 export const fetch = isLoaded => {
 	return dispatch => {
 		if (isLoaded) return Promise.resolve();
@@ -24,7 +24,7 @@ export const fetch = isLoaded => {
 			if (json.errors) {
 				dispatch(setError(json.errors));
 			} else {
-				dispatch({ type: RECEIVE_PACKS, ...json });
+				dispatch({ type: RECVD_PACKS, ...json });
 			}
 		});
 	};
@@ -32,7 +32,7 @@ export const fetch = isLoaded => {
 
 // Fetch just the pure pack info, no generators or tables
 export const FETCH_PACK = "FETCH_PACK";
-export const RECEIVE_PACK = "RECEIVE_PACK";
+export const RECVD_PACK = "RECVD_PACK";
 export const fetchPack = (dispatch, url, isLoaded) => {
 	if (!isLoaded) {
 		dispatch({
@@ -43,7 +43,7 @@ export const fetchPack = (dispatch, url, isLoaded) => {
 			if (json.errors) {
 				dispatch(pushSnack(json.errors[0]));
 			} else {
-				dispatch({ type: RECEIVE_PACK, id: json.data.id, isLoaded: true, ...json });
+				dispatch({ type: RECVD_PACK, id: json.data.id, isLoaded: true, ...json });
 			}
 		});
 	}

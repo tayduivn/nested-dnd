@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import { createMatchSelector } from "connected-react-router";
 
-import { GENERATOR_SET, GENERATOR_RENAME, RECEIVE_GENERATORS } from "./actions";
+import { GENERATOR_SET, GENERATOR_RENAME, RECVD_GENERATORS } from "./actions";
 
 export const genPathSelector = createMatchSelector({ path: "/packs/:pack/generators/:generator" });
 
@@ -18,7 +18,7 @@ const DEFAULT_GENERATOR = { isLoaded: false };
 function generator(state = DEFAULT_GENERATOR, action) {
 	switch (action.type) {
 		// recieve a partial generator
-		case RECEIVE_GENERATORS:
+		case RECVD_GENERATORS:
 			return { ...state, ...action.data };
 		case GENERATOR_RENAME:
 			return { ...state, isa: action.isa };
@@ -36,7 +36,7 @@ function generator(state = DEFAULT_GENERATOR, action) {
 
 function byId(state = {}, action) {
 	switch (action.type) {
-		case RECEIVE_GENERATORS:
+		case RECVD_GENERATORS:
 			const newState = { ...state };
 			// look thorugh each generator in the array and use the generators() function
 			action.included.forEach(item => {

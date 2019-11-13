@@ -7,6 +7,7 @@ import PackDisplay from "../components/PackDisplay";
 
 import { fetchPack, fetchRebuild } from "store/packs";
 import { fetchPackGenerators } from "store/generators";
+import { fetchPackTables } from "store/tables";
 
 /**
  * Wrapper Component for Pack pages
@@ -27,6 +28,7 @@ class Pack extends Component {
 	constructor(props) {
 		super(props);
 		props.dispatch(fetchPackGenerators(props.packUrl));
+		props.dispatch(fetchPackTables(props.packUrl));
 	}
 
 	handleRebuild = () => {
@@ -39,14 +41,14 @@ class Pack extends Component {
 	};
 
 	render() {
-		const { error, pack, activeTab } = this.props;
+		const { error, pack, activeTab, tables } = this.props;
 
 		if (error) return error.display;
 		if (!pack.isLoaded) {
 			return <Loading.Page />;
 		}
 
-		return <PackDisplay {...{ ...pack, activeTab }} handleRebuild={this.handleRebuild} />;
+		return <PackDisplay {...{ ...pack, activeTab, tables }} handleRebuild={this.handleRebuild} />;
 	}
 }
 
@@ -60,15 +62,9 @@ export default connect(
 		let tables = [];
 		if (pack && pack.tables) {
 			tables = pack.tables.map(t => {
-				return state.tables.byId[t] || {};
-			});
-		}
-
-		let generators = {};
-		if (pack && pack.originalGen) {
-			pack.originalGen.forEach(id => {
-				const gen = state.generators.byId[id];
-				if (gen) generators[gen.isa] = gen;
+				const table = state.tables.byId[t] || {};
+				table._id = t;
+				return table;
 			});
 		}
 
@@ -76,7 +72,6 @@ export default connect(
 			packUrl: ownProps.match.params.pack,
 			pack,
 			tables,
-			generators,
 			activeTab: ownProps.location.hash.substr(1)
 		};
 	},

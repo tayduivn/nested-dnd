@@ -24,7 +24,7 @@ const ADD_GENERATOR = (
 const Filters = ({ filters = {}, handleFilterToggle }) => (
 	<div className="filters col-auto">
 		<div className="form-check">
-			<input
+			{/* <input
 				className="form-check-input"
 				type="checkbox"
 				value={filters.unique}
@@ -33,7 +33,7 @@ const Filters = ({ filters = {}, handleFilterToggle }) => (
 			/>
 			<label className="form-check-label" htmlFor="unique">
 				Unique
-			</label>
+			</label> */}
 		</div>
 	</div>
 );
@@ -70,7 +70,7 @@ class OpenButton extends React.PureComponent {
  */
 class GenLink extends React.PureComponent {
 	_getLink() {
-		const isa = (this.props.gen && this.props.gen.isa) || "";
+		const isa = this.props.isa || "";
 		return encodeURI(
 			"/packs/" +
 				this.props.packUrl +
@@ -84,21 +84,27 @@ class GenLink extends React.PureComponent {
 		return {
 			...this.props,
 			key: isa,
-			gen: this.props.generators[isa],
+			isa,
 			genTree: this.props.genTree[isa],
 			isOpen: this.props.open.includes(isa)
 		};
 	}
 	render() {
-		const { gen = {}, genTree = {}, isOpen, handleGeneratorToggle } = this.props;
+		const {
+			isa = "",
+			extends: extendsValue,
+			genTree = {},
+			isOpen,
+			handleGeneratorToggle
+		} = this.props;
 		return (
 			<React.Fragment>
 				<li>
 					{Object.keys(genTree).length ? (
-						<OpenButton {...{ handleGeneratorToggle, isOpen, isa: gen.isa }} />
+						<OpenButton {...{ handleGeneratorToggle, isOpen, isa }} />
 					) : null}
-					<Link to={this._getLink()}>{gen.isa}</Link>
-					{gen.extends ? <em className="ml-2">{gen.extends}</em> : null}
+					<Link to={this._getLink()}>{isa}</Link>
+					{extendsValue ? <em className="ml-2">{extendsValue}</em> : null}
 				</li>
 				{isOpen ? (
 					<ul>
@@ -122,13 +128,13 @@ class NestedGenerators extends React.PureComponent {
 		const { handleGeneratorToggle = () => {}, open = [] } = this.props;
 		const genTree = generatorTree[isa];
 		const isOpen = open.includes(isa);
-		const gen = generators[isa];
 		return {
 			key: isa,
 			packUrl,
 			isOwner,
 			handleGeneratorToggle,
-			gen,
+			isa,
+			extends: generators[isa],
 			genTree,
 			isOpen,
 			generators,

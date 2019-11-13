@@ -2,6 +2,7 @@ import async from "async";
 
 import DB from "util/DB";
 import merge from "util/merge";
+import { pushSnacks } from "store/snackbar";
 
 const EXPIRATON = 1000 * 60 * 30; // 30 minutes
 
@@ -41,18 +42,47 @@ export function fetchTableIfNeeded(id) {
 }
 
 // -----------------------------------------
-export const RECEIVE_TABLE = "RECIEVE_TABLE";
+export const FETCH_PACK_TABLES = "FETCH_PACK_TABLES";
+export const RECVD_PACK_TABLES = "RECVD_PACK_TABLES";
+export function fetchPackTables(packUrl) {
+	return async (dispatch, getStore) => {
+		// determine if we need to fetch
+		const packs = getStore().packs;
+		const pack = packs.byId[packs.byUrl[packUrl]];
+		// we already have it
+		if (pack && pack.table) return;
+
+		dispatch({
+			type: FETCH_PACK_TABLES,
+			packUrl
+		});
+
+		const json = await DB.fetch(`packs/${packUrl}/tables`);
+		if (json.errors) {
+			pushSnacks(json.errors);
+		} else if (json.data) {
+			dispatch({
+				type: RECVD_PACK_TABLES,
+				...json,
+				id: json.data.id
+			});
+		}
+	};
+}
+
+// -----------------------------------------
+export const RECVD_TABLE = "RECVD_TABLE";
 export const receiveTable = (id, data) => ({
-	type: RECEIVE_TABLE,
+	type: RECVD_TABLE,
 	id,
 	data,
 	receivedAt: Date.now()
 });
 
 // -----------------------------------------
-export const RECEIVE_TABLES = "RECEIVE_TABLES";
+export const RECVD_TABLES = "RECVD_TABLES";
 export const receiveTables = (byId = {}) => ({
-	type: RECEIVE_TABLES,
+	type: RECVD_TABLES,
 	byId
 });
 

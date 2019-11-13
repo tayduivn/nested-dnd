@@ -47,14 +47,18 @@ function normalizePack(p, user_id) {
 		delete result.data.attributes.tables;
 	}
 	if (pack.generators) {
-		// only send the names
+		// only send the names + extends data
 		// we don't need to do anything with the generator data unless we're editing or viewing it
 		// that generator specifically
-		const nameSet = pack.generators.reduce((set, g) => {
-			set.add(g.isa);
-			return set;
-		}, new Set());
-		result.related.generators = [...nameSet].sort();
+		// we need the extends data for the pack preview
+		// we expect these generators to be sorted in dependency order!
+		const nameSet = pack.generators.reduce((map, g) => {
+			if (!map[g.isa]) map[g.isa] = "";
+			if (g.extends) map[g.isa] = g.extends;
+			return map;
+		}, {});
+		result.related.generators = nameSet;
+
 		delete result.data.attributes.generators;
 	}
 	return result;

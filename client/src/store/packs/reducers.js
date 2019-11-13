@@ -4,14 +4,15 @@ import {
 	FETCH_PACK,
 	PACKS_SET,
 	REBUILD_PACK,
-	RECEIVE_CHILD_OPTIONS,
-	RECEIVE_PACK,
-	RECEIVE_PACKS,
+	RECVD_CHILD_OPTIONS,
+	RECVD_PACK,
+	RECVD_PACKS,
 	SET_PACK
 } from "./actions";
 import { GENERATOR_SET, GENERATOR_RENAME, CLEAR_GENERATOR_ERRORS } from "store/generators";
-import { RECEIVE_EXPLORE, RECEIVE_MY_UNIVERSES } from "store/universes";
-import { RECEIVE_GENERATORS } from "store/generators/actions";
+import { RECVD_EXPLORE, RECVD_MY_UNIVERSES } from "store/universes";
+import { RECVD_GENERATORS } from "store/generators/actions";
+import { RECVD_PACK_TABLES } from "store/tables/actions";
 
 import { combineReducers } from "redux";
 
@@ -49,14 +50,19 @@ const DEFAULT_PACK = {
 
 const pack = (state = DEFAULT_PACK, action = {}) => {
 	switch (action.type) {
-		case RECEIVE_GENERATORS:
+		case RECVD_GENERATORS:
 			return {
 				...state,
 				...action.data.attributes,
 				isLoaded: true,
 				generators: action.related.generators
 			};
-		case RECEIVE_CHILD_OPTIONS:
+		case RECVD_PACK_TABLES:
+			return {
+				...state,
+				tables: action.related.tables
+			};
+		case RECVD_CHILD_OPTIONS:
 			return {
 				...state,
 				generators: action.generators,
@@ -79,7 +85,7 @@ const pack = (state = DEFAULT_PACK, action = {}) => {
 			return { ...state, ...action.data, isLoaded: true, isFetching: false };
 		case FETCH_PACK:
 			return { ...state, isFetching: true };
-		case RECEIVE_PACK:
+		case RECVD_PACK:
 			return { ...state, ...action.data.attributes, isFetching: false, isLoaded: true };
 		default:
 			const newGens = generators(state.generators, action);
@@ -90,16 +96,17 @@ const pack = (state = DEFAULT_PACK, action = {}) => {
 
 // eslint-disable-next-line complexity
 function byId(state = {}, action) {
-	if (action.type === RECEIVE_MY_UNIVERSES || action.type === RECEIVE_EXPLORE) {
+	if (action.type === RECVD_MY_UNIVERSES || action.type === RECVD_EXPLORE) {
 		action = { ...action, data: action.included.filter(item => item.type === "Pack") };
 	}
 
 	let data;
 	switch (action.type) {
-		case RECEIVE_GENERATORS:
+		case RECVD_PACK_TABLES:
+		case RECVD_GENERATORS:
 			return {
 				...state,
-				[action.data.id]: pack(state[action.pack_id], action)
+				[action.data.id]: pack(state[action.data.id], action)
 			};
 		case GENERATOR_RENAME:
 			return { ...state, [action.pack_id]: pack(state[action.pack_id], action) };
@@ -113,10 +120,10 @@ function byId(state = {}, action) {
 			}
 			return state;
 		// we're operating on a sole pack, so just pass on through
-		case RECEIVE_CHILD_OPTIONS:
+		case RECVD_CHILD_OPTIONS:
 		case FETCH_CHILD_OPTIONS:
 		case FETCH_PACK:
-		case RECEIVE_PACK:
+		case RECVD_PACK:
 		case REBUILD_PACK:
 		case SET_PACK:
 			if (action.id) return { ...state, [action.id]: pack(state[action.id], action) };
@@ -129,9 +136,9 @@ function byId(state = {}, action) {
 				obj[pack_id] = pack(state[pack_id], { type: SET_PACK, data: data[pack_id] });
 			}
 			return obj;
-		case RECEIVE_EXPLORE:
-		case RECEIVE_MY_UNIVERSES:
-		case RECEIVE_PACKS:
+		case RECVD_EXPLORE:
+		case RECVD_MY_UNIVERSES:
+		case RECVD_PACKS:
 			const newState = { ...state };
 			action.data.forEach(
 				item => (newState[item.id] = { ...(state[item.id] || {}), ...item.attributes })
@@ -146,10 +153,10 @@ function byUrl(state = {}, action) {
 	let newByUrl;
 
 	switch (action.type) {
-		case RECEIVE_GENERATORS:
-		case RECEIVE_PACK:
+		case RECVD_GENERATORS:
+		case RECVD_PACK:
 			return { ...state, [action.data.attributes.url]: action.id };
-		case RECEIVE_EXPLORE:
+		case RECVD_EXPLORE:
 			// find the pack in included items
 			const pack = action.included.find(item => item.type === "Pack");
 			return { ...state, [pack.attributes.url]: pack.id };
@@ -166,7 +173,7 @@ function byUrl(state = {}, action) {
 		case SET_PACK:
 			newByUrl = action.data && action.data.url ? { [action.data.url]: action.id } : {};
 			return { ...state, ...newByUrl };
-		case RECEIVE_PACKS:
+		case RECVD_PACKS:
 			const oldUrls = Object.keys(state);
 			const oldIds = Object.values(state);
 			newByUrl = action.data.reduce((obj, item) => {
@@ -191,7 +198,7 @@ function isLoaded(state = false, action) {
 
 function publicPacks(state = [], action) {
 	switch (action.type) {
-		case RECEIVE_PACKS:
+		case RECVD_PACKS:
 			return action.data
 				.filter(item => item.attributes.public && !item.attributes.owned)
 				.map(item => item.id);
@@ -209,7 +216,7 @@ function publicPacks(state = [], action) {
 }
 function myPacks(state = [], action) {
 	switch (action.type) {
-		case RECEIVE_PACKS:
+		case RECVD_PACKS:
 			return action.data
 				.filter(item => item.attributes.owned && !item.attributes.universe_id)
 				.map(item => item.id);
@@ -228,7 +235,7 @@ function myPacks(state = [], action) {
  */
 function options(state = {}, action) {
 	switch (action.type) {
-		case RECEIVE_CHILD_OPTIONS:
+		case RECVD_CHILD_OPTIONS:
 			state[action.id] = { generators: action.generators, tables: action.tables };
 			return state;
 		default:

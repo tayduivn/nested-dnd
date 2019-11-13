@@ -12,6 +12,9 @@ const generators = require("../../generator/routes/generators");
 const { getPackByUrl, getPackOptions, getPackGenerators } = require("../query");
 const { normalizePack } = require("../normalize");
 const { normalizeGenerators } = require("../../generator/normalize");
+const { normalizeTables } = require("table/normalize");
+
+const { sortGensByPack } = require("builtpack/util");
 
 // Read Pack - slim! needs to be simple for edit page, etc. not all options
 // ---------------------------------
@@ -72,14 +75,20 @@ router.delete("/", MW.isLoggedIn, (req, res, next) => {
 		.catch(next);
 });
 
-router.get("/tables", MW.canViewPack, (req, res, next) => {
-	Table.find({ pack: req.pack.id })
-		.exec()
-		.then(async tables => {
-			tables.sort((a, b) => a.title.localeCompare(b.title));
-			return res.json(tables);
-		})
-		.catch(next);
+// get partial data about all the tables in this pack
+router.get("/tables", MW.canViewPack, async (req, res, next) => {
+	try {
+		const tables = await Table.find({ pack: req.pack.id }, "title returns").exec();
+		tables.sort((a, b) => a.title.localeCompare(b.title));
+
+		const pack = {
+			_id: req.pack.id,
+			tables: tables
+		};
+		return res.json(normalizePack(pack));
+	} catch (e) {
+		next(e);
+	}
 });
 
 /**
@@ -88,8 +97,13 @@ router.get("/tables", MW.canViewPack, (req, res, next) => {
 router.get("/generators", MW.canViewPack, async (req, res, next) => {
 	try {
 		const pack = await getPackGenerators(req.params.url, req.user._id);
+		// sort generators by dependency order
+		pack.generators = sortGensByPack(pack.generators, [...pack.dependencies, pack._id]);
 		const normalPack = normalizePack(pack);
+
 		normalPack.included = normalizeGenerators(pack.generators).data;
+
+		// normal pack should include extends
 		res.json(normalPack);
 	} catch (e) {
 		next(e);

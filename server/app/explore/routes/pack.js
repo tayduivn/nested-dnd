@@ -5,7 +5,6 @@ const MW = require("../../util/middleware");
 // const Universe = require("../../universe/Universe");
 // const { stringify, normalUniverseResponse, setLastSaw } = require("../../util");
 const { normalizePack } = require("../../pack/normalize");
-const { normalizeInstance } = require("universe/normalize");
 const explorePack = require("pack/query/explorePack");
 const Maker = require("generator/util/make");
 

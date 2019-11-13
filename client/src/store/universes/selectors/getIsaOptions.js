@@ -1,9 +1,10 @@
 import { getGeneratorTables } from "store/tables";
 
 export default function getIsaOptions(state, pack_id) {
-	const { generators = [], tables = [] } = state.packs.options[pack_id] || {};
+	const { generators = {}, tables = [] } = state.packs.options[pack_id] || {};
+	const generatorNames = Object.keys(generators);
 	const tablesFiltered = getGeneratorTables(state, tables);
-	const genOpts = generators.map(g => ({ label: g, value: g }));
+	const genOpts = generatorNames.map(g => ({ label: g, value: g }));
 	const tableOpt = [];
 	let table_id;
 	for (table_id in tablesFiltered) {
