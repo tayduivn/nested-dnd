@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Toggle } from "components/Form";
 import EditTableRows from "./EditTableRows";
@@ -44,6 +44,49 @@ const BulkAdd = ({ handleBulkAdd, bulkAddText, handleChange }) => (
 	</div>
 );
 
+const CapitalizeFirst = ({ checked, handleChange }) => {
+	const onChange = useEffect(e => handleChange(["rows", 3, "value"], e.target.checked), [
+		handleChange
+	]);
+
+	return (
+		<div className="form-group">
+			<label>
+				<input type="checkbox" checked={checked} name="capitalize" onChange={onChange} />
+				<strong> Capitalize:</strong> The first letter of the result will always be capitalized.
+			</label>
+		</div>
+	);
+};
+
+const DeleteButton = ({ handleDelete }) => {
+	return (
+		<div className="btn btn-danger" onClick={handleDelete}>
+			Delete
+		</div>
+	);
+};
+
+const Source = ({ source, handleChange }) => {
+	return (
+		<div className="form-group">
+			<label>Source URL</label>
+			<input
+				value={source.url}
+				name="source"
+				className="form-control"
+				onChange={e => handleChange(["source", "url"], e.target.value)}
+			/>
+		</div>
+	);
+};
+
+const RollResult = ({ roll }) => {
+	return (
+		<>Roll: {typeof roll === "string" ? roll : roll && roll.toString ? roll.toString() : null}</>
+	);
+};
+
 const DisplayForm = ({
 	_id,
 	desc,
@@ -67,7 +110,6 @@ const DisplayForm = ({
 	<div>
 		{!isEmbedded ? <Returns {...{ returns, handleChange }} /> : null}
 
-		{/* --------- Concatenate ------------ */}
 		<div className="form-group">
 			<Toggle checked={concat} name="concat" handleChange={handleChange}>
 				<strong> Combine Rows:</strong> The rows will combine together (instead of returning 1
@@ -75,49 +117,21 @@ const DisplayForm = ({
 			</Toggle>
 		</div>
 
-		{/* --------- Capitalize First ------------ */}
 		{returns === "fng" ? (
-			<div className="form-group">
-				<label>
-					<input
-						type="checkbox"
-						checked={rows[3] && rows[3].value}
-						name="capitalize"
-						onChange={e => handleChange(["rows", 3, "value"], e.target.checked)}
-					/>
-					<strong> Capitalize:</strong> The first letter of the result will always be capitalized.
-				</label>
-			</div>
+			<CapitalizeFirst handleChange={handleChange} checked={rows[3] && rows[3].value} />
 		) : null}
 
 		<EditTableRows {...{ returns, handleChange, rows, concat, generators, tables, _id }} />
 
 		{!concat ? <div>Weights Total = {totalWeight}</div> : null}
 
-		{/* --------- Source ------------ */}
-		{returns !== "fng" ? (
-			<div className="form-group">
-				<label>Source URL</label>
-				<input
-					value={source.url}
-					name="source"
-					className="form-control"
-					onChange={e => handleChange(["source", "url"], e.target.value)}
-				/>
-			</div>
-		) : null}
+		{returns !== "fng" ? <Source handleChange={handleChange} source={source} /> : null}
 
-		{isEmbedded ? null : (
-			<div>
-				Roll: {typeof roll === "string" ? roll : roll && roll.toString ? roll.toString() : null}
-			</div>
-		)}
+		{isEmbedded ? null : <RollResult roll={roll} />}
 
 		{returns === "text" ? <BulkAdd {...{ handleBulkAdd, bulkAddText, handleChange }} /> : null}
 
-		<div className="btn btn-danger" onClick={handleDelete}>
-			Delete
-		</div>
+		<DeleteButton handleDelete={handleDelete} />
 	</div>
 );
 

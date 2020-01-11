@@ -28,5 +28,6 @@ function normalizeTable(table) {
 }
 
 module.exports = {
-	normalizeTables
+	normalizeTables,
+	normalizeTable
 };

@@ -3,6 +3,7 @@ const router = require("express").Router();
 const Table = require("../table/Table");
 const { MW } = require("../util");
 const merge = require("../util/merge");
+const { normalizeTable } = require("./normalize");
 
 // Create Table
 // ---------------------------------
@@ -40,9 +41,11 @@ router.get("/:table", MW.canViewTable, (req, res) => {
 	if (req.table && req.table.roll) {
 		// TODO
 		req.table.roll().then(result => {
-			return res.json(Object.assign({}, req.table.toJSON(), { roll: result }));
+			const normalTable = normalizeTable(req.table);
+			normalTable.related = { roll: result };
+			return res.json(normalTable);
 		});
-	} else return res.json(Object.assign({}, req.table.toJSON()));
+	} else return res.json(normalizeTable(req.table));
 });
 
 // Update Table

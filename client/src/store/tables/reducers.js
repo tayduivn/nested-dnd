@@ -84,9 +84,16 @@ const DEFAULT_TABLES = {
 const tables = (state = DEFAULT_TABLES, action) => {
 	let newById;
 	switch (action.type) {
+		case RECVD_TABLE:
+			return {
+				...state,
+				byId: {
+					...state.byId,
+					[action.id]: table(state.byId[action.id], { ...action, data: action.data.attributes })
+				}
+			};
 		// a specific table, pass through to table()
 		case FETCH_TABLE:
-		case RECVD_TABLE:
 		case FETCH_TABLE_ERROR:
 		case SAVE_TABLE_START:
 		case SAVE_TABLE_SUCCESS:

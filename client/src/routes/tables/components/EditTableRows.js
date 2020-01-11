@@ -34,31 +34,36 @@ const NotFNG = ({
 	concat,
 	handleChange,
 	generators,
-	tables,
+	tables = [],
 	rows,
 	i,
 	_id
-}) => (
-	<MixedThing
-		options={{
-			types:
-				returns === "generator"
-					? ["generator", "embed", "table_id", "table", "data"]
-					: ["string", "table_id", "table", "data", "dice"],
-			property: i,
-			showWeight: !concat,
-			isTextarea: true
-		}}
-		{...{ handleChange, value, generators, weight, i, _id }}
-		tables={
-			returns === "generator"
-				? tables.filter(t => t.returns === "generator" && t._id !== _id)
-				: tables.filter(t => t.returns !== "generator" && t._id !== _id)
-		}
-		array={rows}
-		type={returns === "generator" && (!type || type === "string") ? "generator" : type}
-	/>
-);
+}) => {
+	console.log(returns === "generator" && Array.isArray(tables) && tables.filter);
+	return (
+		<MixedThing
+			options={{
+				types:
+					returns === "generator"
+						? ["generator", "embed", "table_id", "table", "data"]
+						: ["string", "table_id", "table", "data", "dice"],
+				property: i,
+				showWeight: !concat,
+				isTextarea: true
+			}}
+			{...{ handleChange, value, generators, weight, i, _id }}
+			tables={
+				Array.isArray(tables) && tables.filter
+					? returns === "generator"
+						? tables.filter(t => t.returns === "generator" && t._id !== _id)
+						: tables.filter(t => t.returns !== "generator" && t._id !== _id)
+					: null
+			}
+			array={rows}
+			type={returns === "generator" && (!type || type === "string") ? "generator" : type}
+		/>
+	);
+};
 
 export default class EditTableRows extends React.Component {
 	constructor(props) {

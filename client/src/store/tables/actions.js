@@ -15,26 +15,23 @@ function shouldFetchTable(state, id) {
 	const table = state.tables.byId[id];
 	if (!table) return true;
 	if (table.isFetching) return false;
+	if (!table.lastUpdated) return true;
 	const expired = table.lastUpdated + EXPIRATON < Date.now();
 	if (expired) return true;
 	return false;
 }
-function fetchTable(id) {
-	return dispatch => {
-		dispatch({
-			type: FETCH_TABLE,
-			id
-		});
-		return DB.get("tables", id).then(({ data, error }) => {
-			if (error) dispatch(fetchTableError(id, error));
-			dispatch(receiveTable(id, data));
-		});
-	};
-}
+
 export function fetchTableIfNeeded(id) {
 	return (dispatch, getState) => {
 		if (shouldFetchTable(getState(), id)) {
-			return dispatch(fetchTable(id));
+			dispatch({
+				type: FETCH_TABLE,
+				id
+			});
+			return DB.get("tables", id).then(({ data, error }) => {
+				if (error) dispatch(fetchTableError(id, error));
+				dispatch(receiveTable(id, data));
+			});
 		} else {
 			return Promise.resolve();
 		}
