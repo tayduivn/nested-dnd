@@ -23,7 +23,7 @@
 		"connected-react-router": "^6.5.2",
 		"eslint-plugin-react-hooks": "^1.7.0",
 		"jsdom": "^15.1.1",
-		"jquery": "^3.4.1",
+		"jquery": "^3.5.0",
 		"prop-types": "^15.7.2",
 		"react": "^16.9.0",
 		"react-color": "^2.17.3",
