@@ -31,7 +31,7 @@
 		"react-dom": "^16.9.0",
 		"react-inlinesvg": "^1.1.6",
 		"react-lottie": "^1.2.3",
-		"react-redux": "^7.1.0",
+		"react-redux": "^7.2.2",
 		"react-router": "^5.0.1",
 		"react-router-dom": "^5.0.1",
 		"react-router-redux": "^4.0.8",
