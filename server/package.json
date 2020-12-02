@@ -32,7 +32,7 @@
 		"connect-flash": "^0.1.1",
 		"connect-mongo": "^3.0.0",
 		"cookie-parser": "^1.4.4",
-		"cross-env": "^5.1.4",
+		"cross-env": "^7.0.3",
 		"express": "^4.17.1",
 		"express-session": "^1.16.2",
 		"express-sslify": "^1.2.0",
